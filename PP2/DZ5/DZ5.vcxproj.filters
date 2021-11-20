@@ -1,0 +1,638 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="2_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="2_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="3_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="3_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="5_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="5_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="6_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="6_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="7_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="7_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="9_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="9_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="10_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="10_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="11_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="11_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="12_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="12_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="13_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="13_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="14_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="14_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="15_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="15_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="16_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="16_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="17_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="17_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="18_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="18_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="19_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="19_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="20_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="20_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="21_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="21_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="22_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="22_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="22A_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="22A_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="23_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="23_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="24_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="24_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="25_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="25_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="25P_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="25P_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="26_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="26_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="26L_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="26L_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="27_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="27_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="27E_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="27E_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="28_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="28_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="29_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="29_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="30_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="30_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="31_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="31_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="32_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="32_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="32E_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="32E_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="33_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="33_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="34_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="34_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="35_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="35_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="35L_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="35L_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="36_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="36_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="37_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="37_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="38_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="38_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="38L_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="38L_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="39_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="39_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="40_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="40_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="41_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="41_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="42_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="42_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="43_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="43_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="44_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="44_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="45_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="45_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="46_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="46_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="47_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="47_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="48_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="48_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="49_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="49_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="50_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="50_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="51_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="51_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="52_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="52_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="53_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="53_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="54_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="54_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="55_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="55_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="56_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="56_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="56L_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="56L_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="57_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="57_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="58_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="58_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="59_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="59_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="60_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="60_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="65_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="65_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="66_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="66_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="67_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="67_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="68_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="68_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="70_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="70_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="71_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="71_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="72_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="72_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="73_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="73_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="74_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="74_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="75_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="75_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="76_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="76_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="77_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="77_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="78_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="78_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="79_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="79_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="81_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="81_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="81L_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="81L_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="82_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="82_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="83_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="83_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="84_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="84_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="85_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="85_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="87_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="87_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="88_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="88_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="89_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="89_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="91_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="91_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="92_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="92_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="94_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="94_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="95_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="95_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="96_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="96_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="302_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="302_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="303_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="303_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="304_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="304_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="305_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="305_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="306_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="306_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="307_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="307_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="308_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="308_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="309_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="309_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="310_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="310_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="311_dirA.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="311_dirB.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+  </ItemGroup>
+</Project>

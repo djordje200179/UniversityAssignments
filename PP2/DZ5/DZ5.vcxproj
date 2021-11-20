@@ -1,0 +1,367 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{1188415b-82ae-40d7-b630-f90f73c61ba8}</ProjectGuid>
+    <RootNamespace>DZ5</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(ProjectDir)$(Configuration)\$(Platform)\</OutDir>
+    <IntDir>$(Configuration)\$(Platform)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(ProjectDir)$(Configuration)\$(Platform)\</OutDir>
+    <IntDir>$(Configuration)\$(Platform)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(ProjectDir)$(Configuration)\$(Platform)\</OutDir>
+    <IntDir>$(Configuration)\$(Platform)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(ProjectDir)$(Configuration)\$(Platform)\</OutDir>
+    <IntDir>$(Configuration)\$(Platform)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>false</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <OutputFile>$(ProjectDir)$(Configuration)\$(Platform)\$(TargetName)$(TargetExt)</OutputFile>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>false</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <OutputFile>$(ProjectDir)$(Configuration)\$(Platform)\$(TargetName)$(TargetExt)</OutputFile>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>false</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <OutputFile>$(ProjectDir)$(Configuration)\$(Platform)\$(TargetName)$(TargetExt)</OutputFile>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>false</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <OutputFile>$(ProjectDir)$(Configuration)\$(Platform)\$(TargetName)$(TargetExt)</OutputFile>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="main.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="10_dirA.txt" />
+    <Text Include="10_dirB.txt" />
+    <Text Include="11_dirA.txt" />
+    <Text Include="11_dirB.txt" />
+    <Text Include="12_dirA.txt" />
+    <Text Include="12_dirB.txt" />
+    <Text Include="13_dirA.txt" />
+    <Text Include="13_dirB.txt" />
+    <Text Include="14_dirA.txt" />
+    <Text Include="14_dirB.txt" />
+    <Text Include="15_dirA.txt" />
+    <Text Include="15_dirB.txt" />
+    <Text Include="16_dirA.txt" />
+    <Text Include="16_dirB.txt" />
+    <Text Include="17_dirA.txt" />
+    <Text Include="17_dirB.txt" />
+    <Text Include="18_dirA.txt" />
+    <Text Include="18_dirB.txt" />
+    <Text Include="19_dirA.txt" />
+    <Text Include="19_dirB.txt" />
+    <Text Include="20_dirA.txt" />
+    <Text Include="20_dirB.txt" />
+    <Text Include="21_dirA.txt" />
+    <Text Include="21_dirB.txt" />
+    <Text Include="22A_dirA.txt" />
+    <Text Include="22A_dirB.txt" />
+    <Text Include="22_dirA.txt" />
+    <Text Include="22_dirB.txt" />
+    <Text Include="23_dirA.txt" />
+    <Text Include="23_dirB.txt" />
+    <Text Include="24_dirA.txt" />
+    <Text Include="24_dirB.txt" />
+    <Text Include="25P_dirA.txt" />
+    <Text Include="25P_dirB.txt" />
+    <Text Include="25_dirA.txt" />
+    <Text Include="25_dirB.txt" />
+    <Text Include="26L_dirA.txt" />
+    <Text Include="26L_dirB.txt" />
+    <Text Include="26_dirA.txt" />
+    <Text Include="26_dirB.txt" />
+    <Text Include="27E_dirA.txt" />
+    <Text Include="27E_dirB.txt" />
+    <Text Include="27_dirA.txt" />
+    <Text Include="27_dirB.txt" />
+    <Text Include="28_dirA.txt" />
+    <Text Include="28_dirB.txt" />
+    <Text Include="29_dirA.txt" />
+    <Text Include="29_dirB.txt" />
+    <Text Include="2_dirA.txt" />
+    <Text Include="2_dirB.txt" />
+    <Text Include="302_dirA.txt" />
+    <Text Include="302_dirB.txt" />
+    <Text Include="303_dirA.txt" />
+    <Text Include="303_dirB.txt" />
+    <Text Include="304_dirA.txt" />
+    <Text Include="304_dirB.txt" />
+    <Text Include="305_dirA.txt" />
+    <Text Include="305_dirB.txt" />
+    <Text Include="306_dirA.txt" />
+    <Text Include="306_dirB.txt" />
+    <Text Include="307_dirA.txt" />
+    <Text Include="307_dirB.txt" />
+    <Text Include="308_dirA.txt" />
+    <Text Include="308_dirB.txt" />
+    <Text Include="309_dirA.txt" />
+    <Text Include="309_dirB.txt" />
+    <Text Include="30_dirA.txt" />
+    <Text Include="30_dirB.txt" />
+    <Text Include="310_dirA.txt" />
+    <Text Include="310_dirB.txt" />
+    <Text Include="311_dirA.txt" />
+    <Text Include="311_dirB.txt" />
+    <Text Include="31_dirA.txt" />
+    <Text Include="31_dirB.txt" />
+    <Text Include="32E_dirA.txt" />
+    <Text Include="32E_dirB.txt" />
+    <Text Include="32_dirA.txt" />
+    <Text Include="32_dirB.txt" />
+    <Text Include="33_dirA.txt" />
+    <Text Include="33_dirB.txt" />
+    <Text Include="34_dirA.txt" />
+    <Text Include="34_dirB.txt" />
+    <Text Include="35L_dirA.txt" />
+    <Text Include="35L_dirB.txt" />
+    <Text Include="35_dirA.txt" />
+    <Text Include="35_dirB.txt" />
+    <Text Include="36_dirA.txt" />
+    <Text Include="36_dirB.txt" />
+    <Text Include="37_dirA.txt" />
+    <Text Include="37_dirB.txt" />
+    <Text Include="38L_dirA.txt" />
+    <Text Include="38L_dirB.txt" />
+    <Text Include="38_dirA.txt" />
+    <Text Include="38_dirB.txt" />
+    <Text Include="39_dirA.txt" />
+    <Text Include="39_dirB.txt" />
+    <Text Include="3_dirA.txt" />
+    <Text Include="3_dirB.txt" />
+    <Text Include="40_dirA.txt" />
+    <Text Include="40_dirB.txt" />
+    <Text Include="41_dirA.txt" />
+    <Text Include="41_dirB.txt" />
+    <Text Include="42_dirA.txt" />
+    <Text Include="42_dirB.txt" />
+    <Text Include="43_dirA.txt" />
+    <Text Include="43_dirB.txt" />
+    <Text Include="44_dirA.txt" />
+    <Text Include="44_dirB.txt" />
+    <Text Include="45_dirA.txt" />
+    <Text Include="45_dirB.txt" />
+    <Text Include="46_dirA.txt" />
+    <Text Include="46_dirB.txt" />
+    <Text Include="47_dirA.txt" />
+    <Text Include="47_dirB.txt" />
+    <Text Include="48_dirA.txt" />
+    <Text Include="48_dirB.txt" />
+    <Text Include="49_dirA.txt" />
+    <Text Include="49_dirB.txt" />
+    <Text Include="50_dirA.txt" />
+    <Text Include="50_dirB.txt" />
+    <Text Include="51_dirA.txt" />
+    <Text Include="51_dirB.txt" />
+    <Text Include="52_dirA.txt" />
+    <Text Include="52_dirB.txt" />
+    <Text Include="53_dirA.txt" />
+    <Text Include="53_dirB.txt" />
+    <Text Include="54_dirA.txt" />
+    <Text Include="54_dirB.txt" />
+    <Text Include="55_dirA.txt" />
+    <Text Include="55_dirB.txt" />
+    <Text Include="56L_dirA.txt" />
+    <Text Include="56L_dirB.txt" />
+    <Text Include="56_dirA.txt" />
+    <Text Include="56_dirB.txt" />
+    <Text Include="57_dirA.txt" />
+    <Text Include="57_dirB.txt" />
+    <Text Include="58_dirA.txt" />
+    <Text Include="58_dirB.txt" />
+    <Text Include="59_dirA.txt" />
+    <Text Include="59_dirB.txt" />
+    <Text Include="5_dirA.txt" />
+    <Text Include="5_dirB.txt" />
+    <Text Include="60_dirA.txt" />
+    <Text Include="60_dirB.txt" />
+    <Text Include="65_dirA.txt" />
+    <Text Include="65_dirB.txt" />
+    <Text Include="66_dirA.txt" />
+    <Text Include="66_dirB.txt" />
+    <Text Include="67_dirA.txt" />
+    <Text Include="67_dirB.txt" />
+    <Text Include="68_dirA.txt" />
+    <Text Include="68_dirB.txt" />
+    <Text Include="6_dirA.txt" />
+    <Text Include="6_dirB.txt" />
+    <Text Include="70_dirA.txt" />
+    <Text Include="70_dirB.txt" />
+    <Text Include="71_dirA.txt" />
+    <Text Include="71_dirB.txt" />
+    <Text Include="72_dirA.txt" />
+    <Text Include="72_dirB.txt" />
+    <Text Include="73_dirA.txt" />
+    <Text Include="73_dirB.txt" />
+    <Text Include="74_dirA.txt" />
+    <Text Include="74_dirB.txt" />
+    <Text Include="75_dirA.txt" />
+    <Text Include="75_dirB.txt" />
+    <Text Include="76_dirA.txt" />
+    <Text Include="76_dirB.txt" />
+    <Text Include="77_dirA.txt" />
+    <Text Include="77_dirB.txt" />
+    <Text Include="78_dirA.txt" />
+    <Text Include="78_dirB.txt" />
+    <Text Include="79_dirA.txt" />
+    <Text Include="79_dirB.txt" />
+    <Text Include="7_dirA.txt" />
+    <Text Include="7_dirB.txt" />
+    <Text Include="81L_dirA.txt" />
+    <Text Include="81L_dirB.txt" />
+    <Text Include="81_dirA.txt" />
+    <Text Include="81_dirB.txt" />
+    <Text Include="82_dirA.txt" />
+    <Text Include="82_dirB.txt" />
+    <Text Include="83_dirA.txt" />
+    <Text Include="83_dirB.txt" />
+    <Text Include="84_dirA.txt" />
+    <Text Include="84_dirB.txt" />
+    <Text Include="85_dirA.txt" />
+    <Text Include="85_dirB.txt" />
+    <Text Include="87_dirA.txt" />
+    <Text Include="87_dirB.txt" />
+    <Text Include="88_dirA.txt" />
+    <Text Include="88_dirB.txt" />
+    <Text Include="89_dirA.txt" />
+    <Text Include="89_dirB.txt" />
+    <Text Include="91_dirA.txt" />
+    <Text Include="91_dirB.txt" />
+    <Text Include="92_dirA.txt" />
+    <Text Include="92_dirB.txt" />
+    <Text Include="94_dirA.txt" />
+    <Text Include="94_dirB.txt" />
+    <Text Include="95_dirA.txt" />
+    <Text Include="95_dirB.txt" />
+    <Text Include="96_dirA.txt" />
+    <Text Include="96_dirB.txt" />
+    <Text Include="9_dirA.txt" />
+    <Text Include="9_dirB.txt" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
