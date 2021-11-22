@@ -6,7 +6,7 @@
 
 struct Node {
 	std::vector<std::string> keys;
-	std::vector<Node*> nodes;
+	std::vector<Node*> children;
 
 	bool isLeaf();
 };
