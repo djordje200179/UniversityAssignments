@@ -8,10 +8,13 @@
 class BStarTree {
 private:
 	using CStr = const std::string&;
-	
+
 	struct Node {
 		std::vector<std::string> keys;
 		std::vector<Node*> children;
+		Node* parent;
+
+		Node(Node* parent = nullptr) : parent(parent) {}
 
 		bool isLeaf();
 		bool canAddKey(int maxKeys);
