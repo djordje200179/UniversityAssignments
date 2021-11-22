@@ -4,7 +4,9 @@
 
 using namespace std;
 
-Rec::Rec(string inicijalizator) : karakteri(inicijalizator) {}
+Rec::Rec(string inicijalizator) {
+	filtrirajRec(inicijalizator);
+}
 
 size_t Rec::operator+() const {
 	return karakteri.length();
@@ -51,6 +53,8 @@ bool Rec::jeNosilacSloga(size_t indeks) const {
 	return true;
 }
 
+void Rec::filtrirajRec(std::string rec) {}
+
 bool operator^(const Rec& prva, const Rec& druga) {
 	int brojPoklapanja = (~prva == 1 || ~druga == 1) ? 1 : 2;
 
@@ -71,13 +75,10 @@ bool operator^(const Rec& prva, const Rec& druga) {
 }
 
 istream& operator>>(istream& is, Rec& rec) {
-	string privremeni;
-	is >> privremeni;
+	string privremeni; 
+	getline(is, privremeni);
 
-	rec.karakteri = "";
-	for (char karakter : privremeni)
-		if (isalpha(karakter))
-			rec.karakteri += karakter;
+	rec.filtrirajRec(privremeni);
 
 	return is;
 }
@@ -86,4 +87,11 @@ ostream& operator<<(ostream& os, const Rec& rec) {
 	os << rec.karakteri;
 
 	return os;
+}
+
+void Rec::filtrirajRec(std::string rec) {
+	karakteri = "";
+	for (char karakter : rec)
+		if (isalpha(karakter))
+			karakteri += karakter;
 }

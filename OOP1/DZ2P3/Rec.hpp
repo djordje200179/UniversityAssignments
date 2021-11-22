@@ -16,6 +16,7 @@ public:
 	friend std::ostream& operator<<(std::ostream& os, const Rec& rec);
 private:
 	bool jeNosilacSloga(size_t indeks) const;
+	void filtrirajRec(std::string rec);
 
 	std::string karakteri;
 };
