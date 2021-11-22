@@ -12,7 +12,7 @@ size_t Rec::operator+() const {
 
 int Rec::operator~() const {
 	int brojac = 0;
-	for (int i = 0; i < karakteri.length(); i++)
+	for (int i = 0; i < +*this; i++)
 		brojac += jeNosilacSloga(i);
 
 	return brojac;
@@ -45,7 +45,7 @@ bool Rec::jeNosilacSloga(size_t indeks) const {
 		return false;
 	
 	if((indeks != 0 && samoglasnici(karakteri[indeks - 1])) ||
-	   (indeks != karakteri.length() - 1 && samoglasnici(karakteri[indeks + 1])))
+	   (indeks != +*this - 1 && samoglasnici(karakteri[indeks + 1])))
 	   return false;
 
 	return true;
