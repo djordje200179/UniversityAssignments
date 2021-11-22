@@ -4,6 +4,18 @@
 
 using namespace std;
 
+bool BStarTree::Node::isLeaf() {
+	for (auto child : children)
+		if (child)
+			return false;
+
+	return true;
+}
+
+bool BStarTree::Node::canAddKey(int maxKeys) {
+	return isLeaf && children.size() != maxKeys;
+}
+
 BStarTree::BStarTree(int degree) : degree(degree), maxKeys(degree - 1),
 								   minNodeKeys(ceil((2 * degree - 1) / 3.0 - 1)), 
 								   maxRootKeys(2 * floor((2 * degree - 2) / 3.0)) {}

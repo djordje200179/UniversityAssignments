@@ -14,6 +14,7 @@ private:
 		std::vector<Node*> children;
 
 		bool isLeaf();
+		bool canAddKey(int maxKeys);
 	};
 
 	struct Position {
