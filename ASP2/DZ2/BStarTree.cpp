@@ -37,11 +37,33 @@ bool BStarTree::keyExists(CStr key) const {
 	return findKey(key).node != nullptr;
 }
 
+BStarTree::CStr BStarTree::findKthKey(int k) const {
+	stack<Position> s;
+	Position curr = { root, 0 };
+
+	int cnt = 0;
+	while (curr || !s.empty()) {
+		while (curr) {
+			s.push(curr);
+			curr = { curr.node->children[curr.index], 0};
+		}
+
+		curr = s.top(), s.pop();
+
+		if (cnt == k)
+			return curr;
+		
+		cnt++;
+
+		curr++;
+	}
+}
+
 BStarTree::Position BStarTree::findKey(CStr key) const {
 	auto curr = root;
 
 	while (curr) {
-		for (size_t i = 0; i < curr->keys.size(); i++)
+		for (int i = 0; i < curr->keys.size(); i++)
 			if (curr->keys[i] == key)
 				return { curr, i };
 			else if (curr->keys[i] > key) {

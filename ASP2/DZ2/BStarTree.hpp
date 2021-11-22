@@ -9,7 +9,12 @@ private:
 	using CStr = const std::string&;
 	struct Position {
 		Node* node;
-		size_t index;
+		int index;
+
+		operator bool() const { return node != nullptr; }
+		operator CStr() const { return node->keys[index]; }
+		void operator++() { index++; }
+		void operator++(int) { index++; }
 	};
 public:
 	BStarTree(int degree);
@@ -19,21 +24,21 @@ public:
 	bool addKey(CStr key);
 	bool removeKey(CStr key);
 	void printTree(std::ostream& os) const;
-	CStr findKthWord(size_t n) const;
+	CStr findKthKey(int k) const;
 
 	bool operator()(CStr key) const { return keyExists(key); }
 	bool operator+=(CStr key) { return addKey(key); }
 	bool operator-=(CStr key) { return removeKey(key); }
 	friend std::ostream& operator<<(std::ostream& os, const BStarTree& tree) { tree.printTree(os); return os; }
-	CStr operator()(size_t n) const { return findKthWord(n); }
+	CStr operator()(int k) const { return findKthKey(k); }
 private:
 	Position findKey(CStr key) const;
 
 	Node* root = nullptr;
-	const size_t degree;
-	const size_t maxKeys;
-	const size_t minNodeKeys;
-	const size_t maxRootKeys;
+	const int degree;
+	const int maxKeys;
+	const int minNodeKeys;
+	const int maxRootKeys;
 };
 
 #endif // B_STAR_TREE_H
