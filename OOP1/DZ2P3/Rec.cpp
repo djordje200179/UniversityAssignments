@@ -52,7 +52,22 @@ bool Rec::jeNosilacSloga(size_t indeks) const {
 }
 
 bool operator^(const Rec& prva, const Rec& druga) {
-	return false;
+	int brojPoklapanja = (~prva == 1 || ~druga == 1) ? 1 : 2;
+
+	int itPrvi = prva(-brojPoklapanja);
+	int itDrugi = druga(-brojPoklapanja);
+
+	int duzinaPrvi = +prva;
+	int duzinaDrugi = +druga;
+
+	if (duzinaDrugi - itDrugi != duzinaPrvi - itPrvi)
+		return false;
+
+	for (; itPrvi < duzinaPrvi; itPrvi++, itDrugi++)
+		if (prva.karakteri[itPrvi] != druga.karakteri[itDrugi])
+			return false;
+
+	return true;
 }
 
 istream& operator>>(istream& is, Rec& rec) {
