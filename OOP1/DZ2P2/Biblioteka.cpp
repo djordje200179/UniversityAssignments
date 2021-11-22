@@ -1,4 +1,5 @@
 #include "Biblioteka.hpp"
+#include <stdexcept>
 
 using namespace std;
 
@@ -44,6 +45,8 @@ const Knjiga& Biblioteka::dohvatiKnjigu(int id) const {
     for (int i = 0; i < brojKnjiga; i++)
         if (niz[i]->dohvatiId() == id)
             return *niz[i];
+
+    throw runtime_error("Knjiga ne postoji");
 }
 
 Biblioteka& Biblioteka::operator+=(const Knjiga& knjiga) {
