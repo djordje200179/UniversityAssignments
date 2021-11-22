@@ -2,7 +2,7 @@
 #include "BStarTree.hpp"
 
 int main() {
-	BStarTree tree;
+	BStarTree tree(4);
 
 	return 0;
 }

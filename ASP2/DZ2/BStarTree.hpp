@@ -8,6 +8,7 @@ class BStarTree {
 private:
 	using CStr = const std::string&;
 public:
+	BStarTree(int degree);
 	~BStarTree();
 
 	bool keyExists(CStr key) const;
@@ -23,6 +24,10 @@ public:
 	CStr operator()(size_t n) const { return findKthWord(n); }
 private:
 	Node* root = nullptr;
+	const int degree;
+	const int maxKeys;
+	const int minNodeKeys;
+	const int maxRootKeys;
 };
 
 #endif // B_STAR_TREE_H
