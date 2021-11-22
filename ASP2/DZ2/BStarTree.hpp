@@ -1,12 +1,21 @@
 #ifndef B_STAR_TREE_H
 #define B_STAR_TREE_H
 
-#include "Node.hpp"
 #include <ostream>
+#include <vector>
+#include <string>
 
 class BStarTree {
 private:
 	using CStr = const std::string&;
+	
+	struct Node {
+		std::vector<std::string> keys;
+		std::vector<Node*> children;
+
+		bool isLeaf();
+	};
+
 	struct Position {
 		Node* node;
 		int index;
