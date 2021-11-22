@@ -24,5 +24,8 @@ int main() {
 	cout << "slog[-2] = " << rec(-2) << endl;
 	cout << "slog[-3] = " << rec(-3) << endl;
 
+	cout << "dugoprstic ^ prstic = " << (Rec("dugoprstic") ^ Rec("prstic")) << endl;
+	cout << "slonic ^ prstic = " << (Rec("slonic") ^ Rec("prstic")) << endl;
+
 	return 0;
 }
