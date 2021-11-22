@@ -25,11 +25,8 @@ Cvecara& Cvecara::operator=(Cvecara druga) {
 }
 
 Cvecara::~Cvecara() {
-    for (Cvor* trenutni = pocetni; trenutni;) {
-        Cvor* sledeci = trenutni->sledeci;
-        delete trenutni;
-        trenutni = sledeci;
-    }
+    for (Cvor* trenutni = pocetni; trenutni;)
+        delete exchange(trenutni, trenutni->sledeci);
 }
 
 void Cvecara::dodajBuket(const Buket& buket) {

@@ -19,11 +19,8 @@ Buket& Buket::operator=(Buket drugi) {
 }
 
 Buket::~Buket() {
-	for (Cvor* trenutni = pocetni; trenutni;) {
-		Cvor* sledeci = trenutni->sledeci;
-		delete trenutni;
-		trenutni = sledeci;
-	}
+	for (Cvor* trenutni = pocetni; trenutni;) 
+		delete exchange(trenutni, trenutni->sledeci);
 }
 
 void Buket::dodajCvet(const Cvet& cvet) {
