@@ -15,7 +15,7 @@ public:
 	friend std::istream& operator>>(std::istream& is, Rec& rec);
 	friend std::ostream& operator<<(std::ostream& os, const Rec& rec);
 private:
-	bool jeSlog(size_t indeks) const;
+	bool jeNosilacSloga(size_t indeks) const;
 
 	std::string karakteri;
 };

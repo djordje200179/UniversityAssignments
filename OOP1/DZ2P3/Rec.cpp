@@ -13,7 +13,7 @@ size_t Rec::operator+() const {
 int Rec::operator~() const {
 	int brojac = 0;
 	for (int i = 0; i < karakteri.length(); i++)
-		brojac += jeSlog(i);
+		brojac += jeNosilacSloga(i);
 
 	return brojac;
 }
@@ -24,13 +24,13 @@ int Rec::operator()(int n) const {
 
 	int i = 0;
 	for (int brojac = 0; i < karakteri.length() && brojac < n; i++)
-		if (jeSlog(i))
+		if (jeNosilacSloga(i))
 			brojac++;
 
 	return i != karakteri.length() ? i : -1;
 }
 
-bool Rec::jeSlog(size_t indeks) const {
+bool Rec::jeNosilacSloga(size_t indeks) const {
 	Skup samoglasnici("aeiouAEIOU");
 	Skup sonanti("lnrLNR");
 
