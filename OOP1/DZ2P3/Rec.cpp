@@ -1,4 +1,5 @@
 #include "Rec.hpp"
+#include "Skup.hpp"
 #include <cctype>
 
 using namespace std;
@@ -18,55 +19,32 @@ int Rec::operator~() const {
 }
 
 int Rec::operator()(int n) const {
-	if (n > 0) {
-		int i = 0;
-		for (int brojac = 0; i < karakteri.length() && brojac < n; i++)
-			if (jeSlog(i))
-				brojac++;
+	if (n < 0)
+		n += ~(*this);
 
-		return i != karakteri.length() ? i : -1;
-	} else {
-		int i = karakteri.length();
-		for (int brojac = n; i < karakteri.length() && brojac; i++)
-			if (jeSlog(i))
-				brojac++;
+	int i = 0;
+	for (int brojac = 0; i < karakteri.length() && brojac < n; i++)
+		if (jeSlog(i))
+			brojac++;
 
-		return i;
-	}
+	return i != karakteri.length() ? i : -1;
 }
 
 bool Rec::jeSlog(size_t indeks) const {
-	if (jeSamoglasnik(karakteri[indeks]))
+	Skup samoglasnici("aeiouAEIOU");
+	Skup sonanti("lnrLNR");
+
+	if (samoglasnici(karakteri[indeks]))
 		return true;
 
-	if (!jeSonant(karakteri[indeks]))
+	if (!sonanti(karakteri[indeks]))
 		return false;
 	
-	if((indeks != 0 && jeSamoglasnik(karakteri[indeks - 1])) ||
-	   (indeks != karakteri.length() - 1 && jeSamoglasnik(karakteri[indeks + 1])))
+	if((indeks != 0 && samoglasnici(karakteri[indeks - 1])) ||
+	   (indeks != karakteri.length() - 1 && samoglasnici(karakteri[indeks + 1])))
 	   return false;
 
 	return true;
-}
-
-bool Rec::jeSamoglasnik(char karakter) {
-	static const char samoglasnici[] = { 'a', 'e', 'i', 'o', 'u' };
-	
-	for (int i = 0; i < sizeof(samoglasnici) / sizeof(char); i++)
-		if (karakter == samoglasnici[i])
-			return true;
-
-	return false;
-}
-
-bool Rec::jeSonant(char karakter) {
-	static const char sonanti[] = { 'l', 'n', 'r' };
-
-	for (int i = 0; i < sizeof(sonanti) / sizeof(char); i++)
-		if (karakter == sonanti[i])
-			return true;
-
-	return false;
 }
 
 bool operator^(const Rec& prva, const Rec& druga) {

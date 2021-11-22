@@ -16,8 +16,6 @@ public:
 	friend std::ostream& operator<<(std::ostream& os, const Rec& rec);
 private:
 	bool jeSlog(size_t indeks) const;
-	static bool jeSamoglasnik(char karakter);
-	static bool jeSonant(char karakter);
 
 	std::string karakteri;
 };
