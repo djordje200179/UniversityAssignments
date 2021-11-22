@@ -32,3 +32,25 @@ BStarTree::~BStarTree() {
 		delete node;
 	}
 }
+
+bool BStarTree::keyExists(CStr key) const {
+	return findKey(key).node != nullptr;
+}
+
+BStarTree::Position BStarTree::findKey(CStr key) const {
+	auto curr = root;
+
+	while (curr) {
+		for (size_t i = 0; i < curr->keys.size(); i++)
+			if (curr->keys[i] == key)
+				return { curr, i };
+			else if (curr->keys[i] > key) {
+				curr = curr->children[i];
+				break;
+			}
+
+		curr = curr->children.back();
+	}
+
+	return { nullptr, 0 };
+}

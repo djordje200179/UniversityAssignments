@@ -7,6 +7,10 @@
 class BStarTree {
 private:
 	using CStr = const std::string&;
+	struct Position {
+		Node* node;
+		size_t index;
+	};
 public:
 	BStarTree(int degree);
 	~BStarTree();
@@ -23,11 +27,13 @@ public:
 	friend std::ostream& operator<<(std::ostream& os, const BStarTree& tree) { tree.printTree(os); return os; }
 	CStr operator()(size_t n) const { return findKthWord(n); }
 private:
+	Position findKey(CStr key) const;
+
 	Node* root = nullptr;
-	const int degree;
-	const int maxKeys;
-	const int minNodeKeys;
-	const int maxRootKeys;
+	const size_t degree;
+	const size_t maxKeys;
+	const size_t minNodeKeys;
+	const size_t maxRootKeys;
 };
 
 #endif // B_STAR_TREE_H
