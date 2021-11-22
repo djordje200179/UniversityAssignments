@@ -19,19 +19,19 @@ int Rec::operator~() const {
 }
 
 int Rec::operator()(int n) const {
-	int total = ~*this;
+	int ukupno = ~*this;
 	if (n < 0)
-		n += total;
+		n += ukupno;
 
-	if (n < 0 || n >= total)
+	if (n < 0 || n >= ukupno)
 		return -1;
 
 	int i = 0;
-	for (int brojac = 0; i < karakteri.length() && brojac < n; i++)
+	for (int brojac = 0; brojac <= n; i++)
 		if (jeNosilacSloga(i))
 			brojac++;
 
-	return i;
+	return i - 1;
 }
 
 bool Rec::jeNosilacSloga(size_t indeks) const {
