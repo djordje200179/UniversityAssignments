@@ -35,8 +35,8 @@ int Rec::operator()(int n) const {
 }
 
 bool Rec::jeNosilacSloga(size_t indeks) const {
-	Skup samoglasnici("aeiouAEIOU");
-	Skup sonanti("lnrLNR");
+	static Skup samoglasnici("aeiouAEIOU");
+	static Skup sonanti("lnrLNR");
 
 	if (samoglasnici(karakteri[indeks]))
 		return true;
