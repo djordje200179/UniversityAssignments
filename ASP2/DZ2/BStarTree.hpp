@@ -9,16 +9,7 @@ class BStarTree {
 private:
 	using CStr = const std::string&;
 
-	struct Node {
-		std::vector<std::string> keys;
-		std::vector<Node*> children;
-		Node* parent;
-
-		Node(Node* parent = nullptr) : parent(parent) {}
-
-		bool isLeaf();
-		bool canAddKey(int maxKeys);
-	};
+	struct Node;
 
 	struct Position {
 		Node* node;
@@ -28,6 +19,18 @@ private:
 		operator CStr() const { return node->keys[index]; }
 		void operator++() { index++; }
 		void operator++(int) { index++; }
+	};
+
+	struct Node {
+		std::vector<std::string> keys;
+		std::vector<Node*> children;
+		Position positionInParent;
+
+		Node(Position positionInParent = { nullptr, 0 }) : positionInParent(positionInParent) {}
+
+		bool isLeaf();
+		bool canAddKey(int maxKeys);
+		Position findSuccessor();
 	};
 public:
 	BStarTree(int degree);

@@ -5,15 +5,21 @@
 using namespace std;
 
 bool BStarTree::Node::isLeaf() {
-	for (auto child : children)
-		if (child)
-			return false;
-
-	return true;
+	return children.size() > 0 && children.front() == nullptr;
 }
 
 bool BStarTree::Node::canAddKey(int maxKeys) {
-	return isLeaf && children.size() != maxKeys;
+	return isLeaf() && children.size() != maxKeys;
+}
+
+BStarTree::Position BStarTree::Node::findSuccessor() {
+	if (isLeaf()) {
+			
+	} else {
+		
+	}
+
+	return { nullptr, 0 };
 }
 
 BStarTree::BStarTree(int degree) : degree(degree), maxKeys(degree - 1),
