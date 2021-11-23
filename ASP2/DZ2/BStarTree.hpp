@@ -17,8 +17,8 @@ private:
 
 		operator bool() const { return node != nullptr; }
 		operator CStr() const { return node->keys[index]; }
-		void operator++() { index++; }
-		void operator++(int) { index++; }
+		Position& operator++() { index++; return *this; }
+		Position operator++(int) { auto copy = *this; index++; return copy; }
 	};
 
 	struct Node {
@@ -30,7 +30,6 @@ private:
 
 		bool isLeaf();
 		bool canAddKey(int maxKeys);
-		Position findSuccessor();
 	};
 public:
 	BStarTree(int degree);
@@ -49,6 +48,7 @@ public:
 	CStr operator()(int k) const { return findKthKey(k); }
 private:
 	Position findKey(CStr key) const;
+	Position findSuccessor(Position pos);
 
 	Node* root = nullptr;
 	const int DEGREE;

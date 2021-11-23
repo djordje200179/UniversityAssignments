@@ -12,24 +12,6 @@ bool BStarTree::Node::canAddKey(int maxKeys) {
 	return isLeaf() && children.size() != maxKeys;
 }
 
-BStarTree::Position BStarTree::Node::findSuccessor() {
-	if (isLeaf()) {
-		auto curr = this;
-		while (curr == positionInParent.node->children.back())
-			curr = curr->positionInParent.node;
-		
-		return curr->positionInParent;
-	} else {
-		auto curr = children[positionInParent.index + 1];
-		while (!curr->isLeaf())
-			curr = curr->children.front();
-
-		return { curr, 0 };
-	}
-
-	return { nullptr, 0 };
-}
-
 BStarTree::BStarTree(int degree) : DEGREE(degree), MAX_KEYS(degree - 1),
 								   MAX_ROOT_KEYS(2 * floor((2 * degree - 2) / 3.0)),
 								   MIN_NODE_KEYS(ceil((2 * degree - 1) / 3.0 - 1)) {}
@@ -71,14 +53,14 @@ BStarTree::CStr BStarTree::findKthKey(int k) const {
 	while (curr || !s.empty()) {
 		while (curr) {
 			s.push(curr);
-			curr = { curr.node->children[curr.index], 0};
+			curr = { curr.node->children[curr.index], 0 };
 		}
 
 		curr = s.top(), s.pop();
 
 		if (cnt == k)
 			return curr;
-		
+
 		cnt++;
 
 		curr++;
@@ -101,4 +83,28 @@ BStarTree::Position BStarTree::findKey(CStr key) const {
 	}
 
 	return { nullptr, 0 };
+}
+
+BStarTree::Position BStarTree::findSuccessor(Position position) {
+	if (position.node->isLeaf()) {
+		while (position.index == position.node->children.size() - 1) {
+			auto node = position.node;
+			auto parentNode = node->positionInParent.node;
+
+			if (!parentNode)
+				return { nullptr, 0 };
+
+			auto parentNodePosition = parentNode->positionInParent.index;
+
+			position = { parentNode, parentNodePosition };
+		}
+
+		return ++position;
+	} else {
+		position++;
+		while (!position.node->isLeaf())
+			position = { position.node->children[position.index], 0 };
+
+		return position;
+	}
 }
