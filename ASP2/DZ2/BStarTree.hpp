@@ -51,10 +51,10 @@ private:
 	Position findKey(CStr key) const;
 
 	Node* root = nullptr;
-	const int degree;
-	const int maxKeys;
-	const int minNodeKeys;
-	const int maxRootKeys;
+	const int DEGREE;
+	const int MAX_KEYS;
+	const int MAX_ROOT_KEYS;
+	const int MIN_NODE_KEYS;
 };
 
 #endif // B_STAR_TREE_H

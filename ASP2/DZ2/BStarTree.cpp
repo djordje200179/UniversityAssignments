@@ -5,7 +5,7 @@
 using namespace std;
 
 bool BStarTree::Node::isLeaf() {
-	return children.size() > 0 && children.front() == nullptr;
+	return children.front() == nullptr;
 }
 
 bool BStarTree::Node::canAddKey(int maxKeys) {
@@ -14,7 +14,7 @@ bool BStarTree::Node::canAddKey(int maxKeys) {
 
 BStarTree::Position BStarTree::Node::findSuccessor() {
 	if (isLeaf()) {
-			
+		
 	} else {
 		
 	}
@@ -22,9 +22,9 @@ BStarTree::Position BStarTree::Node::findSuccessor() {
 	return { nullptr, 0 };
 }
 
-BStarTree::BStarTree(int degree) : degree(degree), maxKeys(degree - 1),
-								   minNodeKeys(ceil((2 * degree - 1) / 3.0 - 1)), 
-								   maxRootKeys(2 * floor((2 * degree - 2) / 3.0)) {}
+BStarTree::BStarTree(int degree) : DEGREE(degree), MAX_KEYS(degree - 1),
+								   MAX_ROOT_KEYS(2 * floor((2 * degree - 2) / 3.0)),
+								   MIN_NODE_KEYS(ceil((2 * degree - 1) / 3.0 - 1)) {}
 
 BStarTree::~BStarTree() {
 	stack<Node*> traversalStack, postorderStack;
