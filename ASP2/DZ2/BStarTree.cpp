@@ -4,12 +4,24 @@
 
 using namespace std;
 
+BStarTree::Node::Node(Position positionInParent) : positionInParent(positionInParent) {
+	children.push_back(nullptr);
+}
+
 bool BStarTree::Node::isLeaf() {
 	return children.front() == nullptr;
 }
 
 bool BStarTree::Node::canAddKey(int maxKeys) {
 	return isLeaf() && children.size() != maxKeys;
+}
+
+void BStarTree::Node::addKey(CStr key) {
+	int i;
+	for (i = 0; i < keys.size() && keys[i] > key; i++);
+
+	keys.insert(keys.begin() + i, key);
+	children.insert(children.begin() + 1, nullptr);
 }
 
 BStarTree::BStarTree(int degree)
@@ -44,6 +56,32 @@ BStarTree::~BStarTree() {
 
 bool BStarTree::keyExists(CStr key) const {
 	return findKey(key).node != nullptr;
+}
+
+bool BStarTree::addKey(CStr key) {
+	if (!root)
+		root = new Node();
+
+	Node* curr = root;
+	Node* prev = nullptr;
+
+	while (curr) {
+		for (int i = 0; i < curr->keys.size(); i++)
+			if (curr->keys[i] == key)
+				return false;
+			else if (curr->keys[i] > key) {
+				curr = curr->children[i];
+				break;
+			}
+
+		prev = exchange(curr, curr->children.back());
+	}
+	
+	if (prev->canAddKey(MAX_KEYS))
+		prev->addKey(key);
+	else {
+
+	}
 }
 
 BStarTree::CStr BStarTree::findKthKey(int k) const {

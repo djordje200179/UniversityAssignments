@@ -26,10 +26,11 @@ private:
 		std::vector<Node*> children;
 		Position positionInParent;
 
-		Node(Position positionInParent = { nullptr, 0 }) : positionInParent(positionInParent) {}
+		Node(Position positionInParent = { nullptr, 0 });
 
 		bool isLeaf();
 		bool canAddKey(int maxKeys);
+		void addKey(CStr key);
 	};
 public:
 	BStarTree(int degree);
