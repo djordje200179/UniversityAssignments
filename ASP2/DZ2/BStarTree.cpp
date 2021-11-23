@@ -14,9 +14,17 @@ bool BStarTree::Node::canAddKey(int maxKeys) {
 
 BStarTree::Position BStarTree::Node::findSuccessor() {
 	if (isLeaf()) {
+		auto curr = this;
+		while (curr == positionInParent.node->children.back())
+			curr = curr->positionInParent.node;
 		
+		return curr->positionInParent;
 	} else {
-		
+		auto curr = children[positionInParent.index + 1];
+		while (!curr->isLeaf())
+			curr = curr->children.front();
+
+		return { curr, 0 };
 	}
 
 	return { nullptr, 0 };
