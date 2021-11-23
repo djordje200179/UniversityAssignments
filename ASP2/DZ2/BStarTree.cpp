@@ -12,9 +12,10 @@ bool BStarTree::Node::canAddKey(int maxKeys) {
 	return isLeaf() && children.size() != maxKeys;
 }
 
-BStarTree::BStarTree(int degree) : DEGREE(degree), MAX_KEYS(degree - 1),
-								   MAX_ROOT_KEYS(2 * floor((2 * degree - 2) / 3.0)),
-								   MIN_NODE_KEYS(ceil((2 * degree - 1) / 3.0 - 1)) {}
+BStarTree::BStarTree(int degree)
+	: DEGREE(degree), MAX_KEYS(degree - 1),
+	MAX_ROOT_KEYS(2 * floor((2 * degree - 2) / 3.0)),
+	MIN_NODE_KEYS(ceil((2 * degree - 1) / 3.0 - 1)) {}
 
 BStarTree::~BStarTree() {
 	stack<Node*> traversalStack, postorderStack;
