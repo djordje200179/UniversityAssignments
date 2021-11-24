@@ -17,7 +17,7 @@ public:
 	int dohvatiBrojKnjiga() const;
 	int dohvatiKapacitet() const;
 
-	const Knjiga& dohvatiKnjigu(int id) const;
+	const Knjiga* dohvatiKnjigu(int id) const;
 
 	Biblioteka& operator+=(const Knjiga& knjiga);
 	friend std::ostream& operator<<(std::ostream& os, const Biblioteka& biblioteka);
