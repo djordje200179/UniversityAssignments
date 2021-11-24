@@ -53,8 +53,6 @@ bool Rijec::jeNosilacSloga(size_t indeks) const {
 	return true;
 }
 
-void Rijec::filtrirajRijec(std::string rijec) {}
-
 bool operator^(const Rijec& prva, const Rijec& druga) {
 	int brojPoklapanja = (~prva == 1 || ~druga == 1) ? 1 : 2;
 
