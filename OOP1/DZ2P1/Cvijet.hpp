@@ -6,7 +6,7 @@
 
 class Cvijet {
 public:
-	Cvijet(std::string naziv, int nabavnaCijena, int prodajnaCijena);
+	Cvijet(const std::string& naziv, int nabavnaCijena, int prodajnaCijena);
 
 	std::string dohvatiNaziv() const;
 	int dohvatiNabavnuCijenu() const;

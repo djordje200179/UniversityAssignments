@@ -6,7 +6,7 @@
 
 class Knjiga {
 public:
-	Knjiga(std::string naziv, std::string autor);
+	Knjiga(const std::string& naziv, const std::string& autor);
 	Knjiga(const Knjiga&) = delete;
 	Knjiga& operator=(const Knjiga&) = delete;
 

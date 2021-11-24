@@ -2,7 +2,7 @@
 
 using namespace std;
 
-Cvijet::Cvijet(string naziv, int nabavnaCijena, int prodajnaCijena) 
+Cvijet::Cvijet(const string& naziv, int nabavnaCijena, int prodajnaCijena) 
     : naziv(naziv), nabavnaCijena(nabavnaCijena), prodajnaCijena(prodajnaCijena) {}
 
 string Cvijet::dohvatiNaziv() const {

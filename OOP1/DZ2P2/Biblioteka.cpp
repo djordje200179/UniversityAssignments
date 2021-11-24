@@ -2,7 +2,7 @@
 
 using namespace std;
 
-Biblioteka::Biblioteka(string naziv, int kapacitet) : naziv(naziv), kapacitet(kapacitet) {
+Biblioteka::Biblioteka(const string& naziv, int kapacitet) : naziv(naziv), kapacitet(kapacitet) {
     niz = new Knjiga * [kapacitet];
 }
 

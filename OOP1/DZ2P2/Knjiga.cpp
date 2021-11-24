@@ -2,7 +2,7 @@
 
 using namespace std;
 
-Knjiga::Knjiga(string naziv, string autor) : naziv(naziv), autor(autor) {}
+Knjiga::Knjiga(const string& naziv, const string& autor) : naziv(naziv), autor(autor) {}
 
 string Knjiga::dohvatiNaziv() const {
     return naziv;

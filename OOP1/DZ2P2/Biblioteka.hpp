@@ -7,7 +7,7 @@
 
 class Biblioteka {
 public:
-	Biblioteka(std::string naziv, int kapacitet);
+	Biblioteka(const std::string& naziv, int kapacitet);
 	Biblioteka(const Biblioteka& druga);
 	Biblioteka(Biblioteka&& druga);
 	Biblioteka& operator=(Biblioteka druga);
