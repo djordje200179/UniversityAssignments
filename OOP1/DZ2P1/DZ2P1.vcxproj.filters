@@ -18,24 +18,24 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Cvet.cpp">
+    <ClCompile Include="Cvijet.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Buket.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Cvecara.cpp">
+    <ClCompile Include="Cvjecara.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Cvet.hpp">
+    <ClInclude Include="Cvijet.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Buket.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Cvecara.hpp">
+    <ClInclude Include="Cvjecara.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

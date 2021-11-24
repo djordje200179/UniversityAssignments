@@ -1,7 +1,7 @@
 #ifndef BUKET_H
 #define BUKET_H
 
-#include "Cvet.hpp"
+#include "Cvijet.hpp"
 #include <ostream>
 
 class Buket {
@@ -12,10 +12,10 @@ public:
 	Buket& operator=(Buket drugi);
 	~Buket();
 
-	void dodajCvet(const Cvet& cvet);
+	void dodajCvijet(const Cvijet& cvijet);
 
-	int izracunajNabavnuCenu() const;
-	int izracunajProdajnuCenu() const;
+	int izracunajNabavnuCijenu() const;
+	int izracunajProdajnuCijenu() const;
 	int izracunajZaradu() const;
 
 	friend bool operator>(const Buket& pocetni, const Buket& drugi);
@@ -24,7 +24,7 @@ private:
 	friend void swap(Buket& pocetni, Buket& drugi);
 
 	struct Cvor {
-		Cvet cvet;
+		Cvijet cvijet;
 		Cvor* sledeci;
 	};
 

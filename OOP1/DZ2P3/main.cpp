@@ -1,6 +1,6 @@
 ﻿#include <iostream>
 #include "Skup.hpp"
-#include "Rec.hpp"
+#include "Rijec.hpp"
 
 using namespace std;
 
@@ -14,18 +14,18 @@ int main() {
 	skup += 'g';
 	cout << "g: " << skup('g') << endl;
 
-	Rec rec("medvedic");
-	cout << rec << '=' << +rec << '/' << ~rec << endl;
-	cout << "slog[0] = " << rec(0) << endl;
-	cout << "slog[1] = " << rec(1) << endl;
-	cout << "slog[2] = " << rec(2) << endl;
-	cout << "slog[3] = " << rec(3) << endl;
-	cout << "slog[-1] = " << rec(-1) << endl;
-	cout << "slog[-2] = " << rec(-2) << endl;
-	cout << "slog[-3] = " << rec(-3) << endl;
+	Rijec rijec("medvedic");
+	cout << rijec << '=' << +rijec << '/' << ~rijec << endl;
+	cout << "slog[0] = " << rijec(0) << endl;
+	cout << "slog[1] = " << rijec(1) << endl;
+	cout << "slog[2] = " << rijec(2) << endl;
+	cout << "slog[3] = " << rijec(3) << endl;
+	cout << "slog[-1] = " << rijec(-1) << endl;
+	cout << "slog[-2] = " << rijec(-2) << endl;
+	cout << "slog[-3] = " << rijec(-3) << endl;
 
-	cout << "dugoprstic ^ prstic = " << (Rec("dugoprstic") ^ Rec("prstic")) << endl;
-	cout << "slonic ^ prstic = " << (Rec("slonic") ^ Rec("prstic")) << endl;
+	cout << "dugoprstic ^ prstic = " << (Rijec("dugoprstic") ^ Rijec("prstic")) << endl;
+	cout << "slonic ^ prstic = " << (Rijec("slonic") ^ Rijec("prstic")) << endl;
 
 	return 0;
 }

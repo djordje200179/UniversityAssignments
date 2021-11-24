@@ -1,43 +1,43 @@
-#include "Cvecara.hpp"
+#include "Cvjecara.hpp"
 
 using namespace std;
 
-Cvecara::Cvecara(int pocetnaZarada) : zarada(pocetnaZarada) {}
+Cvjecara::Cvjecara(int pocetnaZarada) : zarada(pocetnaZarada) {}
 
-Cvecara::Cvecara(const Cvecara& druga) {
+Cvjecara::Cvjecara(const Cvjecara& druga) {
     for (Cvor* trenutni = druga.pocetni; trenutni; trenutni = trenutni->sledeci)
         dodajBuket(trenutni->buket);
 
     zarada = druga.zarada;
 }
 
-Cvecara::Cvecara(Cvecara&& druga) {
+Cvjecara::Cvjecara(Cvjecara&& druga) {
     pocetni = exchange(druga.pocetni, nullptr);
     poslednji = exchange(druga.poslednji, nullptr);
 
     zarada = druga.zarada;
 }
 
-Cvecara& Cvecara::operator=(Cvecara druga) {
+Cvjecara& Cvjecara::operator=(Cvjecara druga) {
     swap(*this, druga);
 
     return *this;
 }
 
-Cvecara::~Cvecara() {
+Cvjecara::~Cvjecara() {
     for (Cvor* trenutni = pocetni; trenutni;)
         delete exchange(trenutni, trenutni->sledeci);
 }
 
-void Cvecara::dodajBuket(const Buket& buket) {
-    if (100 * buket.izracunajZaradu() / buket.izracunajNabavnuCenu() < 20)
+void Cvjecara::dodajBuket(const Buket& buket) {
+    if (100 * buket.izracunajZaradu() / buket.izracunajNabavnuCijenu() < 20)
         return;
 
     Cvor* novi = new Cvor{ buket };
 
     Cvor* prethodni = nullptr;
     for (Cvor* trenutni = pocetni;
-         trenutni && trenutni->buket.izracunajProdajnuCenu() < buket.izracunajProdajnuCenu();
+         trenutni && trenutni->buket.izracunajProdajnuCijenu() < buket.izracunajProdajnuCijenu();
          prethodni = exchange(trenutni, trenutni->sledeci));
 
     if (prethodni) {
@@ -48,31 +48,31 @@ void Cvecara::dodajBuket(const Buket& buket) {
     } else
         pocetni = poslednji = novi;
 
-    zarada -= buket.izracunajNabavnuCenu();
+    zarada -= buket.izracunajNabavnuCijenu();
 }
 
-void Cvecara::prodajBuket(int pozicija) {
+void Cvjecara::prodajBuket(int pozicija) {
     Cvor* prethodni = nullptr;
     Cvor* trenutni = pocetni;
 
     for (int i = 0; i < pozicija; i++)
         prethodni = exchange(trenutni, trenutni->sledeci);
 
-    zarada += trenutni->buket.izracunajProdajnuCenu();
+    zarada += trenutni->buket.izracunajProdajnuCijenu();
 
     (prethodni ? prethodni->sledeci : pocetni) = trenutni->sledeci;
     delete trenutni;
 }
 
-ostream& operator<<(ostream& os, const Cvecara& cvecara) {
-    os << "zarada=" << cvecara.zarada << "RSD" << endl;
-    for (Cvecara::Cvor* trenutni = cvecara.pocetni; trenutni; trenutni = trenutni->sledeci)
+ostream& operator<<(ostream& os, const Cvjecara& cvjecara) {
+    os << "zarada=" << cvjecara.zarada << "RSD" << endl;
+    for (Cvjecara::Cvor* trenutni = cvjecara.pocetni; trenutni; trenutni = trenutni->sledeci)
         os << trenutni->buket << endl;
 
     return os;
 }
 
-void swap(Cvecara& prva, Cvecara& druga) {
+void swap(Cvjecara& prva, Cvjecara& druga) {
     swap(prva.pocetni, druga.pocetni);
     swap(prva.poslednji, druga.poslednji);
 }

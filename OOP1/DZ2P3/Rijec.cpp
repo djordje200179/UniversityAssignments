@@ -1,18 +1,18 @@
-#include "Rec.hpp"
+#include "Rijec.hpp"
 #include "Skup.hpp"
 #include <cctype>
 
 using namespace std;
 
-Rec::Rec(string inicijalizator) {
-	filtrirajRec(inicijalizator);
+Rijec::Rijec(string inicijalizator) {
+	filtrirajRijec(inicijalizator);
 }
 
-size_t Rec::operator+() const {
+size_t Rijec::operator+() const {
 	return karakteri.length();
 }
 
-int Rec::operator~() const {
+int Rijec::operator~() const {
 	int brojac = 0;
 	for (int i = 0; i < +*this; i++)
 		brojac += jeNosilacSloga(i);
@@ -20,7 +20,7 @@ int Rec::operator~() const {
 	return brojac;
 }
 
-int Rec::operator()(int n) const {
+int Rijec::operator()(int n) const {
 	int ukupno = ~*this;
 	if (n < 0)
 		n += ukupno;
@@ -36,7 +36,7 @@ int Rec::operator()(int n) const {
 	return i - 1;
 }
 
-bool Rec::jeNosilacSloga(size_t indeks) const {
+bool Rijec::jeNosilacSloga(size_t indeks) const {
 	static Skup samoglasnici("aeiouAEIOU");
 	static Skup sonanti("lnrLNR");
 
@@ -53,9 +53,9 @@ bool Rec::jeNosilacSloga(size_t indeks) const {
 	return true;
 }
 
-void Rec::filtrirajRec(std::string rec) {}
+void Rijec::filtrirajRijec(std::string rijec) {}
 
-bool operator^(const Rec& prva, const Rec& druga) {
+bool operator^(const Rijec& prva, const Rijec& druga) {
 	int brojPoklapanja = (~prva == 1 || ~druga == 1) ? 1 : 2;
 
 	int itPrvi = prva(-brojPoklapanja);
@@ -74,24 +74,24 @@ bool operator^(const Rec& prva, const Rec& druga) {
 	return true;
 }
 
-istream& operator>>(istream& is, Rec& rec) {
+istream& operator>>(istream& is, Rijec& rijec) {
 	string privremeni; 
 	getline(is, privremeni);
 
-	rec.filtrirajRec(privremeni);
+	rijec.filtrirajRijec(privremeni);
 
 	return is;
 }
 
-ostream& operator<<(ostream& os, const Rec& rec) {
-	os << rec.karakteri;
+ostream& operator<<(ostream& os, const Rijec& rijec) {
+	os << rijec.karakteri;
 
 	return os;
 }
 
-void Rec::filtrirajRec(std::string rec) {
+void Rijec::filtrirajRijec(std::string rijec) {
 	karakteri = "";
-	for (char karakter : rec)
+	for (char karakter : rijec)
 		if (isalpha(karakter))
 			karakteri += karakter;
 }

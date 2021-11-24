@@ -156,14 +156,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Buket.cpp" />
-    <ClCompile Include="Cvecara.cpp" />
-    <ClCompile Include="Cvet.cpp" />
+    <ClCompile Include="Cvjecara.cpp" />
+    <ClCompile Include="Cvijet.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Buket.hpp" />
-    <ClInclude Include="Cvecara.hpp" />
-    <ClInclude Include="Cvet.hpp" />
+    <ClInclude Include="Cvjecara.hpp" />
+    <ClInclude Include="Cvijet.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

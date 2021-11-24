@@ -1,30 +1,30 @@
 ﻿#include <iostream>
-#include "Cvet.hpp"
+#include "Cvijet.hpp"
 #include "Buket.hpp"
-#include "Cvecara.hpp"
+#include "Cvjecara.hpp"
 
 using namespace std;
 
 int main() {
-	Cvet ruza("Ruza", 10, 20);
-	Cvet karanfil("Karanfil", 25, 35);
-	Cvet lala("Lala", 5, 10);
+	Cvijet ruza("Ruza", 10, 20);
+	Cvijet karanfil("Karanfil", 25, 35);
+	Cvijet lala("Lala", 5, 10);
 
 	Buket buket1;
-	buket1.dodajCvet(ruza);
-	buket1.dodajCvet(lala);
+	buket1.dodajCvijet(ruza);
+	buket1.dodajCvijet(lala);
 
 	Buket buket2;
-	buket2.dodajCvet(karanfil);
-	buket2.dodajCvet(lala);
-	buket2.dodajCvet(karanfil);
-	buket2.dodajCvet(ruza);
+	buket2.dodajCvijet(karanfil);
+	buket2.dodajCvijet(lala);
+	buket2.dodajCvijet(karanfil);
+	buket2.dodajCvijet(ruza);
 
-	Cvecara cvecara;
-	cvecara.dodajBuket(buket1);
-	cvecara.dodajBuket(buket2);
+	Cvjecara cvjecara;
+	cvjecara.dodajBuket(buket1);
+	cvjecara.dodajBuket(buket2);
 
-	cout << cvecara;
+	cout << cvjecara;
 
 	return 0;
 }

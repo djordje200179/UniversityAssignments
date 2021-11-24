@@ -4,7 +4,7 @@ using namespace std;
 
 Buket::Buket(const Buket& drugi) {
 	for (Cvor* trenutni = drugi.pocetni; trenutni; trenutni = trenutni->sledeci)
-		dodajCvet(trenutni->cvet);
+		dodajCvijet(trenutni->cvijet);
 }
 
 Buket::Buket(Buket&& drugi) {
@@ -23,32 +23,32 @@ Buket::~Buket() {
 		delete exchange(trenutni, trenutni->sledeci);
 }
 
-void Buket::dodajCvet(const Cvet& cvet) {
-	poslednji = (poslednji ? poslednji->sledeci : pocetni) = new Cvor{ cvet };
+void Buket::dodajCvijet(const Cvijet& cvijet) {
+	poslednji = (poslednji ? poslednji->sledeci : pocetni) = new Cvor{ cvijet };
 }
 
-int Buket::izracunajNabavnuCenu() const {
+int Buket::izracunajNabavnuCijenu() const {
 	int ukupno = 0;
 	for (Cvor* trenutni = pocetni; trenutni; trenutni = trenutni->sledeci)
-		ukupno += trenutni->cvet.dohvatiNabavnuCenu();
+		ukupno += trenutni->cvijet.dohvatiNabavnuCijenu();
 
 	return ukupno;
 }
 
-int Buket::izracunajProdajnuCenu() const {
+int Buket::izracunajProdajnuCijenu() const {
 	int ukupno = 0;
 	for (Cvor* trenutni = pocetni; trenutni; trenutni = trenutni->sledeci)
-		ukupno += trenutni->cvet.dohvatiProdajuCenu();
+		ukupno += trenutni->cvijet.dohvatiProdajuCijenu();
 
 	return ukupno;
 }
 
 int Buket::izracunajZaradu() const {
-	return izracunajProdajnuCenu() - izracunajNabavnuCenu();
+	return izracunajProdajnuCijenu() - izracunajNabavnuCijenu();
 }
 
 bool operator>(const Buket& pocetni, const Buket& drugi) {
-	return pocetni.izracunajProdajnuCenu() - drugi.izracunajProdajnuCenu();
+	return pocetni.izracunajProdajnuCijenu() - drugi.izracunajProdajnuCijenu();
 }
 
 ostream& operator<<(ostream& os, const Buket& buket) {
@@ -56,7 +56,7 @@ ostream& operator<<(ostream& os, const Buket& buket) {
 	for (Buket::Cvor* trenutni = buket.pocetni; trenutni; trenutni = trenutni->sledeci) {
 		bool validan = true;
 		for(Buket::Cvor* privremeni = buket.pocetni; privremeni != trenutni; privremeni = privremeni->sledeci)
-			if (trenutni->cvet == privremeni->cvet) {
+			if (trenutni->cvijet == privremeni->cvijet) {
 				validan = false;
 				break;
 			}
@@ -65,12 +65,12 @@ ostream& operator<<(ostream& os, const Buket& buket) {
 			if (trenutni != buket.pocetni)
 				os << ", ";
 
-			os << trenutni->cvet;
+			os << trenutni->cvijet;
 		}		
 	}
 	os << ") ";
 
-	os << buket.izracunajProdajnuCenu() << "RSD";
+	os << buket.izracunajProdajnuCijenu() << "RSD";
 
 	return os;
 }
