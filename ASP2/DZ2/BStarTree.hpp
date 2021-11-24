@@ -24,13 +24,19 @@ private:
 	struct Node {
 		std::vector<std::string> keys;
 		std::vector<Node*> children;
-		Position positionInParent;
+		Node* parent;
 
-		Node(Position positionInParent = { nullptr, 0 });
+		Node(Node* parent = nullptr);
+		Node(Node* parent, 
+			 const std::vector<std::string>& initKeys,
+			 const std::vector<Node*>& initChildren);
 
 		bool isLeaf();
 		bool canAddKey(int maxKeys);
 		void addKey(CStr key);
+		int getIndexInParent();
+		Node* getLeft();
+		Node* getRight();
 	};
 public:
 	BStarTree(int degree);
