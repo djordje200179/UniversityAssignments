@@ -26,10 +26,10 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Knjiga.h">
+    <ClInclude Include="Knjiga.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Biblioteka.h">
+    <ClInclude Include="Biblioteka.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

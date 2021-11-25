@@ -160,8 +160,8 @@
     <ClCompile Include="Skup.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Rijec.h" />
-    <ClInclude Include="Skup.h" />
+    <ClInclude Include="Rijec.hpp" />
+    <ClInclude Include="Skup.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

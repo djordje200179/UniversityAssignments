@@ -3,7 +3,7 @@
 
 #include <string>
 #include <ostream>
-#include "Knjiga.h"
+#include "Knjiga.hpp"
 
 class Biblioteka {
 public:

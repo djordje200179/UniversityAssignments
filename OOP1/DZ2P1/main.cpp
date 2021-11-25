@@ -1,34 +1,30 @@
 ﻿#include <iostream>
-#include "Cvijet.h"
-#include "Buket.h"
-#include "Cvjecara.h"
+#include "Cvijet.hpp"
+#include "Buket.hpp"
+#include "Cvjecara.hpp"
 
 using namespace std;
 
 int main() {
-	cout << boolalpha;
-
-	const Cvijet ruza("Ruza", 15, 20);
-	const Cvijet lala("Lala", 25, 43);
+	Cvijet ruza("Ruza", 10, 20);
+	Cvijet karanfil("Karanfil", 25, 35);
+	Cvijet lala("Lala", 5, 10);
 
 	Buket buket1;
 	buket1.dodajCvijet(ruza);
 	buket1.dodajCvijet(lala);
-	cout << "buket1: " << buket1 << endl;
-	buket1.dodajCvijet(ruza);
-	cout << "buket1: " << buket1 << endl;
 
-	const Buket buket2(buket1);
-	buket1.dodajCvijet(lala);
+	Buket buket2;
+	buket2.dodajCvijet(karanfil);
+	buket2.dodajCvijet(lala);
+	buket2.dodajCvijet(karanfil);
+	buket2.dodajCvijet(ruza);
 
-	cout << "buket1: " << buket1 << endl;
-	cout << "buket2: " << buket2 << endl;
+	Cvjecara cvjecara;
+	cvjecara.dodajBuket(buket1);
+	cvjecara.dodajBuket(buket2);
 
-	Buket buket3;
-	buket3 = buket2;
-	buket3.dodajCvijet(lala);
-	cout << "buket2: " << buket2 << endl;
-	cout << "buket3: " << buket3 << endl;
+	cout << cvjecara;
 
 	return 0;
 }
