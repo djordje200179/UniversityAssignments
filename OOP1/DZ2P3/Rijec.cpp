@@ -1,5 +1,5 @@
-#include "Rijec.hpp"
-#include "Skup.hpp"
+#include "Rijec.h"
+#include "Skup.h"
 #include <cctype>
 
 using namespace std;

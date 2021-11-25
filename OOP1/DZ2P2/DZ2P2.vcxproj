@@ -160,8 +160,8 @@
     <ClCompile Include="Knjiga.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Biblioteka.hpp" />
-    <ClInclude Include="Knjiga.hpp" />
+    <ClInclude Include="Biblioteka.h" />
+    <ClInclude Include="Knjiga.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

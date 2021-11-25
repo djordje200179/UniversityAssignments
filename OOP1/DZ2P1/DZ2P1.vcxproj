@@ -161,9 +161,9 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Buket.hpp" />
-    <ClInclude Include="Cvjecara.hpp" />
-    <ClInclude Include="Cvijet.hpp" />
+    <ClInclude Include="Buket.h" />
+    <ClInclude Include="Cvjecara.h" />
+    <ClInclude Include="Cvijet.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,6 +1,6 @@
 ﻿#include <iostream>
-#include "Skup.hpp"
-#include "Rijec.hpp"
+#include "Skup.h"
+#include "Rijec.h"
 
 using namespace std;
 

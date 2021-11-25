@@ -1,4 +1,4 @@
-#include "Skup.hpp"
+#include "Skup.h"
 
 using namespace std;
 

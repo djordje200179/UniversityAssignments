@@ -1,7 +1,7 @@
 #ifndef CVJECARA_H
 #define CVJECARA_H
 
-#include "Buket.hpp"
+#include "Buket.h"
 #include <ostream>
 
 class Cvjecara {

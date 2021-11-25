@@ -26,10 +26,10 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Skup.hpp">
+    <ClInclude Include="Skup.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Rijec.hpp">
+    <ClInclude Include="Rijec.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

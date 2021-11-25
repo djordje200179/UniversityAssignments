@@ -1,6 +1,6 @@
 ﻿#include <iostream>
-#include "Biblioteka.hpp"
-#include "Knjiga.hpp"
+#include "Biblioteka.h"
+#include "Knjiga.h"
 
 using namespace std;
 

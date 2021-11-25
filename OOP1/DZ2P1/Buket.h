@@ -1,7 +1,7 @@
 #ifndef BUKET_H
 #define BUKET_H
 
-#include "Cvijet.hpp"
+#include "Cvijet.h"
 #include <ostream>
 
 class Buket {

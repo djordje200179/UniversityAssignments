@@ -29,13 +29,13 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Cvijet.hpp">
+    <ClInclude Include="Cvijet.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Buket.hpp">
+    <ClInclude Include="Buket.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Cvjecara.hpp">
+    <ClInclude Include="Cvjecara.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
