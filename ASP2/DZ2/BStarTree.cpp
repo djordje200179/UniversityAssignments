@@ -171,13 +171,14 @@ bool BStarTree::addKey(CStr key) {
 
 #pragma region Podjela 2 u 3
 	sibling = right ? right : left;
+	auto isRight = sibling == right;
 
 	auto parent = curr->parent;
-	CStr divider = parent->keys[(sibling == right ? curr : left)->getIndexInParent()];
+	CStr divider = parent->keys[(isRight ? curr : left)->getIndexInParent()];
 
 	vector<string> allKeys;
 	vector<Node*> allChildren;
-	if (sibling == right) {
+	if (isRight) {
 		allKeys.insert(allKeys.end(), curr->keys.begin(), curr->keys.end());
 		allKeys.insert(allKeys.end(), divider);
 		allKeys.insert(allKeys.end(), sibling->keys.begin(), sibling->keys.end());
