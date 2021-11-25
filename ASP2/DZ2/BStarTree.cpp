@@ -172,10 +172,52 @@ bool BStarTree::addKey(CStr key) {
 #pragma region Podjela 2 u 3
 	sibling = right ? right : left;
 
+	auto parent = curr->parent;
+	CStr divider = parent->keys[(sibling == right ? curr : left)->getIndexInParent()];
+
 	vector<string> allKeys;
-	merge(curr->keys.begin(), curr->keys.end(), sibling->keys.begin(), sibling->keys.end(), back_inserter(allKeys));
-	sortedInsert(allKeys, key);
-	sortedInsert(allKeys, curr->parent->keys[(sibling == right ? curr : left)->getIndexInParent()]);
+	vector<Node*> allChildren;
+	if (sibling == right) {
+		allKeys.insert(allKeys.end(), curr->keys.begin(), curr->keys.end());
+		allKeys.insert(allKeys.end(), divider);
+		allKeys.insert(allKeys.end(), sibling->keys.begin(), sibling->keys.end());
+
+		allChildren.insert(allChildren.end(), curr->children.begin(), curr->children.end());
+		allChildren.insert(allChildren.end(), sibling->children.begin(), sibling->children.end());
+	} else {
+		allKeys.insert(allKeys.end(), sibling->keys.begin(), sibling->keys.end());
+		allKeys.insert(allKeys.end(), divider);
+		allKeys.insert(allKeys.end(), curr->keys.begin(), curr->keys.end());
+
+		allChildren.insert(allChildren.end(), sibling->children.begin(), sibling->children.end());
+		allChildren.insert(allChildren.end(), curr->children.begin(), curr->children.end());
+	}
+
+
+	int index1 = (2 * DEGREE - 2) / 3;
+	int index2 = index1 + 1 + (2 * DEGREE - 1) / 3;
+
+	vector<string> leftKeys(allKeys.begin(), allKeys.begin() + index1);
+	vector<string> middleKeys(allKeys.begin() + index1 + 1, allKeys.begin() + index2);
+	vector<string> rightKeys(allKeys.begin() + index2 + 1, allKeys.end());
+
+	vector<Node*> leftChildren(allChildren.begin(), allChildren.begin() + index1 + 1);
+	vector<Node*> middleChildren(allChildren.begin() + index1 + 1, allChildren.begin() + index2 + 1);
+	vector<Node*> rightChildren(allChildren.begin() + index2 + 1, allChildren.end());
+
+	delete curr;
+	delete sibling;
+
+	auto leftNode = new Node(parent, leftKeys, leftChildren);
+	auto middleNode = new Node(parent, middleKeys, middleChildren);
+	auto rightNode = new Node(parent, rightKeys, rightChildren);
+
+	auto positionInParent = distance(parent->keys.begin(), find(parent->keys.begin(), parent->keys.end(), divider));
+	parent->keys[positionInParent] = allKeys[index2];
+	parent->keys.insert(parent->keys.begin() + positionInParent, allKeys[index1]);
+	parent->children[positionInParent + 1] = rightNode;
+	parent->children[positionInParent] = middleNode;
+	parent->children.insert(parent->children.begin() + positionInParent, leftNode);
 #pragma endregion
 }
 

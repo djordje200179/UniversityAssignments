@@ -14,6 +14,8 @@ int main() {
 	tree += "sava";
 	tree += "deni";
 	tree += "nikola";
+	tree += "luka";
+	tree += "lazar";
 
 	return 0;
 }
