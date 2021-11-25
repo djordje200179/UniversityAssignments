@@ -17,8 +17,8 @@ bool BStarTree::Node::isLeaf() {
 	return children.front() == nullptr;
 }
 
-bool BStarTree::Node::canAddKey(int maxKeys) {
-	return keys.size() != maxKeys;
+int BStarTree::Node::keyCount() {
+	return keys.size();
 }
 
 static int sortedInsert(vector<string>& keys, const string& key) {
@@ -95,7 +95,7 @@ bool BStarTree::addKey(CStr key) {
 	Node* curr = root;
 	while (!curr->isLeaf()) {
 		int i;
-		for (i = 0; i < curr->keys.size(); i++)
+		for (i = 0; i < curr->keyCount(); i++)
 			if (curr->keys[i] == key)
 				return false;
 			else if (curr->keys[i] > key)
@@ -105,121 +105,123 @@ bool BStarTree::addKey(CStr key) {
 	}
 #pragma endregion
 
-#pragma region Dodavanje u list
-	if (curr->canAddKey(curr == root ? MAX_ROOT_KEYS : MAX_KEYS)) {
-		curr->addKey(key);
+	curr->addKey(key);
 
-		return true;
-	}
-#pragma endregion
+	while (curr->keyCount() > (curr == root ? MAX_ROOT_KEYS : MAX_KEYS)) {
+		auto parent = curr->parent;
 
 #pragma region Podjela korijena
-	if (curr == root) {
-		curr->addKey(key);
+		if (curr == root) {
+			int halfSize = ceil(curr->keyCount() / 2.0);
 
-		int halfSize = curr->children.size() / 2;
+			vector<string> keysLow(curr->keys.begin(), curr->keys.begin() + halfSize - 1);
+			string keyMiddle = curr->keys[halfSize - 1];
+			vector<string> keysHigh(curr->keys.begin() + halfSize, curr->keys.end());
 
-		vector<string> keysLow(curr->keys.begin(), curr->keys.begin() + halfSize - 1);
-		string keyMiddle = curr->keys[halfSize - 1];
-		vector<string> keysHigh(curr->keys.begin() + halfSize, curr->keys.end());
+			vector<Node*> childrenLow(curr->children.begin(), curr->children.begin() + halfSize);
+			vector<Node*> childrenHigh(curr->children.begin() + halfSize, curr->children.end());
 
-		vector<Node*> childrenLow(curr->children.begin(), curr->children.begin() + halfSize);
-		vector<Node*> childrenHigh(curr->children.begin() + halfSize, curr->children.end());
+			root->children.clear();
+			root->children.push_back(new Node(curr, keysLow, childrenLow));
+			root->children.push_back(new Node(curr, keysHigh, childrenHigh));
 
-		Node* leftNode = new Node(curr, keysLow, childrenLow);
-		Node* rightNode = new Node(curr, keysHigh, childrenHigh);
+			root->keys.clear();
+			root->keys.push_back(keyMiddle);
 
-		root->keys.clear();
-		root->keys.push_back(keyMiddle);
-
-		root->children.clear();
-		root->children.push_back(leftNode);
-		root->children.push_back(rightNode);
-
-		return true;
-	}
+			return true;
+		}
 #pragma endregion 
 
-	auto right = curr->getRight(), left = curr->getLeft();
-	Node* sibling;
+		auto right = curr->getRight(), left = curr->getLeft();
+
 #pragma region Presipanje u susjedni cvor
-	sibling = nullptr;
-	if (right && right->canAddKey(MAX_KEYS))
-		sibling = right;
-	else if (left && left->canAddKey(MAX_KEYS))
-		sibling = left;
+		{
+			Node* sibling = nullptr;
 
-	if (sibling) {
-		auto isRight = sibling == right;
+			if (right && right->keyCount() < MAX_KEYS)
+				sibling = right;
+			else if (left && left->keyCount() < MAX_KEYS)
+				sibling = left;
 
-		sibling->addKey(isRight ? curr->keys.back() : curr->keys.front());
-		sibling->children.pop_back();
+			if (sibling) {
+				auto isRight = sibling == right;
+				auto& divider = parent->keys[(isRight ? curr : left)->getIndexInParent()];
 
-		if (isRight) {
-			sibling->children.insert(sibling->children.begin(), curr->children.back());
-			curr->children.pop_back();
-		} else {
-			sibling->children.push_back(curr->children.front());
-			curr->children.erase(curr->children.begin());
+				auto movingKey = isRight ? curr->keys.end() - 1 : curr->keys.begin();
+				auto movingChild = isRight ? curr->children.end() - 1 : curr->children.begin();
+
+				sibling->keys.insert(isRight ? sibling->keys.begin() : sibling->keys.end(), divider);
+				divider = *movingKey;
+				curr->keys.erase(movingKey);
+
+				sibling->children.insert(isRight ? sibling->children.begin() : sibling->children.end(), *movingChild);
+				curr->children.erase(movingChild);
+
+				curr = parent;
+				continue;
+			}
 		}
-
-		curr->addKey(key);
-
-		return true;
-	}
 #pragma endregion
 
 #pragma region Podjela 2 u 3
-	sibling = right ? right : left;
-	auto isRight = sibling == right;
+		{
+			Node* sibling = right ? right : left;
+			auto isRight = sibling == right;
 
-	auto parent = curr->parent;
-	CStr divider = parent->keys[(isRight ? curr : left)->getIndexInParent()];
+			auto parent = curr->parent;
+			CStr divider = parent->keys[(isRight ? curr : left)->getIndexInParent()];
 
-	vector<string> allKeys;
-	vector<Node*> allChildren;
-	if (isRight) {
-		allKeys.insert(allKeys.end(), curr->keys.begin(), curr->keys.end());
-		allKeys.insert(allKeys.end(), divider);
-		allKeys.insert(allKeys.end(), sibling->keys.begin(), sibling->keys.end());
+			vector<string> allKeys;
+			vector<Node*> allChildren;
+			if (isRight) {
+				allKeys.insert(allKeys.end(), curr->keys.begin(), curr->keys.end());
+				allKeys.insert(allKeys.end(), divider);
+				allKeys.insert(allKeys.end(), sibling->keys.begin(), sibling->keys.end());
 
-		allChildren.insert(allChildren.end(), curr->children.begin(), curr->children.end());
-		allChildren.insert(allChildren.end(), sibling->children.begin(), sibling->children.end());
-	} else {
-		allKeys.insert(allKeys.end(), sibling->keys.begin(), sibling->keys.end());
-		allKeys.insert(allKeys.end(), divider);
-		allKeys.insert(allKeys.end(), curr->keys.begin(), curr->keys.end());
+				allChildren.insert(allChildren.end(), curr->children.begin(), curr->children.end());
+				allChildren.insert(allChildren.end(), sibling->children.begin(), sibling->children.end());
+			} else {
+				allKeys.insert(allKeys.end(), sibling->keys.begin(), sibling->keys.end());
+				allKeys.insert(allKeys.end(), divider);
+				allKeys.insert(allKeys.end(), curr->keys.begin(), curr->keys.end());
 
-		allChildren.insert(allChildren.end(), sibling->children.begin(), sibling->children.end());
-		allChildren.insert(allChildren.end(), curr->children.begin(), curr->children.end());
+				allChildren.insert(allChildren.end(), sibling->children.begin(), sibling->children.end());
+				allChildren.insert(allChildren.end(), curr->children.begin(), curr->children.end());
+			}
+
+
+			int index1 = (2 * DEGREE - 2) / 3;
+			int index2 = index1 + 1 + (2 * DEGREE - 1) / 3;
+
+			vector<string> leftKeys(allKeys.begin(), allKeys.begin() + index1);
+			vector<string> middleKeys(allKeys.begin() + index1 + 1, allKeys.begin() + index2);
+			vector<string> rightKeys(allKeys.begin() + index2 + 1, allKeys.end());
+
+			vector<Node*> leftChildren(allChildren.begin(), allChildren.begin() + index1 + 1);
+			vector<Node*> middleChildren(allChildren.begin() + index1 + 1, allChildren.begin() + index2 + 1);
+			vector<Node*> rightChildren(allChildren.begin() + index2 + 1, allChildren.end());
+
+			delete curr;
+			delete sibling;
+
+			auto leftNode = new Node(parent, leftKeys, leftChildren);
+			auto middleNode = new Node(parent, middleKeys, middleChildren);
+			auto rightNode = new Node(parent, rightKeys, rightChildren);
+
+			auto positionInParent = distance(parent->keys.begin(), find(parent->keys.begin(), parent->keys.end(), divider));
+			parent->keys[positionInParent] = allKeys[index2];
+			parent->keys.insert(parent->keys.begin() + positionInParent, allKeys[index1]);
+			parent->children[positionInParent + 1] = rightNode;
+			parent->children[positionInParent] = middleNode;
+			parent->children.insert(parent->children.begin() + positionInParent, leftNode);
+
+			curr = parent;
+			continue;
+		}
+#pragma endregion
 	}
 
-
-	int index1 = (2 * DEGREE - 2) / 3;
-	int index2 = index1 + 1 + (2 * DEGREE - 1) / 3;
-
-	vector<string> leftKeys(allKeys.begin(), allKeys.begin() + index1);
-	vector<string> middleKeys(allKeys.begin() + index1 + 1, allKeys.begin() + index2);
-	vector<string> rightKeys(allKeys.begin() + index2 + 1, allKeys.end());
-
-	vector<Node*> leftChildren(allChildren.begin(), allChildren.begin() + index1 + 1);
-	vector<Node*> middleChildren(allChildren.begin() + index1 + 1, allChildren.begin() + index2 + 1);
-	vector<Node*> rightChildren(allChildren.begin() + index2 + 1, allChildren.end());
-
-	delete curr;
-	delete sibling;
-
-	auto leftNode = new Node(parent, leftKeys, leftChildren);
-	auto middleNode = new Node(parent, middleKeys, middleChildren);
-	auto rightNode = new Node(parent, rightKeys, rightChildren);
-
-	auto positionInParent = distance(parent->keys.begin(), find(parent->keys.begin(), parent->keys.end(), divider));
-	parent->keys[positionInParent] = allKeys[index2];
-	parent->keys.insert(parent->keys.begin() + positionInParent, allKeys[index1]);
-	parent->children[positionInParent + 1] = rightNode;
-	parent->children[positionInParent] = middleNode;
-	parent->children.insert(parent->children.begin() + positionInParent, leftNode);
-#pragma endregion
+	return true;
 }
 
 BStarTree::CStr BStarTree::findKthKey(int k) const {

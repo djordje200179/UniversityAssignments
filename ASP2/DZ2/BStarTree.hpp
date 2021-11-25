@@ -32,7 +32,7 @@ private:
 			 const std::vector<Node*>& initChildren);
 
 		bool isLeaf();
-		bool canAddKey(int maxKeys);
+		int keyCount();
 		void addKey(CStr key);
 		int getIndexInParent();
 		Node* getLeft();
