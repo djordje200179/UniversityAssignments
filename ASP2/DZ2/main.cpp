@@ -1,6 +1,7 @@
 ﻿#include <iostream>
 #include "BStarTree.hpp"
 #include <fstream>
+#include <queue>
 
 using namespace std;
 
@@ -10,8 +11,8 @@ int main() {
 	ifstream file("sample.txt");
 	file >> tree;
 
-	tree -= "sir";
-	tree -= "sljiva";
+	//tree -= "sir";
+	//tree -= "sljiva";
 
 	cout << tree << endl;
 

@@ -13,7 +13,12 @@ BStarTree::Node::Node() : parent(nullptr), level(0) {
 
 BStarTree::Node::Node(Node* parent,
 					  const vector<string>& initKeys,
-					  const vector<Node*>& initChildren) : parent(parent), children(initChildren), keys(initKeys) {}
+					  const vector<Node*>& initChildren) : parent(parent), children(initChildren), keys(initKeys) {
+	for_each(children.begin(), children.end(), [this](Node* child) {
+		if (child)
+			child->parent = this;
+	});
+}
 
 bool BStarTree::Node::isLeaf() {
 	return children.front() == nullptr;
