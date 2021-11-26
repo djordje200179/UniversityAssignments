@@ -3,6 +3,7 @@
 #include <stack>
 #include <algorithm>
 #include <utility>
+#include <iomanip>
 
 using namespace std;
 
@@ -61,19 +62,25 @@ BStarTree::Node* BStarTree::Node::getRight() {
 }
 
 void BStarTree::Node::print(ostream& os) const {
+	size_t boxSize = 10;
+
 	for (int i = 0; i < level; i++)
 		os << '\t';
-	os << "----------\n";
+	for (int i = 0; i < boxSize + 3; i++)
+		os << '-';
+	os << '\n';
 
-	for (auto& key : keys) {
+	for (CStr key : keys) {
 		for (int i = 0; i < level; i++)
 			os << '\t';
-		os << "| " << key << '\n';
+		os << "| " << left << setw(boxSize) << key << '|' << '\n';
 	}
 
 	for (int i = 0; i < level; i++)
 		os << '\t';
-	os << "----------\n";
+	for (int i = 0; i < boxSize + 3; i++)
+		os << '-';
+	os << '\n';
 }
 
 void BStarTree::Node::split(int maxKeys) {
