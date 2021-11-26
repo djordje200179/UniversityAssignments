@@ -2,6 +2,7 @@
 #define B_STAR_TREE_H
 
 #include <ostream>
+#include <istream>
 #include <vector>
 #include <string>
 
@@ -15,8 +16,8 @@ private:
 		Node* node;
 		int index;
 
+		std::string& getKey() const { return node->keys[index]; }
 		operator bool() const { return node != nullptr; }
-		operator CStr() const { return node->keys[index]; }
 		Position& operator++() { index++; return *this; }
 		Position operator++(int) { auto copy = *this; index++; return copy; }
 	};
@@ -25,8 +26,8 @@ private:
 		std::vector<std::string> keys;
 		std::vector<Node*> children;
 		Node* parent;
-
-		Node(Node* parent = nullptr);
+		int level = -1;
+	
 		Node(Node* parent, 
 			 const std::vector<std::string>& initKeys,
 			 const std::vector<Node*>& initChildren);
@@ -34,9 +35,23 @@ private:
 		bool isLeaf();
 		int keyCount();
 		void addKey(CStr key);
+		void removeKey(int index);
 		int getIndexInParent();
 		Node* getLeft();
 		Node* getRight();
+		void print(std::ostream& os) const;
+		virtual void split(int maxKeys);
+		void spillInto(Node* sibling);
+		virtual bool spill(int maxKeys);
+	protected:
+		Node();
+	};
+
+	struct Root : Node {
+		Root() = default;
+
+		void split(int maxKeys) override;
+		bool spill(int maxKeys) override { return false; }
 	};
 public:
 	BStarTree(int degree);
@@ -46,12 +61,14 @@ public:
 	bool addKey(CStr key);
 	bool removeKey(CStr key);
 	void printTree(std::ostream& os) const;
+	void inputWords(std::istream& is);
 	CStr findKthKey(int k) const;
 
 	bool operator()(CStr key) const { return keyExists(key); }
 	bool operator+=(CStr key) { return addKey(key); }
 	bool operator-=(CStr key) { return removeKey(key); }
 	friend std::ostream& operator<<(std::ostream& os, const BStarTree& tree) { tree.printTree(os); return os; }
+	friend std::istream& operator>>(std::istream& is, BStarTree& tree) { tree.inputWords(is); return is; }
 	CStr operator()(int k) const { return findKthKey(k); }
 private:
 	Position findKey(CStr key) const;
@@ -59,7 +76,7 @@ private:
 
 	Node* root = nullptr;
 	const int DEGREE;
-	const int MAX_KEYS;
+	const int MAX_NODE_KEYS;
 	const int MAX_ROOT_KEYS;
 	const int MIN_NODE_KEYS;
 };

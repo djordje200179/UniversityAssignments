@@ -1,32 +1,19 @@
 ﻿#include <iostream>
 #include "BStarTree.hpp"
+#include <fstream>
+
+using namespace std;
 
 int main() {
 	BStarTree tree(4);
 
-	tree += "marko";
-	tree += "janko";
-	tree += "putin";
-	tree += "darko";
-	tree += "jana";
+	ifstream file("sample.txt");
+	file >> tree;
 
-	tree += "djumic";
-	tree += "jovan";
-	tree += "sava";
-	tree += "deni";
-	tree += "nikola";
+	tree -= "sir";
+	tree -= "sljiva";
 
-	tree += "luka";
-	tree += "lazar";
-	tree += "andjela";
-	tree += "djordje";
-	tree += "ilija";
-
-	tree += "jovana";
-	tree += "milica";
-	tree += "zeljana";
-	tree += "sanja";
-	tree += "katarina";
+	cout << tree << endl;
 
 	return 0;
 }
