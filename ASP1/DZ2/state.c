@@ -154,7 +154,6 @@ bool is_state_magic(StateNode* state, int dimension, int char_sum) {
 	return true;
 }
 
-// TODO: Implementirati funkciju koja provjerava da li je kvadrat savrsen
 bool is_state_special(StateNode* state, int dimension, int char_sum) {
 	if(!is_state_magic(state, dimension, char_sum))
 		return false;
