@@ -77,6 +77,8 @@ void BStarTree::Node::print(ostream& os) const {
 }
 
 void BStarTree::Node::split(int maxKeys) {
+	// TODO: Popraviti postavljanje cvora roditelja
+
 	auto right = getRight(), left = getLeft();
 	Node* sibling = right ? right : left;
 	auto isRight = sibling == right;
@@ -303,6 +305,7 @@ bool BStarTree::removeKey(CStr key) {
 			break;
 		}
 
+		// TODO: Implementirati spajanje cvorova
 	}
 
 	return true;
