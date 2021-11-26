@@ -88,8 +88,6 @@ void BStarTree::Node::print(ostream& os) const {
 }
 
 void BStarTree::Node::split(int maxKeys) {
-	// TODO: Popraviti postavljanje cvora roditelja
-
 	auto right = getRight(), left = getLeft();
 	Node* sibling = right ? right : left;
 	auto isRight = sibling == right;
@@ -189,18 +187,8 @@ void BStarTree::Root::split(int maxKeys) {
 	vector<Node*> childrenHigh(children.begin() + halfSize, children.end());
 
 	children.clear();
-	auto leftNode = new Node(this, keysLow, childrenLow);
-	auto rightNode = new Node(this, keysHigh, childrenHigh);
-	children.push_back(leftNode);
-	children.push_back(rightNode);
-
-	for(auto child : childrenLow)
-		if (child)
-			child->parent = leftNode;
-
-	for (auto child : childrenHigh)
-		if (child)
-			child->parent = rightNode;
+	children.push_back(new Node(this, keysLow, childrenLow));
+	children.push_back(new Node(this, keysHigh, childrenHigh));
 
 	keys.clear();
 	keys.push_back(keyMiddle);
