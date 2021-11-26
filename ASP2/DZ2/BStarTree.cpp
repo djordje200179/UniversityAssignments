@@ -14,10 +14,9 @@ BStarTree::Node::Node() : parent(nullptr), level(0) {
 BStarTree::Node::Node(Node* parent,
 					  const vector<string>& initKeys,
 					  const vector<Node*>& initChildren) : parent(parent), children(initChildren), keys(initKeys) {
-	for_each(children.begin(), children.end(), [this](Node* child) {
+	for (auto child : children)
 		if (child)
 			child->parent = this;
-	});
 }
 
 bool BStarTree::Node::isLeaf() {
@@ -195,15 +194,13 @@ void BStarTree::Root::split(int maxKeys) {
 	children.push_back(leftNode);
 	children.push_back(rightNode);
 
-	for_each(childrenLow.begin(), childrenLow.end(), [&leftNode](Node* node) {
-		if (node)
-			node->parent = leftNode;
-	});
+	for(auto child : childrenLow)
+		if (child)
+			child->parent = leftNode;
 
-	for_each(childrenHigh.begin(), childrenHigh.end(), [&rightNode](Node* node) {
-		if (node)
-			node->parent = rightNode;
-	});
+	for (auto child : childrenHigh)
+		if (child)
+			child->parent = rightNode;
 
 	keys.clear();
 	keys.push_back(keyMiddle);
