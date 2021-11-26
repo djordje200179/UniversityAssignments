@@ -28,5 +28,3 @@ jabuka
 sir
 sljiva
 banana
-malina
-kupina

@@ -8,6 +8,8 @@
 
 class BStarTree {
 private:
+	friend void testPointers(const BStarTree& tree);
+
 	using CStr = const std::string&;
 
 	struct Node;
