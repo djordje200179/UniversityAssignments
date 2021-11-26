@@ -92,7 +92,7 @@ void BStarTree::Node::split(int maxKeys) {
 	Node* sibling = right ? right : left;
 	auto isRight = sibling == right;
 
-	auto dividerIndex = (isRight ? this : left)->getIndexInParent();
+	auto dividerIndex = getIndexInParent() - !isRight;
 	CStr divider = parent->keys[dividerIndex];
 
 	vector<string> allKeys;
@@ -113,7 +113,6 @@ void BStarTree::Node::split(int maxKeys) {
 		allChildren.insert(allChildren.end(), children.begin(), children.end());
 	}
 
-
 	int index1 = 2 * maxKeys / 3;
 	int index2 = index1 + 1 + (2 * maxKeys + 1) / 3;
 
@@ -125,27 +124,38 @@ void BStarTree::Node::split(int maxKeys) {
 	vector<Node*> middleChildren(allChildren.begin() + index1 + 1, allChildren.begin() + index2 + 1);
 	vector<Node*> rightChildren(allChildren.begin() + index2 + 1, allChildren.end());
 
-	*this = Node(parent, leftKeys, leftChildren);
-	*sibling = Node(parent, middleKeys, middleChildren);
-	auto newNode = new Node(parent, rightKeys, rightChildren);
+	keys = middleKeys;
+	children = middleChildren;
 
-	auto leftNode = this;
-	auto middleNode = sibling;
-	auto rightNode = newNode;
+	if (isRight) {
+		sibling->keys = rightKeys;
+		sibling->children = rightChildren;
 
-	auto positionInParent = distance(parent->keys.begin(), find(parent->keys.begin(), parent->keys.end(), divider));
-	parent->keys[positionInParent] = allKeys[index2];
-	parent->keys.insert(parent->keys.begin() + positionInParent, allKeys[index1]);
-	parent->children[positionInParent + 1] = rightNode;
-	parent->children[positionInParent] = middleNode;
-	parent->children.insert(parent->children.begin() + positionInParent, leftNode);
+		auto newNode = new Node(parent, leftKeys, leftChildren);
+
+		parent->keys.insert(parent->keys.begin() + dividerIndex, allKeys[index1]);
+		parent->keys[dividerIndex + 1] = allKeys[index2];
+
+		parent->children.insert(parent->children.begin() + dividerIndex, newNode);
+
+	} else {
+		sibling->keys = leftKeys;
+		sibling->children = leftChildren;
+
+		auto newNode = new Node(parent, rightKeys, leftChildren);
+
+		parent->keys[dividerIndex] = allKeys[index1];
+		parent->keys.insert(parent->keys.begin() + dividerIndex + 1, allKeys[index2]);
+
+		parent->children.insert(parent->children.begin() + dividerIndex + 2, newNode);
+	}
 }
 
 void BStarTree::Node::spillInto(Node* sibling) {
 	auto right = getRight(), left = getLeft();
 	auto isRight = sibling == right;
 
-	auto dividerIndex = (isRight ? this : left)->getIndexInParent();
+	auto dividerIndex = getIndexInParent() - !isRight;
 	auto& divider = parent->keys[dividerIndex];
 
 	auto movingKey = isRight ? keys.end() - 1 : keys.begin();
