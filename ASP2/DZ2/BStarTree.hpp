@@ -34,8 +34,8 @@ private:
 			 const std::vector<std::string>& initKeys,
 			 const std::vector<Node*>& initChildren);
 
-		bool isLeaf();
-		int keyCount();
+		bool isLeaf() { return children.front() == nullptr; }
+		int keyCount() { return keys.size(); }
 		void addKey(CStr key);
 		void removeKey(int index);
 		int getIndexInParent();
@@ -45,6 +45,7 @@ private:
 		virtual void split(int maxKeys);
 		void spillInto(Node* sibling);
 		virtual bool spill(int maxKeys);
+		void updateChildren();
 	protected:
 		Node();
 	};
@@ -56,7 +57,11 @@ private:
 		bool spill(int maxKeys) override { return false; }
 	};
 public:
-	BStarTree(int degree);
+	BStarTree(int degree) 
+		: DEGREE(degree), MAX_NODE_KEYS(degree - 1),
+		MAX_ROOT_KEYS(2 * floor((2 * degree - 2) / 3.0)),
+		MIN_NODE_KEYS(ceil((2 * degree - 1) / 3.0 - 1)) {};
+
 	~BStarTree();
 
 	bool keyExists(CStr key) const;

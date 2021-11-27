@@ -37,9 +37,10 @@ int main() {
 	ifstream file("sample.txt");
 	file >> tree;
 
+	tree -= "sir";
+	tree -= "sljiva";
+
 	testPointers(tree);
-	//tree -= "sir";
-	//tree -= "sljiva";
 
 	cout << tree << endl;
 

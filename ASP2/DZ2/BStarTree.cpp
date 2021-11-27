@@ -14,17 +14,7 @@ BStarTree::Node::Node() : parent(nullptr), level(0) {
 BStarTree::Node::Node(Node* parent,
 					  const vector<string>& initKeys,
 					  const vector<Node*>& initChildren) : parent(parent), children(initChildren), keys(initKeys) {
-	for (auto child : children)
-		if (child)
-			child->parent = this;
-}
-
-bool BStarTree::Node::isLeaf() {
-	return children.front() == nullptr;
-}
-
-int BStarTree::Node::keyCount() {
-	return keys.size();
+	updateChildren();
 }
 
 static int sortedInsert(vector<string>& keys, const string& key) {
@@ -126,10 +116,12 @@ void BStarTree::Node::split(int maxKeys) {
 
 	keys = middleKeys;
 	children = middleChildren;
+	updateChildren();
 
 	if (isRight) {
 		sibling->keys = rightKeys;
 		sibling->children = rightChildren;
+		sibling->updateChildren();
 
 		auto newNode = new Node(parent, leftKeys, leftChildren);
 
@@ -158,15 +150,18 @@ void BStarTree::Node::spillInto(Node* sibling) {
 	auto dividerIndex = getIndexInParent() - !isRight;
 	auto& divider = parent->keys[dividerIndex];
 
-	auto movingKey = isRight ? keys.end() - 1 : keys.begin();
-	auto movingChild = isRight ? children.end() - 1 : children.begin();
+	auto movingKeyIterator = isRight ? keys.end() - 1 : keys.begin();
+	auto movingChildIterator = isRight ? children.end() - 1 : children.begin();
 
 	sibling->keys.insert(isRight ? sibling->keys.begin() : sibling->keys.end(), divider);
-	divider = *movingKey;
-	keys.erase(movingKey);
+	divider = *movingKeyIterator;
+	keys.erase(movingKeyIterator);
 
-	sibling->children.insert(isRight ? sibling->children.begin() : sibling->children.end(), *movingChild);
-	children.erase(movingChild);
+	auto movingChild = *movingChildIterator;
+	if (movingChild)
+		movingChild->parent = sibling;
+	sibling->children.insert(isRight ? sibling->children.begin() : sibling->children.end(), movingChild);
+	children.erase(movingChildIterator);
 }
 
 bool BStarTree::Node::spill(int maxKeys) {
@@ -186,15 +181,21 @@ bool BStarTree::Node::spill(int maxKeys) {
 	return true;
 }
 
+void BStarTree::Node::updateChildren() {
+	for (auto child : children)
+		if (child)
+			child->parent = this;
+}
+
 void BStarTree::Root::split(int maxKeys) {
-	int halfSize = ceil(keyCount() / 2.0);
+	int halfSize = ceil(maxKeys / 2.0);
 
-	vector<string> keysLow(keys.begin(), keys.begin() + halfSize - 1);
-	string keyMiddle = keys[halfSize - 1];
-	vector<string> keysHigh(keys.begin() + halfSize, keys.end());
+	vector<string> keysLow(keys.begin(), keys.begin() + halfSize);
+	string keyMiddle = keys[halfSize];
+	vector<string> keysHigh(keys.begin() + halfSize + 1, keys.end());
 
-	vector<Node*> childrenLow(children.begin(), children.begin() + halfSize);
-	vector<Node*> childrenHigh(children.begin() + halfSize, children.end());
+	vector<Node*> childrenLow(children.begin(), children.begin() + halfSize + 1);
+	vector<Node*> childrenHigh(children.begin() + halfSize + 1, children.end());
 
 	children.clear();
 	children.push_back(new Node(this, keysLow, childrenLow));
@@ -203,11 +204,6 @@ void BStarTree::Root::split(int maxKeys) {
 	keys.clear();
 	keys.push_back(keyMiddle);
 }
-
-BStarTree::BStarTree(int degree)
-	: DEGREE(degree), MAX_NODE_KEYS(degree - 1),
-	MAX_ROOT_KEYS(2 * floor((2 * degree - 2) / 3.0)),
-	MIN_NODE_KEYS(ceil((2 * degree - 1) / 3.0 - 1)) {}
 
 BStarTree::~BStarTree() {
 	stack<Node*> traversalStack, postorderStack;
