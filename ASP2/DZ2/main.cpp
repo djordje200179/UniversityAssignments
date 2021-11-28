@@ -38,6 +38,7 @@ int main() {
 	file >> tree;
 
 	cout << tree << endl;
+	testPointers(tree);
 
 	for(int i = 0; i < 15; i++)
 		cout << tree.findKthKey(i) << endl;
