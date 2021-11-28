@@ -79,9 +79,9 @@ void BStarTree::Node::print(ostream& os) const {
 }
 
 void BStarTree::Node::split(int maxKeys) {
-	auto right = getRight(), left = getLeft();
-	auto sibling = right ? right : left;
-	auto isRight = sibling == right;
+	auto rightSibling = getRight(), leftSibling = getLeft();
+	auto sibling = rightSibling ? rightSibling : leftSibling;
+	auto isRight = sibling == rightSibling;
 
 	auto dividerIndex = getIndexInParent() - !isRight;
 	CStr divider = parent->keys[dividerIndex];
