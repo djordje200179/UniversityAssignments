@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <utility>
 #include <iomanip>
+#include <iostream>
 
 using namespace std;
 
@@ -134,7 +135,7 @@ void BStarTree::Node::split(int maxKeys) {
 		sibling->keys = leftKeys;
 		sibling->children = leftChildren;
 
-		auto newNode = new Node(parent, rightKeys, leftChildren);
+		auto newNode = new Node(parent, rightKeys, rightChildren);
 
 		parent->keys[dividerIndex] = allKeys[index1];
 		parent->keys.insert(parent->keys.begin() + dividerIndex + 1, allKeys[index2]);
