@@ -45,7 +45,7 @@ private:
 		virtual bool spill(int maxKeys);
 		virtual void split(int maxKeys);
 		virtual void join(int minKeys);
-		void spillInto(Node* sibling);
+		static void spill(Node* from, Node* to);
 		void updateChildren();
 	protected:
 		Node();

@@ -146,25 +146,32 @@ void BStarTree::Node::split(int maxKeys) {
 
 void BStarTree::Node::join(int minKeys) {}
 
-void BStarTree::Node::spillInto(Node* sibling) {
-	auto right = getRight(), left = getLeft();
-	auto isRight = sibling == right;
+void BStarTree::Node::spill(Node* from, Node* to) {
+	auto onRight = from->getRight() == to;
+	auto left = onRight ? from : to, right = onRight ? to : from;
 
-	auto dividerIndex = getIndexInParent() - !isRight;
-	auto& divider = parent->keys[dividerIndex];
+	auto dividerIndex = left->getIndexInParent();
+	auto& divider = left->parent->keys[dividerIndex];
 
-	auto movingKeyIterator = isRight ? keys.end() - 1 : keys.begin();
-	auto movingChildIterator = isRight ? children.end() - 1 : children.begin();
+	vector<string> allKeys;
+	vector<Node*> allChildren;
 
-	sibling->keys.insert(isRight ? sibling->keys.begin() : sibling->keys.end(), divider);
-	divider = *movingKeyIterator;
-	keys.erase(movingKeyIterator);
+	allKeys.insert(allKeys.end(), left->keys.begin(), left->keys.end());
+	allKeys.insert(allKeys.end(), divider);
+	allKeys.insert(allKeys.end(), right->keys.begin(), right->keys.end());
 
-	auto movingChild = *movingChildIterator;
-	if (movingChild)
-		movingChild->parent = sibling;
-	sibling->children.insert(isRight ? sibling->children.begin() : sibling->children.end(), movingChild);
-	children.erase(movingChildIterator);
+	allChildren.insert(allChildren.end(), left->children.begin(), left->children.end());
+	allChildren.insert(allChildren.end(), right->children.begin(), right->children.end());
+
+	left->keys = vector<string>(allKeys.begin(), allKeys.begin() + allKeys.size() / 2);
+	divider = allKeys[allKeys.size() / 2];
+	right->keys = vector<string>(allKeys.begin() + allKeys.size() / 2 + 1, allKeys.end());
+
+	left->children = vector<Node*>(allChildren.begin(), allChildren.begin() + allChildren.size() / 2);
+	right->children = vector<Node*>(allChildren.begin() + allChildren.size() / 2, allChildren.end());
+
+	left->updateChildren();
+	right->updateChildren();
 }
 
 bool BStarTree::Node::spill(int maxKeys) {
@@ -179,7 +186,7 @@ bool BStarTree::Node::spill(int maxKeys) {
 	if (!sibling)
 		return false;
 
-	spillInto(sibling);
+	spill(this, sibling);
 
 	return true;
 }
@@ -307,7 +314,7 @@ bool BStarTree::removeKey(CStr key) {
 			sibling = left;
 
 		if (sibling) {
-			sibling->spillInto(curr);
+			Node::spill(sibling, curr);
 			break;
 		}
 
