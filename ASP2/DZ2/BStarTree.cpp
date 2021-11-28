@@ -143,6 +143,8 @@ void BStarTree::Node::split(int maxKeys) {
 	}
 }
 
+void BStarTree::Node::join(int minKeys) {}
+
 void BStarTree::Node::spillInto(Node* sibling) {
 	auto right = getRight(), left = getLeft();
 	auto isRight = sibling == right;
@@ -204,6 +206,8 @@ void BStarTree::Root::split(int maxKeys) {
 	keys.clear();
 	keys.push_back(keyMiddle);
 }
+
+void BStarTree::Root::join(int minKeys) {}
 
 BStarTree::~BStarTree() {
 	stack<Node*> traversalStack, postorderStack;
