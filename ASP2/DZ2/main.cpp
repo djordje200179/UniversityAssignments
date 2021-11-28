@@ -37,12 +37,10 @@ int main() {
 	ifstream file("sample.txt");
 	file >> tree;
 
-	tree -= "sir";
-	tree -= "sljiva";
-
-	testPointers(tree);
-
 	cout << tree << endl;
+
+	for(int i = 0; i < 15; i++)
+		cout << tree.findKthKey(i) << endl;
 
 	return 0;
 }

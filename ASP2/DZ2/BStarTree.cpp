@@ -347,25 +347,14 @@ void BStarTree::inputWords(istream& is) {
 }
 
 BStarTree::CStr BStarTree::findKthKey(int k) const {
-	stack<Position> s;
 	Position curr = { root, 0 };
+	while (!curr.node->isLeaf())
+		curr = { curr.node->children.front(), 0 };
+	
+	for (int i = 0; i < k; i++)
+		curr = findSuccessor(curr);
 
-	int cnt = 0;
-	while (curr || !s.empty()) {
-		while (curr) {
-			s.push(curr);
-			curr = { curr.node->children[curr.index], 0 };
-		}
-
-		curr = s.top(), s.pop();
-
-		if (cnt == k)
-			return curr.getKey();
-
-		cnt++;
-
-		curr++;
-	}
+	return curr.getKey();
 }
 
 BStarTree::Position BStarTree::findKey(CStr key) const {
@@ -385,26 +374,24 @@ BStarTree::Position BStarTree::findKey(CStr key) const {
 	return { nullptr, 0 };
 }
 
-BStarTree::Position BStarTree::findSuccessor(Position position) {
+BStarTree::Position BStarTree::findSuccessor(Position position) const {
 	if (position.node->isLeaf()) {
-		while (position.index == position.node->children.size() - 1) {
-			auto node = position.node;
-			auto parentNode = node->parent;
+		if (position.index != position.node->keys.size() - 1)
+			return ++position;
+
+		do {
+			auto parentNode = position.node->parent;
 
 			if (!parentNode)
 				return { nullptr, 0 };
 
-			auto parentNodeIndex = parentNode->getIndexInParent();
-
-			position = { parentNode, parentNodeIndex };
-		}
-
-		return ++position;
+			position = { parentNode, position.node->getIndexInParent() };
+		} while (position.index == position.node->children.size() - 1);
 	} else {
 		position++;
 		while (!position.node->isLeaf())
 			position = { position.node->children[position.index], 0 };
-
-		return position;
 	}
+
+	return position;
 }

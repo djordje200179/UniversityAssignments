@@ -74,14 +74,14 @@ public:
 	CStr findKthKey(int k) const;
 
 	bool operator()(CStr key) const { return keyExists(key); }
+	CStr operator()(int k) const { return findKthKey(k); }
 	bool operator+=(CStr key) { return addKey(key); }
 	bool operator-=(CStr key) { return removeKey(key); }
 	friend std::ostream& operator<<(std::ostream& os, const BStarTree& tree) { tree.printTree(os); return os; }
 	friend std::istream& operator>>(std::istream& is, BStarTree& tree) { tree.inputWords(is); return is; }
-	CStr operator()(int k) const { return findKthKey(k); }
 private:
 	Position findKey(CStr key) const;
-	Position findSuccessor(Position pos);
+	Position findSuccessor(Position pos) const;
 
 	Node* root = nullptr;
 	const int DEGREE;
