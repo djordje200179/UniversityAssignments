@@ -312,7 +312,11 @@ bool BStarTree::removeKey(CStr key) {
 			break;
 		}
 
-		// TODO: Implementirati spajanje cvorova
+		curr->join(allowedKeys);
+		if (curr == root)
+			break;
+		else
+			curr = curr->parent;
 	}
 
 	return true;
