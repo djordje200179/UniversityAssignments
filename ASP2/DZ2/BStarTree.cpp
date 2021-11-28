@@ -79,7 +79,7 @@ void BStarTree::Node::print(ostream& os) const {
 
 void BStarTree::Node::split(int maxKeys) {
 	auto right = getRight(), left = getLeft();
-	Node* sibling = right ? right : left;
+	auto sibling = right ? right : left;
 	auto isRight = sibling == right;
 
 	auto dividerIndex = getIndexInParent() - !isRight;
@@ -242,8 +242,7 @@ bool BStarTree::addKey(CStr key) {
 	if (!root)
 		root = new Root();
 
-#pragma region Pronalazak lista
-	Node* curr = root;
+	auto curr = root;
 	while (!curr->isLeaf()) {
 		int i;
 		for (i = 0; i < curr->keyCount(); i++)
@@ -254,7 +253,6 @@ bool BStarTree::addKey(CStr key) {
 
 		curr = curr->children[i];
 	}
-#pragma endregion
 
 	curr->addKey(key);
 
@@ -395,9 +393,9 @@ BStarTree::Position BStarTree::findSuccessor(Position position) {
 			if (!parentNode)
 				return { nullptr, 0 };
 
-			auto parentNodePosition = parentNode->getIndexInParent();
+			auto parentNodeIndex = parentNode->getIndexInParent();
 
-			position = { parentNode, parentNodePosition };
+			position = { parentNode, parentNodeIndex };
 		}
 
 		return ++position;
