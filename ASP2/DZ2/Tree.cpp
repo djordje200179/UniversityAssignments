@@ -103,7 +103,6 @@ bool BStarTree::Tree::removeKey(CStr key) {
 		else {
 			auto right = curr->getRight(), left = curr->getLeft();
 
-			curr->split();
 			(left && right ? curr : (right ? right : left))->join();
 			if (curr == root)
 				break;
