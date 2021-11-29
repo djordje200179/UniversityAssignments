@@ -151,11 +151,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="BStarTree.cpp" />
+    <ClCompile Include="Misc.cpp" />
+    <ClCompile Include="Tree.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Node.cpp" />
+    <ClCompile Include="Root.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BStarTree.hpp" />
+    <ClInclude Include="Tree.hpp" />
+    <ClInclude Include="Misc.hpp" />
+    <ClInclude Include="Node.hpp" />
+    <ClInclude Include="Root.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="sample.txt" />

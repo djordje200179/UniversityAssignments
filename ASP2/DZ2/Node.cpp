@@ -1,10 +1,8 @@
-#include "BStarTree.hpp"
-#include <cmath>
-#include <stack>
-#include <algorithm>
-#include <utility>
+#include "Node.hpp"
+#include <vector>
+#include <string>
+#include <ostream>
 #include <iomanip>
-#include <iostream>
 
 using namespace std;
 
@@ -12,9 +10,8 @@ BStarTree::Node::Node() : parent(nullptr), level(0) {
 	children.push_back(nullptr);
 }
 
-BStarTree::Node::Node(Node* parent,
-					  const vector<string>& initKeys,
-					  const vector<Node*>& initChildren) : parent(parent), children(initChildren), keys(initKeys) {
+BStarTree::Node::Node(Node* parent, const vector<string>& initKeys, const vector<Node*>& initChildren)
+	: parent(parent), children(initChildren), keys(initKeys) {
 	updateChildren();
 }
 
@@ -205,15 +202,24 @@ void BStarTree::Node::spill(Node* from, Node* to) {
 	right->updateChildren();
 }
 
-bool BStarTree::Node::trySpill() {
+bool BStarTree::Node::trySpill(SpillType type) {
 	auto right = getRight(), left = getLeft();
 	Node* sibling = nullptr;
 
-	int maxKeys = keys.size() - 1;
-	if (right && right->keyCount() < maxKeys)
-		sibling = right;
-	else if (left && left->keyCount() < maxKeys)
-		sibling = left;
+	if (type == SpillType::OVER) {
+		int maxKeys = keys.size() - 1;
+		if (right && right->keyCount() < maxKeys)
+			sibling = right;
+		else if (left && left->keyCount() < maxKeys)
+			sibling = left;
+	} else {
+		int minKeys = keys.size() + 1;
+		if (right && right->keyCount() > minKeys)
+			sibling = right;
+		else if (left && left->keyCount() > minKeys)
+			sibling = left;
+	}
+
 
 	if (!sibling)
 		return false;
@@ -227,213 +233,4 @@ void BStarTree::Node::updateChildren() {
 	for (auto child : children)
 		if (child)
 			child->parent = this;
-}
-
-void BStarTree::Root::split() {
-	auto halfSize = keys.size() / 2;
-
-	vector<string> keysLow(keys.begin(), keys.begin() + halfSize);
-	string keyMiddle = keys[halfSize];
-	vector<string> keysHigh(keys.begin() + halfSize + 1, keys.end());
-
-	vector<Node*> childrenLow(children.begin(), children.begin() + halfSize + 1);
-	vector<Node*> childrenHigh(children.begin() + halfSize + 1, children.end());
-
-	children.clear();
-	children.push_back(new Node(this, keysLow, childrenLow));
-	children.push_back(new Node(this, keysHigh, childrenHigh));
-
-	keys.clear();
-	keys.push_back(keyMiddle);
-}
-
-void BStarTree::Root::join() {
-	
-}
-
-BStarTree::~BStarTree() {
-	stack<Node*> traversalStack, postorderStack;
-
-	traversalStack.push(root);
-	while (!traversalStack.empty()) {
-		auto node = traversalStack.top();
-		traversalStack.pop();
-
-		if (!node)
-			continue;
-
-		postorderStack.push(node);
-
-		for (auto child : node->children)
-			traversalStack.push(child);
-	}
-
-	while (!postorderStack.empty()) {
-		auto node = postorderStack.top();
-		postorderStack.pop();
-
-		delete node;
-	}
-}
-
-bool BStarTree::keyExists(CStr key) const {
-	return findKey(key).node != nullptr;
-}
-
-bool BStarTree::addKey(CStr key) {
-	if (!root)
-		root = new Root();
-
-	auto curr = root;
-	while (!curr->isLeaf()) {
-		int i;
-		for (i = 0; i < curr->keyCount(); i++)
-			if (curr->keys[i] == key)
-				return false;
-			else if (curr->keys[i] > key)
-				break;
-
-		curr = curr->children[i];
-	}
-
-	curr->addKey(key);
-
-	while (true) {
-		auto allowedKeys = curr == root ? MAX_ROOT_KEYS : MAX_NODE_KEYS;
-		if (curr->keyCount() <= allowedKeys)
-			break;
-
-		auto spilled = curr->trySpill();
-		if (spilled)
-			break;
-		else {
-			curr->split();
-			if (curr == root)
-				break;
-			else
-				curr = curr->parent;
-		}
-	}
-
-	return true;
-}
-
-bool BStarTree::removeKey(CStr key) {
-	auto position = findKey(key);
-
-	if (!position)
-		return false;
-
-	if (!position.node->isLeaf()) {
-		auto successor = findSuccessor(position);
-		swap(position.getKey(), successor.getKey());
-
-		position = successor;
-	}
-
-	auto curr = position.node;
-	curr->removeKey(position.index);
-
-	while (true) {
-		auto allowedKeys = curr == root ? 1 : MIN_NODE_KEYS;
-		if (curr->keyCount() >= allowedKeys)
-			break;
-
-		auto right = curr->getRight(), left = curr->getLeft();
-		Node* sibling = nullptr;
-
-		if (right && right->keyCount() >= MIN_NODE_KEYS + 1)
-			sibling = right;
-		else if (left && left->keyCount() >= MIN_NODE_KEYS + 1)
-			sibling = left;
-
-		if (sibling) {
-			Node::spill(sibling, curr);
-			break;
-		}
-		
-		(left && right ? curr : (right ? right : left))->join();
-
-		if (curr == root)
-			break;
-		else
-			curr = curr->parent;
-	}
-
-	return true;
-}
-
-void BStarTree::printTree(ostream& os) const {
-	stack<Node*> traversalStack;
-	traversalStack.push(root);
-
-	while (!traversalStack.empty()) {
-		auto node = traversalStack.top();
-		traversalStack.pop();
-
-		if (node != root)
-			node->level = node->parent->level + 1;
-
-		node->print(os);
-
-		for (auto it = node->children.rbegin(); it != node->children.rend(); it++)
-			if (*it)
-				traversalStack.push(*it);
-	}
-}
-
-void BStarTree::inputWords(istream& is) {
-	string line;
-	while (getline(is, line))
-		addKey(line);
-}
-
-BStarTree::CStr BStarTree::findKthKey(int k) const {
-	Position curr = { root, 0 };
-	while (!curr.node->isLeaf())
-		curr = { curr.node->children.front(), 0 };
-	
-	for (int i = 0; i < k; i++)
-		curr = findSuccessor(curr);
-
-	return curr.getKey();
-}
-
-BStarTree::Position BStarTree::findKey(CStr key) const {
-	auto curr = root;
-
-	while (curr) {
-		int i;
-		for (i = 0; i < curr->keys.size(); i++)
-			if (curr->keys[i] == key)
-				return { curr, i };
-			else if (curr->keys[i] > key)
-				break;
-
-		curr = curr->children[i];
-	}
-
-	return { nullptr, 0 };
-}
-
-BStarTree::Position BStarTree::findSuccessor(Position position) const {
-	if (position.node->isLeaf()) {
-		if (position.index != position.node->keys.size() - 1)
-			return ++position;
-
-		do {
-			auto parentNode = position.node->parent;
-
-			if (!parentNode)
-				return { nullptr, 0 };
-
-			position = { parentNode, position.node->getIndexInParent() };
-		} while (position.index == position.node->children.size() - 1);
-	} else {
-		position++;
-		while (!position.node->isLeaf())
-			position = { position.node->children[position.index], 0 };
-	}
-
-	return position;
 }

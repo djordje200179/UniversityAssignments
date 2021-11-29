@@ -1,12 +1,13 @@
 ﻿#include <iostream>
-#include "BStarTree.hpp"
+#include "Tree.hpp"
 #include <fstream>
 #include <queue>
 
 using namespace std;
+using namespace BStarTree;
 
 int main() {
-	BStarTree* tree = nullptr;
+	Tree* tree = nullptr;
 	cout << boolalpha;
 
 	while (true) {
@@ -32,7 +33,7 @@ int main() {
 			cin >> tempI;
 
 			delete tree;
-			tree = new BStarTree(tempI);
+			tree = new Tree(tempI);
 
 			break;
 		case 2:
