@@ -78,7 +78,7 @@ void BStarTree::Node::print(ostream& os) const {
 	os << '\n';
 }
 
-void BStarTree::Node::split(int maxKeys) {
+void BStarTree::Node::split() {
 	auto rightSibling = getRight(), leftSibling = getLeft();
 	auto sibling = rightSibling ? rightSibling : leftSibling;
 	auto isRight = sibling == rightSibling;
@@ -104,6 +104,7 @@ void BStarTree::Node::split(int maxKeys) {
 		allChildren.insert(allChildren.end(), children.begin(), children.end());
 	}
 
+	int maxKeys = keys.size() - 1;
 	int index1 = 2 * maxKeys / 3;
 	int index2 = index1 + 1 + (2 * maxKeys + 1) / 3;
 
@@ -144,7 +145,37 @@ void BStarTree::Node::split(int maxKeys) {
 	}
 }
 
-void BStarTree::Node::join(int minKeys) {}
+void BStarTree::Node::join() {
+	auto right = getRight(), left = getLeft();
+	auto index1 = left->getIndexInParent();
+
+	vector<string> allKeys;
+	vector<Node*> allChildren;
+
+	allKeys.insert(allKeys.end(), left->keys.begin(), left->keys.end());
+	allKeys.insert(allKeys.end(), parent->keys[index1]);
+	allKeys.insert(allKeys.end(), this->keys.begin(), this->keys.end());
+	allKeys.insert(allKeys.end(), parent->keys[index1 + 1]);
+	allKeys.insert(allKeys.end(), right->keys.begin(), right->keys.end());
+
+	allChildren.insert(allChildren.end(), left->children.begin(), left->children.end());
+	allChildren.insert(allChildren.end(), this->children.begin(), this->children.end());
+	allChildren.insert(allChildren.end(), right->children.begin(), right->children.end());
+
+	left->keys = vector<string>(allKeys.begin(), allKeys.begin() + allKeys.size() / 2);
+	parent->keys[index1] = allKeys[allKeys.size() / 2];
+	parent->keys.erase(parent->keys.begin() + index1 + 1);
+	right->keys = vector<string>(allKeys.begin() + allKeys.size() / 2 + 1, allKeys.end());
+
+	left->children = vector<Node*>(allChildren.begin(), allChildren.begin() + allChildren.size() / 2);
+	parent->children.erase(parent->children.begin() + index1 + 1);
+	right->children = vector<Node*>(allChildren.begin() + allChildren.size() / 2, allChildren.end());
+
+	left->updateChildren();
+	right->updateChildren();
+
+	delete this;
+}
 
 void BStarTree::Node::spill(Node* from, Node* to) {
 	auto onRight = from->getRight() == to;
@@ -174,10 +205,11 @@ void BStarTree::Node::spill(Node* from, Node* to) {
 	right->updateChildren();
 }
 
-bool BStarTree::Node::spill(int maxKeys) {
+bool BStarTree::Node::trySpill() {
 	auto right = getRight(), left = getLeft();
 	Node* sibling = nullptr;
 
+	int maxKeys = keys.size() - 1;
 	if (right && right->keyCount() < maxKeys)
 		sibling = right;
 	else if (left && left->keyCount() < maxKeys)
@@ -197,8 +229,8 @@ void BStarTree::Node::updateChildren() {
 			child->parent = this;
 }
 
-void BStarTree::Root::split(int maxKeys) {
-	int halfSize = ceil(maxKeys / 2.0);
+void BStarTree::Root::split() {
+	auto halfSize = keys.size() / 2;
 
 	vector<string> keysLow(keys.begin(), keys.begin() + halfSize);
 	string keyMiddle = keys[halfSize];
@@ -215,7 +247,9 @@ void BStarTree::Root::split(int maxKeys) {
 	keys.push_back(keyMiddle);
 }
 
-void BStarTree::Root::join(int minKeys) {}
+void BStarTree::Root::join() {
+	
+}
 
 BStarTree::~BStarTree() {
 	stack<Node*> traversalStack, postorderStack;
@@ -269,11 +303,11 @@ bool BStarTree::addKey(CStr key) {
 		if (curr->keyCount() <= allowedKeys)
 			break;
 
-		auto spilled = curr->spill(allowedKeys);
+		auto spilled = curr->trySpill();
 		if (spilled)
 			break;
 		else {
-			curr->split(allowedKeys);
+			curr->split();
 			if (curr == root)
 				break;
 			else
@@ -301,7 +335,7 @@ bool BStarTree::removeKey(CStr key) {
 	curr->removeKey(position.index);
 
 	while (true) {
-		auto allowedKeys = curr == root ? 2 : MIN_NODE_KEYS;
+		auto allowedKeys = curr == root ? 1 : MIN_NODE_KEYS;
 		if (curr->keyCount() >= allowedKeys)
 			break;
 
@@ -317,8 +351,9 @@ bool BStarTree::removeKey(CStr key) {
 			Node::spill(sibling, curr);
 			break;
 		}
+		
+		(left && right ? curr : (right ? right : left))->join();
 
-		curr->join(allowedKeys);
 		if (curr == root)
 			break;
 		else

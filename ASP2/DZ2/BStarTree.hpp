@@ -42,9 +42,9 @@ private:
 		Node* getLeft();
 		Node* getRight();
 		void print(std::ostream& os) const;
-		virtual bool spill(int maxKeys);
-		virtual void split(int maxKeys);
-		virtual void join(int minKeys);
+		virtual bool trySpill();
+		virtual void split();
+		virtual void join();
 		static void spill(Node* from, Node* to);
 		void updateChildren();
 	protected:
@@ -54,9 +54,9 @@ private:
 	struct Root : Node {
 		Root() = default;
 
-		bool spill(int maxKeys) override { return false; }
-		void split(int maxKeys) override;
-		void join(int minKeys);
+		bool trySpill() override { return false; }
+		void split() override;
+		void join() override;
 	};
 public:
 	BStarTree(int degree) 

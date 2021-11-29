@@ -67,7 +67,7 @@ int main() {
 
 			break;
 		case 3:
-			cout << "Unesi ime fajla: ";
+			cout << "Unesi ime datoteke: ";
 			cin >> tempS;
 			
 			{
