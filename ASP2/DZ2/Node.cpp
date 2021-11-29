@@ -159,19 +159,20 @@ void BStarTree::Node::join() {
 	allChildren.insert(allChildren.end(), this->children.begin(), this->children.end());
 	allChildren.insert(allChildren.end(), right->children.begin(), right->children.end());
 
-	left->keys = vector<string>(allKeys.begin(), allKeys.begin() + allKeys.size() / 2);
+	this->keys = vector<string>(allKeys.begin(), allKeys.begin() + allKeys.size() / 2);
 	parent->keys[index1] = allKeys[allKeys.size() / 2];
 	parent->keys.erase(parent->keys.begin() + index1 + 1);
 	right->keys = vector<string>(allKeys.begin() + allKeys.size() / 2 + 1, allKeys.end());
-
-	left->children = vector<Node*>(allChildren.begin(), allChildren.begin() + allChildren.size() / 2);
-	parent->children.erase(parent->children.begin() + index1 + 1);
+	
+	this->children = vector<Node*>(allChildren.begin(), allChildren.begin() + allChildren.size() / 2);
 	right->children = vector<Node*>(allChildren.begin() + allChildren.size() / 2, allChildren.end());
 
-	left->updateChildren();
+	delete left;
+	parent->children.erase(parent->children.begin() + index1);
+
+	this->updateChildren();
 	right->updateChildren();
 
-	delete this;
 }
 
 void BStarTree::Node::spill(Node* from, Node* to) {
