@@ -5,32 +5,6 @@
 
 using namespace std;
 
-void testPointers(const BStarTree& tree) {
-	queue<BStarTree::Node*> nodes;
-	nodes.push(tree.root);
-
-	while (!nodes.empty()) {
-		auto curr = nodes.front();
-		nodes.pop();
-
-		for (auto child : curr->children) {
-			if (!child)
-				continue;
-
-			nodes.push(child);
-
-			if (child->parent != curr) {
-				cout << "Parent mismatch on node \"" << child->keys[0] << '"' << endl;
-				cout << "\treal parent is \"" << curr->keys[0] << '"' << endl;
-				cout << "\twrong parent is \"" << (child->parent ? child->parent->keys[0] : "NULL") << '"' << endl;
-				cout << endl;
-			}
-		}
-	}
-
-	cout << endl;
-}
-
 int main() {
 	BStarTree* tree = nullptr;
 	cout << boolalpha;
