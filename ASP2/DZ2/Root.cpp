@@ -23,5 +23,24 @@ void BStarTree::Root::split() {
 }
 
 void BStarTree::Root::join() {
+	auto left = children[0];
+	auto right = children[1];
 
+	vector<string> allKeys;
+	vector<Node*> allChildren;
+
+	allKeys.insert(allKeys.end(), left->keys.begin(), left->keys.end());
+	allKeys.insert(allKeys.end(), keys[0]);
+	allKeys.insert(allKeys.end(), right->keys.begin(), right->keys.end());
+
+	allChildren.insert(allChildren.end(), left->children.begin(), left->children.end());
+	allChildren.insert(allChildren.end(), right->children.begin(), right->children.end());
+
+	keys = allKeys;
+	children = allChildren;
+
+	updateChildren();
+
+	delete left;
+	delete right;
 }
