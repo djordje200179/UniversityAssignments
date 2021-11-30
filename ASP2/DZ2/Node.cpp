@@ -159,13 +159,16 @@ void BStarTree::Node::join() {
 	allChildren.insert(allChildren.end(), this->children.begin(), this->children.end());
 	allChildren.insert(allChildren.end(), right->children.begin(), right->children.end());
 
-	this->keys = vector<string>(allKeys.begin(), allKeys.begin() + allKeys.size() / 2);
-	parent->keys[index1] = allKeys[allKeys.size() / 2];
+	int keyMid = allKeys.size() / 2;
+	int childrenMid = (allChildren.size() + 1) / 2;
+
+	this->keys = vector<string>(allKeys.begin(), allKeys.begin() + keyMid);
+	parent->keys[index1] = allKeys[keyMid];
 	parent->keys.erase(parent->keys.begin() + index1 + 1);
-	right->keys = vector<string>(allKeys.begin() + allKeys.size() / 2 + 1, allKeys.end());
+	right->keys = vector<string>(allKeys.begin() + keyMid + 1, allKeys.end());
 	
-	this->children = vector<Node*>(allChildren.begin(), allChildren.begin() + allChildren.size() / 2);
-	right->children = vector<Node*>(allChildren.begin() + allChildren.size() / 2, allChildren.end());
+	this->children = vector<Node*>(allChildren.begin(), allChildren.begin() + childrenMid);
+	right->children = vector<Node*>(allChildren.begin() + childrenMid, allChildren.end());
 
 	delete left;
 	parent->children.erase(parent->children.begin() + index1);
@@ -192,12 +195,15 @@ void BStarTree::Node::spill(Node* from, Node* to) {
 	allChildren.insert(allChildren.end(), left->children.begin(), left->children.end());
 	allChildren.insert(allChildren.end(), right->children.begin(), right->children.end());
 
-	left->keys = vector<string>(allKeys.begin(), allKeys.begin() + allKeys.size() / 2);
-	divider = allKeys[allKeys.size() / 2];
-	right->keys = vector<string>(allKeys.begin() + allKeys.size() / 2 + 1, allKeys.end());
+	int keyMid = allKeys.size() / 2;
+	int childrenMid = (allChildren.size() + 1) / 2;
 
-	left->children = vector<Node*>(allChildren.begin(), allChildren.begin() + allChildren.size() / 2);
-	right->children = vector<Node*>(allChildren.begin() + allChildren.size() / 2, allChildren.end());
+	left->keys = vector<string>(allKeys.begin(), allKeys.begin() + keyMid);
+	divider = allKeys[keyMid];
+	right->keys = vector<string>(allKeys.begin() + keyMid + 1, allKeys.end());
+
+	left->children = vector<Node*>(allChildren.begin(), allChildren.begin() + childrenMid);
+	right->children = vector<Node*>(allChildren.begin() + childrenMid, allChildren.end());
 
 	left->updateChildren();
 	right->updateChildren();
@@ -205,7 +211,11 @@ void BStarTree::Node::spill(Node* from, Node* to) {
 
 bool BStarTree::Node::trySpill(SpillType type) {
 	auto right = getRight(), left = getLeft();
+	auto right2 = right ? right->getRight() : nullptr;
+	auto left2 = left ? left->getLeft() : nullptr;
+
 	Node* sibling = nullptr;
+	Node* over = nullptr;
 
 	if (type == SpillType::OVER) {
 		int maxKeys = keys.size() - 1;
@@ -219,13 +229,26 @@ bool BStarTree::Node::trySpill(SpillType type) {
 			sibling = right;
 		else if (left && left->keyCount() > minKeys)
 			sibling = left;
+		else if (right2 && right2->keyCount() > minKeys)
+			sibling = right2, over = right;
+		else if (left2 && left2->keyCount() > minKeys)
+			sibling = left2, over = left;
 	}
 
 
 	if (!sibling)
 		return false;
 
-	spill(this, sibling);
+	if (type == SpillType::OVER)
+		spill(this, sibling);
+	else {
+		if(!over)
+			spill(sibling, this);
+		else {
+			spill(over, sibling);
+			spill(this, over);
+		}
+	}
 
 	return true;
 }
