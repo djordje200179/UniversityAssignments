@@ -8,13 +8,13 @@ public:
 	}
 };
 
-class DoubleHashing : public AddressFunction {
+class SplitSequenceLinearHashing : public AddressFunction {
 private:
-	int p, q;
+	int s1, s2;
 public:
-	DoubleHashing(int p, int q) : p(p), q(q) {}
+	SplitSequenceLinearHashing(int s1, int s2) : s1(s1), s2(s2) {}
 
-	unsigned int getAddress(unsigned int key, int address, int attempt, int size) const override {
-		return address + attempt * (q + key % p);
+	unsigned int getAddress(unsigned int lastKey, int address, int attempt, int size) const override {
+		return (address + attempt * (true ? s1 : s2)) % size; // popraviti uslov
 	}
 };

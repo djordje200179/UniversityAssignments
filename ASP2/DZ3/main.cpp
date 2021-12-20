@@ -7,7 +7,7 @@
 using namespace std;
 
 int main() {
-	HashTable hashTable(4, 3, DoubleHashing(2, 5));
+	HashTable hashTable(3, 2, SplitSequenceLinearHashing(2, 3));
 	CSVParser fileReader("students_10.csv");
 
 	while (auto student = fileReader.readRow())
