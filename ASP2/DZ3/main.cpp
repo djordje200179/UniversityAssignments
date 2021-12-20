@@ -7,13 +7,11 @@
 using namespace std;
 
 int main() {
-	HashTable hashTable(3, 2, SplitSequenceLinearHashing(2, 3));
-	CSVParser fileReader("students_10.csv");
+	HashTable hashTable(5, 10, SplitSequenceLinearHashing(2, 3));
+	CSVParser fileReader("students_5000.csv");
 
 	while (auto student = fileReader.readRow())
 		hashTable.insertKey(student->getId(), student);
-
-	hashTable.deleteKey(19960046, true);
 
 	cout << hashTable;
 
