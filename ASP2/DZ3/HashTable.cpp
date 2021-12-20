@@ -4,82 +4,70 @@
 using namespace std;
 
 Student* HashTable::findKey(unsigned int key) const {
-	unsigned int address = hashFunction(key);
-	int attempt = 0;
+	unsigned int originalAddress = hashFunction(key), address = originalAddress;
 
-	while (true) {
+	for (int attempt = 0; attempt < tableSize(); attempt++, address = addressFunction(key, originalAddress, attempt, tableSize())) {
 		auto& bucket = table[address];
 
-		auto full = bucket.size() == bucketSize;
 		auto it = find_if(bucket.begin(), bucket.end(), [key](Student* student) { return student->getId() == key; });
 
-		if (it != bucket.end()) {
+		if (it != bucket.end())
 			return *it;
-		}
 
-		if (!full)
+		if (bucket.size() != bucketSize)
 			return nullptr;
-
-		attempt++;
-		if (attempt == tableSize())
-			return nullptr;
-
-		address = addressFunction(key, address, attempt, tableSize());
 	}
+
+	return nullptr;
 }
 
 bool HashTable::insertKey(unsigned int key, Student* data) {
-	unsigned int address = hashFunction(key);
-	int attempt = 0;
+	if (findKey(key))
+		return false;
 
-	while (table[address].size() == bucketSize) {
+	unsigned int originalAddress = hashFunction(key), address = originalAddress;
+
+	for (int attempt = 0; attempt < tableSize(); attempt++, address = addressFunction(key, originalAddress, attempt, tableSize())) {
+		auto& bucket = table[address];
+
 		auto deletedIt = find(table[address].begin(), table[address].end(), nullptr);
-		auto hasDeleted = deletedIt == table[address].end();
-		if (hasDeleted) {
+		
+		if (deletedIt != table[address].end()) {
 			*deletedIt = data;
 			return true;
 		}
 
-		attempt++;
-		if (attempt == tableSize())
-			return false;
-
-		address = addressFunction(key, address, attempt, tableSize());
+		if (bucket.size() != bucketSize) {
+			bucket.push_back(data);
+			return true;
+		}
 	}
 
-	table[address].push_back(data);
-
-	return true;
+	return false;
 }
 
 bool HashTable::deleteKey(unsigned int key, bool callDestructor) {
-	unsigned int address = hashFunction(key);
-	int attempt = 0;
+	unsigned int originalAddress = hashFunction(key), address = originalAddress;
 
-	while (true) {
+	for (int attempt = 0; attempt < tableSize(); attempt++, address = addressFunction(key, originalAddress, attempt, tableSize())) {
 		auto& bucket = table[address];
 
-		auto full = bucket.size() == bucketSize;
 		auto it = find_if(bucket.begin(), bucket.end(), [key](Student* student) { return student->getId() == key; });
-
+		
 		if (it != bucket.end()) {
 			if (callDestructor)
-				delete *it;
+				delete* it;
 
 			*it = nullptr;
-			
+
 			return true;
 		}
 
-		if (!full)
+		if (bucket.size() != bucketSize)
 			return false;
-
-		attempt++;
-		if (attempt == tableSize())
-			return false;
-
-		address = addressFunction(key, address, attempt, tableSize());
 	}
+
+	return false;
 }
 
 void HashTable::clear() {
