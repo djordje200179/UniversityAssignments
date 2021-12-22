@@ -79,8 +79,9 @@ int HashTable::keyCount() const {
 	int counter = 0;
 
 	for (auto& bucket : table)
-		for (auto& data : bucket)
-			counter++;
+		for (auto data : bucket)
+			if(data)
+				counter++;
 
 	return counter;
 }
