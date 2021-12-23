@@ -4,7 +4,7 @@ class StaticHashTable;
 
 class AddressFunction {
 protected:
-	mutable StaticHashTable* hashTable;
+	mutable StaticHashTable* hashTable = nullptr;
 public:
 	void init(StaticHashTable* hashTable) const;
 
