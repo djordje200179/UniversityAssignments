@@ -19,9 +19,9 @@ public:
 	bool deleteKey(unsigned int key, bool callDestructor = false) override;
 
 	void clear() override;
-	int keyCount() const override;
+	size_t keyCount() const override;
 
-	int tableSize() const { return table.size(); }
+	size_t tableSize() const { return table.size(); }
 	double fillRatio() const { return (double)keyCount() / (tableSize() * bucketSize); }
 
 	friend class SplitSequenceLinearHashing;

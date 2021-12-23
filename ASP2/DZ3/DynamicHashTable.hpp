@@ -27,5 +27,5 @@ public:
 	bool deleteKey(unsigned int key, bool callDestructor = false) override;
 
 	void clear() override;
-	int keyCount() const override;
+	size_t keyCount() const override;
 };

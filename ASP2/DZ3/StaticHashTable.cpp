@@ -106,8 +106,8 @@ void StaticHashTable::clear() {
 		bucket.clear();
 }
 
-int StaticHashTable::keyCount() const {
-	int counter = 0;
+size_t StaticHashTable::keyCount() const {
+	size_t counter = 0;
 
 	for (auto& bucket : table)
 		for (auto data : bucket)

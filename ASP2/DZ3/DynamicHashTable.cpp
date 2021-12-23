@@ -3,7 +3,7 @@
 
 DynamicHashTable::DynamicHashTable(int bucketSize, int hashDegree, int rootBuckets) :
 	HashTable(bucketSize, hashDegree),
-	buckets(1 << rootBuckets) {
+	buckets(1ull << rootBuckets) {
 	for (auto& bucket : buckets)
 		bucket = new Leaf;
 }
@@ -29,6 +29,6 @@ void DynamicHashTable::clear() {
 		bucket = new Leaf; //popraviti brisanje
 }
 
-int DynamicHashTable::keyCount() const {
+size_t DynamicHashTable::keyCount() const {
 	return 0; //popraviti brojanje
 }

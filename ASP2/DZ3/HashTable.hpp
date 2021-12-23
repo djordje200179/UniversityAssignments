@@ -21,7 +21,7 @@ public:
 	virtual bool deleteKey(unsigned int key, bool callDestructor = false) = 0;
 
 	virtual void clear() = 0;
-	virtual int keyCount() const = 0;
+	virtual size_t keyCount() const = 0;
 
 	friend std::ostream& operator<<(std::ostream& os, const HashTable& table) { table.print(os); return os; }
 };
