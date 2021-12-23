@@ -1,9 +1,10 @@
 #include "AddressFunction.hpp"
-#include "HashTable.hpp"
+#include "DefaultHashTable.hpp"
+#include "Student.hpp"
 
 using namespace std;
 
-void AddressFunction::init(HashTable* hashTable) const {
+void AddressFunction::init(DefaultHashTable* hashTable) const {
 	this->hashTable = hashTable;
 }
 

@@ -149,13 +149,14 @@
   <ItemGroup>
     <ClCompile Include="AddressFunction.cpp" />
     <ClCompile Include="CSVParser.cpp" />
-    <ClCompile Include="HashTable.cpp" />
+    <ClCompile Include="DefaultHashTable.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Student.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AddressFunction.hpp" />
     <ClInclude Include="CSVParser.hpp" />
+    <ClInclude Include="DefaultHashTable.hpp" />
     <ClInclude Include="HashTable.hpp" />
     <ClInclude Include="Student.hpp" />
   </ItemGroup>

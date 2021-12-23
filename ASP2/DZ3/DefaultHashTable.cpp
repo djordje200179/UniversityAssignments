@@ -1,17 +1,40 @@
-#include "HashTable.hpp"
-#include <algorithm>
+#include "DefaultHashTable.hpp"
 #include "AddressFunction.hpp"
+#include "Student.hpp"
+#include <algorithm>
 
 using namespace std;
 
-HashTable::HashTable(int bucketSize, int hashDegree, const AddressFunction& addressFunction) :
-	bucketSize(bucketSize), hashDegree(hashDegree),
+void DefaultHashTable::print(std::ostream& os) const {
+	for (auto& bucket : table) {
+		os << string(50, '-') << endl;
+
+		if (bucket.size()) {
+			for (auto& data : bucket) {
+				os << "| ";
+
+				if (data)
+					os << *data;
+				else
+					os << "DELETED";
+
+				os << endl;
+			}
+		} else
+			os << "| EMPTY" << endl;
+	}
+
+	os << string(50, '-') << endl;
+}
+
+DefaultHashTable::DefaultHashTable(int bucketSize, int hashDegree, const AddressFunction& addressFunction) :
+	HashTable(bucketSize, hashDegree),
 	addressFunction(addressFunction),
 	table(1ull << hashDegree) {
 	addressFunction.init(this);
 }
 
-Student* HashTable::findKey(unsigned int key) const {
+Student* DefaultHashTable::findKey(unsigned int key) const {
 	unsigned int originalAddress = hashFunction(key), address = originalAddress;
 
 	for (int attempt = 0; attempt < tableSize(); attempt++, address = addressFunction(key, originalAddress, attempt, tableSize())) {
@@ -29,7 +52,7 @@ Student* HashTable::findKey(unsigned int key) const {
 	return nullptr;
 }
 
-bool HashTable::insertKey(unsigned int key, Student* data) {
+bool DefaultHashTable::insertKey(unsigned int key, Student* data) {
 	if (findKey(key))
 		return false;
 
@@ -54,7 +77,7 @@ bool HashTable::insertKey(unsigned int key, Student* data) {
 	return false;
 }
 
-bool HashTable::deleteKey(unsigned int key, bool callDestructor) {
+bool DefaultHashTable::deleteKey(unsigned int key, bool callDestructor) {
 	unsigned int originalAddress = hashFunction(key), address = originalAddress;
 
 	for (int attempt = 0; attempt < tableSize(); attempt++, address = addressFunction(key, originalAddress, attempt, tableSize())) {
@@ -78,12 +101,12 @@ bool HashTable::deleteKey(unsigned int key, bool callDestructor) {
 	return false;
 }
 
-void HashTable::clear() {
+void DefaultHashTable::clear() {
 	for (auto& bucket : table)
 		bucket.clear();
 }
 
-int HashTable::keyCount() const {
+int DefaultHashTable::keyCount() const {
 	int counter = 0;
 
 	for (auto& bucket : table)
@@ -92,28 +115,4 @@ int HashTable::keyCount() const {
 				counter++;
 
 	return counter;
-}
-
-ostream& operator<<(ostream& os, const HashTable& table) {
-	for (auto& bucket : table.table) {
-		os << string(50, '-') << endl;
-
-		if (bucket.size()) {
-			for (auto& data : bucket) {
-				os << "| ";
-
-				if (data)
-					os << *data;
-				else
-					os << "DELETED";
-
-				os << endl;
-			}
-		} else
-			os << "| EMPTY" << endl;
-	}
-
-	os << string(50, '-') << endl;
-
-	return os;
 }

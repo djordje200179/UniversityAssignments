@@ -1,12 +1,12 @@
 #pragma once
 
-class HashTable;
+class DefaultHashTable;
 
 class AddressFunction {
 protected:
-	mutable HashTable* hashTable;
+	mutable DefaultHashTable* hashTable;
 public:
-	void init(HashTable* hashTable) const;
+	void init(DefaultHashTable* hashTable) const;
 
 	virtual unsigned int getAddress(unsigned int key, int address, int attempt, int size) const = 0;
 	unsigned int operator()(unsigned int key, int address, int attempt, int size) const { return getAddress(key, address, attempt, size); }
