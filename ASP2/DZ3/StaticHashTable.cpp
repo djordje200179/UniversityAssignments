@@ -14,7 +14,7 @@ StaticHashTable::StaticHashTable(int bucketSize, int hashDegree, const AddressFu
 
 void StaticHashTable::print(std::ostream& os) const {
 	for (auto& bucket : table) {
-		os << string(50, '-') << endl;
+		os << string(50, '-') << '\n';
 
 		if (bucket.size()) {
 			for (auto& data : bucket) {
@@ -25,13 +25,13 @@ void StaticHashTable::print(std::ostream& os) const {
 				else
 					os << "DELETED";
 
-				os << endl;
+				os << '\n';
 			}
 		} else
-			os << "| EMPTY" << endl;
+			os << "| EMPTY" << '\n';
 	}
 
-	os << string(50, '-') << endl;
+	os << string(50, '-') << '\n';
 }
 
 Student* StaticHashTable::findKey(unsigned int key) const {
