@@ -3,8 +3,6 @@
 #include "HashTable.hpp"
 #include <vector>
 
-class Student;
-
 class DynamicHashTable : public HashTable {
 private:
 	struct TreeNode {};

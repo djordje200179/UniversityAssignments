@@ -1,7 +1,7 @@
 #pragma once
 
-#include <vector>
 #include "HashTable.hpp"
+#include <vector>
 
 class AddressFunction;
 

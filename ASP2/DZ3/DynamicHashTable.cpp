@@ -1,4 +1,5 @@
 #include "DynamicHashTable.hpp"
+#include "Student.hpp"
 
 DynamicHashTable::DynamicHashTable(int bucketSize, int hashDegree, int rootBuckets) :
 	HashTable(bucketSize, hashDegree),
