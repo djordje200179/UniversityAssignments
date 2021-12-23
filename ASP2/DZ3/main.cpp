@@ -17,10 +17,10 @@ void test(HashTable& hashTable) {
 }
 
 int main() {
-	StaticHashTable staticHashTable(10, 5, SplitSequenceLinearHashing(2, 3));
+	StaticHashTable staticHashTable(10, 6, SplitSequenceLinearHashing(2, 3));
 	test(staticHashTable);
 
-	DynamicHashTable dynamicHashTable(10, 5, 3);
+	DynamicHashTable dynamicHashTable(10, 6, 4);
 	test(dynamicHashTable);
 
 	return 0;
