@@ -5,14 +5,14 @@
 
 class AddressFunction;
 
-class DefaultHashTable : public HashTable {
+class StaticHashTable : public HashTable {
 private:
 	std::vector<std::vector<Student*>> table;
 	const AddressFunction& addressFunction;
 protected:
 	void print(std::ostream& os) const override;
 public:
-	DefaultHashTable(int bucketSize, int hashDegree, const AddressFunction& addressFunction);
+	StaticHashTable(int bucketSize, int hashDegree, const AddressFunction& addressFunction);
 
 	Student* findKey(unsigned int key) const override;
 	bool insertKey(unsigned int key, Student* data) override;

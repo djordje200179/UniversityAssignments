@@ -1,11 +1,18 @@
-#include "DefaultHashTable.hpp"
+#include "StaticHashTable.hpp"
 #include "AddressFunction.hpp"
 #include "Student.hpp"
 #include <algorithm>
 
 using namespace std;
 
-void DefaultHashTable::print(std::ostream& os) const {
+StaticHashTable::StaticHashTable(int bucketSize, int hashDegree, const AddressFunction& addressFunction) :
+	HashTable(bucketSize, hashDegree),
+	addressFunction(addressFunction),
+	table(1ull << hashDegree) {
+	addressFunction.init(this);
+}
+
+void StaticHashTable::print(std::ostream& os) const {
 	for (auto& bucket : table) {
 		os << string(50, '-') << endl;
 
@@ -27,14 +34,7 @@ void DefaultHashTable::print(std::ostream& os) const {
 	os << string(50, '-') << endl;
 }
 
-DefaultHashTable::DefaultHashTable(int bucketSize, int hashDegree, const AddressFunction& addressFunction) :
-	HashTable(bucketSize, hashDegree),
-	addressFunction(addressFunction),
-	table(1ull << hashDegree) {
-	addressFunction.init(this);
-}
-
-Student* DefaultHashTable::findKey(unsigned int key) const {
+Student* StaticHashTable::findKey(unsigned int key) const {
 	unsigned int originalAddress = hashFunction(key), address = originalAddress;
 
 	for (int attempt = 0; attempt < tableSize(); attempt++, address = addressFunction(key, originalAddress, attempt, tableSize())) {
@@ -52,7 +52,7 @@ Student* DefaultHashTable::findKey(unsigned int key) const {
 	return nullptr;
 }
 
-bool DefaultHashTable::insertKey(unsigned int key, Student* data) {
+bool StaticHashTable::insertKey(unsigned int key, Student* data) {
 	if (findKey(key))
 		return false;
 
@@ -77,7 +77,7 @@ bool DefaultHashTable::insertKey(unsigned int key, Student* data) {
 	return false;
 }
 
-bool DefaultHashTable::deleteKey(unsigned int key, bool callDestructor) {
+bool StaticHashTable::deleteKey(unsigned int key, bool callDestructor) {
 	unsigned int originalAddress = hashFunction(key), address = originalAddress;
 
 	for (int attempt = 0; attempt < tableSize(); attempt++, address = addressFunction(key, originalAddress, attempt, tableSize())) {
@@ -101,12 +101,12 @@ bool DefaultHashTable::deleteKey(unsigned int key, bool callDestructor) {
 	return false;
 }
 
-void DefaultHashTable::clear() {
+void StaticHashTable::clear() {
 	for (auto& bucket : table)
 		bucket.clear();
 }
 
-int DefaultHashTable::keyCount() const {
+int StaticHashTable::keyCount() const {
 	int counter = 0;
 
 	for (auto& bucket : table)

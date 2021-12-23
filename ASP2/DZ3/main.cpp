@@ -1,6 +1,7 @@
 #include <iostream>
 #include "AddressFunction.hpp"
-#include "DefaultHashTable.hpp"
+#include "StaticHashTable.hpp"
+#include "DynamicHashTable.hpp"
 #include "Student.hpp"
 #include "CSVParser.hpp"
 
@@ -16,8 +17,11 @@ void test(HashTable& hashTable) {
 }
 
 int main() {
-	DefaultHashTable hashTable(10, 5, SplitSequenceLinearHashing(2, 3));
-	test(hashTable);
+	StaticHashTable staticHashTable(10, 5, SplitSequenceLinearHashing(2, 3));
+	test(staticHashTable);
+
+	DynamicHashTable dynamicHashTable(10, 5, 3);
+	test(dynamicHashTable);
 
 	return 0;
 }

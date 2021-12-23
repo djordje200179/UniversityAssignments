@@ -27,7 +27,10 @@
     <ClCompile Include="AddressFunction.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="DefaultHashTable.cpp">
+    <ClCompile Include="StaticHashTable.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DynamicHashTable.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -44,7 +47,10 @@
     <ClInclude Include="CSVParser.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="DefaultHashTable.hpp">
+    <ClInclude Include="StaticHashTable.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DynamicHashTable.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
