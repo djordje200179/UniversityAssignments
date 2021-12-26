@@ -16,19 +16,18 @@ void StaticHashTable::print(std::ostream& os) const {
 	for (auto& bucket : table) {
 		os << string(50, '-') << '\n';
 
-		if (bucket.size()) {
-			for (auto& data : bucket) {
-				os << "| ";
+		for(int i = 0; i < bucketSize; i++) {
+			os << "| ";
 
-				if (data)
-					os << *data;
-				else
-					os << "DELETED";
+			if (i >= bucket.size())
+				os << "EMPTY";
+			else if (bucket[i])
+				os << *bucket[i];
+			else
+				os << "DELETED";
 
-				os << '\n';
-			}
-		} else
-			os << "| EMPTY" << '\n';
+			os << '\n';
+		}
 	}
 
 	os << string(50, '-') << '\n';
