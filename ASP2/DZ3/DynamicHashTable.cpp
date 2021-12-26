@@ -107,14 +107,7 @@ bool DynamicHashTable::insertKey(unsigned int key, Student* data) {
 
 	while (currLeaf->entries.size() > bucketSize) {
 		if (currIndex == hashDegree) {
-			auto it = find_if(currLeaf->entries.begin(), currLeaf->entries.end(), [key](Student* student) {
-				return student->getId() == key;
-			});
-
-			if (it == currLeaf->entries.end())
-				throw std::runtime_error("Element not added");
-
-			currLeaf->entries.erase(it);
+			deleteKey(key);
 
 			return false;
 		}
