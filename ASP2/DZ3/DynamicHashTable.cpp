@@ -168,8 +168,8 @@ bool DynamicHashTable::deleteKey(unsigned int key, bool callDestructor) {
 
 		auto newLeaf = new LeafNode;
 
-		newLeaf->entries.insert(newLeaf->entries.begin(), currLeaf->entries.begin(), currLeaf->entries.end());
-		newLeaf->entries.insert(newLeaf->entries.begin(), siblingLeaf->entries.begin(), siblingLeaf->entries.end());
+		newLeaf->entries.insert(newLeaf->entries.end(), currLeaf->entries.begin(), currLeaf->entries.end());
+		newLeaf->entries.insert(newLeaf->entries.end(), siblingLeaf->entries.begin(), siblingLeaf->entries.end());
 
 		auto grandparent = parent->parent;
 		if (!grandparent)
@@ -177,6 +177,10 @@ bool DynamicHashTable::deleteKey(unsigned int key, bool callDestructor) {
 		else
 			(grandparent->right == parent ? grandparent->right : grandparent->left) = newLeaf;
 		newLeaf->parent = grandparent;
+
+		delete parent;
+		delete currLeaf;
+		delete siblingLeaf;
 
 		currLeaf = newLeaf;
 	}
