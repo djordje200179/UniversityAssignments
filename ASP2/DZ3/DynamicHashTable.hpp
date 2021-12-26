@@ -5,9 +5,13 @@
 
 class DynamicHashTable : public HashTable {
 private:
-	struct TreeNode {};
+	struct TreeNode {
+		virtual ~TreeNode() = 0;
+	};
 
 	struct Node : TreeNode {
+		Node(TreeNode* left, TreeNode* right) : left(left), right(right) {}
+
 		TreeNode* left;
 		TreeNode* right;
 	};
@@ -16,7 +20,11 @@ private:
 		std::vector<Student*> entries;
 	};
 private:
-	std::vector<TreeNode*> buckets;
+	const int b;
+	mutable std::vector<TreeNode*> buckets;
+
+	std::vector<bool> calculateAdress(unsigned int key) const;
+	TreeNode*& getBucket(const std::vector<bool>& bits) const;
 protected:
 	void print(std::ostream& os) const override;
 public:

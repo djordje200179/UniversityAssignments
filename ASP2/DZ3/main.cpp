@@ -10,15 +10,17 @@ using namespace std;
 void test(HashTable& hashTable) {
 	CSVParser fileReader("students_500.csv");
 
+	size_t counter = 0;
 	while (auto student = fileReader.readRow())
-		hashTable.insertKey(student->getId(), student);
+		counter += hashTable.insertKey(student->getId(), student);
 
-	cout << hashTable;
+	cout << "Keys successfully inserted: " << counter << endl;
+	cout << "Keys in table: " << hashTable.keyCount() << endl;
 }
 
 int main() {
-	StaticHashTable staticHashTable(10, 6, SplitSequenceLinearHashing(2, 3));
-	test(staticHashTable);
+	/*StaticHashTable staticHashTable(10, 6, SplitSequenceLinearHashing(2, 3));
+	test(staticHashTable);*/
 
 	DynamicHashTable dynamicHashTable(10, 6, 4);
 	test(dynamicHashTable);
