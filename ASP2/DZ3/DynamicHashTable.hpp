@@ -20,7 +20,7 @@ private:
 		std::vector<Student*> entries;
 	};
 private:
-	const int b;
+	const int rootAddressBits;
 	mutable std::vector<TreeNode*> buckets;
 
 	std::vector<bool> calculateAdress(unsigned int key) const;

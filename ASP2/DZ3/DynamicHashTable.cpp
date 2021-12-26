@@ -7,10 +7,10 @@ using namespace std;
 
 DynamicHashTable::TreeNode::~TreeNode() = default;
 
-DynamicHashTable::DynamicHashTable(int bucketSize, int hashDegree, int rootBuckets) :
+DynamicHashTable::DynamicHashTable(int bucketSize, int hashDegree, int rootAddressBits) :
 	HashTable(bucketSize, hashDegree),
-	b(rootBuckets),
-	buckets(1ull << rootBuckets) {
+	rootAddressBits(rootAddressBits),
+	buckets(1ull << rootAddressBits) {
 	for (auto& bucket : buckets)
 		bucket = new Leaf;
 }
@@ -19,8 +19,8 @@ std::vector<bool> DynamicHashTable::calculateAdress(unsigned int key) const {
 	auto hash = hashFunction(key);
 	vector<bool> bits(hashDegree);
 
-	for (int i = 0; i < hashDegree; i++) {
-		bits[hashDegree - i - 1] = hash & 1;
+	for (int i = hashDegree - 1; i >= 0; i--) {
+		bits[i] = hash & 1;
 		hash >>= 1;
 	}
 
@@ -29,25 +29,25 @@ std::vector<bool> DynamicHashTable::calculateAdress(unsigned int key) const {
 
 DynamicHashTable::TreeNode*& DynamicHashTable::getBucket(const std::vector<bool>&bits) const {
 	size_t index = 0;
-	size_t term;
-	for (int i = 0, term = 1 << (b - 1); i < b; i++) {
-		index += term * bits[i];
-		term >>= 1;
+
+	for (int i = rootAddressBits - 1; i >= 0; i--) {
+		index |= bits[i];
+		index <<= 1;
 	}
 
 	return buckets[index];
 }
 
 void DynamicHashTable::print(std::ostream & os) const {
-	//popraviti ispis
+	//implementirati ispis
 }
 
 Student* DynamicHashTable::findKey(unsigned int key) const {
 	auto bits = calculateAdress(key);
 	auto node = getBucket(bits);
-	auto currIndex = b;
+	auto currIndex = rootAddressBits;
 
-	for (currIndex = b; currIndex < hashDegree; currIndex++) {
+	for (currIndex = rootAddressBits; currIndex < hashDegree; currIndex++) {
 		if (auto treeNode = dynamic_cast<Node*>(node))
 			node = (bits[currIndex] == 0) ? treeNode->left : treeNode->right;
 		else
@@ -55,6 +55,9 @@ Student* DynamicHashTable::findKey(unsigned int key) const {
 	}
 
 	auto leaf = dynamic_cast<Leaf*>(node);
+
+	if (!leaf)
+		throw std::runtime_error("Leaf doesn't exist");
 
 	for (auto data : leaf->entries)
 		if (key == data->getId())
@@ -66,10 +69,10 @@ Student* DynamicHashTable::findKey(unsigned int key) const {
 bool DynamicHashTable::insertKey(unsigned int key, Student * data) {
 	auto bits = calculateAdress(key);
 	auto node = getBucket(bits);
-	auto currIndex = b;
+	auto currIndex = rootAddressBits;
 	Node* parentNode = nullptr;
 
-	for (currIndex = b; currIndex < hashDegree; currIndex++) {
+	for (currIndex = rootAddressBits; currIndex < hashDegree; currIndex++) {
 		if (auto treeNode = dynamic_cast<Node*>(node)) {
 			parentNode = treeNode;
 			node = (bits[currIndex] == 0) ? treeNode->left : treeNode->right;
@@ -78,6 +81,9 @@ bool DynamicHashTable::insertKey(unsigned int key, Student * data) {
 	}
 
 	auto leaf = dynamic_cast<Leaf*>(node);
+
+	if (!leaf)
+		throw std::runtime_error("Leaf doesn't exist");
 
 	if (currIndex == hashDegree && leaf->entries.size() == bucketSize)
 		return false;
@@ -109,9 +115,11 @@ bool DynamicHashTable::insertKey(unsigned int key, Student * data) {
 
 bool DynamicHashTable::deleteKey(unsigned int key, bool callDestructor) {
 	auto bits = calculateAdress(key);
-	auto bucket = getBucket(bits);
+	auto node = getBucket(bits);
 
-	return false; //popraviti brisanje
+	//implementirati brisanje
+
+	return false;
 }
 
 void DynamicHashTable::clear() {
