@@ -8,7 +8,7 @@
 using namespace std;
 
 void test(HashTable& hashTable) {
-	CSVParser fileReader("students_500.csv");
+	CSVParser fileReader("students_10000.csv");
 
 	size_t counter = 0;
 	while (auto student = fileReader.readRow())
@@ -17,15 +17,19 @@ void test(HashTable& hashTable) {
 	cout << "Keys successfully inserted: " << counter << endl;
 	cout << "Keys in table: " << hashTable.keyCount() << endl;
 
-	cout << hashTable;
+	//cout << hashTable;
 }
 
 int main() {
-	StaticHashTable staticHashTable(10, 6, SplitSequenceLinearHashing(2, 3));
+	StaticHashTable staticHashTable(5, 15, SplitSequenceLinearHashing(3, 5));
+	cout << "Testing static table:" << endl;
 	test(staticHashTable);
+	cout << endl;
 
-	DynamicHashTable dynamicHashTable(10, 6, 4);
+	DynamicHashTable dynamicHashTable(5, 15, 11);
+	cout << "Testing dynamic table:" << endl;
 	test(dynamicHashTable);
+	cout << endl;
 
 	return 0;
 }
