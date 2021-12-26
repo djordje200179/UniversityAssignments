@@ -44,17 +44,17 @@ void DynamicHashTable::print(std::ostream & os) const {
 
 Student* DynamicHashTable::findKey(unsigned int key) const {
 	auto bits = calculateAdress(key);
-	auto node = getBucket(bits);
+	auto currNode = getBucket(bits);
 	auto currIndex = rootAddressBits;
 
 	for (currIndex = rootAddressBits; currIndex < hashDegree; currIndex++) {
-		if (auto internalNode = dynamic_cast<InternalNode*>(node))
-			node = (bits[currIndex] == 0) ? internalNode->left : internalNode->right;
+		if (auto internalNode = dynamic_cast<InternalNode*>(currNode))
+			currNode = (bits[currIndex] == 0) ? internalNode->left : internalNode->right;
 		else
 			break;
 	}
 
-	auto leaf = dynamic_cast<LeafNode*>(node);
+	auto leaf = dynamic_cast<LeafNode*>(currNode);
 
 	if (!leaf)
 		throw std::runtime_error("Leaf doesn't exist");
@@ -65,48 +65,48 @@ Student* DynamicHashTable::findKey(unsigned int key) const {
 
 bool DynamicHashTable::insertKey(unsigned int key, Student * data) {
 	auto bits = calculateAdress(key);
-	auto node = getBucket(bits);
+	auto currNode = getBucket(bits);
 	auto currIndex = rootAddressBits;
 
 	for (currIndex = rootAddressBits; currIndex < hashDegree; currIndex++) {
-		if (auto internalNode = dynamic_cast<InternalNode*>(node))
-			node = (bits[currIndex] == 0) ? internalNode->left : internalNode->right;
+		if (auto internalNode = dynamic_cast<InternalNode*>(currNode))
+			currNode = (bits[currIndex] == 0) ? internalNode->left : internalNode->right;
 		else
 			break;
 	}
 
-	auto leaf = dynamic_cast<LeafNode*>(node);
+	auto currLeaf = dynamic_cast<LeafNode*>(currNode);
 
-	if (!leaf)
+	if (!currLeaf)
 		throw std::runtime_error("Leaf doesn't exist");
 
-	if (currIndex == hashDegree && leaf->entries.size() == bucketSize)
+	if (currIndex == hashDegree && currLeaf->entries.size() == bucketSize)
 		return false;
 
-	leaf->entries.push_back(data);
+	currLeaf->entries.push_back(data);
 
-	while (leaf->entries.size() == bucketSize + 1) {
+	while (currLeaf->entries.size() == bucketSize + 1) {
 		auto leftNode = new LeafNode;
 		auto rightNode = new LeafNode;
 		auto newParentNode = new InternalNode(leftNode, rightNode);
 
-		for (auto& data : leaf->entries) {
+		for (auto& data : currLeaf->entries) {
 			auto bits = calculateAdress(data->getId());
 			(bits[currIndex] == false ? leftNode : rightNode)->entries.push_back(data);
 		}
 
-		if (!leaf->parent) {
-			delete leaf;
+		if (!currLeaf->parent) {
+			delete currLeaf;
 			getBucket(bits) = newParentNode;
 		} else {
-			auto parent = leaf->parent;
-			(parent->left == leaf ? parent->left : parent->right) = newParentNode;
+			auto parent = currLeaf->parent;
+			(parent->left == currLeaf ? parent->left : parent->right) = newParentNode;
 			newParentNode->parent = parent;
 
-			delete leaf;
+			delete currLeaf;
 		}
 			
-		leaf = (leftNode->entries.size() > rightNode->entries.size() ? leftNode : rightNode);
+		currLeaf = (leftNode->entries.size() > rightNode->entries.size() ? leftNode : rightNode);
 	}
 
 	return true;
@@ -114,38 +114,38 @@ bool DynamicHashTable::insertKey(unsigned int key, Student * data) {
 
 bool DynamicHashTable::deleteKey(unsigned int key, bool callDestructor) {
 	auto bits = calculateAdress(key);
-	auto node = getBucket(bits);
+	auto currNode = getBucket(bits);
 	auto currIndex = rootAddressBits;
 
 	for (currIndex = rootAddressBits; currIndex < hashDegree; currIndex++) {
-		if (auto internalNode = dynamic_cast<InternalNode*>(node))
-			node = (bits[currIndex] == 0) ? internalNode->left : internalNode->right;
+		if (auto internalNode = dynamic_cast<InternalNode*>(currNode))
+			currNode = (bits[currIndex] == 0) ? internalNode->left : internalNode->right;
 		else
 			break;
 	}
 
-	auto leaf = dynamic_cast<LeafNode*>(node);
+	auto currLeaf = dynamic_cast<LeafNode*>(currNode);
 
-	if (!leaf)
+	if (!currLeaf)
 		throw std::runtime_error("Leaf doesn't exist");
 
-	auto it = find_if(leaf->entries.begin(), leaf->entries.end(), [key](Student* entry) { return key == entry->getId(); });
-	if (it == leaf->entries.end())
+	auto it = find_if(currLeaf->entries.begin(), currLeaf->entries.end(), [key](Student* entry) { return key == entry->getId(); });
+	if (it == currLeaf->entries.end())
 		return false;
 
-	leaf->entries.erase(it);
+	currLeaf->entries.erase(it);
 
-	auto parent = leaf->parent;
+	auto parent = currLeaf->parent;
 	if (!parent)
 		return true;
 
-	auto siblingNode = parent->left == leaf ? parent->right : parent->left;
+	auto siblingNode = parent->left == currLeaf ? parent->right : parent->left;
 	auto siblingLeaf = dynamic_cast<LeafNode*>(siblingNode);
 
 	if (!siblingLeaf)
 		return true;
 
-	if (siblingLeaf->entries.size() + leaf->entries.size() > bucketSize)
+	if (siblingLeaf->entries.size() + currLeaf->entries.size() > bucketSize)
 		return true;
 
 	// implementirati spajanje
