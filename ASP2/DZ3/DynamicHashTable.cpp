@@ -5,14 +5,14 @@
 
 using namespace std;
 
-DynamicHashTable::TreeNode::~TreeNode() = default;
+DynamicHashTable::Node::~Node() = default;
 
 DynamicHashTable::DynamicHashTable(int bucketSize, int hashDegree, int rootAddressBits) :
 	HashTable(bucketSize, hashDegree),
 	rootAddressBits(rootAddressBits),
 	buckets(1ull << rootAddressBits) {
-	for (auto& bucket : buckets)
-		bucket = new Leaf;
+	for (auto& node : buckets)
+		node = new LeafNode;
 }
 
 std::vector<bool> DynamicHashTable::calculateAdress(unsigned int key) const {
@@ -27,7 +27,7 @@ std::vector<bool> DynamicHashTable::calculateAdress(unsigned int key) const {
 	return bits;
 }
 
-DynamicHashTable::TreeNode*& DynamicHashTable::getBucket(const std::vector<bool>&bits) const {
+DynamicHashTable::Node*& DynamicHashTable::getBucket(const std::vector<bool>&bits) const {
 	size_t index = 0;
 
 	for (int i = rootAddressBits - 1; i >= 0; i--) {
@@ -48,20 +48,20 @@ Student* DynamicHashTable::findKey(unsigned int key) const {
 	auto currIndex = rootAddressBits;
 
 	for (currIndex = rootAddressBits; currIndex < hashDegree; currIndex++) {
-		if (auto treeNode = dynamic_cast<Node*>(node))
-			node = (bits[currIndex] == 0) ? treeNode->left : treeNode->right;
+		if (auto internalNode = dynamic_cast<InternalNode*>(node))
+			node = (bits[currIndex] == 0) ? internalNode->left : internalNode->right;
 		else
 			break;
 	}
 
-	auto leaf = dynamic_cast<Leaf*>(node);
+	auto leaf = dynamic_cast<LeafNode*>(node);
 
 	if (!leaf)
 		throw std::runtime_error("Leaf doesn't exist");
 
-	for (auto data : leaf->entries)
-		if (key == data->getId())
-			return data;
+	for (auto entry : leaf->entries)
+		if (key == entry->getId())
+			return entry;
 
 	return nullptr;
 }
@@ -70,17 +70,17 @@ bool DynamicHashTable::insertKey(unsigned int key, Student * data) {
 	auto bits = calculateAdress(key);
 	auto node = getBucket(bits);
 	auto currIndex = rootAddressBits;
-	Node* parentNode = nullptr;
+	InternalNode* parentNode = nullptr;
 
 	for (currIndex = rootAddressBits; currIndex < hashDegree; currIndex++) {
-		if (auto treeNode = dynamic_cast<Node*>(node)) {
-			parentNode = treeNode;
-			node = (bits[currIndex] == 0) ? treeNode->left : treeNode->right;
+		if (auto internalNode = dynamic_cast<InternalNode*>(node)) {
+			parentNode = internalNode;
+			node = (bits[currIndex] == 0) ? internalNode->left : internalNode->right;
 		} else
 			break;
 	}
 
-	auto leaf = dynamic_cast<Leaf*>(node);
+	auto leaf = dynamic_cast<LeafNode*>(node);
 
 	if (!leaf)
 		throw std::runtime_error("Leaf doesn't exist");
@@ -91,9 +91,9 @@ bool DynamicHashTable::insertKey(unsigned int key, Student * data) {
 	leaf->entries.push_back(data);
 
 	while (leaf->entries.size() == bucketSize + 1) {
-		auto leftNode = new Leaf;
-		auto rightNode = new Leaf;
-		auto newParentNode = new Node(leftNode, rightNode);
+		auto leftNode = new LeafNode;
+		auto rightNode = new LeafNode;
+		auto newParentNode = new InternalNode(leftNode, rightNode);
 
 		for (auto& data : leaf->entries) {
 			auto bits = calculateAdress(data->getId());
@@ -123,37 +123,37 @@ bool DynamicHashTable::deleteKey(unsigned int key, bool callDestructor) {
 }
 
 void DynamicHashTable::clear() {
-	stack<TreeNode*> traversalStack;
-	stack<TreeNode*> deletingStack;
+	stack<Node*> traversalStack;
+	stack<Node*> deletingStack;
 
 	for (auto node : buckets)
 		traversalStack.push(node);
 
 	while (!traversalStack.empty()) {
-		auto treeNode = traversalStack.top();
+		auto node = traversalStack.top();
 		traversalStack.pop();
 
-		deletingStack.push(treeNode);
+		deletingStack.push(node);
 
-		if (auto node = dynamic_cast<Node*>(treeNode)) {
-			traversalStack.push(node->right);
-			traversalStack.push(node->left);
+		if (auto internalNode = dynamic_cast<InternalNode*>(node)) {
+			traversalStack.push(internalNode->right);
+			traversalStack.push(internalNode->left);
 		}
 	}
 
 	while (!deletingStack.empty()) {
-		auto treeNode = deletingStack.top();
+		auto node = deletingStack.top();
 		deletingStack.pop();
 
-		delete treeNode;
+		delete node;
 	}
 
-	for (auto& bucket : buckets)
-		bucket = new Leaf;
+	for (auto& node : buckets)
+		node = new LeafNode;
 }
 
 size_t DynamicHashTable::keyCount() const {
-	stack<TreeNode*> traversalStack;
+	stack<Node*> traversalStack;
 
 	for (auto node : buckets)
 		traversalStack.push(node);
@@ -163,10 +163,10 @@ size_t DynamicHashTable::keyCount() const {
 		auto treeNode = traversalStack.top();
 		traversalStack.pop();
 
-		if (auto node = dynamic_cast<Node*>(treeNode)) {
+		if (auto node = dynamic_cast<InternalNode*>(treeNode)) {
 			traversalStack.push(node->right);
 			traversalStack.push(node->left);
-		} else if (auto leaf = dynamic_cast<Leaf*>(treeNode))
+		} else if (auto leaf = dynamic_cast<LeafNode*>(treeNode))
 			counter += leaf->entries.size();
 	}
 
