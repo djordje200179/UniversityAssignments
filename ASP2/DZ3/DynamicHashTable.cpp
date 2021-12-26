@@ -59,11 +59,8 @@ Student* DynamicHashTable::findKey(unsigned int key) const {
 	if (!leaf)
 		throw std::runtime_error("Leaf doesn't exist");
 
-	for (auto entry : leaf->entries)
-		if (key == entry->getId())
-			return entry;
-
-	return nullptr;
+	auto it = find_if(leaf->entries.begin(), leaf->entries.end(), [key](Student* entry) { return key == entry->getId(); });
+	return it != leaf->entries.end() ? *it : nullptr;
 }
 
 bool DynamicHashTable::insertKey(unsigned int key, Student * data) {
@@ -116,10 +113,43 @@ bool DynamicHashTable::insertKey(unsigned int key, Student * data) {
 bool DynamicHashTable::deleteKey(unsigned int key, bool callDestructor) {
 	auto bits = calculateAdress(key);
 	auto node = getBucket(bits);
+	auto currIndex = rootAddressBits;
+	InternalNode* parentNode = nullptr;
 
-	//implementirati brisanje
+	for (currIndex = rootAddressBits; currIndex < hashDegree; currIndex++) {
+		if (auto internalNode = dynamic_cast<InternalNode*>(node)) {
+			parentNode = internalNode;
+			node = (bits[currIndex] == 0) ? internalNode->left : internalNode->right;
+		} else
+			break;
+	}
 
-	return false;
+	auto leaf = dynamic_cast<LeafNode*>(node);
+
+	if (!leaf)
+		throw std::runtime_error("Leaf doesn't exist");
+
+	auto it = find_if(leaf->entries.begin(), leaf->entries.end(), [key](Student* entry) { return key == entry->getId(); });
+	if (it == leaf->entries.end())
+		return false;
+
+	leaf->entries.erase(it);
+
+	if (!parentNode)
+		return true;
+
+	auto siblingNode = parentNode->left == leaf ? parentNode->right : parentNode->left;
+	auto siblingLeaf = dynamic_cast<LeafNode*>(siblingNode);
+
+	if (!siblingLeaf)
+		return true;
+
+	if (siblingLeaf->entries.size() + leaf->entries.size() > bucketSize)
+		return true;
+
+	// implementirati spajanje
+
+	return true;
 }
 
 void DynamicHashTable::clear() {
