@@ -45,4 +45,5 @@ public:
 
 	void clear() override;
 	size_t keyCount() const override;
+	size_t tableSize() const override;
 };

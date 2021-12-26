@@ -252,3 +252,24 @@ size_t DynamicHashTable::keyCount() const {
 
 	return counter;
 }
+
+size_t DynamicHashTable::tableSize() const {
+	stack<Node*> traversalStack;
+
+	for (auto node : buckets)
+		traversalStack.push(node);
+
+	size_t counter = 0;
+	while (!traversalStack.empty()) {
+		auto treeNode = traversalStack.top();
+		traversalStack.pop();
+
+		if (auto node = dynamic_cast<InternalNode*>(treeNode)) {
+			traversalStack.push(node->right);
+			traversalStack.push(node->left);
+		} else if (auto leaf = dynamic_cast<LeafNode*>(treeNode))
+			counter++;
+	}
+
+	return counter;
+}

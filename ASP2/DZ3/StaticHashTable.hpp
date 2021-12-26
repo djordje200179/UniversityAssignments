@@ -21,9 +21,7 @@ public:
 
 	void clear() override;
 	size_t keyCount() const override;
-
-	size_t tableSize() const { return table.size(); }
-	double fillRatio() const { return (double)keyCount() / (tableSize() * bucketSize); }
+	size_t tableSize() const override { return table.size(); }
 
 	friend class SplitSequenceLinearHashing;
 };

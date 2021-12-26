@@ -22,6 +22,8 @@ public:
 
 	virtual void clear() = 0;
 	virtual size_t keyCount() const = 0;
+	virtual size_t tableSize() const = 0;
+	double fillRatio() const { return (double)keyCount() / (tableSize() * bucketSize); }
 
 	friend std::ostream& operator<<(std::ostream& os, const HashTable& table) { table.print(os); return os; }
 };

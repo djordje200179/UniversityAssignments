@@ -16,6 +16,8 @@ void test(HashTable& hashTable) {
 
 	cout << "Keys successfully inserted: " << counter << endl;
 	cout << "Keys in table: " << hashTable.keyCount() << endl;
+	cout << "Table size: " << hashTable.tableSize() << endl;
+	cout << "Fill ratio: " << hashTable.fillRatio() << endl;
 
 	//cout << hashTable;
 }
