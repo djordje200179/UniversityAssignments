@@ -104,10 +104,10 @@ bool DynamicHashTable::insertKey(unsigned int key, Student * data) {
 
 		if (!parentNode)
 			getBucket(bits) = newParentNode;
-		else
+		else 
 			(parentNode->left == leaf ? parentNode->left : parentNode->right) = newParentNode;
 
-		leaf = (leftNode->entries.size() > 0 ? leftNode : rightNode);
+		leaf = (leftNode->entries.size() > rightNode->entries.size() ? leftNode : rightNode);
 	}
 
 	return true;
