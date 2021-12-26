@@ -1,7 +1,7 @@
 #include "DynamicHashTable.hpp"
 #include "Student.hpp"
-#include <numeric>
 #include <stack>
+#include <algorithm>
 
 using namespace std;
 
@@ -83,7 +83,10 @@ Student* DynamicHashTable::findKey(unsigned int key) const {
 	return it != leaf->entries.end() ? *it : nullptr;
 }
 
-bool DynamicHashTable::insertKey(unsigned int key, Student * data) {
+bool DynamicHashTable::insertKey(unsigned int key, Student* data) {
+	if (findKey(key))
+		return false;
+
 	auto bits = calculateAdress(key);
 	auto currNode = getRootNode(bits);
 	auto currIndex = rootAddressBits;
@@ -100,12 +103,22 @@ bool DynamicHashTable::insertKey(unsigned int key, Student * data) {
 	if (!currLeaf)
 		throw std::runtime_error("Leaf doesn't exist");
 
-	if (currIndex == hashDegree && currLeaf->entries.size() == bucketSize)
-		return false;
-
 	currLeaf->entries.push_back(data);
 
-	while (currLeaf->entries.size() == bucketSize + 1) {
+	while (currLeaf->entries.size() > bucketSize) {
+		if (currIndex == hashDegree) {
+			auto it = find_if(currLeaf->entries.begin(), currLeaf->entries.end(), [key](Student* student) {
+				return student->getId() == key;
+			});
+
+			if (it == currLeaf->entries.end())
+				throw std::runtime_error("Element not added");
+
+			currLeaf->entries.erase(it);
+
+			return false;
+		}
+
 		auto leftNode = new LeafNode;
 		auto rightNode = new LeafNode;
 		auto newParentNode = new InternalNode(leftNode, rightNode);
@@ -125,8 +138,9 @@ bool DynamicHashTable::insertKey(unsigned int key, Student * data) {
 
 			delete currLeaf;
 		}
-			
+
 		currLeaf = (leftNode->entries.size() > rightNode->entries.size() ? leftNode : rightNode);
+		currIndex++;
 	}
 
 	return true;
