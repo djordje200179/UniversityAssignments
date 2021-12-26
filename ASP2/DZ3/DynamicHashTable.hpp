@@ -31,7 +31,8 @@ private:
 	mutable std::vector<Node*> buckets;
 
 	std::vector<bool> calculateAdress(unsigned int key) const;
-	Node*& getBucket(const std::vector<bool>& bits) const;
+	Node*& getRootNode(const std::vector<bool>& bits) const;
+	LeafNode* getBucket(unsigned int key) const;
 protected:
 	void print(std::ostream& os) const override;
 public:

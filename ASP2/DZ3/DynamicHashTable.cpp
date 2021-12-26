@@ -27,7 +27,7 @@ std::vector<bool> DynamicHashTable::calculateAdress(unsigned int key) const {
 	return bits;
 }
 
-DynamicHashTable::Node*& DynamicHashTable::getBucket(const std::vector<bool>&bits) const {
+DynamicHashTable::Node*& DynamicHashTable::getRootNode(const std::vector<bool>&bits) const {
 	size_t index = 0;
 
 	for (int i = rootAddressBits - 1; i >= 0; i--) {
@@ -38,13 +38,33 @@ DynamicHashTable::Node*& DynamicHashTable::getBucket(const std::vector<bool>&bit
 	return buckets[index];
 }
 
+DynamicHashTable::LeafNode* DynamicHashTable::getBucket(unsigned int key) const {
+	auto bits = calculateAdress(key);
+	auto currNode = getRootNode(bits);
+	auto currIndex = rootAddressBits;
+
+	for (currIndex = rootAddressBits; currIndex < hashDegree; currIndex++) {
+		if (auto internalNode = dynamic_cast<InternalNode*>(currNode))
+			currNode = (bits[currIndex] == 0) ? internalNode->left : internalNode->right;
+		else
+			break;
+	}
+
+	auto leaf = dynamic_cast<LeafNode*>(currNode);
+
+	if (!leaf)
+		throw std::runtime_error("Leaf doesn't exist");
+
+	return leaf;
+}
+
 void DynamicHashTable::print(std::ostream & os) const {
 	//implementirati ispis
 }
 
 Student* DynamicHashTable::findKey(unsigned int key) const {
 	auto bits = calculateAdress(key);
-	auto currNode = getBucket(bits);
+	auto currNode = getRootNode(bits);
 	auto currIndex = rootAddressBits;
 
 	for (currIndex = rootAddressBits; currIndex < hashDegree; currIndex++) {
@@ -65,7 +85,7 @@ Student* DynamicHashTable::findKey(unsigned int key) const {
 
 bool DynamicHashTable::insertKey(unsigned int key, Student * data) {
 	auto bits = calculateAdress(key);
-	auto currNode = getBucket(bits);
+	auto currNode = getRootNode(bits);
 	auto currIndex = rootAddressBits;
 
 	for (currIndex = rootAddressBits; currIndex < hashDegree; currIndex++) {
@@ -97,7 +117,7 @@ bool DynamicHashTable::insertKey(unsigned int key, Student * data) {
 
 		if (!currLeaf->parent) {
 			delete currLeaf;
-			getBucket(bits) = newParentNode;
+			getRootNode(bits) = newParentNode;
 		} else {
 			auto parent = currLeaf->parent;
 			(parent->left == currLeaf ? parent->left : parent->right) = newParentNode;
@@ -114,7 +134,7 @@ bool DynamicHashTable::insertKey(unsigned int key, Student * data) {
 
 bool DynamicHashTable::deleteKey(unsigned int key, bool callDestructor) {
 	auto bits = calculateAdress(key);
-	auto currNode = getBucket(bits);
+	auto currNode = getRootNode(bits);
 	auto currIndex = rootAddressBits;
 
 	for (currIndex = rootAddressBits; currIndex < hashDegree; currIndex++) {
