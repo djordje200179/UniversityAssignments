@@ -16,11 +16,13 @@ void test(HashTable& hashTable) {
 
 	cout << "Keys successfully inserted: " << counter << endl;
 	cout << "Keys in table: " << hashTable.keyCount() << endl;
+
+	cout << hashTable;
 }
 
 int main() {
-	/*StaticHashTable staticHashTable(10, 6, SplitSequenceLinearHashing(2, 3));
-	test(staticHashTable);*/
+	StaticHashTable staticHashTable(10, 6, SplitSequenceLinearHashing(2, 3));
+	test(staticHashTable);
 
 	DynamicHashTable dynamicHashTable(10, 6, 4);
 	test(dynamicHashTable);
