@@ -31,8 +31,8 @@ DynamicHashTable::Node*& DynamicHashTable::getBucket(const std::vector<bool>&bit
 	size_t index = 0;
 
 	for (int i = rootAddressBits - 1; i >= 0; i--) {
-		index |= bits[i];
 		index <<= 1;
+		index |= bits[i];
 	}
 
 	return buckets[index];
