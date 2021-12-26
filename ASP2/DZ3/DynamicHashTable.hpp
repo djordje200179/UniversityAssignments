@@ -29,6 +29,7 @@ protected:
 	void print(std::ostream& os) const override;
 public:
 	DynamicHashTable(int bucketSize, int hashDegree, int rootBuckets);
+	~DynamicHashTable() { clear(); }
 
 	Student* findKey(unsigned int key) const override;
 	bool insertKey(unsigned int key, Student* data) override;

@@ -13,6 +13,7 @@ protected:
 	void print(std::ostream& os) const override;
 public:
 	StaticHashTable(int bucketSize, int hashDegree, const AddressFunction& addressFunction);
+	~StaticHashTable() = default;
 
 	Student* findKey(unsigned int key) const override;
 	bool insertKey(unsigned int key, Student* data) override;
