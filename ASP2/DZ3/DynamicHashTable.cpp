@@ -67,13 +67,11 @@ bool DynamicHashTable::insertKey(unsigned int key, Student * data) {
 	auto bits = calculateAdress(key);
 	auto node = getBucket(bits);
 	auto currIndex = rootAddressBits;
-	InternalNode* parentNode = nullptr;
 
 	for (currIndex = rootAddressBits; currIndex < hashDegree; currIndex++) {
-		if (auto internalNode = dynamic_cast<InternalNode*>(node)) {
-			parentNode = internalNode;
+		if (auto internalNode = dynamic_cast<InternalNode*>(node))
 			node = (bits[currIndex] == 0) ? internalNode->left : internalNode->right;
-		} else
+		else
 			break;
 	}
 
@@ -97,13 +95,17 @@ bool DynamicHashTable::insertKey(unsigned int key, Student * data) {
 			(bits[currIndex] == false ? leftNode : rightNode)->entries.push_back(data);
 		}
 
-		delete leaf;
-
-		if (!parentNode)
+		if (!leaf->parent) {
+			delete leaf;
 			getBucket(bits) = newParentNode;
-		else 
-			(parentNode->left == leaf ? parentNode->left : parentNode->right) = newParentNode;
+		} else {
+			auto parent = leaf->parent;
+			(parent->left == leaf ? parent->left : parent->right) = newParentNode;
+			newParentNode->parent = parent;
 
+			delete leaf;
+		}
+			
 		leaf = (leftNode->entries.size() > rightNode->entries.size() ? leftNode : rightNode);
 	}
 
@@ -114,13 +116,11 @@ bool DynamicHashTable::deleteKey(unsigned int key, bool callDestructor) {
 	auto bits = calculateAdress(key);
 	auto node = getBucket(bits);
 	auto currIndex = rootAddressBits;
-	InternalNode* parentNode = nullptr;
 
 	for (currIndex = rootAddressBits; currIndex < hashDegree; currIndex++) {
-		if (auto internalNode = dynamic_cast<InternalNode*>(node)) {
-			parentNode = internalNode;
+		if (auto internalNode = dynamic_cast<InternalNode*>(node))
 			node = (bits[currIndex] == 0) ? internalNode->left : internalNode->right;
-		} else
+		else
 			break;
 	}
 
@@ -135,10 +135,11 @@ bool DynamicHashTable::deleteKey(unsigned int key, bool callDestructor) {
 
 	leaf->entries.erase(it);
 
-	if (!parentNode)
+	auto parent = leaf->parent;
+	if (!parent)
 		return true;
 
-	auto siblingNode = parentNode->left == leaf ? parentNode->right : parentNode->left;
+	auto siblingNode = parent->left == leaf ? parent->right : parent->left;
 	auto siblingLeaf = dynamic_cast<LeafNode*>(siblingNode);
 
 	if (!siblingLeaf)

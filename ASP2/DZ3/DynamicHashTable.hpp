@@ -5,12 +5,19 @@
 
 class DynamicHashTable : public HashTable {
 private:
+	struct InternalNode;
+
 	struct Node {
+		InternalNode* parent = nullptr;
+
 		virtual ~Node() = 0;
 	};
 
 	struct InternalNode : Node {
-		InternalNode(Node* left, Node* right) : left(left), right(right) {}
+		InternalNode(Node* left, Node* right) : left(left), right(right) {
+			left->parent = this;
+			right->parent = this;
+		}
 
 		Node* left;
 		Node* right;
