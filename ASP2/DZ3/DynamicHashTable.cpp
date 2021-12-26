@@ -155,20 +155,31 @@ bool DynamicHashTable::deleteKey(unsigned int key, bool callDestructor) {
 
 	currLeaf->entries.erase(it);
 
-	auto parent = currLeaf->parent;
-	if (!parent)
-		return true;
+	while (true) {
+		InternalNode* parent = currLeaf->parent;
+		if (!parent)
+			break;
 
-	auto siblingNode = parent->left == currLeaf ? parent->right : parent->left;
-	auto siblingLeaf = dynamic_cast<LeafNode*>(siblingNode);
+		Node* siblingNode = parent->left == currLeaf ? parent->right : parent->left;
+		LeafNode* siblingLeaf = dynamic_cast<LeafNode*>(siblingNode);
 
-	if (!siblingLeaf)
-		return true;
+		if (!siblingLeaf || siblingLeaf->entries.size() + currLeaf->entries.size() > bucketSize)
+			break;
 
-	if (siblingLeaf->entries.size() + currLeaf->entries.size() > bucketSize)
-		return true;
+		auto newLeaf = new LeafNode;
 
-	// implementirati spajanje
+		newLeaf->entries.insert(newLeaf->entries.begin(), currLeaf->entries.begin(), currLeaf->entries.end());
+		newLeaf->entries.insert(newLeaf->entries.begin(), siblingLeaf->entries.begin(), siblingLeaf->entries.end());
+
+		auto grandparent = parent->parent;
+		if (!grandparent)
+			getRootNode(bits) = newLeaf;
+		else
+			(grandparent->right == parent ? grandparent->right : grandparent->left) = newLeaf;
+		newLeaf->parent = grandparent;
+
+		currLeaf = newLeaf;
+	}
 
 	return true;
 }
