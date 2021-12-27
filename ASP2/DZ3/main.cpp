@@ -183,7 +183,7 @@ int main() {
 
 			auto result = hashTable->deleteKey(key, true);
 
-			cout << (result ? "Kljuc uspjesno izbacen : Kljuc nije pronadjen") << '\n';
+			cout << (result ? "Kljuc uspjesno izbacen" : "Kljuc nije pronadjen") << '\n';
 
 			break;
 		}
