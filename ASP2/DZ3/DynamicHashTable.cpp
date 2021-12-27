@@ -89,8 +89,8 @@ void DynamicHashTable::print(std::ostream & os) const {
 		}
 
 		if (auto internalNode = dynamic_cast<InternalNode*>(node)) {
-			traversalQueue.push(internalNode->right);
 			traversalQueue.push(internalNode->left);
+			traversalQueue.push(internalNode->right);
 		}
 	}
 
