@@ -10,33 +10,9 @@ using namespace std;
 
 #define CHECK(table) if(!table) { cout << "Tabela nije kreirana" << endl; break; }
 
-void test(HashTable& hashTable) {
-	CSVParser fileReader("students_10000.csv");
-
-	size_t counter = 0;
-	while (auto student = fileReader.readRow())
-		counter += hashTable.insertKey(student->getId(), student);
-
-	cout << "Keys successfully inserted: " << counter << endl;
-	cout << "Keys in table: " << hashTable.keyCount() << endl;
-	cout << "Table size: " << hashTable.tableSize() << endl;
-	cout << "Fill ratio: " << hashTable.fillRatio() << endl;
-
-	//cout << hashTable;
-}
-
 int main() {
-	/*StaticHashTable staticHashTable(5, 15, SplitSequenceLinearHashing(3, 5));
-	cout << "Testing static table:" << endl;
-	test(staticHashTable);
-	cout << endl;
-
-	DynamicHashTable dynamicHashTable(5, 15, 11);
-	cout << "Testing dynamic table:" << endl;
-	test(dynamicHashTable);
-	cout << endl;*/
-
 	HashTable* hashTable = nullptr;
+
 	do {
 		cout << "Odaberite opciju iz menija: " << '\n';
 		cout << "1) Kreiranje tabele" << '\n';
