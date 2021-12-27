@@ -231,27 +231,19 @@ bool DynamicHashTable::deleteKey(unsigned int key, bool callDestructor) {
 }
 
 void DynamicHashTable::clear() {
-	stack<Node*> traversalStack;
-	stack<Node*> deletingStack;
+	queue<Node*> traversalQueue;
 
 	for (auto node : buckets)
-		traversalStack.push(node);
+		traversalQueue.push(node);
 
-	while (!traversalStack.empty()) {
-		auto node = traversalStack.top();
-		traversalStack.pop();
-
-		deletingStack.push(node);
+	while (!traversalQueue.empty()) {
+		auto node = traversalQueue.front();
+		traversalQueue.pop();
 
 		if (auto internalNode = dynamic_cast<InternalNode*>(node)) {
-			traversalStack.push(internalNode->right);
-			traversalStack.push(internalNode->left);
+			traversalQueue.push(internalNode->left);
+			traversalQueue.push(internalNode->right);
 		}
-	}
-
-	while (!deletingStack.empty()) {
-		auto node = deletingStack.top();
-		deletingStack.pop();
 
 		delete node;
 	}
