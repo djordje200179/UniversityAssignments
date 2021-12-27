@@ -1,6 +1,7 @@
 #include "DynamicHashTable.hpp"
 #include "Student.hpp"
 #include <stack>
+#include <queue>
 #include <algorithm>
 
 using namespace std;
@@ -59,7 +60,41 @@ DynamicHashTable::LeafNode* DynamicHashTable::getBucket(unsigned int key) const 
 }
 
 void DynamicHashTable::print(std::ostream & os) const {
-	//implementirati ispis
+	queue<Node*> traversalQueue;
+
+	for (auto node : buckets)
+		traversalQueue.push(node);
+
+	while (!traversalQueue.empty()) {
+		auto node = traversalQueue.front();
+		traversalQueue.pop();
+
+		if (auto leafNode = dynamic_cast<LeafNode*>(node)) {
+			auto& bucket = leafNode->entries;
+
+			os << string(50, '-') << '\n';
+
+			for (int i = 0; i < bucketSize; i++) {
+				os << "| ";
+
+				if (i >= bucket.size())
+					os << "EMPTY";
+				else if (bucket[i])
+					os << *bucket[i];
+				else
+					os << "DELETED";
+
+				os << '\n';
+			}
+		}
+
+		if (auto internalNode = dynamic_cast<InternalNode*>(node)) {
+			traversalQueue.push(internalNode->right);
+			traversalQueue.push(internalNode->left);
+		}
+	}
+
+	os << string(50, '-') << '\n';
 }
 
 Student* DynamicHashTable::findKey(unsigned int key) const {
