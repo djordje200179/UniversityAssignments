@@ -138,15 +138,17 @@ bool DynamicHashTable::insertKey(unsigned int key, Student* data) {
 	if (!currLeaf)
 		throw std::runtime_error("Leaf doesn't exist");
 
+	int counter = 0;
+	int tempHash = hashFunction(key);
+	for (auto student : currLeaf->entries)
+		counter += hashFunction(student->getId() == tempHash);
+	
+	if (counter == bucketSize)
+		return false;
+
 	currLeaf->entries.push_back(data);
 
 	while (currLeaf->entries.size() > bucketSize) {
-		if (currIndex == hashDegree) {
-			deleteKey(key);
-
-			return false;
-		}
-
 		auto leftNode = new LeafNode;
 		auto rightNode = new LeafNode;
 		auto newParentNode = new InternalNode(leftNode, rightNode);
