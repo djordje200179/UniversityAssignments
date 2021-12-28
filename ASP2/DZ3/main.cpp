@@ -162,6 +162,7 @@ int main() {
 
 			string name;
 			cout << "Unesite ime studenta: " << '\n';
+			cin.ignore();
 			getline(cin, name);
 
 			unsigned int key;
