@@ -23,6 +23,9 @@ public:
 		int daysWaiting = 0;
 		double shipmentCost = 0.0;
 	};
+
+	friend class Operator;
+	friend class Seller;
 public:
 	Shipment(Article& article) : article(article) {}
 

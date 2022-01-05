@@ -2,7 +2,7 @@
 #include "Shipment.hpp"
 
 void Seller::process(Shipment& shipment) const {
-	auto details = shipment.getDetails(); // dodati referencu
+	auto& details = shipment.details;
 	
 	int n = items.length();
 	for (int i = 0; i < n; i++) {
