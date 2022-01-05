@@ -25,7 +25,6 @@ public:
 	};
 
 	friend class Operator;
-	friend class Seller;
 public:
 	Shipment(Article& article) : article(article) {}
 

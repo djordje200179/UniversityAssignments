@@ -13,6 +13,8 @@ public:
 	virtual ~Operator() = default;
 
 	virtual void process(Shipment& shipment) const = 0;
+protected:
+	Shipment::Details& getDetails(Shipment& shipment) const { return shipment.details; }
 };
 
 #endif // OPERATOR_H

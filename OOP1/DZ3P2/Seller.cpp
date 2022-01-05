@@ -2,7 +2,7 @@
 #include "Shipment.hpp"
 
 void Seller::process(Shipment& shipment) const {
-	auto& details = shipment.details;
+	auto& details = getDetails(shipment);
 	
 	int n = items.length();
 	for (int i = 0; i < n; i++) {
