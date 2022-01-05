@@ -26,12 +26,25 @@ public:
 
 	friend class Operator;
 public:
-	Shipment(Article& article) : article(article) {}
+	Shipment(const Article& article) : article(article) {}
+	Shipment(const Shipment& shipment) :
+		article(shipment.article),
+		operators(shipment.operators),
+		details(shipment.details),
+		detailsCalculated(shipment.detailsCalculated) {}
+	Shipment& operator=(const Shipment& shipment) {
+		article = shipment.article;
+		operators = shipment.operators;
+		details = shipment.details;
+		detailsCalculated = shipment.detailsCalculated;
+
+		return *this;
+	}
 
 	Shipment& operator+=(const Operator& op);
 	friend std::ostream& operator<<(std::ostream& os, const Shipment& shipment);
 
-	const Article& getArticle() const { return article; }
+	Article getArticle() const { return article; }
 	int getId() const { return id; }
 	Details getDetails() const;
 
@@ -40,7 +53,7 @@ private:
 	static int idCounter;
 
 	int id = idCounter++;
-	Article& article;
+	Article article;
 	List<const Operator&> operators;
 	Details details;
 	bool detailsCalculated = false;
