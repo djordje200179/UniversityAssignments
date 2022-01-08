@@ -17,16 +17,16 @@ public:
 		os << vehicle.model;
 		return os;
 	}
-private:
+protected:
 	virtual double startCost() const = 0;
-
+private:
 	std::string model;
 };
 
 class DefaultVehicle : public Vehicle {
 public:
 	using Vehicle::Vehicle;
-private:
+protected:
 	double startCost() const override { return 120.0; }
 };
 
