@@ -1,6 +1,7 @@
 #include "Team.hpp"
 #include "Player.hpp"
 #include "Match.hpp"
+#include "Pair.hpp"
 #include <iostream>
 
 using namespace std;
@@ -33,6 +34,11 @@ int main() {
 
 	Match match(&team1, &team2);
 	match.play();
+
+	auto result = match.getPoints();
+	cout << result << endl;
+	delete result.getFirst();
+	delete result.getSecond();
 
 	cout << match;
 
