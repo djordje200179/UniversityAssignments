@@ -49,8 +49,7 @@ Pair<int> Match::getPoints() const {
 }
 
 ostream& operator<<(ostream& os, const Match& match) {
-	os << *match.teams.getFirst() << endl;
-	os << *match.teams.getSecond() << endl;
+	os << match.teams << ' ';
 
 	if (match.isPlayed())
 		switch (match.outcome) {

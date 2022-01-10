@@ -93,6 +93,12 @@ void Team::printPlayers(ostream& os) const {
 	}
 }
 
+Team& Team::setPlayer(Player* player, int position) {
+	players[position] = player;
+
+	return *this;
+}
+
 void Team::print(ostream& os) const {
 	os << name << '[';
 
@@ -109,9 +115,12 @@ void PrivilegedTeam::print(ostream& os) const {
 	os << ']';
 }
 
-void PrivilegedTeam::setPlayer(Player* player, int position) {
+PrivilegedTeam& PrivilegedTeam::setPlayer(Player* player, int position) {
 	if (player->getValue() < minimalValue)
 		throw ValueTooLowException();
-	else
+	else {
 		Team::setPlayer(player, position);
+
+		return *this;
+	}
 }

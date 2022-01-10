@@ -1,7 +1,7 @@
 #ifndef OPERATOR_H
 #define OPERATOR_H
 
-class Shipment;
+#include "Shipment.hpp"
 
 class Operator {
 public:
@@ -11,6 +11,7 @@ public:
 	Operator& operator=(const Operator&) = default;
 	Operator& operator=(Operator&&) = default;
 	virtual ~Operator() = default;
+	virtual Operator* copy() const = 0;
 
 	virtual void process(Shipment& shipment) const = 0;
 protected:

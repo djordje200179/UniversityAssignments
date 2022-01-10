@@ -1,4 +1,5 @@
 #include "Shipment.hpp"
+#include "Operator.hpp"
 
 using namespace std;
 

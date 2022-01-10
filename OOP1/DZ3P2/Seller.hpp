@@ -17,6 +17,7 @@ public:
 	};
 public:
 	Seller(const std::string& name) : name(name) {}
+	virtual Seller* copy() const override { return new Seller(*this); }
 	
 	std::string getName() const { return name; }
 

@@ -36,7 +36,7 @@ int main() {
 	match.play();
 
 	auto result = match.getPoints();
-	cout << result << endl;
+	cout << "Ishod: " << result << endl;
 	delete result.getFirst();
 	delete result.getSecond();
 
