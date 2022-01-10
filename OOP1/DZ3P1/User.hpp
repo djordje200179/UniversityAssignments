@@ -14,6 +14,9 @@ public:
 		os << '(' << user.name << ')' << user.address;
 		return os;
 	}
+
+	std::string getName() const { return name; }
+	std::string getAddress() const { return address; }
 private:
 	std::string name;
 	std::string address;

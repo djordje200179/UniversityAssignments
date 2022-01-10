@@ -1,17 +1,25 @@
 #include "User.hpp"
 #include "Email.hpp"
+#include "Timestamp.hpp"
+#include "List.hpp"
 #include <iostream>
 
 using namespace std;
 
 int main() {
-	User user1("Marko Markovic", "marko123@gmail.com");
-	User user2("Jovan Jovanovic", "jovan@yahoo.com");
+	try {
+		List<int> l;
 
-	EmailWithText email(user1, user2, "Test");
-	email.setText("Ovo je proba");
+		User user1("Marko Markovic", "marko123@gmail.com");
+		User user2("Jovan Jovanovic", "jovan@yahoo.com");
 
-	cout << email;
+		EmailWithText email(user1, user2, "Test");
+		email.setText("Ovo je proba");
+
+		cout << email;
+	} catch (const exception& e) {
+		cout << e.what() << endl;
+	}
 
 	return 0;
 }

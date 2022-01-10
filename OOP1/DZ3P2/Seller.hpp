@@ -7,7 +7,7 @@
 #include <string>
 
 class Seller : public Operator {
-public:
+private:
 	struct Item {
 		Article article;
 		double margin;
@@ -17,11 +17,14 @@ public:
 	};
 public:
 	Seller(const std::string& name) : name(name) {}
+	virtual Seller* copy() const override { return new Seller(*this); }
 	
 	std::string getName() const { return name; }
 
-	void addItem(const Item& item) { items += item; }
-	void addItem(const Article& article, double margin, int acquisitionDays) { items += { article, margin, acquisitionDays}; }
+	Seller& addItem(const Article& article, double margin, int acquisitionDays) {
+		items += { article, margin, acquisitionDays};
+		return *this;
+	}
 	void process(Shipment& shipment) const override;
 private:
 	std::string name;

@@ -1,4 +1,5 @@
 #include "Shipment.hpp"
+#include "Operator.hpp"
 
 using namespace std;
 
@@ -23,6 +24,8 @@ Shipment::Details Shipment::getDetails() const {
 void Shipment::process() {
 	for (int i = 0; i < operators.length(); i++)
 		operators[i].process(*this);
+
+	detailsCalculated = true;
 }
 
 ostream& operator<<(ostream& os, const Shipment& shipment) {

@@ -74,8 +74,6 @@ private:
 	void copy(const List& rhs) {
 		for (Node* curr = rhs.start; curr; curr = curr->next)
 			(*this) += curr->data;
-
-		elements = rhs.elements;
 	}
 	void move(List& rhs) {
 		start = std::exchange(rhs.start, nullptr);

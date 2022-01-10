@@ -16,6 +16,7 @@ public:
 	Team(const std::string& name, int capacity) : name(name), capacity(capacity) { init(); }
 	Team(const Team& rhs) { copy(rhs); }
 	Team(Team&& rhs) { move(rhs); }
+	virtual Team* copy() const { return new Team(*this); }
 	virtual ~Team() { destroy(); }
 	Team& operator=(const Team& rhs);
 	Team& operator=(Team&& rhs);
@@ -23,7 +24,7 @@ public:
 	int addedPlayers() const;
 	int possiblePlayers() const { return capacity; }
 	double teamValue() const;
-	virtual void setPlayer(Player* player, int position) { players[position] = player; }
+	virtual Team& setPlayer(Player* player, int position);
 
 	Player* operator[](size_t index) const { return players[index]; }
 	friend bool operator==(const Team& lhs, const Team& rhs);
@@ -47,8 +48,9 @@ class PrivilegedTeam : public Team {
 public:
 	PrivilegedTeam(const std::string& name, int minimalValue, int capacity)
 		: Team(name, capacity), minimalValue(minimalValue) {}
+	PrivilegedTeam* copy() const override { return new PrivilegedTeam(*this); }
 
-	void setPlayer(Player* player, int position) override;
+	PrivilegedTeam& setPlayer(Player* player, int position) override;
 protected:
 	void print(std::ostream& os) const override;
 private:

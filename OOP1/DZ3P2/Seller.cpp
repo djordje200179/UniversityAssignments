@@ -3,9 +3,8 @@
 
 void Seller::process(Shipment& shipment) const {
 	auto& details = getDetails(shipment);
-	
-	int n = items.length();
-	for (int i = 0; i < n; i++) {
+
+	for (int i = 0; i < items.length(); i++) {
 		auto& item = items[i];
 
 		if (item.article == shipment.getArticle()) {

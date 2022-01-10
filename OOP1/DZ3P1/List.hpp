@@ -38,9 +38,11 @@ public:
 		return *this;
 	}
 	
-	void append(const T& data) {
+	List& append(const T& data) {
 		end = (end ? end->next : start) = new Node{ data };
 		elements++;
+
+		return *this;
 	}
 	size_t length() const { return elements; }
 
@@ -53,7 +55,7 @@ public:
 		auto& value = const_cast<T&>(constValue);
 		return value;
 	}
-	const T& accessIteartor() const {
+	const T& accessIterator() const {
 		if (!iterator)
 			throw InvalidIteratorException();
 		else
@@ -72,16 +74,14 @@ private:
 			append(curr->data);
 
 			if (curr = rhs.iterator)
-				iterator = curr;
+				iterator = end;
 		}
-
-		elements = rhs.elements;
 	}
 	void move(List& move) {
 		start = std::exchange(move.start, nullptr);
 		end = std::exchange(move.end, nullptr);
 		iterator = std::exchange(move.iterator, nullptr);
-		elements = std::exchange(rhs.length, 0);
+		elements = std::exchange(move.elements, 0);
 	}
 
 	Node* start = nullptr;

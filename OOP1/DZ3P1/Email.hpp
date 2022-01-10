@@ -19,6 +19,7 @@ public:
 		: sender(sender), receiver(receiver), title(title) {}
 	Email(const Email&) = default;
 	Email(Email&&) = default;
+	virtual Email* copy() const = 0;
 	Email& operator=(const Email&) = default;
 	Email& operator=(Email&&) = default;
 	virtual ~Email() = default;
@@ -29,7 +30,6 @@ public:
 	Status getStatus() const { return status; }
 
 	virtual void send() = 0;
-	virtual Email* copy() const = 0;
 
 	friend std::ostream& operator<<(std::ostream& os, const Email& email);
 protected:
@@ -44,10 +44,11 @@ private:
 class EmailWithText : public Email {
 public:
 	using Email::Email;
+	EmailWithText* copy() const override { return new EmailWithText(*this); }
 
 	void send() override { status = SENT; }
+
 	void setText(const std::string& text);
-	EmailWithText* copy() const override { return new EmailWithText(*this); }
 protected:
 	void print(std::ostream& os) const override;
 private:

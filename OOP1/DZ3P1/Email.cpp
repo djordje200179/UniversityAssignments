@@ -10,7 +10,7 @@ ostream& operator<<(ostream& os, const Email& email) {
 void Email::print(ostream& os) const {
 	os << title << '\n';
 	os << sender << '\n';
-	os << receiver << '\n';
+	os << receiver;
 }
 
 void EmailWithText::setText(const string& text) {
@@ -22,5 +22,6 @@ void EmailWithText::setText(const string& text) {
 
 void EmailWithText::print(ostream& os) const {
 	Email::print(os);
+	os << '\n';
 	os << text;
 }

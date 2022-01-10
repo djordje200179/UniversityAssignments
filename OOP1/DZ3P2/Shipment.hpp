@@ -2,7 +2,6 @@
 #define SHIPMENT_H
 
 #include "List.hpp"
-#include "Operator.hpp"
 #include "Article.hpp"
 #include <ostream>
 #include <exception>
@@ -16,6 +15,8 @@ class AlreadyCalculatedException : public std::exception {
 public:
 	AlreadyCalculatedException() : std::exception("Can't add operators after shipment is calculated") {}
 };
+
+class Operator;
 
 class Shipment {
 public:
@@ -32,6 +33,7 @@ public:
 		operators(shipment.operators),
 		details(shipment.details),
 		detailsCalculated(shipment.detailsCalculated) {}
+	Shipment(Shipment&& shipment) = default;
 	Shipment& operator=(const Shipment& shipment) {
 		article = shipment.article;
 		operators = shipment.operators;
@@ -40,6 +42,7 @@ public:
 
 		return *this;
 	}
+	Shipment& operator=(Shipment&&) = default;
 
 	Shipment& operator+=(const Operator& op);
 	friend std::ostream& operator<<(std::ostream& os, const Shipment& shipment);

@@ -14,24 +14,26 @@ public:
 class Match {
 public:
 	enum Outcome { 
-		NOT_PLAYED,
 		HOME_WIN, 
 		DRAW, 
 		GUEST_WIN 
 	};
 
 public:
-	Match(Team* home, Team* guest) : teams(home, guest) {}
+	Match(Team& home, Team& guest) : teams(&home, &guest) {}
 
 	void play();
-	bool isPlayed() const { return outcome != NOT_PLAYED; }
+	bool isPlayed() const { return played; }
 	Pair<Team> getTeams() const { return teams; }
-	Pair<int> getPoints() const;
+	Pair<const int> getPoints() const;
 
 	friend std::ostream& operator<<(std::ostream& os, const Match& match);
 private:
+	bool played = false;
+	mutable int pointsHome = 0, pointsGuest = 0;
+
 	Pair<Team> teams;
-	Outcome outcome = NOT_PLAYED;
+	Outcome outcome;
 };
 
 #endif MATCH_H

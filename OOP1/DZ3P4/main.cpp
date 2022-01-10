@@ -1,46 +1,46 @@
 #include "Team.hpp"
 #include "Player.hpp"
 #include "Match.hpp"
-#include "Pair.hpp"
 #include <iostream>
 
 using namespace std;
 
 int main() {
-	Player players[] = {
-		{ "Marko Markovic", 200 },
-		{ "Janko Jovanovic" },
-		{ "Djordje Milanovic", 500 },
-		{ "Branislav Djumic", 1300 },
-		{ "Jovan Nikolic" },
-		{ "Aleksa Djuric", 850 },
-		{ "Denijal Petric" },
-		{ "Nikola Sendelj" },
-		{ "Petar Markovic", 7500 }
-	};
+	try {
+		Player players[] = {
+			{ "Marko Markovic", 200 },
+			{ "Janko Jovanovic" },
+			{ "Djordje Milanovic", 500 },
+			{ "Branislav Djumic", 1300 },
+			{ "Jovan Nikolic" },
+			{ "Aleksa Djuric", 850 },
+			{ "Denijal Petric" },
+			{ "Nikola Sendelj" },
+			{ "Petar Markovic", 7500 }
+		};
 
-	Team team1("Sutjeska Foca", 5);
-	team1.setPlayer(&players[0], 0);
-	team1.setPlayer(&players[1], 1);
-	team1.setPlayer(&players[2], 2);
-	team1.setPlayer(&players[3], 4);
+		Team team1("Sutjeska Foca", 5);
+		PrivilegedTeam team2("Rudar Pljevlja", 750, 10);
 
-	Team team2("Rudar Pljevlja", 10);
-	team2.setPlayer(&players[4], 0);
-	team2.setPlayer(&players[5], 2);
-	team2.setPlayer(&players[6], 4);
-	team2.setPlayer(&players[7], 6);
-	team2.setPlayer(&players[8], 8);
+		team1.setPlayer(&players[0], 0)
+			.setPlayer(&players[1], 1)
+			.setPlayer(&players[2], 2)
+			.setPlayer(&players[3], 4);
 
-	Match match(&team1, &team2);
-	match.play();
+		team2.setPlayer(&players[4], 0)
+			.setPlayer(&players[5], 2)
+			.setPlayer(&players[6], 4)
+			.setPlayer(&players[7], 6)
+			.setPlayer(&players[8], 8);
 
-	auto result = match.getPoints();
-	cout << result << endl;
-	delete result.getFirst();
-	delete result.getSecond();
+		Match match(team1, team2);
+		match.play();
 
-	cout << match;
+		cout << "Ishod: " << match.getPoints() << endl;
+		cout << match;
+	} catch (const exception& e) {
+		cout << e.what() << endl;
+	}
 
 	return 0;
 }

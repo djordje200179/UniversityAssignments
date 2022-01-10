@@ -6,8 +6,8 @@ void Match::play() {
 	auto& homeTeam = *teams.getFirst();
 	auto& guestTeam = *teams.getSecond();
 
-	int homeValue = homeTeam.teamValue();
-	int guestValue = guestTeam.teamValue();
+	double homeValue = homeTeam.teamValue();
+	double guestValue = guestTeam.teamValue();
 
 	if (homeValue > guestValue) {
 		outcome = HOME_WIN;
@@ -32,27 +32,33 @@ void Match::play() {
 				guestTeam[i]->changeValue(+10);
 	} else
 		outcome = DRAW;
+
+	played = true;
 }
 
-Pair<int> Match::getPoints() const {
+Pair<const int> Match::getPoints() const {
+	if (!played)
+		throw MatchNotPlayedException();
+
 	switch (outcome) {
 	case DRAW:
-		return Pair<int>(new int(1), new int(1));
+		pointsHome = 1, pointsGuest = 1;
+		break;
 	case HOME_WIN:
-		return Pair<int>(new int(3), new int(0));
+		pointsHome = 3, pointsGuest = 0;
+		break;
 	case GUEST_WIN:
-		return Pair<int>(new int(0), new int(3)); 
-	case NOT_PLAYED:
-	default:
-		throw MatchNotPlayedException();
+		pointsHome = 0, pointsGuest = 3;
+		break;
 	}
+
+	return Pair<const int>(&pointsHome, &pointsGuest);
 }
 
 ostream& operator<<(ostream& os, const Match& match) {
-	os << *match.teams.getFirst() << endl;
-	os << *match.teams.getSecond() << endl;
+	os << match.teams << ' ';
 
-	if (match.isPlayed())
+	if (match.played) {
 		switch (match.outcome) {
 		case Match::HOME_WIN:
 			os << "DOMACIN POBJEDIO";
@@ -64,6 +70,7 @@ ostream& operator<<(ostream& os, const Match& match) {
 			os << "GOST POBJEDIO";
 			break;
 		}
+	}
 
 	return os;
 }
