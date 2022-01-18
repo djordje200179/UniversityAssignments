@@ -20,6 +20,7 @@ public:
 	virtual ~Team() { destroy(); }
 	Team& operator=(const Team& rhs);
 	Team& operator=(Team&& rhs);
+	virtual Team* copy() const { return new Team(*this); }
 
 	int addedPlayers() const;
 	int possiblePlayers() const { return capacity; }
