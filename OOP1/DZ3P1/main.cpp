@@ -16,6 +16,9 @@ int main() {
 		EmailWithText email(user1, user2, "Test");
 		email.setText("Ovo je proba");
 
+		EmailWithText email2(email);
+		email2 = email;
+
 		cout << email;
 	} catch (const exception& e) {
 		cout << e.what() << endl;
