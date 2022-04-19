@@ -9,7 +9,7 @@ public class Kombinacija {
 	}
 
 	public void dodaj(Nosivo stvar) throws GDodavanje {
-		if(brojDodatihStvari == stvari.length)
+		if (brojDodatihStvari == stvari.length)
 			throw new GDodavanje();
 
 		stvari[brojDodatihStvari++] = stvar;
@@ -24,7 +24,7 @@ public class Kombinacija {
 	}
 
 	public Nosivo dohvStvar(int index) throws GIndeks {
-		if(index < 0 || index >= brojDodatihStvari || stvari[index] == null)
+		if (index < 0 || index >= brojDodatihStvari || stvari[index] == null)
 			throw new GIndeks();
 		else
 			return stvari[index];
@@ -35,8 +35,8 @@ public class Kombinacija {
 		var sb = new StringBuilder();
 
 		sb.append('[');
-		for(int i = 0; i < brojDodatihStvari; i++) {
-			if(i != 0)
+		for (int i = 0; i < brojDodatihStvari; i++) {
+			if (i != 0)
 				sb.append(", ");
 
 			sb.append(stvari[i]);

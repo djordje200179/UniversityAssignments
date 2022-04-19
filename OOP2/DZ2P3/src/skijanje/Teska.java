@@ -1,6 +1,6 @@
 package skijanje;
 
-public class Teska extends Deonica{
+public class Teska extends Deonica {
 	public Teska(double duzina, double nagib) {
 		super(duzina, nagib);
 	}

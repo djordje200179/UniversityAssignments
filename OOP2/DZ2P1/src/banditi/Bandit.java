@@ -1,7 +1,7 @@
 package banditi;
 
 public class Bandit {
-	public enum Tim { A, B }
+	public enum Tim {A, B}
 
 	private final Tim tim;
 	private int brojZlatnika = 50;

@@ -1,12 +1,10 @@
 package skijanje;
 
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class Staza {
-	private LinkedList<Deonica> deonice = new LinkedList<Deonica>();
+	private List<Deonica> deonice = new ArrayList<Deonica>();
 	private final String naziv;
 
 	public Staza(String naziv) {
@@ -30,33 +28,24 @@ public class Staza {
 	}
 
 	public char oznaka() throws GOznaka {
-		if(deonice.isEmpty())
+		if (deonice.isEmpty())
 			throw new GOznaka();
 
-		var brojaci = new HashMap<Character, Integer>();
-
-		for (var deonica : deonice) {
-			var oznaka = deonica.oznaka();
-
-			brojaci.put(oznaka, brojaci.containsKey(oznaka) ? brojaci.get(oznaka) + 1 : 1);
-		}
-
-		return brojaci.entrySet().stream().max(Comparator.comparingInt(Map.Entry::getValue)).get().getKey();
+		return deonice
+				.stream().collect(Collectors.groupingBy(Deonica::oznaka))
+				.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().size()))
+				.entrySet().stream().max(Map.Entry.comparingByValue()).get().getKey();
 	}
 
 	public double brzina(double pocetnaBrzina) {
-		var trenutnaBrzina = pocetnaBrzina;
-		for(var deonica : deonice)
-			trenutnaBrzina = deonica.brzina(trenutnaBrzina);
-
-		return trenutnaBrzina;
+		return deonice.stream().reduce(pocetnaBrzina, (trenutnaBrzina, deonica) -> deonica.brzina(trenutnaBrzina), (a, b) -> a);
 	}
 
 	public double vreme(double pocetnaBrzina) {
 		var trenutnoVreme = 0.0;
 		var trenutnaBrzina = pocetnaBrzina;
 
-		for(var deonica : deonice) {
+		for (var deonica : deonice) {
 			trenutnoVreme += deonica.vreme(trenutnaBrzina);
 			trenutnaBrzina = deonica.brzina(trenutnaBrzina);
 		}
@@ -66,17 +55,9 @@ public class Staza {
 
 	@Override
 	public String toString() {
-		var sb = new StringBuilder();
+		var zaglavlje = naziv + '|' + broj() + '|' + duzina() + '|' + nagib();
+		var lista = '[' + deonice.stream().map(Objects::toString).collect(Collectors.joining(",")) + ']';
 
-		sb.append(naziv).append('|').append(broj()).append('|').append(duzina()).append('|').append(nagib());
-		sb.append('\n');
-
-		sb.append('[');
-		for(var deonica : deonice)
-			sb.append(deonica).append(',');
-		sb.deleteCharAt(sb.length() - 1);
-		sb.append(']');
-
-		return sb.toString();
+		return zaglavlje + '\n' + lista;
 	}
 }
