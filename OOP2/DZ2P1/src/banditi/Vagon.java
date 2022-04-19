@@ -1,6 +1,8 @@
 package banditi;
 
 import java.util.LinkedList;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class Vagon {
 	private LinkedList<Bandit> banditi = new LinkedList<Bandit>();
@@ -27,15 +29,6 @@ public class Vagon {
 
 	@Override
 	public String toString() {
-		var sb = new StringBuilder();
-
-		sb.append('[');
-		for (var bandit : banditi)
-			sb.append(bandit).append(',');
-		if(!banditi.isEmpty())
-			sb.deleteCharAt(sb.length() - 1);
-		sb.append(']');
-
-		return sb.toString();
+		return '[' + banditi.stream().map(Objects::toString).collect(Collectors.joining(",")) + ']';
 	}
 }

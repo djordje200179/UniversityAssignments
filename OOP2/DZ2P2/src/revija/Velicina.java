@@ -3,7 +3,7 @@ package revija;
 public class Velicina {
 	public enum Oznaka {
 		S, M, L
-	};
+	}
 
 	private final Oznaka oznaka;
 

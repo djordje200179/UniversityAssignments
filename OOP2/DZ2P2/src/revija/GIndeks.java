@@ -1,3 +1,3 @@
 package revija;
 
-public class GIndeks extends Exception{}
+public class GIndeks extends Exception {}
