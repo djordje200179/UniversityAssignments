@@ -1,5 +1,5 @@
 package revija;
 
 public interface Nosivo {
-	public boolean odgovara(Model model);
+	boolean odgovara(Model model);
 }

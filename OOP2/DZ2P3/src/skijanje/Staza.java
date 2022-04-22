@@ -28,13 +28,11 @@ public class Staza {
 	}
 
 	public char oznaka() throws GOznaka {
-		if (deonice.isEmpty())
-			throw new GOznaka();
-
 		return deonice
-				.stream().collect(Collectors.groupingBy(Deonica::oznaka))
-				.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().size()))
-				.entrySet().stream().max(Map.Entry.comparingByValue()).get().getKey();
+				.stream().collect(Collectors.groupingBy(Deonica::oznaka, LinkedHashMap::new, Collectors.counting()))
+				.entrySet().stream().max(Map.Entry.comparingByValue())
+				.orElseThrow(GOznaka::new)
+				.getKey();
 	}
 
 	public double brzina(double pocetnaBrzina) {

@@ -13,17 +13,15 @@ public class Kompozicija {
 	}
 
 	public Vagon dohvatiVagon(Bandit bandit) throws GNepostojeciVagon {
-		for (var vagon : vagoni)
-			if (vagon.sadrziBandita(bandit))
-				return vagon;
-
-		throw new GNepostojeciVagon();
+		return vagoni.stream()
+				.filter(vagon -> vagon.sadrziBandita(bandit)).findFirst()
+				.orElseThrow(GNepostojeciVagon::new);
 	}
 
 	public Vagon dohvatiSusedniVagon(Vagon vagon, Smer smer) throws GNepostojeciVagon {
 		var index = vagoni.indexOf(vagon);
 
-		if(index == -1)
+		if (index == -1)
 			throw new GNepostojeciVagon();
 
 		try {

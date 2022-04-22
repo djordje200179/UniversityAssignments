@@ -20,6 +20,6 @@ public class Model {
 
 	@Override
 	public String toString() {
-		return "Model " + id + ' ' + '(' + velicina + ')';
+		return "Model " + id + " (" + velicina + ')';
 	}
 }
