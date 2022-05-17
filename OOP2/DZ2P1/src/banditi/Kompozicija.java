@@ -3,6 +3,7 @@ package banditi;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class Kompozicija {
@@ -14,7 +15,8 @@ public class Kompozicija {
 
 	public Vagon dohvatiVagon(Bandit bandit) throws GNepostojeciVagon {
 		return vagoni.stream()
-				.filter(vagon -> vagon.sadrziBandita(bandit)).findFirst()
+				.filter(vagon -> vagon.sadrziBandita(bandit))
+				.findFirst()
 				.orElseThrow(GNepostojeciVagon::new);
 	}
 
