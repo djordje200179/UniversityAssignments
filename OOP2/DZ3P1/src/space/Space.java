@@ -1,11 +1,10 @@
 package space;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Vector;
 
 public class Space extends Canvas {
-	private final List<CelestialBody> bodies = new ArrayList<>();
+	private final Vector<CelestialBody> bodies = new Vector<>();
 	private final Thread thread = new Thread(this::loop);
 
 	public Space() {
@@ -28,8 +27,6 @@ public class Space extends Canvas {
 
 	@Override
 	public void paint(Graphics g) {
-		super.paint(g);
-
 		for(var body : bodies)
 			body.draw(g);
 	}

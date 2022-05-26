@@ -16,8 +16,8 @@ public abstract class Object {
 	public int getY() {	return y; }
 	protected Color getColor() { return color; }
 
-	public void moveX(int x) { this.x += x; }
-	public void moveY(int y) { this.y += y; }
+	public void moveX(int by) { this.x += by; }
+	public void moveY(int by) { this.y += by; }
 
 	public abstract void draw(Graphics g);
 }

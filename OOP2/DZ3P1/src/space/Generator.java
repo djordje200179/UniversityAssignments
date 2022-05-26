@@ -4,7 +4,7 @@ import java.util.Random;
 
 public class Generator {
 	private final Space space;
-	private final Thread thread = new Thread(this::createComet);
+	private final Thread thread = new Thread(this::generateComets);
 
 	public Generator(Space space) {
 		this.space = space;
@@ -21,14 +21,14 @@ public class Generator {
 		} catch(InterruptedException ignored) { }
 	}
 
-	public void createComet() {
+	private void generateComets() {
 		var randomGenerator = new Random();
 
 		try {
 			while(!Thread.interrupted()) {
 				var x = randomGenerator.nextInt(200);
 				var y = 0;
-				var radius = 10 + randomGenerator.nextInt(20);
+				var radius = randomGenerator.nextInt(10, 30);
 
 				var comet = new Comet(x, y, radius);
 				space.addBody(comet);

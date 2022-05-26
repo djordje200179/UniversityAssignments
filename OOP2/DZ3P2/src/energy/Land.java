@@ -15,13 +15,9 @@ public class Land extends Panel {
 		this.rows = rows;
 		this.columns = columns;
 
-		for(var i = 0; i < rows; i++) {
-			for(var j = 0; j < columns; j++) {
-				var parcel = Math.random() > 0.7 ? new GrassSurface() : new WaterSurface();
-
-				add(parcel);
-			}
-		}
+		for(var i = 0; i < rows; i++)
+			for(var j = 0; j < columns; j++)
+				add(generatePlot());
 
 		addMouseListener(new MouseAdapter() {
 			@Override
@@ -31,6 +27,15 @@ public class Land extends Panel {
 					chooseParcel((Plot)source);
 			}
 		});
+	}
+
+	private Plot generatePlot() {
+		var rand = Math.random();
+
+		if(rand > 0.7)
+			return new GrassSurface();
+		else
+			return new WaterSurface();
 	}
 
 	public void chooseParcel(Plot newPlot) {
@@ -104,8 +109,8 @@ public class Land extends Panel {
 
 	public void stopAllProducers() {
 		Arrays.stream(getComponents())
-				.filter(component -> component instanceof Producer)
-				.map(component -> (Producer)component)
-				.forEach(Producer::stop);
+		      .filter(component -> component instanceof Producer)
+		      .map(component -> (Producer)component)
+		      .forEach(Producer::stop);
 	}
 }
