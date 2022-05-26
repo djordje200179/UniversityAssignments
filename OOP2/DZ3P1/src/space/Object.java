@@ -4,7 +4,7 @@ import java.awt.*;
 
 public abstract class Object {
 	private int x, y;
-	protected final Color color;
+	private final Color color;
 
 	public Object(int x, int y, Color color) {
 		this.x = x;
@@ -12,21 +12,12 @@ public abstract class Object {
 		this.color = color;
 	}
 
-	public int getX() {
-		return x;
-	}
+	public int getX() {	return x; }
+	public int getY() {	return y; }
+	protected Color getColor() { return color; }
 
-	public int getY() {
-		return y;
-	}
+	public void moveX(int x) { this.x += x; }
+	public void moveY(int y) { this.y += y; }
 
-	public void moveX(int x) {
-		this.x += x;
-	}
-
-	public void moveY(int y) {
-		this.y += y;
-	}
-
-	public abstract void paint(Graphics g);
+	public abstract void draw(Graphics g);
 }

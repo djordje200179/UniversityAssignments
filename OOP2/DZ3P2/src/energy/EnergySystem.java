@@ -5,22 +5,24 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 public class EnergySystem extends Frame {
-	private final Place place;
+	private final Land land;
 	private final Battery battery;
 
 	public EnergySystem(int placeRows, int placeColumns, int batteryCapacity) {
 		setSize(500, 500);
 
-		place = new Place(placeRows, placeColumns);
+		land = new Land(placeRows, placeColumns);
 		battery = new Battery(batteryCapacity);
 
-		add(place);
+		add(land);
 		addButton();
+
+		setTitle("Energetski sistem");
 
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
-				place.stopAllProducers();
+				land.stopAllProducers();
 
 				dispose();
 			}
@@ -31,12 +33,16 @@ public class EnergySystem extends Frame {
 	}
 
 	private void addButton() {
+		var panel = new Panel();
+
 		var button = new Button("Dodaj");
 		button.addActionListener(e -> {
-			place.addProducer(new Hydroplant(battery));
+			land.addProducer(new HydroelectricPlant(battery));
 		});
 
-		add(button, BorderLayout.NORTH);
+		panel.add(button);
+
+		add(panel, BorderLayout.NORTH);
 	}
 
 	public static void main(String[] args) {

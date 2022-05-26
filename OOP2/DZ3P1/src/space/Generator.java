@@ -11,7 +11,15 @@ public class Generator {
 	}
 
 	public void start() { thread.start(); }
-	public void stop() { thread.interrupt(); }
+	public void stop() {
+		if(!thread.isAlive())
+			return;
+
+		thread.interrupt();
+		try {
+			synchronized(this) { wait(); }
+		} catch(InterruptedException ignored) { }
+	}
 
 	public void createComet() {
 		var randomGenerator = new Random();

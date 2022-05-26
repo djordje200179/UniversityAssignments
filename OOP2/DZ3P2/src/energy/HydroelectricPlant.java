@@ -2,12 +2,14 @@ package energy;
 
 import java.awt.*;
 
-public class Hydroplant extends Producer {
+public class HydroelectricPlant extends Producer {
 	private int surroundingWaterSurfaces = 0;
 
-	public Hydroplant(Battery battery) { super('H', Color.BLUE, 1500, battery); }
+	public HydroelectricPlant(Battery battery) { super('H', Color.BLUE, 1500, battery); }
 
+	@Override
 	protected int producingEnergyUnits() { return surroundingWaterSurfaces; }
+	@Override
 	protected boolean isProductionSuccessful() { return surroundingWaterSurfaces > 0; }
 
 	public void setSurroundingWaterSurfaces(int surroundingWaterSurfaces) { this.surroundingWaterSurfaces = surroundingWaterSurfaces; }

@@ -16,14 +16,22 @@ public class Space extends Canvas {
 
 	public void startActivity() { thread.start(); }
 
-	public void stopActivity() { thread.interrupt(); }
+	public void stopActivity() {
+		if(!thread.isAlive())
+			return;
+
+		thread.interrupt();
+		try {
+			synchronized(this) { wait(); }
+		} catch(InterruptedException ignored) { }
+	}
 
 	@Override
 	public void paint(Graphics g) {
 		super.paint(g);
 
 		for(var body : bodies)
-			body.paint(g);
+			body.draw(g);
 	}
 
 	private void move() {

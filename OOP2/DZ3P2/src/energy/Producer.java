@@ -3,10 +3,9 @@ package energy;
 import java.awt.*;
 import java.util.Random;
 
-public abstract class Producer extends Parcel {
+public abstract class Producer extends Plot {
 	private final int producingTime;
 	private final Battery battery;
-	private final Color originalColor;
 	private final Thread thread = new Thread(this::loop);
 
 	public Producer(char label, Color backgroundColor, int basicTime, Battery battery) {
@@ -14,7 +13,6 @@ public abstract class Producer extends Parcel {
 
 		this.producingTime = basicTime + new Random().nextInt(301);
 		this.battery = battery;
-		this.originalColor = backgroundColor;
 
 		thread.start();
 	}
@@ -29,15 +27,25 @@ public abstract class Producer extends Parcel {
 
 				battery.addEnergy(producingEnergyUnits());
 
+				var originalColor = getForeground();
 				if(isProductionSuccessful())
-					setBackgroundColor(Color.RED);
+					setForeground(Color.RED);
 
 				Thread.sleep(300);
 
-				setBackgroundColor(originalColor);
+				setForeground(originalColor);
 			}
-		} catch(InterruptedException ignored) { }
+		} catch(InterruptedException ignored) {}
+
+		thread.notify();
 	}
 
-	public void stop() { thread.interrupt(); }
+	public void stop() {
+		thread.interrupt();
+		synchronized(this) {
+			try {
+				wait();
+			} catch(InterruptedException ignored) { }
+		}
+	}
 }

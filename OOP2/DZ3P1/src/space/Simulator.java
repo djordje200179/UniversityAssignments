@@ -20,13 +20,8 @@ public class Simulator extends Frame {
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
-				try {
-					generator.stop();
-					synchronized(generator) { generator.wait(); }
-
-					space.stopActivity();
-					synchronized(space) { space.wait(); }
-				} catch(InterruptedException ignored) { }
+				generator.stop();
+				space.stopActivity();
 
 				dispose();
 			}
