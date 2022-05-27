@@ -41,18 +41,13 @@ public class Land extends Panel {
 	public void chooseParcel(Plot newPlot) {
 		var oldPlot = selectedPlot;
 
-		if(newPlot == oldPlot)
-			return;
+		if(oldPlot != null)
+			oldPlot.setFont(getFont().deriveFont(14f));
+
+		if(newPlot != null)
+			newPlot.setFont(getFont().deriveFont(20f));
 
 		selectedPlot = newPlot;
-
-		for(var i = 0; i < getComponentCount(); i++) {
-			var component = (Plot)getComponent(i);
-			if(component == oldPlot)
-				component.setFont(getFont().deriveFont(14f));
-			else if(component == newPlot)
-				component.setFont(getFont().deriveFont(20f));
-		}
 	}
 
 	public boolean addProducer(Producer producer) {
@@ -82,30 +77,31 @@ public class Land extends Panel {
 	}
 
 	private void updateSurroundingWaterSurfaces() {
-		for(var i = 0; i < getComponentCount(); i++) {
-			var component = getComponent(i);
+		for(var i = 0; i < rows; i++)
+			for(var j = 0; j < columns; j++) {
+				var plot = getPlot(i, j);
 
-			if(!(component instanceof HydroelectricPlant))
-				continue;
+				if(!(plot instanceof HydroelectricPlant))
+					continue;
 
-			var row = i / columns;
-			var column = i % columns;
+				var surroundingWaterSurfaces = 0;
+				for(int k = -1; k <= 1; k++)
+					for(int l = -1; l <= 1; l++) {
+						if(k == 0 && l == 0)
+							continue;
 
-			var surroundingWaterSurfaces = 0;
-			if(row > 0 && getPlot(row - 1, column) instanceof WaterSurface)
-				surroundingWaterSurfaces++;
-			if(row < rows - 1 && getPlot(row + 1, column) instanceof WaterSurface)
-				surroundingWaterSurfaces++;
-			if(column > 0 && getPlot(row, column - 1) instanceof WaterSurface)
-				surroundingWaterSurfaces++;
-			if(column < columns - 1 && getPlot(row, column + 1) instanceof WaterSurface)
-				surroundingWaterSurfaces++;
+						if(getPlot(i + k, j + l) instanceof WaterSurface)
+							surroundingWaterSurfaces++;
+					}
 
-			((HydroelectricPlant)component).setSurroundingWaterSurfaces(surroundingWaterSurfaces);
-		}
+				((HydroelectricPlant)plot).setSurroundingWaterSurfaces(surroundingWaterSurfaces);
+			}
 	}
 
 	private Plot getPlot(int row, int column) {
+		if(row < 0 || row >= rows || column < 0 || column >= columns)
+			return null;
+
 		var index = row * columns + column;
 		return (Plot)getComponent(index);
 	}
