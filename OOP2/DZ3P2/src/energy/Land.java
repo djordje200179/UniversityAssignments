@@ -66,7 +66,10 @@ public class Land extends Panel {
 				break;
 		}
 
-		remove(index);
+		remove(selectedPlot);
+		if(selectedPlot instanceof Producer)
+			((Producer)selectedPlot).stop();
+
 		add(producer, index);
 
 		revalidate();

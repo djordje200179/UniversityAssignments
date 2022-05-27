@@ -37,7 +37,9 @@ public class EnergySystem extends Frame {
 
 		var button = new Button("Dodaj");
 		button.addActionListener(e -> {
-			land.addProducer(new HydroelectricPlant(battery));
+			var producer = new HydroelectricPlant(battery);
+			if(!land.addProducer(producer))
+				producer.stop();
 		});
 
 		panel.add(button);
