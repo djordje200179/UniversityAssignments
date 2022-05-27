@@ -21,7 +21,7 @@ public class Space extends Canvas {
 
 		thread.interrupt();
 		try {
-			synchronized(this) { wait(); }
+			thread.join();
 		} catch(InterruptedException ignored) { }
 	}
 
@@ -45,7 +45,5 @@ public class Space extends Canvas {
 				Thread.sleep(100);
 			}
 		} catch(InterruptedException ignored) { }
-
-		synchronized(this) { notify(); }
 	}
 }
