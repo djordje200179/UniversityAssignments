@@ -35,17 +35,16 @@ public abstract class Producer extends Plot {
 
 				setForeground(originalColor);
 			}
-		} catch(InterruptedException ignored) {}
-
-		thread.notify();
+		} catch(InterruptedException ignored) { }
 	}
 
 	public void stop() {
+		if(!thread.isAlive())
+			return;
+
 		thread.interrupt();
-		synchronized(this) {
-			try {
-				wait();
-			} catch(InterruptedException ignored) { }
-		}
+		try {
+			thread.join();
+		} catch(InterruptedException ignored) { }
 	}
 }

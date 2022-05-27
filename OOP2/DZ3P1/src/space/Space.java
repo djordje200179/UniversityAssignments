@@ -11,7 +11,7 @@ public class Space extends Canvas {
 		setBackground(Color.BLACK);
 	}
 
-	public void addBody(CelestialBody body) { bodies.add(body); }
+	public synchronized void addBody(CelestialBody body) { bodies.add(body); }
 
 	public void startActivity() { thread.start(); }
 
@@ -21,17 +21,17 @@ public class Space extends Canvas {
 
 		thread.interrupt();
 		try {
-			synchronized(this) { wait(); }
+			thread.join();
 		} catch(InterruptedException ignored) { }
 	}
 
 	@Override
-	public void paint(Graphics g) {
+	public synchronized void paint(Graphics g) {
 		for(var body : bodies)
 			body.draw(g);
 	}
 
-	private void move() {
+	private synchronized void move() {
 		for(var body : bodies)
 			body.moveY(5);
 	}
@@ -45,7 +45,5 @@ public class Space extends Canvas {
 				Thread.sleep(100);
 			}
 		} catch(InterruptedException ignored) { }
-
-		synchronized(this) { notify(); }
 	}
 }

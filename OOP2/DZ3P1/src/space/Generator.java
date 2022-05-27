@@ -17,7 +17,7 @@ public class Generator {
 
 		thread.interrupt();
 		try {
-			synchronized(this) { wait(); }
+			thread.join();
 		} catch(InterruptedException ignored) { }
 	}
 
@@ -36,7 +36,5 @@ public class Generator {
 				Thread.sleep(900);
 			}
 		} catch(InterruptedException ignored) { }
-
-		synchronized(this) { notify(); }
 	}
 }

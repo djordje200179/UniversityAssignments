@@ -32,7 +32,7 @@ public class Land extends Panel {
 	private Plot generatePlot() {
 		var rand = Math.random();
 
-		if(rand > 0.7)
+		if(rand > 0.3)
 			return new GrassSurface();
 		else
 			return new WaterSurface();
@@ -71,7 +71,7 @@ public class Land extends Panel {
 
 		updateSurroundingWaterSurfaces();
 
-		selectedPlot = null;
+		chooseParcel(null);
 
 		return true;
 	}
