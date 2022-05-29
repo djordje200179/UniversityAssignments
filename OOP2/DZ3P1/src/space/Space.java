@@ -11,7 +11,11 @@ public class Space extends Canvas {
 		setBackground(Color.BLACK);
 	}
 
-	public synchronized void addBody(CelestialBody body) { bodies.add(body); }
+	public void addBody(CelestialBody body) {
+		synchronized(bodies) {
+			bodies.add(body);
+		}
+	}
 
 	public void startActivity() { thread.start(); }
 
@@ -26,14 +30,18 @@ public class Space extends Canvas {
 	}
 
 	@Override
-	public synchronized void paint(Graphics g) {
-		for(var body : bodies)
-			body.draw(g);
+	public void paint(Graphics g) {
+		synchronized(bodies) {
+			for(var body : bodies)
+				body.draw(g);
+		}
 	}
 
-	private synchronized void move() {
-		for(var body : bodies)
-			body.moveY(5);
+	private void move() {
+		synchronized(bodies) {
+			for(var body : bodies)
+				body.moveY(5);
+		}
 	}
 
 	private void loop() {
