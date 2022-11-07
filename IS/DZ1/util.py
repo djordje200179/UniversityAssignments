@@ -39,7 +39,7 @@ class TimedFunction(Thread):
             end_time = time.time()
             elapsed_time = end_time - start_time
             self.queue.put((result, elapsed_time), block=False)
-        except (Timeout, Exception):
-            pass
+        #except (Timeout, Exception):
+        #    pass
         finally:
             timer.cancel()

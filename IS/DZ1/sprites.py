@@ -1,6 +1,7 @@
+import itertools
 import math
+import queue
 import random
-
 import pygame
 import os
 import config
@@ -119,29 +120,93 @@ class Aki(Agent):
     def __init__(self, x, y, file_name):
         super().__init__(x, y, file_name)
 
-    def get_agent_path(self, coin_distance):
-        pass
+    def get_agent_path(self, coin_distance: list[list[int]]) -> list[int]:
+        num_of_coins = len(coin_distance)
+
+        path = [0]
+        possible_coins = set(range(1, num_of_coins))
+
+        while len(path) < num_of_coins:
+            def calc_coin_distance(coin: int) -> float:
+                last = path[-1]
+
+                if coin == last:
+                    return math.inf
+
+                return coin_distance[last][coin]
+
+            best = min(possible_coins, key=calc_coin_distance)
+
+            path.append(best)
+            possible_coins.remove(best)
+
+        path.append(0)
+
+        return path
 
 
 class Jocke(Agent):
     def __init__(self, x, y, file_name):
         super().__init__(x, y, file_name)
 
-    def get_agent_path(self, coin_distance):
-        pass
+    def get_agent_path(self, coin_distance: list[list[int]]) -> list[int]:
+        num_of_coins = len(coin_distance)
+        possible_coins = set(range(1, num_of_coins))
+
+        def calc_path_distance(path: list[int]) -> int:
+            distance = 0
+
+            last_coin = 0
+            for curr_coin in path:
+                distance += coin_distance[last_coin][curr_coin]
+                last_coin = curr_coin
+            distance += coin_distance[last_coin][0]
+
+            return distance
+
+        permutations = list(itertools.permutations(possible_coins))
+        best_permutation = min(permutations, key=calc_path_distance)
+
+        return [0] + list(best_permutation) + [0]
 
 
 class Uki(Agent):
     def __init__(self, x, y, file_name):
         super().__init__(x, y, file_name)
 
-    def get_agent_path(self, coin_distance):
-        pass
+    def get_agent_path(self, coin_distance: list[list[int]]) -> list[int]:
+        num_of_coins = len(coin_distance)
 
+        # Ubaciti sopstveni prioritetni red koji ako je distanca ista bira duzi put, te onda onaj sa manje zlatnika
+        pending_paths = queue.PriorityQueue[(int, list[int])]()
+        pending_paths.put((0, [0]))
+
+        while True:
+            curr_distance: int
+            curr_path: list[int]
+
+            curr_distance, curr_path = pending_paths.get()
+            curr_len = len(curr_path)
+
+            if curr_len == num_of_coins + 1:
+                return curr_path
+
+            last_coin = curr_path[-1]
+
+            possible_coins = set(range(num_of_coins)) - set(curr_path)
+            if curr_len == num_of_coins:
+                possible_coins = {0}
+
+            for coin in possible_coins:
+                new_path = curr_path.copy()
+                new_path.append(coin)
+
+                new_distance = curr_distance + coin_distance[last_coin][coin]
+                pending_paths.put((new_distance, new_path))
 
 class Micko(Agent):
     def __init__(self, x, y, file_name):
         super().__init__(x, y, file_name)
 
-    def get_agent_path(self, coin_distance):
+    def get_agent_path(self, coin_distance: list[list[int]]) -> list[int]:
         pass
