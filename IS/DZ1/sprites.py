@@ -177,13 +177,13 @@ class Uki(Agent):
     def get_agent_path(self, coin_distance: list[list[int]]) -> list[int]:
         num_of_coins = len(coin_distance)
 
-        pending_paths = queue.PriorityQueue[(int, (int, int, list[int]))]()
-        pending_paths.put((0, (0, 0, [0])))
+        pending_paths = queue.PriorityQueue[(int, int, int, list[int])]()
+        pending_paths.put((0, 0, 0, [0]))
 
         while True:
             curr_distance: int
             curr_path: list[int]
-            curr_distance, (_, _, curr_path) = pending_paths.get()
+            curr_distance, _, _, curr_path = pending_paths.get()
 
             curr_len = len(curr_path)
             if curr_len == num_of_coins + 1:
@@ -201,9 +201,7 @@ class Uki(Agent):
 
                 new_distance = curr_distance + coin_distance[last_coin][coin]
 
-                priority = new_distance
-                data = (-(curr_len + 1), coin, new_path)
-                pending_paths.put((priority, data))
+                pending_paths.put((new_distance, -(curr_len + 1), coin, new_path))
 
 
 class Micko(Agent):
@@ -213,13 +211,13 @@ class Micko(Agent):
     def get_agent_path(self, coin_distance: list[list[int]]) -> list[int]:
         num_of_coins = len(coin_distance)
 
-        pending_paths = queue.PriorityQueue[(int, (int, int, int, list[int]))]()
-        pending_paths.put((0, (0, 0, 0, [0])))
+        pending_paths = queue.PriorityQueue[(int, int, int, int, list[int])]()
+        pending_paths.put((0, 0, 0, 0, [0]))
 
         while True:
             curr_distance: int
             curr_path: list[int]
-            _, (_, _, curr_distance, curr_path) = pending_paths.get()
+            _, _, _, curr_distance, curr_path = pending_paths.get()
 
             curr_len = len(curr_path)
             if curr_len == num_of_coins + 1:
@@ -276,5 +274,4 @@ class Micko(Agent):
                 new_distance = curr_distance + coin_distance[last_coin][coin]
 
                 priority = new_distance + new_heuristic
-                data = (-(curr_len + 1), coin, new_distance, new_path)
-                pending_paths.put((priority, data))
+                pending_paths.put((priority, -(curr_len + 1), coin, new_distance, new_path))
