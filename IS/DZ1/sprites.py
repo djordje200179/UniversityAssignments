@@ -177,17 +177,15 @@ class Uki(Agent):
     def get_agent_path(self, coin_distance: list[list[int]]) -> list[int]:
         num_of_coins = len(coin_distance)
 
-        # Ubaciti sopstveni prioritetni red koji ako je distanca ista bira duzi put, te onda onaj sa manje zlatnika
-        pending_paths = queue.PriorityQueue[(int, list[int])]()
-        pending_paths.put((0, [0]))
+        pending_paths = queue.PriorityQueue[(int, (int, int, list[int]))]()
+        pending_paths.put((0, (0, 0, [0])))
 
         while True:
             curr_distance: int
             curr_path: list[int]
+            curr_distance, (_, _, curr_path) = pending_paths.get()
 
-            curr_distance, curr_path = pending_paths.get()
             curr_len = len(curr_path)
-
             if curr_len == num_of_coins + 1:
                 return curr_path
 
@@ -202,11 +200,81 @@ class Uki(Agent):
                 new_path.append(coin)
 
                 new_distance = curr_distance + coin_distance[last_coin][coin]
-                pending_paths.put((new_distance, new_path))
+
+                priority = new_distance
+                data = (-(curr_len + 1), coin, new_path)
+                pending_paths.put((priority, data))
+
 
 class Micko(Agent):
     def __init__(self, x, y, file_name):
         super().__init__(x, y, file_name)
 
     def get_agent_path(self, coin_distance: list[list[int]]) -> list[int]:
-        pass
+        num_of_coins = len(coin_distance)
+
+        pending_paths = queue.PriorityQueue[(int, (int, int, int, list[int]))]()
+        pending_paths.put((0, (0, 0, 0, [0])))
+
+        while True:
+            curr_distance: int
+            curr_path: list[int]
+            _, (_, _, curr_distance, curr_path) = pending_paths.get()
+
+            curr_len = len(curr_path)
+            if curr_len == num_of_coins + 1:
+                return curr_path
+
+            last_coin = curr_path[-1]
+
+            possible_coins = set(range(num_of_coins)) - set(curr_path)
+            if curr_len == num_of_coins:
+                possible_coins = {0}
+
+            def find_mst_edges() -> list[(int, int)]:
+                unconnected_coins = possible_coins.copy()
+                vertices = [0]
+                edges: list[(int, int)] = []
+
+                while len(unconnected_coins) > 0:
+                    def find_best_edge() -> (int, int):
+                        best_edge_length = math.inf
+                        best_start_coin, best_end_coin = -1, -1
+
+                        for start_coin in vertices:
+                            for end_coin in unconnected_coins:
+                                edge_length = coin_distance[start_coin][end_coin]
+
+                                if edge_length < best_edge_length:
+                                    best_edge_length = edge_length
+                                    best_start_coin, best_end_coin = start_coin, end_coin
+
+                        return best_start_coin, best_end_coin
+
+                    start_coin, end_coin = find_best_edge()
+                    vertices.append(end_coin)
+                    unconnected_coins.remove(end_coin)
+                    edges.append((start_coin, end_coin))
+
+                return edges
+
+            def calc_mst_distance() -> int:
+                mst_edges = find_mst_edges()
+
+                mst_distance = 0
+                for start_coin, end_coin in mst_edges:
+                    mst_distance += coin_distance[start_coin][end_coin]
+
+                return mst_distance
+
+            new_heuristic = calc_mst_distance()
+
+            for coin in possible_coins:
+                new_path = curr_path.copy()
+                new_path.append(coin)
+
+                new_distance = curr_distance + coin_distance[last_coin][coin]
+
+                priority = new_distance + new_heuristic
+                data = (-(curr_len + 1), coin, new_distance, new_path)
+                pending_paths.put((priority, data))
