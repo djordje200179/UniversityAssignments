@@ -1,7 +1,9 @@
+from __future__ import annotations
 import itertools
 import math
 import queue
 import random
+from dataclasses import dataclass
 import pygame
 import os
 import config
@@ -177,31 +179,49 @@ class Uki(Agent):
     def get_agent_path(self, coin_distance: list[list[int]]) -> list[int]:
         num_of_coins = len(coin_distance)
 
-        pending_paths = queue.PriorityQueue[(int, int, int, list[int])]()
-        pending_paths.put((0, 0, 0, [0]))
+        @dataclass
+        class PartialPath:
+            path: list[int]
+            distance: int
+
+            def __len__(self):
+                return len(self.path)
+
+            def __getitem__(self, index: int):
+                return self.path[index]
+
+            def __lt__(self, other: PartialPath) -> bool:
+                if self.distance < other.distance:
+                    return True
+                elif self.distance > other.distance:
+                    return False
+
+                if len(self) > len(other):
+                    return True
+                elif len(self) < len(other):
+                    return False
+
+                return self.path[-1] < other.path[-1]
+
+        pending_paths = queue.PriorityQueue[PartialPath]()
+        pending_paths.put(PartialPath([0], 0))
 
         while True:
-            curr_distance: int
-            curr_path: list[int]
-            curr_distance, _, _, curr_path = pending_paths.get()
+            curr_path: PartialPath = pending_paths.get()
 
-            curr_len = len(curr_path)
-            if curr_len == num_of_coins + 1:
-                return curr_path
+            if len(curr_path) == num_of_coins + 1:
+                return curr_path.path
 
-            last_coin = curr_path[-1]
-
-            possible_coins = set(range(num_of_coins)) - set(curr_path)
-            if curr_len == num_of_coins:
-                possible_coins = {0}
+            possible_coins = (set(range(num_of_coins)) - set(curr_path.path)) if len(curr_path) < num_of_coins else {0}
 
             for coin in possible_coins:
-                new_path = curr_path.copy()
+                new_path = curr_path.path.copy()
                 new_path.append(coin)
 
-                new_distance = curr_distance + coin_distance[last_coin][coin]
+                new_distance = curr_path.distance + coin_distance[curr_path[-1]][coin]
 
-                pending_paths.put((new_distance, -(curr_len + 1), coin, new_path))
+                pending_paths.put(PartialPath(new_path, new_distance))
+
 
 
 class Micko(Agent):
@@ -211,23 +231,41 @@ class Micko(Agent):
     def get_agent_path(self, coin_distance: list[list[int]]) -> list[int]:
         num_of_coins = len(coin_distance)
 
-        pending_paths = queue.PriorityQueue[(int, int, int, int, list[int])]()
-        pending_paths.put((0, 0, 0, 0, [0]))
+        @dataclass
+        class PartialPath:
+            path: list[int]
+            heuristic: int
+            distance: int
+
+            def __len__(self):
+                return len(self.path)
+
+            def __getitem__(self, index: int):
+                return self.path[index]
+
+            def __lt__(self, other: PartialPath) -> bool:
+                if self.distance + self.heuristic < other.distance + self.heuristic:
+                    return True
+                elif self.distance + self.heuristic > other.distance + self.heuristic:
+                    return False
+
+                if len(self) > len(other):
+                    return True
+                elif len(self) < len(other):
+                    return False
+
+                return self.path[-1] < other.path[-1]
+
+        pending_paths = queue.PriorityQueue[PartialPath]()
+        pending_paths.put(PartialPath([0], 0, 0))
 
         while True:
-            curr_distance: int
-            curr_path: list[int]
-            _, _, _, curr_distance, curr_path = pending_paths.get()
+            curr_path: PartialPath = pending_paths.get()
 
-            curr_len = len(curr_path)
-            if curr_len == num_of_coins + 1:
-                return curr_path
+            if len(curr_path) == num_of_coins + 1:
+                return curr_path.path
 
-            last_coin = curr_path[-1]
-
-            possible_coins = set(range(num_of_coins)) - set(curr_path)
-            if curr_len == num_of_coins:
-                possible_coins = {0}
+            possible_coins = (set(range(num_of_coins)) - set(curr_path.path)) if len(curr_path) < num_of_coins else {0}
 
             def find_mst_edges() -> list[(int, int)]:
                 unconnected_coins = possible_coins.copy()
@@ -268,10 +306,9 @@ class Micko(Agent):
             new_heuristic = calc_mst_distance()
 
             for coin in possible_coins:
-                new_path = curr_path.copy()
+                new_path = curr_path.path.copy()
                 new_path.append(coin)
 
-                new_distance = curr_distance + coin_distance[last_coin][coin]
+                new_distance = curr_path.distance + coin_distance[curr_path[-1]][coin]
 
-                priority = new_distance + new_heuristic
-                pending_paths.put((priority, -(curr_len + 1), coin, new_distance, new_path))
+                pending_paths.put(PartialPath(new_path, new_heuristic, new_distance))
