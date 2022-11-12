@@ -264,16 +264,12 @@ class Micko(Agent):
             return self.path[-1] < other.path[-1]
 
         @staticmethod
-        def __find_best_mst_edge(coin_distance: list[list[int]], vertices: set[int], remaining_vertices: set[int]) -> tuple[int, int]:
-            best_edge_length = math.inf
-            best_start_coin, best_end_coin = -1, -1
+        def __find_best_mst_edge(coin_distance: list[list[int]], vertices: set[int], unconnected_vertices: set[int]) -> tuple[int, int]:
+            best_start_coin, best_end_coin = None, None
 
             for start_coin in vertices:
-                for end_coin in remaining_vertices:
-                    edge_length = coin_distance[start_coin][end_coin]
-
-                    if edge_length < best_edge_length:
-                        best_edge_length = edge_length
+                for end_coin in unconnected_vertices:
+                    if coin_distance[start_coin][end_coin] < coin_distance[best_start_coin][best_end_coin]:
                         best_start_coin, best_end_coin = start_coin, end_coin
 
             return best_start_coin, best_end_coin
