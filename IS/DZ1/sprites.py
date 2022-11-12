@@ -129,18 +129,19 @@ class Aki(Agent):
         possible_coins = set(range(1, num_of_coins))
 
         while len(path) < num_of_coins:
-            def calc_coin_distance(coin: int) -> float:
-                last = path[-1]
+            best_coin = None
+            best_coin_distance = None
 
-                if coin == last:
-                    return math.inf
+            available_paths = coin_distance[path[-1]]
+            for coin in possible_coins:
+                current_coin_distance = available_paths[coin]
 
-                return coin_distance[last][coin]
+                if best_coin_distance is None or current_coin_distance < best_coin_distance:
+                    best_coin = coin
+                    best_coin_distance = current_coin_distance
 
-            best = min(possible_coins, key=calc_coin_distance)
-
-            path.append(best)
-            possible_coins.remove(best)
+            path.append(best_coin)
+            possible_coins.remove(best_coin)
 
         path.append(0)
 
