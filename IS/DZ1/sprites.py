@@ -201,7 +201,7 @@ class Uki(Agent):
 
     def get_agent_path(self, coin_distance: list[list[int]]) -> list[int]:
         num_of_coins = len(coin_distance)
-        all_coins = range(num_of_coins)
+        all_coins = set(range(num_of_coins))
 
         pending_paths = queue.PriorityQueue[Uki.PartialPath]()
         pending_paths.put(Uki.PartialPath([0], 0))
