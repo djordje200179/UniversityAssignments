@@ -153,7 +153,7 @@ class Jocke(Agent):
         super().__init__(x, y, file_name)
 
     def get_agent_path(self, coin_distance: list[list[int]]) -> list[int]:
-        def calc_path_distance(path: list[int]) -> int:
+        def calc_path_distance(path: tuple) -> int:
             distance = 0
 
             last_coin = 0
@@ -165,7 +165,7 @@ class Jocke(Agent):
             return distance
 
         num_of_coins = len(coin_distance)
-        permutations = list(itertools.permutations(range(1, num_of_coins)))
+        permutations = itertools.permutations(range(1, num_of_coins))
         best_permutation = min(permutations, key=calc_path_distance)
 
         return [0] + list(best_permutation) + [0]
