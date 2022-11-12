@@ -153,9 +153,6 @@ class Jocke(Agent):
         super().__init__(x, y, file_name)
 
     def get_agent_path(self, coin_distance: list[list[int]]) -> list[int]:
-        num_of_coins = len(coin_distance)
-        possible_coins = set(range(1, num_of_coins))
-
         def calc_path_distance(path: list[int]) -> int:
             distance = 0
 
@@ -167,7 +164,8 @@ class Jocke(Agent):
 
             return distance
 
-        permutations = list(itertools.permutations(possible_coins))
+        num_of_coins = len(coin_distance)
+        permutations = list(itertools.permutations(range(1, num_of_coins)))
         best_permutation = min(permutations, key=calc_path_distance)
 
         return [0] + list(best_permutation) + [0]
@@ -268,13 +266,13 @@ class Micko(Agent):
 
             possible_coins = (set(range(num_of_coins)) - set(curr_path.path)) if len(curr_path) < num_of_coins else {0}
 
-            def find_mst_edges() -> list[(int, int)]:
+            def find_mst_edges() -> list[tuple[int, int]]:
                 unconnected_coins = possible_coins.copy()
                 vertices = [0]
-                edges: list[(int, int)] = []
+                edges: list[tuple[int, int]] = []
 
                 while len(unconnected_coins) > 0:
-                    def find_best_edge() -> (int, int):
+                    def find_best_edge() -> tuple[int, int]:
                         best_edge_length = math.inf
                         best_start_coin, best_end_coin = -1, -1
 
