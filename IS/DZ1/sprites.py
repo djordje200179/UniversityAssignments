@@ -205,10 +205,10 @@ class Uki(Agent):
 
             paths: list[Uki.PartialPath] = []
             for coin in possible_coins:
-                current_coin_distance = available_paths[coin]
+                new_path = self.path.copy()
+                new_path.append(coin)
 
-                new_path = self.path + [coin]
-                new_distance = self.distance + current_coin_distance
+                new_distance = self.distance + available_paths[coin]
 
                 paths.append(Uki.PartialPath(new_path, new_distance))
 
