@@ -247,7 +247,7 @@ class Micko(Agent):
 
             for start_coin in vertices:
                 for end_coin in unconnected_vertices:
-                    if self.coin_distance[start_coin][end_coin] < self.coin_distance[best_start_coin][best_end_coin]:
+                    if best_start_coin is None or self.coin_distance[start_coin][end_coin] < self.coin_distance[best_start_coin][best_end_coin]:
                         best_start_coin, best_end_coin = start_coin, end_coin
 
             return best_start_coin, best_end_coin
