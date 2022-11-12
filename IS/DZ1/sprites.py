@@ -244,11 +244,15 @@ class Micko(Agent):
 
         def __find_best_mst_edge(self, vertices: set[int], unconnected_vertices: set[int]) -> tuple[int, int]:
             best_start_coin, best_end_coin = None, None
+            best_distance = None
 
             for start_coin in vertices:
                 for end_coin in unconnected_vertices:
-                    if best_start_coin is None or self.coin_distance[start_coin][end_coin] < self.coin_distance[best_start_coin][best_end_coin]:
+                    curr_distance = self.coin_distance[start_coin][end_coin]
+
+                    if best_distance is None or curr_distance < best_distance:
                         best_start_coin, best_end_coin = start_coin, end_coin
+                        best_distance = curr_distance
 
             return best_start_coin, best_end_coin
 
