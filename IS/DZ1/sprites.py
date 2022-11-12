@@ -263,10 +263,49 @@ class Micko(Agent):
 
             return self.path[-1] < other.path[-1]
 
+        @staticmethod
+        def __find_best_mst_edge(coin_distance: list[list[int]], vertices: set[int], remaining_vertices: set[int]) -> tuple[int, int]:
+            best_edge_length = math.inf
+            best_start_coin, best_end_coin = -1, -1
+
+            for start_coin in vertices:
+                for end_coin in remaining_vertices:
+                    edge_length = coin_distance[start_coin][end_coin]
+
+                    if edge_length < best_edge_length:
+                        best_edge_length = edge_length
+                        best_start_coin, best_end_coin = start_coin, end_coin
+
+            return best_start_coin, best_end_coin
+
+        @staticmethod
+        def __find_mst_edges(coin_distance: list[list[int]], possible_coins: set[int]) -> list[tuple[int, int]]:
+            vertices = {0}
+            unconnected_vertices = possible_coins.copy()
+            edges: list[tuple[int, int]] = []
+
+            while len(unconnected_vertices) > 0:
+                start_coin, end_coin = Micko.PartialPath.__find_best_mst_edge(coin_distance, vertices, unconnected_vertices)
+                vertices.add(end_coin)
+                unconnected_vertices.remove(end_coin)
+                edges.append((start_coin, end_coin))
+
+            return edges
+
+        @staticmethod
+        def __calc_mst_distance(coin_distance: list[list[int]], possible_coins: set[int]) -> int:
+            mst_edges = Micko.PartialPath.__find_mst_edges(coin_distance, possible_coins)
+
+            mst_distance = 0
+            for start_coin, end_coin in mst_edges:
+                mst_distance += coin_distance[start_coin][end_coin]
+
+            return mst_distance
+
         def generate_paths(self, coin_distance: list[list[int]], possible_coins: set[int]) -> list[Micko.PartialPath]:
             last_coin = self.path[-1]
             available_paths = coin_distance[last_coin]
-            new_heuristic = Micko.calc_mst_distance(coin_distance, possible_coins)
+            new_heuristic = Micko.PartialPath.__calc_mst_distance(coin_distance, possible_coins)
 
             paths: list[Micko.PartialPath] = []
             for coin in possible_coins:
@@ -278,45 +317,6 @@ class Micko(Agent):
                 paths.append(Micko.PartialPath(new_path, new_heuristic, new_distance))
 
             return paths
-
-    @staticmethod
-    def find_best_mst_edge(coin_distance: list[list[int]], vertices: set[int], remaining_vertices: set[int]) -> tuple[int, int]:
-        best_edge_length = math.inf
-        best_start_coin, best_end_coin = -1, -1
-
-        for start_coin in vertices:
-            for end_coin in remaining_vertices:
-                edge_length = coin_distance[start_coin][end_coin]
-
-                if edge_length < best_edge_length:
-                    best_edge_length = edge_length
-                    best_start_coin, best_end_coin = start_coin, end_coin
-
-        return best_start_coin, best_end_coin
-
-    @staticmethod
-    def find_mst_edges(coin_distance: list[list[int]], possible_coins: set[int]) -> list[tuple[int, int]]:
-        vertices = {0}
-        unconnected_vertices = possible_coins.copy()
-        edges: list[tuple[int, int]] = []
-
-        while len(unconnected_vertices) > 0:
-            start_coin, end_coin = Micko.find_best_mst_edge(coin_distance, vertices, unconnected_vertices)
-            vertices.add(end_coin)
-            unconnected_vertices.remove(end_coin)
-            edges.append((start_coin, end_coin))
-
-        return edges
-
-    @staticmethod
-    def calc_mst_distance(coin_distance: list[list[int]], possible_coins: set[int]) -> int:
-        mst_edges = Micko.find_mst_edges(coin_distance, possible_coins)
-
-        mst_distance = 0
-        for start_coin, end_coin in mst_edges:
-            mst_distance += coin_distance[start_coin][end_coin]
-
-        return mst_distance
 
     def get_agent_path(self, coin_distance: list[list[int]]) -> list[int]:
         num_of_coins = len(coin_distance)
