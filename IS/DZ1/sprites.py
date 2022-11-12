@@ -222,7 +222,6 @@ class Uki(Agent):
                 pending_paths.put(PartialPath(new_path, new_distance))
 
 
-
 class Micko(Agent):
     def __init__(self, x, y, file_name):
         super().__init__(x, y, file_name)
@@ -255,6 +254,42 @@ class Micko(Agent):
 
                 return self.path[-1] < other.path[-1]
 
+        def find_mst_edges(possible_coins: set[int]) -> list[tuple[int, int]]:
+            unconnected_coins = possible_coins.copy()
+            vertices = [0]
+            edges: list[tuple[int, int]] = []
+
+            def find_best_edge() -> tuple[int, int]:
+                best_edge_length = math.inf
+                best_start_coin, best_end_coin = -1, -1
+
+                for start_coin in vertices:
+                    for end_coin in unconnected_coins:
+                        edge_length = coin_distance[start_coin][end_coin]
+
+                        if edge_length < best_edge_length:
+                            best_edge_length = edge_length
+                            best_start_coin, best_end_coin = start_coin, end_coin
+
+                return best_start_coin, best_end_coin
+
+            while len(unconnected_coins) > 0:
+                start_coin, end_coin = find_best_edge()
+                vertices.append(end_coin)
+                unconnected_coins.remove(end_coin)
+                edges.append((start_coin, end_coin))
+
+            return edges
+
+        def calc_mst_distance(possible_coins: set[int]) -> int:
+            mst_edges = find_mst_edges(possible_coins)
+
+            mst_distance = 0
+            for start_coin, end_coin in mst_edges:
+                mst_distance += coin_distance[start_coin][end_coin]
+
+            return mst_distance
+
         pending_paths = queue.PriorityQueue[PartialPath]()
         pending_paths.put(PartialPath([0], 0, 0))
 
@@ -265,44 +300,7 @@ class Micko(Agent):
                 return curr_path.path
 
             possible_coins = (set(range(num_of_coins)) - set(curr_path.path)) if len(curr_path) < num_of_coins else {0}
-
-            def find_mst_edges() -> list[tuple[int, int]]:
-                unconnected_coins = possible_coins.copy()
-                vertices = [0]
-                edges: list[tuple[int, int]] = []
-
-                while len(unconnected_coins) > 0:
-                    def find_best_edge() -> tuple[int, int]:
-                        best_edge_length = math.inf
-                        best_start_coin, best_end_coin = -1, -1
-
-                        for start_coin in vertices:
-                            for end_coin in unconnected_coins:
-                                edge_length = coin_distance[start_coin][end_coin]
-
-                                if edge_length < best_edge_length:
-                                    best_edge_length = edge_length
-                                    best_start_coin, best_end_coin = start_coin, end_coin
-
-                        return best_start_coin, best_end_coin
-
-                    start_coin, end_coin = find_best_edge()
-                    vertices.append(end_coin)
-                    unconnected_coins.remove(end_coin)
-                    edges.append((start_coin, end_coin))
-
-                return edges
-
-            def calc_mst_distance() -> int:
-                mst_edges = find_mst_edges()
-
-                mst_distance = 0
-                for start_coin, end_coin in mst_edges:
-                    mst_distance += coin_distance[start_coin][end_coin]
-
-                return mst_distance
-
-            new_heuristic = calc_mst_distance()
+            new_heuristic = calc_mst_distance(possible_coins)
 
             for coin in possible_coins:
                 new_path = curr_path.path.copy()
