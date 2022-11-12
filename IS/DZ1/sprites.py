@@ -177,6 +177,7 @@ class Uki(Agent):
 
     def get_agent_path(self, coin_distance: list[list[int]]) -> list[int]:
         num_of_coins = len(coin_distance)
+        all_coins = range(num_of_coins)
 
         @dataclass
         class PartialPath:
@@ -211,13 +212,14 @@ class Uki(Agent):
             if len(curr_path) == num_of_coins + 1:
                 return curr_path.path
 
-            possible_coins = (set(range(num_of_coins)) - set(curr_path.path)) if len(curr_path) < num_of_coins else {0}
+            possible_coins = (all_coins - set(curr_path.path)) if len(curr_path) < num_of_coins else {0}
+            available_paths = coin_distance[curr_path[-1]]
 
             for coin in possible_coins:
                 new_path = curr_path.path.copy()
                 new_path.append(coin)
 
-                new_distance = curr_path.distance + coin_distance[curr_path[-1]][coin]
+                new_distance = curr_path.distance + available_paths[coin]
 
                 pending_paths.put(PartialPath(new_path, new_distance))
 
@@ -228,6 +230,7 @@ class Micko(Agent):
 
     def get_agent_path(self, coin_distance: list[list[int]]) -> list[int]:
         num_of_coins = len(coin_distance)
+        all_coins = set(range(num_of_coins))
 
         @dataclass
         class PartialPath:
@@ -299,13 +302,14 @@ class Micko(Agent):
             if len(curr_path) == num_of_coins + 1:
                 return curr_path.path
 
-            possible_coins = (set(range(num_of_coins)) - set(curr_path.path)) if len(curr_path) < num_of_coins else {0}
+            possible_coins = (all_coins - set(curr_path.path)) if len(curr_path) < num_of_coins else {0}
+            available_paths = coin_distance[curr_path[-1]]
             new_heuristic = calc_mst_distance(possible_coins)
 
             for coin in possible_coins:
                 new_path = curr_path.path.copy()
                 new_path.append(coin)
 
-                new_distance = curr_path.distance + coin_distance[curr_path[-1]][coin]
+                new_distance = curr_path.distance + available_paths[coin]
 
                 pending_paths.put(PartialPath(new_path, new_heuristic, new_distance))
