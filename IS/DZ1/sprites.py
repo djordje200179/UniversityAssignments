@@ -199,6 +199,21 @@ class Uki(Agent):
 
             return self.path[-1] < other.path[-1]
 
+        def generate_paths(self, coin_distance: list[list[int]], possible_coins: set[int]) -> list[Uki.PartialPath]:
+            last_coin = self.path[-1]
+            available_paths = coin_distance[last_coin]
+
+            paths: list[Uki.PartialPath] = []
+            for coin in possible_coins:
+                current_coin_distance = available_paths[coin]
+
+                new_path = self.path + [coin]
+                new_distance = self.distance + current_coin_distance
+
+                paths.append(Uki.PartialPath(new_path, new_distance))
+
+            return paths
+
     def get_agent_path(self, coin_distance: list[list[int]]) -> list[int]:
         num_of_coins = len(coin_distance)
         all_coins = set(range(num_of_coins))
@@ -213,15 +228,10 @@ class Uki(Agent):
                 return curr_path.path
 
             possible_coins = (all_coins - set(curr_path.path)) if len(curr_path) < num_of_coins else {0}
-            available_paths = coin_distance[curr_path[-1]]
 
-            for coin in possible_coins:
-                new_path = curr_path.path.copy()
-                new_path.append(coin)
-
-                new_distance = curr_path.distance + available_paths[coin]
-
-                pending_paths.put(Uki.PartialPath(new_path, new_distance))
+            new_paths = curr_path.generate_paths(coin_distance, possible_coins)
+            for new_path in new_paths:
+                pending_paths.put(new_path)
 
 
 class Micko(Agent):
@@ -252,6 +262,22 @@ class Micko(Agent):
                 return False
 
             return self.path[-1] < other.path[-1]
+
+        def generate_paths(self, coin_distance: list[list[int]], possible_coins: set[int]) -> list[Micko.PartialPath]:
+            last_coin = self.path[-1]
+            available_paths = coin_distance[last_coin]
+            new_heuristic = Micko.calc_mst_distance(coin_distance, possible_coins)
+
+            paths: list[Micko.PartialPath] = []
+            for coin in possible_coins:
+                new_path = self.path.copy()
+                new_path.append(coin)
+
+                new_distance = self.distance + available_paths[coin]
+
+                paths.append(Micko.PartialPath(new_path, new_heuristic, new_distance))
+
+            return paths
 
     @staticmethod
     def find_best_mst_edge(coin_distance: list[list[int]], vertices: set[int], remaining_vertices: set[int]) -> tuple[int, int]:
@@ -306,13 +332,7 @@ class Micko(Agent):
                 return curr_path.path
 
             possible_coins = (all_coins - set(curr_path.path)) if len(curr_path) < num_of_coins else {0}
-            available_paths = coin_distance[curr_path[-1]]
-            new_heuristic = Micko.calc_mst_distance(coin_distance, possible_coins)
 
-            for coin in possible_coins:
-                new_path = curr_path.path.copy()
-                new_path.append(coin)
-
-                new_distance = curr_path.distance + available_paths[coin]
-
-                pending_paths.put(Micko.PartialPath(new_path, new_heuristic, new_distance))
+            new_paths = curr_path.generate_paths(coin_distance, possible_coins)
+            for new_path in new_paths:
+                pending_paths.put(new_path)
