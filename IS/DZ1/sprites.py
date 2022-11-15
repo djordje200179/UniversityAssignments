@@ -4,7 +4,6 @@ import math
 import queue
 import random
 from dataclasses import dataclass
-from typing import Generator
 
 import pygame
 import os
