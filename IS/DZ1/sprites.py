@@ -204,9 +204,16 @@ class Uki(Agent):
 
             return self.path[-1] < other.path[-1]
 
-        def generate_paths(self, coin_distance: list[list[int]]):
+        def generate_paths(self, coin_distance: list[list[int]]) -> Generator[Uki.PartialPath, None, None]:
             last_coin = self.path[-1]
             available_paths = coin_distance[last_coin]
+
+            if len(self.path) == len(coin_distance):
+                new_path = self.path + (0,)
+                new_distance = self.distance + available_paths[0]
+                yield Uki.PartialPath(new_path, new_distance)
+
+                return
 
             for coin in range(1, len(coin_distance)):
                 if coin in self.path:
@@ -304,9 +311,16 @@ class Micko(Agent):
 
             return self.path[-1] < other.path[-1]
 
-        def generate_paths(self, graph: Micko.Graph):
+        def generate_paths(self, graph: Micko.Graph) -> Generator[Micko.PartialPath, None, None]:
             last_coin = self.path[-1]
             available_paths = graph.coin_distance[last_coin]
+
+            if len(self.path) == len(graph.coin_distance):
+                new_path = (*self.path, 0)
+                new_distance = self.distance + available_paths[0]
+                yield Micko.PartialPath(new_path, 0, new_distance)
+
+                return
 
             possible_coins = set(range(1, len(graph.coin_distance))) - set(self.path)
             new_heuristic = graph.calc_mst_distance(frozenset(possible_coins | {last_coin}))
@@ -328,12 +342,6 @@ class Micko(Agent):
 
             if len(curr_path.path) == num_of_coins + 1:
                 return list(curr_path.path)
-            elif len(curr_path.path) == num_of_coins:
-                new_path = (*curr_path.path, 0)
-                new_distance = curr_path.distance + coin_distance[curr_path.path[-1]][0]
-                pending_paths.put(Micko.PartialPath(new_path, 0, new_distance))
-
-                continue
 
             new_paths = curr_path.generate_paths(graph)
             for new_path in new_paths:
