@@ -204,27 +204,9 @@ class Uki(Agent):
 
             return self.path[-1] < other.path[-1]
 
-        def generate_paths(self, coin_distance: list[list[int]]) -> Generator[Uki.PartialPath, None, None]:
-            last_coin = self.path[-1]
-            available_paths = coin_distance[last_coin]
-
-            if len(self.path) == len(coin_distance):
-                new_path = self.path + (0,)
-                new_distance = self.distance + available_paths[0]
-                yield Uki.PartialPath(new_path, new_distance)
-
-                return
-
-            for coin in range(1, len(coin_distance)):
-                if coin in self.path:
-                    continue
-
-                new_path = (*self.path, coin)
-                new_distance = self.distance + available_paths[coin]
-                yield Uki.PartialPath(new_path, new_distance)
-
     def get_agent_path(self, coin_distance: list[list[int]]) -> list[int]:
         num_of_coins = len(coin_distance)
+        all_coins = frozenset(range(1, num_of_coins))
 
         pending_paths = queue.PriorityQueue[Uki.PartialPath]()
         pending_paths.put(Uki.PartialPath((0,), 0))
@@ -232,18 +214,25 @@ class Uki(Agent):
         while True:
             curr_path: Uki.PartialPath = pending_paths.get()
 
+            last_coin = curr_path.path[-1]
+            available_paths = coin_distance[last_coin]
+
             if len(curr_path.path) == num_of_coins + 1:
                 return list(curr_path.path)
             elif len(curr_path.path) == num_of_coins:
                 new_path = (*curr_path.path, 0)
-                new_distance = curr_path.distance + coin_distance[curr_path.path[-1]][0]
+                new_distance = curr_path.distance + available_paths[0]
                 pending_paths.put(Uki.PartialPath(new_path, new_distance))
 
                 continue
 
-            new_paths = curr_path.generate_paths(coin_distance)
-            for new_path in new_paths:
-                pending_paths.put(new_path)
+            possible_coins = all_coins - frozenset(curr_path.path)
+
+            for coin in possible_coins:
+                new_path = (*curr_path.path, coin)
+                new_distance = curr_path.distance + available_paths[coin]
+
+                pending_paths.put(Uki.PartialPath(new_path, new_distance))
 
 
 class Micko(Agent):
@@ -311,28 +300,10 @@ class Micko(Agent):
 
             return self.path[-1] < other.path[-1]
 
-        def generate_paths(self, graph: Micko.Graph) -> Generator[Micko.PartialPath, None, None]:
-            last_coin = self.path[-1]
-            available_paths = graph.coin_distance[last_coin]
-
-            if len(self.path) == len(graph.coin_distance):
-                new_path = (*self.path, 0)
-                new_distance = self.distance + available_paths[0]
-                yield Micko.PartialPath(new_path, 0, new_distance)
-
-                return
-
-            possible_coins = set(range(1, len(graph.coin_distance))) - set(self.path)
-            new_heuristic = graph.calc_mst_distance(frozenset(possible_coins | {last_coin}))
-
-            for coin in possible_coins:
-                new_path = (*self.path, coin)
-                new_distance = self.distance + available_paths[coin]
-                yield Micko.PartialPath(new_path, new_heuristic, new_distance)
-
     def get_agent_path(self, coin_distance: list[list[int]]) -> list[int]:
         graph = Micko.Graph(coin_distance)
         num_of_coins = len(coin_distance)
+        all_coins = frozenset(range(1, num_of_coins))
 
         pending_paths = queue.PriorityQueue[Micko.PartialPath]()
         pending_paths.put(Micko.PartialPath((0,), 0, 0))
@@ -340,9 +311,23 @@ class Micko(Agent):
         while True:
             curr_path: Micko.PartialPath = pending_paths.get()
 
+            last_coin = curr_path.path[-1]
+            available_paths = graph.coin_distance[last_coin]
+
             if len(curr_path.path) == num_of_coins + 1:
                 return list(curr_path.path)
+            elif len(curr_path.path) == num_of_coins:
+                new_path = (*curr_path.path, 0)
+                new_distance = curr_path.distance + available_paths[0]
+                pending_paths.put(Micko.PartialPath(new_path, 0, new_distance))
 
-            new_paths = curr_path.generate_paths(graph)
-            for new_path in new_paths:
-                pending_paths.put(new_path)
+                continue
+
+            possible_coins = all_coins - frozenset(curr_path.path)
+            new_heuristic = graph.calc_mst_distance(possible_coins | frozenset({last_coin}))
+
+            for coin in possible_coins:
+                new_path = (*curr_path.path, coin)
+                new_distance = curr_path.distance + available_paths[coin]
+
+                pending_paths.put(Micko.PartialPath(new_path, new_heuristic, new_distance))
