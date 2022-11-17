@@ -161,7 +161,6 @@
     <None Include="test\lock.S">
       <Filter>Source Files\Tests</Filter>
     </None>
-    <None Include="Dockerfile" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="lib\console.lib">

@@ -87,7 +87,8 @@
     </BuildCommandLine>
     <CleanCommandLine>
     </CleanCommandLine>
-    <RemoteBuildCommandLine>make qemu</RemoteBuildCommandLine>
+    <RemoteBuildCommandLine>
+    </RemoteBuildCommandLine>
     <RemoteCleanCommandLine>make clean</RemoteCleanCommandLine>
   </PropertyGroup>
   <ItemGroup>
