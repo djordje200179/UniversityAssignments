@@ -1,17 +1,24 @@
 #pragma once
 
-#include "Singleton.hpp"
-
 namespace Kernel {
 class Thread;
 
-SINGLETON_CLASS(Scheduler)
+class Scheduler {
+public:
+	Scheduler(const Scheduler&) = delete;
+	Scheduler& operator=(const Scheduler&) = delete;
+
+	static Scheduler& getInstance() {
+		static Scheduler instance;
+		return instance;
+	}
+private:
+	Scheduler() = default;
+
 public:
 	void put(Thread* thread);
 	Thread* get();
 private:
-	Scheduler() = default;
-
 	Thread* head = nullptr;
 	Thread* tail = nullptr;
 

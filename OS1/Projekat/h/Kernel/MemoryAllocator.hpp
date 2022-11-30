@@ -1,10 +1,20 @@
 #pragma once
 
 #include "../../lib/hw.h"
-#include "Singleton.hpp"
 
 namespace Kernel {
-SINGLETON_CLASS(MemoryAllocator)
+class MemoryAllocator {
+public:
+	MemoryAllocator(const MemoryAllocator&) = delete;
+	MemoryAllocator& operator=(const MemoryAllocator&) = delete;
+
+	static MemoryAllocator& getInstance() {
+		static MemoryAllocator instance;
+		return instance;
+	}
+private:
+	MemoryAllocator();
+
 public:
 	void* allocate(size_t blocks);
 	void* allocateBytes(size_t bytes) {	return allocate(calculateBlocks(bytes));	}
@@ -21,8 +31,6 @@ public:
 		return blocks;
 	}
 private:
-	MemoryAllocator();
-
 	struct MemorySegment {
 		size_t blocks;
 

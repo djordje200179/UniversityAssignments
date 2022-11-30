@@ -1,10 +1,18 @@
 #pragma once
 
 #include "../../lib/hw.h"
-#include "Singleton.hpp"
 
 namespace Kernel {
-SINGLETON_CLASS(Syscalls)
+class Syscalls {
+public:
+	Syscalls(const Syscalls&) = delete;
+	Syscalls& operator=(const Syscalls&) = delete;
+
+	static Syscalls& getInstance() {
+		static Syscalls instance;
+		return instance;
+	}
+
 public:
 	enum Type : uint64 {
 		MEM_ALLOC		= 0x01,
@@ -32,7 +40,7 @@ public:
 	void handle();
 private:
 	Syscalls();
-
+	
 	void(*functions[0x100])();
 };
 }

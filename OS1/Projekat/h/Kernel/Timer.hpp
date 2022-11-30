@@ -1,19 +1,27 @@
 #pragma once
 
 #include "../syscall_c.h"
-#include "Singleton.hpp"
 #include "Thread.hpp"
 
 namespace Kernel {
 class Thread;
 
-SINGLETON_CLASS(Timer)
+class Timer {
+public:
+	Timer(const Timer&) = delete;
+	Timer& operator=(const Timer&) = delete;
+
+	static Timer& getInstance() {
+		static Timer instance;
+		return instance;
+	}
+private:
+	Timer() = default;
+
 public:
 	void put(Thread* thread, time_t ticks);
 	void tick();
 private:
-	Timer() = default;
-
 	void update() { head->sleepingTicks--; }
 	void release();
 

@@ -1,12 +1,22 @@
 #pragma once
 
-#include "Singleton.hpp"
 #include "Buffer.hpp"
 #include "Semaphore.hpp"
 #include "../syscall_c.h"
 
 namespace Kernel {
-SINGLETON_CLASS(Console)
+class Console {
+public:
+	Console(const Console&) = delete;
+	Console& operator=(const Console&) = delete;
+
+	static Console& getInstance() {
+		static Console instance;
+		return instance;
+	}
+private:
+	Console() = default;
+
 public:
 	char readChar() { return inputBuffer.get(); }
 	void writeChar(char c);
@@ -16,9 +26,8 @@ public:
 
 	void handleInterrupt() { tryRead(); tryWrite(); }
 private:
-	Console() = default;
 	// Implement destructor
-
+	
 	void tryRead();
 	void tryWrite();
 
