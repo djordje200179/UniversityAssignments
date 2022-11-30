@@ -10,17 +10,17 @@ Kernel::MemoryAllocators::Heap::Heap() {
 
 void* Kernel::MemoryAllocators::Heap::allocate(size_t blocks) {
 	MemorySegment* validSegment;
-	for(validSegment = headSegment; validSegment; validSegment = validSegment->next)
-		if(validSegment->blocks >= blocks)
+	for (validSegment = headSegment; validSegment; validSegment = validSegment->next)
+		if (validSegment->blocks >= blocks)
 			break;
 
-	if(!validSegment)
+	if (!validSegment)
 		return nullptr;
 
 	auto prevSegment = validSegment->prev;
 	auto nextSegment = validSegment->next;
 
-	if(validSegment->blocks > blocks) {
+	if (validSegment->blocks > blocks) {
 		auto newSegment = (MemorySegment*)((char*)validSegment + MEM_BLOCK_SIZE * blocks);
 
 		newSegment->blocks = validSegment->blocks - blocks;
@@ -28,12 +28,12 @@ void* Kernel::MemoryAllocators::Heap::allocate(size_t blocks) {
 		(prevSegment ? prevSegment->next : headSegment) = newSegment;
 		newSegment->prev = prevSegment;
 
-		if(nextSegment)
+		if (nextSegment)
 			nextSegment->prev = newSegment;
 		newSegment->next = nextSegment;
 	} else {
 		(prevSegment ? prevSegment->next : headSegment) = nextSegment;
-		if(nextSegment)
+		if (nextSegment)
 			nextSegment->prev = prevSegment;
 	}
 
@@ -50,8 +50,8 @@ void Kernel::MemoryAllocators::Heap::deallocate(void* ptr) {
 	ptr = headerPointer;
 
 	MemorySegment* prevSegment;
-	for(prevSegment = headSegment; prevSegment; prevSegment = prevSegment->next)
-		if(ptr < prevSegment)
+	for (prevSegment = headSegment; prevSegment; prevSegment = prevSegment->next)
+		if (ptr < prevSegment)
 			break;
 	prevSegment = prevSegment->prev;
 
@@ -62,20 +62,20 @@ void Kernel::MemoryAllocators::Heap::deallocate(void* ptr) {
 	newSegment->next = prevSegment ? prevSegment->next : headSegment;
 	(prevSegment ? prevSegment->next : headSegment) = newSegment;
 
-	if(newSegment->next)
+	if (newSegment->next)
 		newSegment->next->prev = newSegment;
 
 	newSegment->tryJoinWithNext();
-	if(prevSegment)
+	if (prevSegment)
 		prevSegment->tryJoinWithNext();
 }
 
 void Kernel::MemoryAllocators::Heap::MemorySegment::tryJoinWithNext() {
-	if(!next || (char*)this + blocks * MEM_BLOCK_SIZE != (char*)next)
+	if (!next || (char*)this + blocks * MEM_BLOCK_SIZE != (char*)next)
 		return;
 
 	blocks += next->blocks;
 	next = next->next;
-	if(next)
+	if (next)
 		next->prev = this;
 }

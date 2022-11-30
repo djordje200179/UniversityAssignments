@@ -27,7 +27,7 @@ public:
 	void handleInterrupt() { tryRead(); tryWrite(); }
 private:
 	// Implement destructor
-	
+
 	void tryRead();
 	void tryWrite();
 

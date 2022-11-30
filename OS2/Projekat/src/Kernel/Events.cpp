@@ -7,7 +7,7 @@
 namespace Kernel {
 static void hardwareInterrupt() {
 	auto irq = plic_claim();
-	if(irq == CONSOLE_IRQ)
+	if (irq == CONSOLE_IRQ)
 		Console::getInstance().handleInterrupt();
 	plic_complete(irq);
 }
@@ -23,7 +23,7 @@ void Kernel::Events::handle() {
 	Type type;
 	asm volatile ("csrr %0, scause" : "=r" (type));
 
-	switch(type) {
+	switch (type) {
 		case Type::ECALL_USER:
 		case Type::ECALL_SYS:
 			Syscalls::getInstance().handle();
@@ -38,8 +38,6 @@ void Kernel::Events::handle() {
 		case Type::ERR_READ:
 		case Type::ERR_WRITE:
 		default:
-			volatile Type copy = type;
-			if(copy == Type::ERR_INSTR);
 			break;
 	}
 }

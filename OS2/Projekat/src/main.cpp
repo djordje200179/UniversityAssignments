@@ -20,5 +20,5 @@ void main() {
 	startTimer();
 	exit_sys();
 
-    userMain();
+	userMain();
 }

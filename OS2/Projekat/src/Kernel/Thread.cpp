@@ -19,10 +19,10 @@ Kernel::Thread::Thread() : stack(nullptr) {
 }
 
 Kernel::Thread::~Thread() {
-	if(stack)
+	if (stack)
 		MemoryAllocators::Heap::getInstance().deallocate(stack);
 
-	if(this == current) {
+	if (this == current) {
 		current = nullptr;
 		Thread::dispatch();
 	}
@@ -35,7 +35,7 @@ void Kernel::Thread::init() {
 
 void Kernel::Thread::tick() {
 	currentTimeLeft--;
-	if(currentTimeLeft == 0)
+	if (currentTimeLeft == 0)
 		dispatch();
 }
 
@@ -47,7 +47,7 @@ void Kernel::Thread::wrapperFunction() {
 void Kernel::Thread::dispatch() {
 	auto oldThread = current;
 
-	if(oldThread && oldThread->state != State::BLOCKED)
+	if (oldThread && oldThread->state != State::BLOCKED)
 		Scheduler::getInstance().put(oldThread);
 
 	auto newThread = Scheduler::getInstance().get();

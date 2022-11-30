@@ -9,14 +9,14 @@ void Kernel::Console::writeChar(char c) {
 }
 
 void Kernel::Console::tryRead() {
-	while(INPUT_READY && !inputBuffer.full()) {
+	while (INPUT_READY && !inputBuffer.full()) {
 		inputBuffer.put(*(char*)CONSOLE_RX_DATA);
 		inputItemAvailable->signal();
 	}
 }
 
 void Kernel::Console::tryWrite() {
-	while(OUTPUT_READY && !outputBuffer.empty()) {
+	while (OUTPUT_READY && !outputBuffer.empty()) {
 		*(char*)CONSOLE_TX_DATA = outputBuffer.get();
 		outputSpaceAvailable->signal();
 	}

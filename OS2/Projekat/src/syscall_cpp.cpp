@@ -9,12 +9,12 @@ struct PeriodicThreadData {
 	time_t period;
 };
 
-PeriodicThread::PeriodicThread(time_t period) : Thread(wrapper, new PeriodicThreadData {this, period}) {}
+PeriodicThread::PeriodicThread(time_t period) : Thread(wrapper, new PeriodicThreadData{this, period}) {}
 
 void PeriodicThread::wrapper(void* arg) {
 	auto data = (PeriodicThreadData*)arg;
 
-	while(true) {
+	while (true) {
 		sleep(data->period);
 		data->thread->periodicActivation();
 	}

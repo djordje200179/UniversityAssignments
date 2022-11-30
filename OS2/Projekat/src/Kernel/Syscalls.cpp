@@ -41,13 +41,13 @@ static void thread_init() {
 
 static void thread_start(bool just_created) {
 	Thread* thread;
-	if(just_created) {
+	if (just_created) {
 		auto handle = GET_PARAM(1, Thread**);
 		thread = *handle;
 	} else
 		thread = GET_PARAM(1, Thread*);
 
-	if(thread) {
+	if (thread) {
 		Scheduler::getInstance().put(thread);
 		SET_RET_VAL(0);
 	} else
@@ -70,7 +70,7 @@ static void sem_open() {
 	auto handle = GET_PARAM(1, Semaphore**);
 	auto init = GET_PARAM(2, unsigned);
 
-	if((*handle = new Semaphore(init)) == nullptr)
+	if ((*handle = new Semaphore(init)) == nullptr)
 		SET_RET_VAL(-1);
 	SET_RET_VAL(0);
 }

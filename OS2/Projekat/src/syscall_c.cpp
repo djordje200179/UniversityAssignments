@@ -5,15 +5,15 @@
 
 #define SET_PARAM(index, value) asm volatile ("mv a" #index ", %0" : : "r" (value))
 
-#define SYSCALL(syscall) {            				\
-    asm volatile ("li a0, %0" : : "i" (syscall));	\
-    asm volatile ("ecall");  						\
+#define SYSCALL(syscall) {                          \
+    asm volatile ("li a0, %0" : : "i" (syscall));   \
+    asm volatile ("ecall");                         \
 }
 
-#define SET_RET_VAL(type) { 						\
-	type ret_value;   	                 			\
-    asm volatile ("mv %0, a0" : "=r" (ret_value)); 	\
-	return ret_value; 								\
+#define SET_RET_VAL(type) {                         \
+    type ret_value;                                 \
+    asm volatile ("mv %0, a0" : "=r" (ret_value));  \
+    return ret_value;                               \
 }
 
 #define SYSCALL_WITH_RET(syscall, type) { SYSCALL(syscall); SET_RET_VAL(type); }
@@ -34,8 +34,8 @@ int mem_free(void* ptr) {
 	SYSCALL_WITH_RET(Syscalls::MEM_FREE, int);
 }
 
-int thread_create(thread_t* handle, void(*start_routine)(void*), void* arg) {
-    void* stack_space = mem_alloc(DEFAULT_STACK_SIZE * sizeof(uint64));
+int thread_create(thread_t* handle, void(* start_routine)(void*), void* arg) {
+	void* stack_space = mem_alloc(DEFAULT_STACK_SIZE * sizeof(uint64));
 
 	SET_PARAM(4, stack_space);
 	SET_PARAM(3, arg);
@@ -45,7 +45,7 @@ int thread_create(thread_t* handle, void(*start_routine)(void*), void* arg) {
 	SYSCALL_WITH_RET(Syscalls::THREAD_CREATE, int);
 }
 
-void thread_init(thread_t* handle, void(*start_routine)(void*), void* arg) {
+void thread_init(thread_t* handle, void(* start_routine)(void*), void* arg) {
 	void* stack_space = mem_alloc(DEFAULT_STACK_SIZE * sizeof(uint64));
 
 	SET_PARAM(4, stack_space);

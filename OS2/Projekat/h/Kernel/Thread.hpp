@@ -7,7 +7,7 @@ namespace Kernel {
 class Thread {
 // Misc
 public:
-	using Function = void(*)(void*);
+	using Function = void (*)(void*);
 
 	enum class State {
 		CREATED, READY, RUNNING, BLOCKED

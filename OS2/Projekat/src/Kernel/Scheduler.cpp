@@ -2,7 +2,7 @@
 #include "../../h/Kernel/Thread.hpp"
 
 void Kernel::Scheduler::put(Thread* thread) {
-	if(thread == idleThread)
+	if (thread == idleThread)
 		return;
 
 	thread->state = Thread::State::READY;
@@ -10,11 +10,11 @@ void Kernel::Scheduler::put(Thread* thread) {
 }
 
 Kernel::Thread* Kernel::Scheduler::get() {
-	if(head) {
+	if (head) {
 		Thread* ret = head;
 
 		head = head->next;
-		if(!head)
+		if (!head)
 			tail = nullptr;
 
 		ret->next = nullptr;
@@ -22,9 +22,9 @@ Kernel::Thread* Kernel::Scheduler::get() {
 	} else {
 		if (!idleThread)
 			idleThread = new Thread(
-				(uint64*) MemoryAllocators::Heap::getInstance().allocateBytes(DEFAULT_STACK_SIZE),
-				[](void*) { while(true); },
-				nullptr
+					(uint64*)MemoryAllocators::Heap::getInstance().allocateBytes(DEFAULT_STACK_SIZE),
+					[](void*) { while (true); },
+					nullptr
 			);
 
 		return idleThread;
