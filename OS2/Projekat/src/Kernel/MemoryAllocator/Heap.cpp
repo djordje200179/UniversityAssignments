@@ -1,9 +1,11 @@
 #include "../../../h/Kernel/MemoryAllocators/Heap.hpp"
 
 Kernel::MemoryAllocators::Heap::Heap() {
-	headSegment = (MemorySegment*)HEAP_START_ADDR;
+	auto startAddress = (MemorySegment*)((uint64)HEAP_START_ADDR + ((uint64)HEAP_START_ADDR >> 3));
 
-	headSegment->blocks = (uint64)((char*)HEAP_END_ADDR - (char*)HEAP_START_ADDR) / MEM_BLOCK_SIZE;
+	headSegment = (MemorySegment*)startAddress;
+
+	headSegment->blocks = (uint64)((char*)HEAP_END_ADDR - (char*)startAddress) / MEM_BLOCK_SIZE;
 	headSegment->prev = nullptr;
 	headSegment->next = nullptr;
 }
