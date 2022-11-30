@@ -6,11 +6,11 @@
 namespace Kernel {
 namespace MemoryAllocators {
 template<typename T>
-class Slab<T> {
+class Slab {
 // Misc
 	BUDDY_ALLOCATED(Slab<T>);
 
-	const int SLOTS = 10;
+	static const int SLOTS = 10;
 // Nonstatic members
 public:
 	Slab();
@@ -20,7 +20,7 @@ public:
 private:
 	Slab<T> next = nullptr;
 	T* freeSlot = &slots[0];
-	T slots[SLOTS]
+	T slots[SLOTS];
 };
 }
 }

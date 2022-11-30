@@ -7,7 +7,7 @@
 namespace Kernel {
 namespace MemoryAllocators {
 template<typename T>
-class Cache<T> {
+class Cache {
 public:
 	Cache(const Cache&) = delete;
 	Cache& operator=(const Cache&) = delete;
@@ -25,20 +25,20 @@ public:
 	T* allocate();
 	void deallocate(T* ptr);
 private:
-	Slab* headSlab = nullptr;
+	Slab<T>* headSlab = nullptr;
 };
 }
 }
 
 template<typename T>
 T* Kernel::MemoryAllocators::Cache<T>::allocate() {
-	for (Slab* slab = headSlab; slab; slab = slab->nextSlab) {
+	for (auto slab = headSlab; slab; slab = slab->nextSlab) {
 		T* ret = slab->allocate();
 		if (ret)
 			return ret;
 	}
 
-	Slab* newSlab = new Slab();
+	auto newSlab = new Slab<T>();
 
 	if (!newSlab)
 		return nullptr;
@@ -51,7 +51,7 @@ T* Kernel::MemoryAllocators::Cache<T>::allocate() {
 
 template<typename T>
 void Kernel::MemoryAllocators::Cache<T>::deallocate(T* ptr) {
-	for (Slab* slab = headSlab; slab; slab = slab->nextSlab) {
+	for (auto slab = headSlab; slab; slab = slab->nextSlab) {
 		bool success = slab->deallocate(ptr);
 
 		if (success)
@@ -59,6 +59,6 @@ void Kernel::MemoryAllocators::Cache<T>::deallocate(T* ptr) {
 	}
 }
 
-#define CACHE_ALLOCATED(type)                                                                   \
-	static void* operator new(size_t size) { return Cache<type>::getInstance().allocate(); }    \
-	static void operator delete(void* ptr) { Cache<type>::getInstance().deallocate(ptr); }      \
+#define CACHE_ALLOCATED(T)                                                                                          \
+	static void* operator new(size_t size) { return Kernel::MemoryAllocators::Cache<T>::getInstance().allocate(); } \
+	static void operator delete(void* ptr) { Kernel::MemoryAllocators::Cache<T>::getInstance().deallocate(ptr); }

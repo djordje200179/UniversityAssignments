@@ -12,8 +12,6 @@ public:
 
 // Nonstatic members
 public:
-	KERNEL_ALLOCATOR
-
 	Semaphore(unsigned initialValue) { value = initialValue; }
 	~Semaphore();
 

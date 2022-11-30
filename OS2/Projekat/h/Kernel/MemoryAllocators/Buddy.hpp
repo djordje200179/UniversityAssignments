@@ -23,6 +23,6 @@ public:
 }
 }
 
-#define BUDDY_ALLOCATED(type)                                                                       \
-	static void* operator new(size_t size) { return Buddy::getInstance().allocate(size); }          \
-	static void operator delete(void* ptr) { Buddy::getInstance().deallocate(ptr, sizeof(type)); }  \
+#define BUDDY_ALLOCATED(T)                                                                      \
+	static void* operator new(size_t size) { return Buddy::getInstance().allocate(size); }      \
+	static void operator delete(void* ptr) { Buddy::getInstance().deallocate(ptr, sizeof(T)); }
