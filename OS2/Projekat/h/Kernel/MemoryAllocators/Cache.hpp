@@ -8,15 +8,20 @@ namespace Kernel {
 namespace MemoryAllocators {
 template<typename T>
 class Cache<T> {
-// Misc
 public:
+	Cache(const Cache&) = delete;
+	Cache& operator=(const Cache&) = delete;
+
+	static Cache<T>& getInstance() {
+		static Cache<T>* instance = new Cache<T>();
+		return *instance;
+	}
+private:
 	BUDDY_ALLOCATED(Cache<T>);
 
-	friend class Slab;
-// Nonstatic members
-public:
-	Cache();
+	Cache() = default;
 
+public:
 	T* allocate();
 	void deallocate(T* ptr);
 private:
@@ -53,3 +58,7 @@ void Kernel::MemoryAllocators::Cache<T>::deallocate(T* ptr) {
 			return;
 	}
 }
+
+#define CACHE_ALLOCATED(type)                                                                   \
+	static void* operator new(size_t size) { return Cache<type>::getInstance().allocate(); }    \
+	static void operator delete(void* ptr) { Cache<type>::getInstance().deallocate(ptr); }      \

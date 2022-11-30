@@ -1,11 +1,16 @@
 #pragma once
 
-#include "MemoryAllocators/Heap.hpp"
+#include "MemoryAllocators/Cache.hpp"
 
 namespace Kernel {
 class Thread;
 
 class Semaphore {
+// Misc
+public:
+	CACHE_ALLOCATED(Semaphore);
+
+// Nonstatic members
 public:
 	KERNEL_ALLOCATOR
 

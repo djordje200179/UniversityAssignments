@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../../lib/hw.h"
-#include "MemoryAllocators/Heap.hpp"
+#include "MemoryAllocators/Cache.hpp"
 
 namespace Kernel {
 class Thread {
@@ -24,7 +24,8 @@ public:
 	friend class Timer;
 	friend class Semaphore;
 
-	KERNEL_ALLOCATOR
+	CACHE_ALLOCATED(Thread);
+
 // Static members
 public:
 	static void init();
