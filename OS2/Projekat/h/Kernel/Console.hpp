@@ -1,11 +1,27 @@
 #pragma once
 
-#include "Buffer.hpp"
 #include "Semaphore.hpp"
 #include "../syscall_c.h"
 
 namespace Kernel {
 class Console {
+// Misc
+private:
+	class Buffer {
+	public:
+		static const int BUFFER_SIZE = 256;
+
+		void put(char c);
+		char get();
+
+		bool empty() const { return count == 0; }
+		bool full() const { return count == BUFFER_SIZE; }
+	private:
+		char buffer[BUFFER_SIZE];
+		int head = 0, tail = 0, count = 0;
+	};
+
+// Nonstatic members
 public:
 	Console(const Console&) = delete;
 	Console& operator=(const Console&) = delete;
