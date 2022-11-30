@@ -38,7 +38,7 @@ private:
 
 	static Thread* main;
 
-	static Thread* current;
+	static Thread* current asm("current_thread");
 	static size_t currentTimeLeft;
 
 // Nonstatic members

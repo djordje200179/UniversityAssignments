@@ -1,10 +1,5 @@
-.extern _ZN6Kernel6Events6handleEv
-
 .global _ZN6Kernel6Events4trapEv
-.global _ZN6Kernel6Thread7currentE
 
-.set handle_trap, _ZN6Kernel6Events6handleEv
-.set current_thread, _ZN6Kernel6Thread7currentE
 .set thread_offset_PC, 0x08
 .set thread_offset_regs, 0x10
 

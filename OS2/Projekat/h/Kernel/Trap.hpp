@@ -16,7 +16,7 @@ enum class Type : uint64 {
 	EXTERNAL 	= 0x1UL << 63 | 0x09
 };
 
-void handle();
+void handle() asm("handle_trap");
 void trap();
 }
 }
