@@ -1,7 +1,7 @@
 #include "../../../h/Kernel/MemoryAllocators/Heap.hpp"
 
 Kernel::MemoryAllocators::Heap::Heap() {
-	auto startAddress = (MemorySegment*)((uint64)HEAP_START_ADDR + ((uint64)HEAP_START_ADDR >> 3));
+	auto startAddress = (void*)((uint64)HEAP_START_ADDR + ((uint64)HEAP_START_ADDR >> 3));
 
 	headSegment = (MemorySegment*)startAddress;
 

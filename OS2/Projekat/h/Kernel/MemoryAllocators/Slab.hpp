@@ -6,49 +6,49 @@
 namespace Kernel {
 namespace MemoryAllocators {
 template<typename T>
+class Cache;
+
+template<typename T>
 class Slab {
 // Misc
+public:
+	friend class Cache<T>;
+
 	BUDDY_ALLOCATED(Slab<T>);
 
 	static const int SLOTS = 10;
 // Nonstatic members
 public:
-	Slab();
+	Slab() {
+        for (size_t i = 0; i < SLOTS - 1; i++)
+            *(T**)(&slots[i]) = &slots[i + 1];
+        *(T**)(&slots[SLOTS - 1]) = 0;
+    }
 
-	T* allocate();
-	bool deallocate(T* ptr);
+	T* allocate() {
+        if (!freeSlot)
+            return nullptr;
+
+        T* ret = freeSlot;
+        freeSlot = *(T**)freeSlot;
+        return ret;
+    }
+
+	bool deallocate(T* ptr) {
+        if (slots > ptr || ptr >= slots + SLOTS)
+            return false;
+
+        *(T**)ptr = freeSlot;
+        freeSlot = ptr;
+
+        return true;
+    }
 private:
-	Slab<T> next = nullptr;
-	T* freeSlot = &slots[0];
-	T slots[SLOTS];
+    char buffer[SLOTS * sizeof(T)] = {0};
+
+    T* slots = (T*)buffer;
+    T* freeSlot = &slots[0];
+	Slab<T>* next = nullptr;
 };
 }
-}
-
-template<typename T>
-Kernel::MemoryAllocators::Slab<T>::Slab() {
-	for (size_t i = 0; i < SLOTS - 1; i++)
-		*(T**)(&slots[i]) = &slots[i + 1];
-	*(T**)(&slots[SLOTS - 1]) = 0;
-}
-
-template<typename T>
-T* Kernel::MemoryAllocators::Slab<T>::allocate() {
-	if (!freeSlot)
-		return nullptr;
-
-	T* ret = freeSlot;
-	freeSlot = *(T**)freeSlot;
-	return ret;
-}
-
-template<typename T>
-bool Kernel::MemoryAllocators::Slab<T>::deallocate(T* ptr) {
-	if (slots > ptr || ptr >= slots + SLOTS)
-		return false;
-
-	*(T**)ptr = freeSlot;
-	freeSlot = ptr;
-
-	return true;
 }
