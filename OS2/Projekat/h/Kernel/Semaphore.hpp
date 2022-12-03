@@ -8,7 +8,16 @@ class Thread;
 class Semaphore {
 // Misc
 public:
-	CACHE_ALLOCATED(Semaphore);
+    static void* operator new(size_t size) {
+        if(!cache)
+            cache = new MemoryAllocators::Cache(sizeof(Semaphore));
+
+        return cache->allocate();
+    }
+
+    static void operator delete(void* ptr) { cache->deallocate(ptr); }
+private:
+    static MemoryAllocators::Cache* cache;
 
 // Nonstatic members
 public:

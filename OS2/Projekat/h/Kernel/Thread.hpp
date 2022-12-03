@@ -24,7 +24,16 @@ public:
 	friend class Timer;
 	friend class Semaphore;
 
-	CACHE_ALLOCATED(Thread);
+    static void* operator new(size_t size) {
+        if(!cache)
+            cache = new MemoryAllocators::Cache(sizeof(Thread));
+
+        return cache->allocate();
+    }
+
+    static void operator delete(void* ptr) { cache->deallocate(ptr); }
+private:
+    static MemoryAllocators::Cache* cache;
 
 // Static members
 public:

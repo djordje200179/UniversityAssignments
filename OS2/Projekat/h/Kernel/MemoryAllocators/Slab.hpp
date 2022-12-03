@@ -5,50 +5,31 @@
 
 namespace Kernel {
 namespace MemoryAllocators {
-template<typename T>
-class Cache;
-
-template<typename T>
 class Slab {
 // Misc
 public:
-	friend class Cache<T>;
+	friend class Cache;
 
-	BUDDY_ALLOCATED(Slab<T>);
+    static void* operator new(size_t size, size_t typeSize, size_t numOfSlots);
+	static void operator delete(void* ptr);
 
-	static const int SLOTS = 10;
 // Nonstatic members
 public:
-	Slab() {
-        for (size_t i = 0; i < SLOTS - 1; i++)
-            *(T**)(&slots[i]) = &slots[i + 1];
-        *(T**)(&slots[SLOTS - 1]) = 0;
-    }
+	Slab(size_t typeSize, size_t numOfSlots);
 
-	T* allocate() {
-        if (!freeSlot)
-            return nullptr;
-
-        T* ret = freeSlot;
-        freeSlot = *(T**)freeSlot;
-        return ret;
-    }
-
-	bool deallocate(T* ptr) {
-        if (slots > ptr || ptr >= slots + SLOTS)
-            return false;
-
-        *(T**)ptr = freeSlot;
-        freeSlot = ptr;
-
-        return true;
-    }
+	void* allocate();
+	bool deallocate(void* ptr);
 private:
-    char buffer[SLOTS * sizeof(T)] = {0};
+    void* getSlotsStart() { return this + 1; }
+    void* getSlotsEnd() { return (char*)(this + 1) + numOfSlots * typeSize; }
 
-    T* slots = (T*)buffer;
-    T* freeSlot = &slots[0];
-	Slab<T>* next = nullptr;
+    void* getSlot(size_t index) { return (char*)getSlotsStart() + index * typeSize; }
+
+    size_t typeSize;
+    size_t numOfSlots;
+
+    void* freeSlot = this + 1;
+	Slab* next = nullptr;
 };
 }
 }
