@@ -2,8 +2,6 @@
 #include "../../h/Kernel/Scheduler.hpp"
 #include "../../h/syscall_c.h"
 
-Kernel::MemoryAllocators::Cache* Kernel::Thread::cache = nullptr;
-
 Kernel::Thread* Kernel::Thread::main;
 Kernel::Thread* Kernel::Thread::current;
 size_t Kernel::Thread::currentTimeLeft;

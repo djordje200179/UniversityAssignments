@@ -2,8 +2,6 @@
 #include "../../h/Kernel/Scheduler.hpp"
 #include "../../h/Kernel/Thread.hpp"
 
-Kernel::MemoryAllocators::Cache* Kernel::Semaphore::cache = nullptr;
-
 Kernel::Semaphore::~Semaphore() {
 	auto& scheduler = Scheduler::getInstance();
 	for (Thread* current = head; current; current = current->next) {

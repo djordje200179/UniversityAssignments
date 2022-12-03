@@ -11,14 +11,26 @@ class Cache {
 public:
 	BUDDY_ALLOCATED(Cache);
 public:
-    Cache(size_t typeSize) : typeSize(typeSize) {}
+	Cache(size_t typeSize) : typeSize(typeSize) {}
 
-	void* allocate();
-	void deallocate(void* ptr);
+	void *allocate();
+
+	void deallocate(void *ptr);
+
 private:
-    size_t typeSize;
+	size_t typeSize;
 
-	Slab* headSlab = nullptr;
+	Slab *headSlab = nullptr;
 };
 }
 }
+
+#define CACHE_ALLOCATED(T)                                                  \
+	public:                                                                 \
+	    void* operator new(size_t size) { return getCache().allocate(); }   \
+	    void operator delete(void* ptr) { getCache().deallocate(ptr); }     \
+	private:                                                                \
+	    static MemoryAllocators::Cache& getCache() {                        \
+	        static MemoryAllocators::Cache* instance = new MemoryAllocators::Cache(sizeof(T)); \
+	        return *instance;                                               \
+	    }
