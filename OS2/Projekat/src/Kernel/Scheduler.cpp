@@ -20,9 +20,9 @@ Kernel::Thread* Kernel::Scheduler::get() {
 		ret->next = nullptr;
 		return ret;
 	} else {
-		if (!idleThread)
+		if(!idleThread)
 			idleThread = new Thread(
-					(uint64*)MemoryAllocators::Heap::getInstance().allocateBytes(DEFAULT_STACK_SIZE),
+					nullptr, // (uint64*)MemoryAllocators::Heap::getInstance().allocateBytes(DEFAULT_STACK_SIZE),
 					[](void*) { while (true); },
 					nullptr
 			);

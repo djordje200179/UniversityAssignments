@@ -19,8 +19,8 @@ Kernel::Thread::Thread() : stack(nullptr) {
 }
 
 Kernel::Thread::~Thread() {
-	if (stack)
-		MemoryAllocators::Heap::getInstance().deallocate(stack);
+	if(stack)
+		;// MemoryAllocators::Heap::getInstance().deallocate(stack);
 
 	if (this == current) {
 		current = nullptr;

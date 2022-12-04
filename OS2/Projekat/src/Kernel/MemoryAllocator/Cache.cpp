@@ -17,7 +17,7 @@ void* Kernel::MemoryAllocators::Cache::allocate() {
     return headSlab->allocate();
 }
 
-void Kernel::MemoryAllocators::Cache::deallocate(T* ptr) {
+void Kernel::MemoryAllocators::Cache::deallocate(void* ptr) {
     for (auto slab = headSlab; slab; slab = slab->next) {
         bool success = slab->deallocate(ptr);
 

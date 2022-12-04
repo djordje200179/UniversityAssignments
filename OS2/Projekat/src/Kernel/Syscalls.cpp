@@ -4,6 +4,7 @@
 #include "../../h/Kernel/Timer.hpp"
 #include "../../h/Kernel/Console.hpp"
 #include "../../h/Kernel/Syscalls.hpp"
+#include "../../h/Kernel/MemoryAllocators/Heap.hpp"
 
 #define GET_PARAM(index, type) (type)Kernel::Thread::getCurrent()->getReg(Kernel::Thread::Registers::a ## index)
 #define SET_RET_VAL(value) Kernel::Thread::getCurrent()->setReg(Kernel::Thread::Registers::a0, (uint64)value)
