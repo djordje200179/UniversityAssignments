@@ -20,31 +20,17 @@ class ExampleAlgorithm(Algorithm):
 
 class Backtracking(Algorithm):
 	@staticmethod
-	def _get_domains(tiles: list[list[bool]], variables: list[str], words: list[str]) -> dict[str, list[str]]:
-		height, width = len(tiles), len(tiles[0])
-
-		def get_domain(var: str) -> list[str]:
-			position, direction = var
-			position = int(position)
-
-			start_y, start_x = position // width, position % width
-
-			var_length = 1
-			if direction == 'h':
-				while start_x + var_length < len(tiles[0]) and not tiles[start_y][start_x + var_length]:
-					var_length += 1
-			else:
-				while start_y + var_length < len(tiles) and not tiles[start_y + var_length][start_x]:
-					var_length += 1
-
-			return [word for word in words if len(word) == var_length]
-
-		return {var: get_domain(var) for var in variables}
+	def _get_domains(variables: dict[str, int], words: list[str]) -> dict[str, list[str]]:
+		return {
+			var: [
+				word for word in words if len(word) == var_len
+			] for var, var_len in variables.items()
+		}
 
 	@staticmethod
 	def __read_var(width: int, var: str) -> (int, int, str):
-		position, direction = var
-		position = int(position)
+		position = int(var[:-1])
+		direction = var[-1]
 
 		y, x = position // width, position % width
 
@@ -86,8 +72,8 @@ class Backtracking(Algorithm):
 
 		return True
 
-	def get_algorithm_steps(self, tiles: list[list[bool]], variables: list[str], words: list[str]):
-		domains: dict[str, list[str]] = Backtracking._get_domains(tiles, variables, words)
+	def get_algorithm_steps(self, tiles: list[list[bool]], variables: dict[str, int], words: list[str]):
+		domains: dict[str, list[str]] = Backtracking._get_domains(variables, words)
 		filled = {var: None for var in variables}
 		steps: list[(str, int | None, dict[str, list[str]])] = []
 
@@ -124,12 +110,12 @@ class ForwardChecking(Backtracking):
 
 		return {
 			var: [
-				word for word in original_domains[var] if Backtracking._can_fit_word(matrix, word, var)
-			] for var in original_domains
+				word for word in domain if Backtracking._can_fit_word(matrix, word, var)
+			] for var, domain in original_domains.items()
 		}
 
-	def get_algorithm_steps(self, tiles: list[list[bool]], variables: list[str], words: list[str]):
-		original_domains: dict[str, list[str]] = Backtracking._get_domains(tiles, variables, words)
+	def get_algorithm_steps(self, tiles: list[list[bool]], variables: dict[str, int], words: list[str]):
+		original_domains: dict[str, list[str]] = Backtracking._get_domains(variables, words)
 		filled: dict[str, None | str] = {var: None for var in variables}
 		steps: list[(str, int | None, dict[str, list[str]])] = []
 
