@@ -19,6 +19,27 @@ private:
 public:
 	void* allocate(size_t size);
 	void deallocate(void* ptr, size_t size);
+private:
+	struct FreeBlock {
+		FreeBlock* prev;
+		FreeBlock* next;
+		
+		FreeBlock* getBuddy(size_t degree) {
+			return (FreeBlock*)((uint64)this ^ (1UL << degree));
+		}
+	};
+	
+	void insertBlock(FreeBlock* block, size_t degree);
+	void removeBlock(FreeBlock* block, size_t degree);
+	
+	size_t findFreeDegree(size_t degree);
+	
+	void recursiveJoin(FreeBlock* block, size_t degree);
+	void recursiveSplit(size_t from, size_t to);
+	
+	static const size_t BLOCK_SIZE_DEGRESS = 30;
+	
+	FreeBlock* blocks[BLOCK_SIZE_DEGRESS];
 };
 }
 }
