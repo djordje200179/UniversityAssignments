@@ -1,17 +1,17 @@
 #include "../../../h/Kernel/MemoryAllocators/Heap.hpp"
 
 Kernel::MemoryAllocators::Heap::Heap() {
-	auto startAddress = (void*)((uint64)HEAP_START_ADDR + ((uint64)HEAP_START_ADDR >> 3));
+	auto startAddress = (char*)((uint64)HEAP_START_ADDR + ((uint64)HEAP_START_ADDR >> 3));
+	auto endAddress = (char*)(HEAP_END_ADDR);
 
-	headSegment = (MemorySegment*)startAddress;
-
-	headSegment->blocks = (uint64)((char*)HEAP_END_ADDR - (char*)startAddress) / MEM_BLOCK_SIZE;
+	headSegment = (Segment*)startAddress;
+	headSegment->blocks = (uint64)(endAddress - startAddress) / MEM_BLOCK_SIZE;
 	headSegment->prev = nullptr;
 	headSegment->next = nullptr;
 }
 
 void* Kernel::MemoryAllocators::Heap::allocate(size_t blocks) {
-	MemorySegment* validSegment;
+	Segment* validSegment;
 	for (validSegment = headSegment; validSegment; validSegment = validSegment->next)
 		if (validSegment->blocks >= blocks)
 			break;
@@ -23,7 +23,7 @@ void* Kernel::MemoryAllocators::Heap::allocate(size_t blocks) {
 	auto nextSegment = validSegment->next;
 
 	if (validSegment->blocks > blocks) {
-		auto newSegment = (MemorySegment*)((char*)validSegment + MEM_BLOCK_SIZE * blocks);
+		auto newSegment = (Segment*)((char*)validSegment + MEM_BLOCK_SIZE * blocks);
 
 		newSegment->blocks = validSegment->blocks - blocks;
 
@@ -39,45 +39,36 @@ void* Kernel::MemoryAllocators::Heap::allocate(size_t blocks) {
 			nextSegment->prev = prevSegment;
 	}
 
-	auto headerPointer = (size_t*)validSegment;
-	*headerPointer = blocks;
-	headerPointer++;
-
-	return headerPointer;
+	validSegment->blocks = blocks;
+	return validSegment->data;
 }
 
 void Kernel::MemoryAllocators::Heap::deallocate(void* ptr) {
-	auto headerPointer = (size_t*)ptr - 1;
-	auto blocks = *headerPointer;
-	ptr = headerPointer;
+	auto segment = Segment::getSegment(ptr);
 
-	MemorySegment* prevSegment;
-	for (prevSegment = headSegment; prevSegment; prevSegment = prevSegment->next)
-		if (ptr < prevSegment)
+	Segment* prevSegment;
+	Segment* nextSegment;
+	for(prevSegment = nullptr, nextSegment = headSegment; nextSegment; prevSegment = nextSegment, nextSegment = nextSegment->next)
+		if(nextSegment > segment)
 			break;
-	prevSegment = prevSegment->prev;
+	
+	segment->prev = prevSegment;
+	segment->next = prevSegment ? prevSegment->next : headSegment;
+	(prevSegment ? prevSegment->next : headSegment) = segment;
+	if (segment->next)
+		segment->next->prev = segment;
 
-	auto newSegment = (MemorySegment*)ptr;
-	newSegment->blocks = blocks;
-	newSegment->prev = prevSegment;
-
-	newSegment->next = prevSegment ? prevSegment->next : headSegment;
-	(prevSegment ? prevSegment->next : headSegment) = newSegment;
-
-	if (newSegment->next)
-		newSegment->next->prev = newSegment;
-
-	newSegment->tryJoinWithNext();
-	if (prevSegment)
-		prevSegment->tryJoinWithNext();
+	joinBlocks(segment);
 }
 
-void Kernel::MemoryAllocators::Heap::MemorySegment::tryJoinWithNext() {
-	if (!next || (char*)this + blocks * MEM_BLOCK_SIZE != (char*)next)
-		return;
+void Kernel::MemoryAllocators::Heap::joinBlocks(Segment* middle) {
+	if(middle->next && (char*)middle + middle->blocks * MEM_BLOCK_SIZE == (char*)middle->next) {
+		middle->blocks += middle->next->blocks;
+		middle->next = middle->next->next;
+	}
 
-	blocks += next->blocks;
-	next = next->next;
-	if (next)
-		next->prev = this;
+	if(middle->prev && (char*)middle->prev + middle->prev->blocks * MEM_BLOCK_SIZE == (char*)middle) {
+		middle->prev->blocks += middle->blocks;
+		middle->prev->next = middle->next;
+	}
 }

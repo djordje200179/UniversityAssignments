@@ -29,18 +29,25 @@ public:
 
 		return blocks;
 	}
-
-private:
-	struct MemorySegment {
+private:	
+	struct Segment {
+		static Segment* getSegment(void* data) { return (Segment*)((size_t*)data - 1); }
+		
 		size_t blocks;
 
-		MemorySegment* prev;
-		MemorySegment* next;
+		union {
+			struct {
+				Segment* prev;
+				Segment* next;
+			};
 
-		void tryJoinWithNext();
+			char data[0];
+		};
 	};
 
-	MemorySegment* headSegment;
+	void joinBlocks(Segment* middle);
+
+	Segment* headSegment;
 };
 }
 }
