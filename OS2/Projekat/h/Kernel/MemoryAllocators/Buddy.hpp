@@ -23,18 +23,24 @@ private:
 	struct FreeBlock {
 		FreeBlock* prev;
 		FreeBlock* next;
+		size_t degree;
 		
-		FreeBlock* getBuddy(size_t degree) {
-			return (FreeBlock*)((uint64)this ^ (1UL << degree));
+		FreeBlock* getBuddy() const {
+			return (FreeBlock*)((uint64)this ^ getSize());
+		}
+
+		size_t getSize() const {
+			return 1UL << degree;
 		}
 	};
 	
-	void insertBlock(FreeBlock* block, size_t degree);
-	void removeBlock(FreeBlock* block, size_t degree);
+	void insertBlock(FreeBlock* block);
+	void removeBlock(FreeBlock* block);
+	bool containsBlock(FreeBlock* block, int degree);
 	
-	size_t findFreeDegree(size_t degree);
+	size_t findFreeDegree(size_t from);
 	
-	void recursiveJoin(FreeBlock* block, size_t degree);
+	void recursiveJoin(FreeBlock* block);
 	void recursiveSplit(size_t from, size_t to);
 	
 	static const size_t BLOCK_SIZE_DEGRESS = 30;
