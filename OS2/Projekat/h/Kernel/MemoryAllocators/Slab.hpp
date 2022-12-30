@@ -9,32 +9,35 @@ class Slab {
 // Misc
 public:
 	friend class Cache;
-
-    static void* operator new(size_t size, size_t typeSize, size_t numOfSlots);
-	static void operator delete(void* ptr);
+	
+	using OBJ_FUN = void (*)(void*);
+	
+	static void* operator new(size_t size) { return Buddy::getInstance().allocate(1); }
+	static void operator delete(void* ptr) { Buddy::getInstance().deallocate(ptr, 1); }
 
 // Nonstatic members
 public:
-	Slab(size_t typeSize, size_t numOfSlots);
+	Slab(size_t typeSize, OBJ_FUN ctor, OBJ_FUN dtor);
+	~Slab();
 
 	void* allocate();
 	bool deallocate(void* ptr);
 
-	bool isEmpty() const { return allocated == numOfSlots; }
-	bool isFull() const { return allocated == 0; }
+	bool isFull() { return allocatedSlots == 0; }
+	bool isEmpty() { return allocatedSlots == numOfSlots; }
 	
 private:
-    void* getSlotsStart() { return this + 1; }
-    void* getSlotsEnd() { return (char*)(this + 1) + numOfSlots * typeSize; }
+	uint16* getFreeSlotsList() { return (uint16*)(this + 1); }
+	void* getSlot(size_t index) { return (char*)slots + index * typeSize; }
 
-    void* getSlot(size_t index) { return (char*)getSlotsStart() + index * typeSize; }
-
-    size_t typeSize;
-    size_t numOfSlots;
-
-    void* freeSlot = this + 1;
-	Slab* next = nullptr;
-	size_t allocated = 0;
+    size_t typeSize, numOfSlots;
+	OBJ_FUN dtor;
+	
+	Slab* nextSlab = nullptr;
+	
+	void* slots;
+	uint16 freeSlotIndex = 0;
+	size_t allocatedSlots = 0;
 };
 }
 }

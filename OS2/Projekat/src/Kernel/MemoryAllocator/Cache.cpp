@@ -1,46 +1,110 @@
 #include "../../../h/Kernel/MemoryAllocators/Cache.hpp"
 
-size_t Kernel::MemoryAllocators::Cache::calculateSlotsPerSlab(size_t blockSize, size_t typeSize) {
-	return size_t();
+void* Kernel::MemoryAllocators::Cache::cachesBlock;
+unsigned int Kernel::MemoryAllocators::Cache::cachesCount;
+Kernel::MemoryAllocators::Cache* Kernel::MemoryAllocators::Cache::cachesHead;
+
+void Kernel::MemoryAllocators::Cache::initCachesBlock() {
+	cachesBlock = Buddy::getInstance().allocate(1);
+	cachesCount = 0;
+	cachesHead = nullptr;
+}
+
+void* Kernel::MemoryAllocators::Cache::operator new(size_t size) {
+	Cache* freeSlot = (Cache*)((size_t*)cachesBlock + cachesCount);
+	cachesCount++;
+	
+	freeSlot->nextCache = cachesHead;
+	cachesHead = freeSlot;
+	
+	return freeSlot;
+}
+
+void Kernel::MemoryAllocators::Cache::operator delete(void* ptr) {
+	for (auto prevCache = (Cache*)nullptr, currCache = cachesHead; currCache; prevCache = currCache, currCache = currCache->nextCache) {
+		if (currCache != (Cache*)ptr)
+			continue;
+
+		(prevCache ? prevCache->nextCache : cachesHead) = currCache->nextCache;
+	}
 }
 
 void* Kernel::MemoryAllocators::Cache::allocate() {
-	for (auto prevSlab = (Slab*)nullptr, currSlab = partialSlabHead; currSlab; prevSlab = currSlab, currSlab = currSlab->next) {
-		void* ret = currSlab->allocate();
+	if (!partialSlabsHead) {
+		if (fullSlabsHead) {
+			partialSlabsHead = fullSlabsHead;
+			fullSlabsHead = fullSlabsHead->nextSlab;
+			partialSlabsHead->nextSlab = nullptr;
+		} else {
+			partialSlabsHead = new Slab(typeSize, ctor, dtor);
+			canShrink = false;
+		}		
+	}
+	
+	void* ret = partialSlabsHead->allocate();
 
-		if (!ret)
-			continue;
-
-		if (currSlab->isEmpty()) {
-			(prevSlab ? prevSlab->next : partialSlabHead) = currSlab->next;
-			currSlab->next = emptySlabHead;
-			emptySlabHead = currSlab;
-		}
-
-		return ret;
+	if (partialSlabsHead->isEmpty()) {
+		auto temp = partialSlabsHead;
+		partialSlabsHead = partialSlabsHead->nextSlab;
+		temp->nextSlab = fullSlabsHead;
+		fullSlabsHead = temp;
 	}
 
-	auto newSlab = new (typeSize, slotsPerSlab) Slab(typeSize, slotsPerSlab);
-	if (!newSlab)
-		return nullptr;
-
-	newSlab->next = partialSlabHead;
-	partialSlabHead = newSlab;
-
-	return fullSlabHead->allocate();
+	return ret;
 }
 
-void Kernel::MemoryAllocators::Cache::deallocate(void* ptr) {
-	for (auto prevSlab = (Slab*)nullptr, currSlab = emptySlabHead; currSlab; prevSlab = currSlab, currSlab = currSlab->next) {
-		bool success = currSlab->deallocate(ptr);
-
-		if (!success)
+bool Kernel::MemoryAllocators::Cache::deallocate(void* ptr) {
+	for (auto prevSlab = (Slab*)nullptr, currSlab = partialSlabsHead; currSlab; prevSlab = currSlab, currSlab = currSlab->nextSlab) {
+		if (!currSlab->deallocate(ptr))
 			continue;
-
+		
 		if (currSlab->isFull()) {
-			(prevSlab ? prevSlab->next : emptySlabHead) = currSlab->next;
-			currSlab->next = partialSlabHead;
-			partialSlabHead = currSlab;
+			(prevSlab ? prevSlab->nextSlab : partialSlabsHead) = currSlab->nextSlab;
+			currSlab->nextSlab = emptySlabsHead;
+			emptySlabsHead = currSlab;
 		}
+
+		return true;
 	}
+
+	for (auto prevSlab = (Slab*)nullptr, currSlab = emptySlabsHead; currSlab; prevSlab = currSlab, currSlab = currSlab->nextSlab) {
+		if (!currSlab->deallocate(ptr))
+			continue;
+		
+		(prevSlab ? prevSlab->nextSlab : emptySlabsHead) = currSlab->nextSlab;
+		currSlab->nextSlab = partialSlabsHead;
+		partialSlabsHead = currSlab;
+
+		return true;
+	}
+
+	return false;
+}
+
+size_t Kernel::MemoryAllocators::Cache::shrink() {
+	if (!canShrink) {
+		canShrink = true;
+		return 0;
+	}
+
+	size_t res = 0;
+	for (auto currSlab = emptySlabsHead; currSlab;) {
+		auto nextSlab = currSlab->nextSlab;
+
+		res += 1;
+		delete currSlab;
+
+		currSlab = nextSlab;
+	}
+	emptySlabsHead = nullptr;
+	
+	return res;
+}
+
+void Kernel::MemoryAllocators::Cache::printInfo() {
+	
+}
+
+int Kernel::MemoryAllocators::Cache::printError() {
+	return 0;
 }

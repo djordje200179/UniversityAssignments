@@ -1,46 +1,41 @@
 #include "../../../h/Kernel/MemoryAllocators/Slab.hpp"
+#include "../../../h/slab.h"
 
-void* Kernel::MemoryAllocators::Slab::operator new(size_t size, size_t typeSize, size_t numOfSlots) {
-    auto slotsSize = numOfSlots * typeSize;
-    auto totalSize = size + slotsSize;
-
-    return Buddy::getInstance().allocate(totalSize);
+Kernel::MemoryAllocators::Slab::Slab(size_t typeSize, OBJ_FUN ctor, OBJ_FUN dtor) :
+    typeSize(typeSize),
+    numOfSlots((BLOCK_SIZE - sizeof(Slab)) / (typeSize + sizeof(uint16))),
+	slots(getFreeSlotsList() + numOfSlots),
+	dtor(dtor) {    
+	if (ctor)
+		for (size_t i = 0; i < numOfSlots; i++)
+			ctor(getSlot(i));
 }
 
-void Kernel::MemoryAllocators::Slab::operator delete(void* ptr) {
-    auto slab = reinterpret_cast<Slab*>(ptr);
-
-    auto slotsSize = slab->numOfSlots * slab->typeSize;
-    auto totalSize = sizeof(Slab) + slotsSize;
-
-    Buddy::getInstance().deallocate(ptr, totalSize);
-}
-
-Kernel::MemoryAllocators::Slab::Slab(size_t typeSize, size_t numOfSlots)
-    : typeSize(typeSize), numOfSlots(numOfSlots) {
-    for (size_t i = 0; i < numOfSlots - 1; i++)
-        *(void**)getSlot(i) = getSlot(i + 1);
-    *(void**) getSlot(numOfSlots - 1) = nullptr;
+Kernel::MemoryAllocators::Slab::~Slab() {
+	if (dtor)
+		for (size_t i = 0; i < numOfSlots; i++)
+			dtor(getSlot(i));
 }
 
 void* Kernel::MemoryAllocators::Slab::allocate() {
-    if (!freeSlot)
+    if (freeSlotIndex == -1)
         return nullptr;
 
-    void* ret = freeSlot;
-    freeSlot = *(void**)freeSlot;
-	allocated++;
+	void* ret = getSlot(freeSlotIndex);
+	freeSlotIndex = getFreeSlotsList()[freeSlotIndex];
+	allocatedSlots++;
     
     return ret;
 }
 
 bool Kernel::MemoryAllocators::Slab::deallocate(void* ptr) {
-    if (getSlotsStart() > (char*)ptr || (char*)ptr >= getSlotsEnd())
+    if (getSlot(0) < (char*)ptr || (char*)ptr > getSlot(numOfSlots - 1))
         return false;
 
-    *(void**)ptr = freeSlot;
-    freeSlot = ptr;
-	allocated--;
+	size_t index = ((char*)ptr - (char*)slots) / typeSize;
+	getFreeSlotsList()[index] = freeSlotIndex;
+	freeSlotIndex = index;
+	allocatedSlots--;
 
     return true;
 }

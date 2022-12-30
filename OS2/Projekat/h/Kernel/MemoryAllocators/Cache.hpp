@@ -7,40 +7,41 @@
 namespace Kernel {
 namespace MemoryAllocators {
 class Cache {
-	// Misc
+// Misc
 public:
-	//BUDDY_ALLOCATED(Cache);
+	static void* operator new(size_t size);
+	static void operator delete(void* ptr);
+	
+// Static members
+public:
+	static void initCachesBlock();
 private:
-	static size_t calculateSlotsPerSlab(size_t blockSize, size_t typeSize);
-	// Nonstatic members
+	static void* cachesBlock;
+	static unsigned int cachesCount;
+	static Cache* cachesHead;
+	
+// Nonstatic members
 public:
-	Cache(size_t typeSize) : typeSize(typeSize) {
-		slotsPerSlab = calculateSlotsPerSlab(4096, typeSize);
-	}
+	Cache(size_t typeSize, const char* name, Slab::OBJ_FUN ctor, Slab::OBJ_FUN dtor) :
+		typeSize(typeSize), name(name), ctor(ctor), dtor(dtor) {}
 
 	void* allocate();
-
-	void deallocate(void* ptr);
-
+	bool deallocate(void* ptr);
+	size_t shrink();
+	void printInfo();
+	int printError();
 private:
-	void allocateNewSlab();
-	
 	size_t typeSize;
-	size_t slotsPerSlab;
+	const char* name;
+	Slab::OBJ_FUN ctor, dtor;
 
-	Slab* fullSlabHead = nullptr;
-	Slab* partialSlabHead = nullptr;
-	Slab* emptySlabHead = nullptr;
+	Cache* nextCache = nullptr;
+
+	Slab* fullSlabsHead = nullptr;
+	Slab* partialSlabsHead = nullptr;
+	Slab* emptySlabsHead = nullptr;
+
+	bool canShrink = true;
 };
 }
 }
-
-#define CACHE_ALLOCATED(T)                                                  \
-	public:                                                                 \
-	    void* operator new(size_t size) { return getCache().allocate(); }   \
-	    void operator delete(void* ptr) { getCache().deallocate(ptr); }     \
-	private:                                                                \
-	    static MemoryAllocators::Cache& getCache() {                        \
-	        static MemoryAllocators::Cache* instance = new MemoryAllocators::Cache(sizeof(T)); \
-	        return *instance;                                               \
-	    }

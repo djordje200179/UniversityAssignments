@@ -52,7 +52,3 @@ private:
 };
 }
 }
-
-#define BUDDY_ALLOCATED(T)                                                                      \
-	static void* operator new(size_t pages) { return Buddy::getInstance().allocate(pages); }      \
-	static void operator delete(void* ptr) { Buddy::getInstance().deallocate(ptr, sizeof(T)); }
