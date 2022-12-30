@@ -33,7 +33,7 @@ void* Kernel::MemoryAllocators::Buddy::allocate(size_t pages) {
 	if(freeDegree == BLOCK_SIZE_DEGRESS)
 		return nullptr;
 	if(freeDegree > degree)
-		recursiveSplit(degree, freeDegree);
+		recursiveSplit(freeDegree, degree);
 	
 	auto block = blocks[degree];
 	removeBlock(block);
@@ -55,16 +55,11 @@ void Kernel::MemoryAllocators::Buddy::deallocate(void* ptr, size_t pages) {
 }
 
 void Kernel::MemoryAllocators::Buddy::insertBlock(FreeBlock* block) {
-	auto prev = (FreeBlock*)nullptr, curr = blocks[block->degree];
-	while(curr && curr < block)
-		prev = curr, curr = curr->next;
-
-	(prev ? prev->next : blocks[block->degree]) = block;
-	block->prev = prev;
-	block->next = curr;
-	
-	if(curr)
-		curr->prev = block;
+	block->next = blocks[block->degree];
+	block->prev = nullptr;
+	if (block->next)
+		block->next->prev = block;
+	blocks[block->degree] = block;
 }
 
 void Kernel::MemoryAllocators::Buddy::removeBlock(FreeBlock* block) {
@@ -91,7 +86,7 @@ size_t Kernel::MemoryAllocators::Buddy::findFreeDegree(size_t from) {
 }
 
 void Kernel::MemoryAllocators::Buddy::recursiveJoin(FreeBlock* block) {
-	for(auto buddy = block->getBuddy(); containsBlock(buddy, block->degree) ; buddy = block->getBuddy()) {
+	for(auto buddy = block->getBuddy(); containsBlock(buddy, block->degree); buddy = block->getBuddy()) {
 		removeBlock(buddy);
 		removeBlock(block);
 
@@ -109,6 +104,7 @@ void Kernel::MemoryAllocators::Buddy::recursiveSplit(size_t from, size_t to) {
 	for(; from > to; from--) {
 		block->degree--;
 		auto buddy = block->getBuddy();
+		buddy->degree = block->degree;
 		insertBlock(buddy);
 	}
 
