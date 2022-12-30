@@ -1,6 +1,6 @@
 #pragma once
 
-#include "MemoryAllocators/Cache.hpp"
+#include "../cache_allocated.h"
 
 namespace Kernel {
 class Thread;
@@ -8,7 +8,7 @@ class Thread;
 class Semaphore {
 // Misc
 public:
-	//CACHE_ALLOCATED(Semaphore);
+	CACHE_ALLOCATED(Semaphore);
 
 // Nonstatic members
 public:
