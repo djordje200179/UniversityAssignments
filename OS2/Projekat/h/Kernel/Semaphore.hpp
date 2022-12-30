@@ -8,7 +8,7 @@ class Thread;
 class Semaphore {
 // Misc
 public:
-	CACHE_ALLOCATED(Semaphore);
+	//CACHE_ALLOCATED(Semaphore);
 
 // Nonstatic members
 public:

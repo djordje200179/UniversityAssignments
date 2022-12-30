@@ -9,16 +9,19 @@ public:
 	Buddy(const Buddy&) = delete;
 	Buddy& operator=(const Buddy&) = delete;
 
+	static void initInstance(void* startAddress, size_t blocks);
+	
 	static Buddy& getInstance() {
-		static Buddy instance;
 		return instance;
 	}
 private:
-	Buddy();
+	Buddy() = default;
+	
+	static Buddy instance;
 
 public:
-	void* allocate(size_t size);
-	void deallocate(void* ptr, size_t size);
+	void* allocate(size_t pages);
+	void deallocate(void* ptr, size_t pages);
 private:
 	struct FreeBlock {
 		FreeBlock* prev;
@@ -51,5 +54,5 @@ private:
 }
 
 #define BUDDY_ALLOCATED(T)                                                                      \
-	static void* operator new(size_t size) { return Buddy::getInstance().allocate(size); }      \
+	static void* operator new(size_t pages) { return Buddy::getInstance().allocate(pages); }      \
 	static void operator delete(void* ptr) { Buddy::getInstance().deallocate(ptr, sizeof(T)); }

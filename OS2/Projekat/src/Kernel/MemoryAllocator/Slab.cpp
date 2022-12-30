@@ -29,6 +29,8 @@ void* Kernel::MemoryAllocators::Slab::allocate() {
 
     void* ret = freeSlot;
     freeSlot = *(void**)freeSlot;
+	allocated++;
+    
     return ret;
 }
 
@@ -38,6 +40,7 @@ bool Kernel::MemoryAllocators::Slab::deallocate(void* ptr) {
 
     *(void**)ptr = freeSlot;
     freeSlot = ptr;
+	allocated--;
 
     return true;
 }

@@ -7,20 +7,30 @@
 namespace Kernel {
 namespace MemoryAllocators {
 class Cache {
-// Misc
+	// Misc
 public:
-	BUDDY_ALLOCATED(Cache);
+	//BUDDY_ALLOCATED(Cache);
+private:
+	static size_t calculateSlotsPerSlab(size_t blockSize, size_t typeSize);
+	// Nonstatic members
 public:
-	Cache(size_t typeSize) : typeSize(typeSize) {}
+	Cache(size_t typeSize) : typeSize(typeSize) {
+		slotsPerSlab = calculateSlotsPerSlab(4096, typeSize);
+	}
 
-	void *allocate();
+	void* allocate();
 
-	void deallocate(void *ptr);
+	void deallocate(void* ptr);
 
 private:
+	void allocateNewSlab();
+	
 	size_t typeSize;
+	size_t slotsPerSlab;
 
-	Slab *headSlab = nullptr;
+	Slab* fullSlabHead = nullptr;
+	Slab* partialSlabHead = nullptr;
+	Slab* emptySlabHead = nullptr;
 };
 }
 }

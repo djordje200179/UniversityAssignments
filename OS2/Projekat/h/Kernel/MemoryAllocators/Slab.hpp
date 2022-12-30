@@ -19,6 +19,10 @@ public:
 
 	void* allocate();
 	bool deallocate(void* ptr);
+
+	bool isEmpty() const { return allocated == numOfSlots; }
+	bool isFull() const { return allocated == 0; }
+	
 private:
     void* getSlotsStart() { return this + 1; }
     void* getSlotsEnd() { return (char*)(this + 1) + numOfSlots * typeSize; }
@@ -30,6 +34,7 @@ private:
 
     void* freeSlot = this + 1;
 	Slab* next = nullptr;
+	size_t allocated = 0;
 };
 }
 }

@@ -1,4 +1,7 @@
 #include "../../../h/Kernel/MemoryAllocators/Buddy.hpp"
+#include "../../../h/slab.h"
+
+Kernel::MemoryAllocators::Buddy Kernel::MemoryAllocators::Buddy::instance;
 
 static uint64 clog2(uint64 num) {
     unsigned int result = 0;
@@ -9,24 +12,22 @@ static uint64 clog2(uint64 num) {
     return result;
 }
 
-Kernel::MemoryAllocators::Buddy::Buddy() {
-	for(size_t i = 0; i < BLOCK_SIZE_DEGRESS; i++)
-		blocks[i] = nullptr;
-	
-	auto endAddress = (void*)((uint64)HEAP_END_ADDR - ((uint64)HEAP_END_ADDR >> 3));
-	auto size = (uint64)endAddress - (uint64)HEAP_START_ADDR;
-	auto degree = clog2(size);
+void Kernel::MemoryAllocators::Buddy::initInstance(void* startAddress, size_t blocks) {
+	for (size_t i = 0; i < BLOCK_SIZE_DEGRESS; i++)
+		instance.blocks[i] = nullptr;
 
-	auto block = (FreeBlock*)HEAP_START_ADDR;
+	auto degree = clog2(blocks * BLOCK_SIZE);
+
+	auto block = (FreeBlock*)startAddress;
 	block->prev = nullptr;
 	block->next = nullptr;
 	block->degree = degree;
-	
-	blocks[degree] = block;
+
+	instance.blocks[degree] = block;
 }
 
-void* Kernel::MemoryAllocators::Buddy::allocate(size_t size) {
-	auto degree = clog2(size);
+void* Kernel::MemoryAllocators::Buddy::allocate(size_t pages) {
+	auto degree = clog2(pages * BLOCK_SIZE);
 	
 	auto freeDegree = findFreeDegree(degree);
 	if(freeDegree == BLOCK_SIZE_DEGRESS)
@@ -40,11 +41,11 @@ void* Kernel::MemoryAllocators::Buddy::allocate(size_t size) {
 	return block;
 }
 
-void Kernel::MemoryAllocators::Buddy::deallocate(void* ptr, size_t size) {
+void Kernel::MemoryAllocators::Buddy::deallocate(void* ptr, size_t pages) {
 	if(!ptr)
 		return;
 	
-	auto degree = clog2(size);
+	auto degree = clog2(pages * BLOCK_SIZE);
 
 	auto block = (FreeBlock*)ptr;
 	block->degree = degree;

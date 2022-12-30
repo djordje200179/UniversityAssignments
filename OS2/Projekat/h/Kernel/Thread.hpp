@@ -24,7 +24,7 @@ public:
 	friend class Timer;
 	friend class Semaphore;
 
-	CACHE_ALLOCATED(Thread);
+	//CACHE_ALLOCATED(Thread);
 
 // Static members
 public:

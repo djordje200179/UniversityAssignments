@@ -1,27 +1,46 @@
 #include "../../../h/Kernel/MemoryAllocators/Cache.hpp"
 
+size_t Kernel::MemoryAllocators::Cache::calculateSlotsPerSlab(size_t blockSize, size_t typeSize) {
+	return size_t();
+}
+
 void* Kernel::MemoryAllocators::Cache::allocate() {
-    for (auto slab = headSlab; slab; slab = slab->next) {
-        void* ret = slab->allocate();
-        if (ret)
-            return ret;
-    }
+	for (auto prevSlab = (Slab*)nullptr, currSlab = partialSlabHead; currSlab; prevSlab = currSlab, currSlab = currSlab->next) {
+		void* ret = currSlab->allocate();
 
-    auto newSlab = new (typeSize, 10) Slab(typeSize, 10);
-    if (!newSlab)
-        return nullptr;
+		if (!ret)
+			continue;
 
-    newSlab->next = headSlab;
-    headSlab = newSlab;
+		if (currSlab->isEmpty()) {
+			(prevSlab ? prevSlab->next : partialSlabHead) = currSlab->next;
+			currSlab->next = emptySlabHead;
+			emptySlabHead = currSlab;
+		}
 
-    return headSlab->allocate();
+		return ret;
+	}
+
+	auto newSlab = new (typeSize, slotsPerSlab) Slab(typeSize, slotsPerSlab);
+	if (!newSlab)
+		return nullptr;
+
+	newSlab->next = partialSlabHead;
+	partialSlabHead = newSlab;
+
+	return fullSlabHead->allocate();
 }
 
 void Kernel::MemoryAllocators::Cache::deallocate(void* ptr) {
-    for (auto slab = headSlab; slab; slab = slab->next) {
-        bool success = slab->deallocate(ptr);
+	for (auto prevSlab = (Slab*)nullptr, currSlab = emptySlabHead; currSlab; prevSlab = currSlab, currSlab = currSlab->next) {
+		bool success = currSlab->deallocate(ptr);
 
-        if (success)
-            return;
-    }
+		if (!success)
+			continue;
+
+		if (currSlab->isFull()) {
+			(prevSlab ? prevSlab->next : emptySlabHead) = currSlab->next;
+			currSlab->next = partialSlabHead;
+			partialSlabHead = currSlab;
+		}
+	}
 }

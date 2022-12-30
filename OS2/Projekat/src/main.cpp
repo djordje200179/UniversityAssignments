@@ -1,6 +1,7 @@
 #include "../h/Kernel/Thread.hpp"
 #include "../h/Kernel/Trap.hpp"
 #include "../h/syscall_c.h"
+#include "../h/slab.h"
 
 inline void registerInterrupts() {
 	asm volatile("csrw stvec, %0" : : "r" (Kernel::Events::trap));
@@ -16,6 +17,8 @@ void userMain() {
 
 void main() {
 	registerInterrupts();
+	kmem_init((void*)0x87000000, (0x88000000 - 0x87000000) / BLOCK_SIZE);
+	
 	Kernel::Thread::init();
 	startTimer();
 	exit_sys();
