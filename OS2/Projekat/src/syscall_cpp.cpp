@@ -20,9 +20,7 @@ void PeriodicThread::wrapper(void* arg) {
 	}
 }
 
-void Console::puts(const char* str, bool newLine) {
-	while (*str) putc(*str++);
-
-	if (newLine)
-		putc('\n');
+void Console::puts(const char* str) {
+	while (*str) 
+		putc(*str++);
 }
