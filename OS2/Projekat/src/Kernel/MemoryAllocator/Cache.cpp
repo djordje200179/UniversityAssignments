@@ -153,7 +153,7 @@ void Kernel::MemoryAllocators::Cache::printInfo() {
 			Console::puts(") ");
 
 			Console::puts("slots: ");
-			Console::puti(currSlab->getAllocatedBlocks());
+			Console::puti(currSlab->getAllocatedSlots());
 			Console::putc('/');
 			Console::puti(currSlab->getNumOfSlots());
 
