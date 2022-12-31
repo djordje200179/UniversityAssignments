@@ -5,6 +5,11 @@ Kernel::MemoryAllocators::Slab::Slab(size_t typeSize, OBJ_FUN ctor, OBJ_FUN dtor
 	typeSize(typeSize), numOfSlots((BLOCK_SIZE - sizeof(Slab)) / (typeSize + sizeof(uint16))),
 	dtor(dtor),
 	slots(getFreeSlotsList() + numOfSlots) {
+	auto slotsList = getFreeSlotsList();
+	for (uint16 i = 0; i < numOfSlots + 1; i++) 
+		slotsList[i] = i + 1;
+	slotsList[numOfSlots - 1] = (uint16)-1;
+	
 	if (ctor)
 		for (size_t i = 0; i < numOfSlots; i++)
 			ctor(getSlot(i));
