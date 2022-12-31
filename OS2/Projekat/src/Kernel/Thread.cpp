@@ -1,5 +1,6 @@
 #include "../../h/Kernel/Thread.hpp"
 #include "../../h/Kernel/Scheduler.hpp"
+#include "../../h/Kernel/MemoryAllocators/Heap.hpp"
 #include "../../h/syscall_c.h"
 
 Kernel::Thread* Kernel::Thread::main;
@@ -20,7 +21,7 @@ Kernel::Thread::Thread() : stack(nullptr) {
 
 Kernel::Thread::~Thread() {
 	if(stack)
-		;// MemoryAllocators::Heap::getInstance().deallocate(stack);
+		MemoryAllocators::Heap::getInstance().deallocate(stack);
 
 	if (this == current) {
 		current = nullptr;
