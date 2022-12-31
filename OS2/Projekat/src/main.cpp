@@ -17,6 +17,11 @@ void userMain() {
 	
 	for (auto currCache = Cache::cachesHead; currCache; currCache = currCache->nextCache)
 		currCache->printInfo();
+
+	time_sleep(1);
+
+	for (auto currCache = Cache::cachesHead; currCache; currCache = currCache->nextCache)
+		currCache->printInfo();
 }
 
 void main() {
