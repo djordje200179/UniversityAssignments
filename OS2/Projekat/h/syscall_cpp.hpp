@@ -45,11 +45,7 @@ public:
     static char getc() { return ::getc();}
     
     static void putc(char c) { ::putc(c); }
-
-    static void puts(const char* str) {
-		while (*str) putc(*str++);
-		putc('\n');
-    }
+    static void puts(const char* str, bool newLine = false);
 };
 
 #endif // _syscall_cpp

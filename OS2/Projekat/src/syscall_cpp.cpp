@@ -9,7 +9,7 @@ struct PeriodicThreadData {
 	time_t period;
 };
 
-PeriodicThread::PeriodicThread(time_t period) : Thread(wrapper, new PeriodicThreadData{this, period}) {}
+PeriodicThread::PeriodicThread(time_t period) : Thread(wrapper, new PeriodicThreadData{ this, period }) {}
 
 void PeriodicThread::wrapper(void* arg) {
 	auto data = (PeriodicThreadData*)arg;
@@ -18,4 +18,11 @@ void PeriodicThread::wrapper(void* arg) {
 		sleep(data->period);
 		data->thread->periodicActivation();
 	}
+}
+
+void Console::puts(const char* str, bool newLine) {
+	while (*str) putc(*str++);
+
+	if (newLine)
+		putc('\n');
 }
