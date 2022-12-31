@@ -1,24 +1,14 @@
 #include "../../../h/Kernel/MemoryAllocators/Cache.hpp"
 #include "../../../h/syscall_cpp.hpp"
 
-void* Kernel::MemoryAllocators::Cache::cachesBlock;
+Kernel::MemoryAllocators::Cache* Kernel::MemoryAllocators::Cache::cachesBlock;
 unsigned int Kernel::MemoryAllocators::Cache::cachesCount;
 Kernel::MemoryAllocators::Cache* Kernel::MemoryAllocators::Cache::cachesHead;
 
 void Kernel::MemoryAllocators::Cache::initCachesBlock() {
-	cachesBlock = Buddy::getInstance().allocate(1);
+	cachesBlock = (Cache*)Buddy::getInstance().allocate(1);
 	cachesCount = 0;
 	cachesHead = nullptr;
-}
-
-void* Kernel::MemoryAllocators::Cache::operator new(size_t size) {
-	Cache* freeSlot = (Cache*)((size_t*)cachesBlock + cachesCount);
-	cachesCount++;
-	
-	freeSlot->nextCache = cachesHead;
-	cachesHead = freeSlot;
-	
-	return freeSlot;
 }
 
 void Kernel::MemoryAllocators::Cache::operator delete(void* ptr) {
