@@ -136,13 +136,15 @@ void Kernel::MemoryAllocators::Cache::printInfo() {
 			Console::puti(i);
 
 			Console::putc('\n');
-
-			allocatedSlots += currSlab->getAllocatedBlocks();
+			
 			numOfSlabs++;
 		}
 		
+		allocatedSlots += slotsPerSlab * numOfSlabs;
+		
 		Console::puts("----------------\n");
 	}
+
 
 	if (partialSlabsHead) {
 		Console::puts("Partially full slabs: \n");
@@ -159,7 +161,7 @@ void Kernel::MemoryAllocators::Cache::printInfo() {
 
 			Console::putc('\n');
 
-			allocatedSlots += currSlab->getAllocatedBlocks();
+			allocatedSlots += currSlab->getAllocatedSlots();
 			numOfSlabs++;
 		}
 		
@@ -175,8 +177,7 @@ void Kernel::MemoryAllocators::Cache::printInfo() {
 			Console::puts(") ");
 
 			Console::putc('\n');
-
-			allocatedSlots += currSlab->getAllocatedBlocks();
+			
 			numOfSlabs++;
 		}
 		
