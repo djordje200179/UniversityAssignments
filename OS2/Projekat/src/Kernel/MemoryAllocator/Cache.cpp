@@ -1,4 +1,5 @@
 #include "../../../h/Kernel/MemoryAllocators/Cache.hpp"
+#include "../../../h/syscall_cpp.hpp"
 
 void* Kernel::MemoryAllocators::Cache::cachesBlock;
 unsigned int Kernel::MemoryAllocators::Cache::cachesCount;
@@ -102,7 +103,7 @@ size_t Kernel::MemoryAllocators::Cache::shrink() {
 }
 
 void Kernel::MemoryAllocators::Cache::printInfo() {
-	
+	Console::puts(name);
 }
 
 int Kernel::MemoryAllocators::Cache::printError() {

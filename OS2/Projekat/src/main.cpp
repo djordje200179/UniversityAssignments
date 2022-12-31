@@ -2,6 +2,7 @@
 #include "../h/Kernel/Trap.hpp"
 #include "../h/syscall_c.h"
 #include "../h/slab.h"
+#include "../h/Kernel/MemoryAllocators/Cache.hpp"
 
 inline void registerInterrupts() {
 	asm volatile("csrw stvec, %0" : : "r" (Kernel::Events::trap));
@@ -12,7 +13,10 @@ inline void startTimer() {
 }
 
 void userMain() {
-
+	using namespace Kernel::MemoryAllocators;
+	
+	for (auto currCache = Cache::cachesHead; currCache; currCache = currCache->nextCache)
+		currCache->printInfo();
 }
 
 void main() {

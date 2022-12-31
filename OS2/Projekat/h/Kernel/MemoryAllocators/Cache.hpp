@@ -4,11 +4,15 @@
 #include "Buddy.hpp"
 #include "Slab.hpp"
 
+void userMain();
+
 namespace Kernel {
 namespace MemoryAllocators {
 class Cache {
 // Misc
 public:
+	friend void ::userMain();
+	
 	static void* operator new(size_t size);
 	static void operator delete(void* ptr);
 	

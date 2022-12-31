@@ -43,7 +43,13 @@ private:
 class Console {
 public:
     static char getc() { return ::getc();}
+    
     static void putc(char c) { ::putc(c); }
+
+    static void puts(const char* str) {
+		while (*str) putc(*str++);
+		putc('\n');
+    }
 };
 
 #endif // _syscall_cpp
