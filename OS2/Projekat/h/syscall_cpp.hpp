@@ -46,6 +46,7 @@ public:
     
     static void putc(char c) { ::putc(c); }
     static void puts(const char* str);
+    static void puti(uint64 number, uint8 base = 10);
 };
 
 #endif // _syscall_cpp

@@ -24,3 +24,18 @@ void Console::puts(const char* str) {
 	while (*str) 
 		putc(*str++);
 }
+
+void Console::puti(uint64 number, uint8 base) {
+    static char digits[] = "0123456789ABCDEF";
+    
+    char buf[16];
+    int i;
+
+    i = 0;
+    do {
+        buf[i++] = digits[number % base];
+    } while (number /= base);
+
+    while (--i >= 0)
+        putc(buf[i]);
+}

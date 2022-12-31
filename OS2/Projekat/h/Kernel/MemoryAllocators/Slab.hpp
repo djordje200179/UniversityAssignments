@@ -23,8 +23,12 @@ public:
 	void* allocate();
 	bool deallocate(void* ptr);
 
+	size_t getAllocatedSlots() { return allocatedSlots; }
 	bool isFull() { return allocatedSlots == 0; }
 	bool isEmpty() { return allocatedSlots == numOfSlots; }
+
+	size_t getAllocatedBlocks() { return 1; }
+	size_t getNumOfSlots() { return numOfSlots; }
 	
 private:
 	uint16* getFreeSlotsList() { return (uint16*)(this + 1); }
