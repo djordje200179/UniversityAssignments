@@ -4,6 +4,15 @@
 
 using namespace Kernel::MemoryAllocators;
 
+static uint64 clog2(uint64 num) {
+	unsigned int result = 0;
+
+	for (num--; num > 0; num >>= 1)
+		result++;
+
+	return result;
+}
+
 void kmem_init(void* space, int block_num) {
 	Buddy::initInstance(space, block_num);
 	Cache::initCachesBlock();
@@ -23,6 +32,27 @@ void* kmem_cache_alloc(kmem_cache_t* cachep) {
 
 void kmem_cache_free(kmem_cache_t* cachep, void* objp) {
 	((Cache*)cachep)->deallocate(objp);
+}
+
+void* kmalloc(size_t size) {
+	auto degree = clog2(size);
+	if (degree < Cache::MIN_BUFFER_CACHE_DEGREE || degree > Cache::MAX_BUFFER_CACHE_DEGREE)
+		return nullptr;
+
+	auto cache = Cache::getBufferCache(degree);
+	return cache->allocate();
+}
+
+void kfree(const void* objp) {
+	for (size_t i = 0; i < Cache::MAX_BUFFER_CACHE_DEGREE - Cache::MIN_BUFFER_CACHE_DEGREE + 1; i++) {
+		auto cache = Cache::bufferCaches[i];
+
+		if (!cache)
+			continue;
+		
+		if (cache->deallocate((void*)objp))
+			return;
+	}
 }
 
 void kmem_cache_destroy(kmem_cache_t* cachep) {

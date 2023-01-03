@@ -5,6 +5,8 @@
 #include "Slab.hpp"
 
 void userMain();
+void* kmalloc(size_t);
+void kfree(const void*);
 
 namespace Kernel {
 namespace MemoryAllocators {
@@ -12,6 +14,8 @@ class Cache {
 // Misc
 public:
 	friend void ::userMain();
+	friend void* ::kmalloc(size_t);
+	friend void ::kfree(const void*);
 	
 	static void* operator new(size_t size) { return &cachesBlock[cachesCount++]; }
 	static void operator delete(void* ptr);
@@ -19,10 +23,16 @@ public:
 // Static members
 public:
 	static void initCachesBlock();
+	static void initBufferCaches();
+	static Cache* getBufferCache(size_t degree);
 private:
+	static const size_t MIN_BUFFER_CACHE_DEGREE = 5;
+	static const size_t MAX_BUFFER_CACHE_DEGREE = 17;
+	
 	static Cache* cachesBlock;
 	static unsigned int cachesCount;
 	static Cache* cachesHead;
+	static Cache* bufferCaches[MAX_BUFFER_CACHE_DEGREE - MIN_BUFFER_CACHE_DEGREE + 1];
 	
 // Nonstatic members
 public:

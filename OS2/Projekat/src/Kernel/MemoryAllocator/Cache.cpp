@@ -5,11 +5,26 @@
 Kernel::MemoryAllocators::Cache* Kernel::MemoryAllocators::Cache::cachesBlock;
 unsigned int Kernel::MemoryAllocators::Cache::cachesCount;
 Kernel::MemoryAllocators::Cache* Kernel::MemoryAllocators::Cache::cachesHead;
+Kernel::MemoryAllocators::Cache* Kernel::MemoryAllocators::Cache::bufferCaches[MAX_BUFFER_CACHE_DEGREE - MIN_BUFFER_CACHE_DEGREE + 1];
 
 void Kernel::MemoryAllocators::Cache::initCachesBlock() {
 	cachesBlock = (Cache*)Buddy::getInstance().allocate(1);
 	cachesCount = 0;
 	cachesHead = nullptr;
+}
+
+void Kernel::MemoryAllocators::Cache::initBufferCaches() {
+	for (size_t i = 0; i < MAX_BUFFER_CACHE_DEGREE - MIN_BUFFER_CACHE_DEGREE + 1; i++)
+		bufferCaches[i] = nullptr;
+}
+
+Kernel::MemoryAllocators::Cache* Kernel::MemoryAllocators::Cache::getBufferCache(size_t degree) {
+	auto index = degree - MIN_BUFFER_CACHE_DEGREE;
+
+	const char* name = "Buffer cache";
+	bufferCaches[index] = new Cache(1 << degree, name, nullptr, nullptr);
+
+	return bufferCaches[index];
 }
 
 void Kernel::MemoryAllocators::Cache::operator delete(void* ptr) {
