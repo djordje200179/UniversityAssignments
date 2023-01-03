@@ -9,7 +9,7 @@ class Console {
 private:
 	class Buffer {
 	public:
-		static const int BUFFER_SIZE = 256;
+		static const int BUFFER_SIZE = 128;
 
 		void put(char c);
 		char get();
@@ -17,7 +17,7 @@ private:
 		bool empty() const { return count == 0; }
 		bool full() const { return count == BUFFER_SIZE; }
 	private:
-		char buffer[BUFFER_SIZE];
+		char* buffer = (char*)kmalloc(BUFFER_SIZE);
 		int head = 0, tail = 0, count = 0;
 	};
 
@@ -49,6 +49,7 @@ private:
 
 	Semaphore* inputItemAvailable = new Semaphore(0);
 	Semaphore* outputSpaceAvailable = new Semaphore(Buffer::BUFFER_SIZE);
+	
 	Buffer inputBuffer, outputBuffer;
 };
 }
