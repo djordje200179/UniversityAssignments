@@ -28,6 +28,7 @@ public:
 private:
 	static const size_t MIN_BUFFER_CACHE_DEGREE = 5;
 	static const size_t MAX_BUFFER_CACHE_DEGREE = 17;
+	static const size_t NAME_BUFFER_SIZE = 16;
 	
 	static Cache* cachesBlock;
 	static unsigned int cachesCount;
@@ -37,7 +38,13 @@ private:
 // Nonstatic members
 public:
 	Cache(size_t typeSize, const char* name, Slab::OBJ_FUN ctor, Slab::OBJ_FUN dtor) :
-		typeSize(typeSize), name(name), ctor(ctor), dtor(dtor) {
+		typeSize(typeSize), ctor(ctor), dtor(dtor) {
+		for (size_t i = 0; i < NAME_BUFFER_SIZE; i++) {
+			this->name[i] = name[i];
+			if (!name[i])
+				break;
+		}
+		
 		nextCache = cachesHead;
 		cachesHead = this;
 	}
@@ -49,7 +56,7 @@ public:
 	int printError();
 private:
 	size_t typeSize;
-	const char* name;
+	char name[NAME_BUFFER_SIZE];
 	Slab::OBJ_FUN ctor, dtor;
 
 	Cache* nextCache = nullptr;
