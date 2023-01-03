@@ -20,13 +20,15 @@ void Kernel::MemoryAllocators::Cache::initBufferCaches() {
 
 Kernel::MemoryAllocators::Cache* Kernel::MemoryAllocators::Cache::getBufferCache(size_t degree) {
 	auto index = degree - MIN_BUFFER_CACHE_DEGREE;
-
-	char name[] = "Buffer - 2^xx";
-	name[11] = '0' + degree / 10;
-	name[12] = '0' + degree % 10;
 	
-	bufferCaches[index] = new Cache(1 << degree, name, nullptr, nullptr);
+	if (!bufferCaches[index]) {
+		char name[] = "Buffer - 2^xx";
+		name[11] = '0' + degree / 10;
+		name[12] = '0' + degree % 10;
 
+		bufferCaches[index] = new Cache(1 << degree, name, nullptr, nullptr);
+	}
+	
 	return bufferCaches[index];
 }
 
