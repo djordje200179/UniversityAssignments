@@ -22,8 +22,8 @@ Kernel::MemoryAllocators::Cache* Kernel::MemoryAllocators::Cache::getBufferCache
 	auto index = degree - MIN_BUFFER_CACHE_DEGREE;
 
 	char name[] = "Buffer - 2^xx";
-	name[10] = '0' + degree / 10;
-	name[11] = '0' + degree % 10;
+	name[11] = '0' + degree / 10;
+	name[12] = '0' + degree % 10;
 	
 	bufferCaches[index] = new Cache(1 << degree, name, nullptr, nullptr);
 
