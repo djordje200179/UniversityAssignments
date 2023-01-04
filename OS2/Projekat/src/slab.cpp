@@ -16,6 +16,7 @@ static uint64 clog2(uint64 num) {
 void kmem_init(void* space, int block_num) {
 	Buddy::initInstance(space, block_num);
 	Cache::initCachesBlock();
+	Cache::initBigSlabsCache();
 }
 
 kmem_cache_t* kmem_cache_create(const char* name, size_t size, void(*ctor)(void*), void(*dtor)(void*)) {

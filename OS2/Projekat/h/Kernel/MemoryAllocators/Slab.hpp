@@ -5,15 +5,24 @@
 
 namespace Kernel {
 namespace MemoryAllocators {
+class Cache;
+
 class Slab {
 // Misc
 public:
 	friend class Cache;
 	
 	using OBJ_FUN = void (*)(void*);
-	
+
+// Static members
+public:
 	static void* operator new(size_t size) { return Buddy::getInstance().allocate(1); }
 	static void operator delete(void* ptr) { Buddy::getInstance().deallocate(ptr, 1); }
+
+	static void* operator new(size_t size, Cache* cache);
+	static void operator delete(void* ptr, Cache* cache);
+	
+	static bool canFitIntoBlock(size_t typeSize);
 
 // Nonstatic members
 public:

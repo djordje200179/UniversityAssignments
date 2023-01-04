@@ -24,6 +24,8 @@ public:
 public:
 	static void initCachesBlock();
 	static void initBufferCaches();
+	static void initBigSlabsCache();
+	
 	static Cache* getBufferCache(size_t degree);
 private:
 	static const size_t MIN_BUFFER_CACHE_DEGREE = 5;
@@ -34,6 +36,7 @@ private:
 	static unsigned int cachesCount;
 	static Cache* cachesHead;
 	static Cache* bufferCaches[MAX_BUFFER_CACHE_DEGREE - MIN_BUFFER_CACHE_DEGREE + 1];
+	static Cache* bigSlabsCache;
 	
 // Nonstatic members
 public:

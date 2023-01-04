@@ -6,6 +6,7 @@ Kernel::MemoryAllocators::Cache* Kernel::MemoryAllocators::Cache::cachesBlock;
 unsigned int Kernel::MemoryAllocators::Cache::cachesCount;
 Kernel::MemoryAllocators::Cache* Kernel::MemoryAllocators::Cache::cachesHead;
 Kernel::MemoryAllocators::Cache* Kernel::MemoryAllocators::Cache::bufferCaches[MAX_BUFFER_CACHE_DEGREE - MIN_BUFFER_CACHE_DEGREE + 1];
+Kernel::MemoryAllocators::Cache* Kernel::MemoryAllocators::Cache::bigSlabsCache;
 
 void Kernel::MemoryAllocators::Cache::initCachesBlock() {
 	cachesBlock = (Cache*)Buddy::getInstance().allocate(1);
@@ -16,6 +17,10 @@ void Kernel::MemoryAllocators::Cache::initCachesBlock() {
 void Kernel::MemoryAllocators::Cache::initBufferCaches() {
 	for (size_t i = 0; i < MAX_BUFFER_CACHE_DEGREE - MIN_BUFFER_CACHE_DEGREE + 1; i++)
 		bufferCaches[i] = nullptr;
+}
+
+void Kernel::MemoryAllocators::Cache::initBigSlabsCache() {
+	bigSlabsCache = new Cache(sizeof(Slab) + sizeof(uint16), "Big slabs", nullptr, nullptr);
 }
 
 Kernel::MemoryAllocators::Cache* Kernel::MemoryAllocators::Cache::getBufferCache(size_t degree) {
@@ -48,7 +53,12 @@ void* Kernel::MemoryAllocators::Cache::allocate() {
 			fullSlabsHead = fullSlabsHead->nextSlab;
 			partialSlabsHead->nextSlab = nullptr;
 		} else {
-			partialSlabsHead = new Slab(typeSize, ctor, dtor);
+			partialSlabsHead = (
+				Slab::canFitIntoBlock(typeSize) 
+				? new Slab(typeSize, ctor, dtor) 
+				: new (bigSlabsCache) Slab(typeSize, ctor, dtor)
+			);
+			
 			canShrink = false;
 		}
 	}
