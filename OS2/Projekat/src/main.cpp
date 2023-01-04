@@ -16,6 +16,8 @@ void userMain() {
 	using namespace Kernel::MemoryAllocators;
 	
 	time_sleep(1);
+
+	kmalloc(1ul << 14);
 	
 	for (auto currCache = Cache::cachesHead; currCache; currCache = currCache->nextCache)
 		currCache->printInfo();
