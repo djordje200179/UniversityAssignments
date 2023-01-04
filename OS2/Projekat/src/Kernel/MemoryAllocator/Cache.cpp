@@ -155,30 +155,24 @@ void Kernel::MemoryAllocators::Cache::printInfo() {
 
 	Console::puts("----------------\n");
 	
-	size_t allocatedSlots = 0, numOfSlabs = 0, i = 0;
+	size_t allocatedSlots = 0, numOfSlabs = 0;
 
 	if (fullSlabsHead) {
-		Console::puts("Full slabs: \n");
+		Console::puts("Full slabs: ");
 		
-		for (auto currSlab = fullSlabsHead; currSlab; currSlab = currSlab->nextSlab, i++) {
-			Console::putc('\t');
-			Console::puti(i);
-			Console::puts(") ");
-
-			Console::putc('\n');
-			
+		for (auto currSlab = fullSlabsHead; currSlab; currSlab = currSlab->nextSlab)
 			numOfSlabs++;
-		}
+		
+		Console::puti(numOfSlabs);
+		Console::putc('\n');
 		
 		allocatedSlots += slotsPerSlab * numOfSlabs;
-		
-		Console::puts("----------------\n");
 	}
-
 
 	if (partialSlabsHead) {
 		Console::puts("Partially full slabs: \n");
 		
+		size_t i = 1;
 		for (auto currSlab = partialSlabsHead; currSlab; currSlab = currSlab->nextSlab, i++) {
 			Console::putc('\t');
 			Console::puti(i);
@@ -194,25 +188,20 @@ void Kernel::MemoryAllocators::Cache::printInfo() {
 			allocatedSlots += currSlab->getAllocatedSlots();
 			numOfSlabs++;
 		}
-		
-		Console::puts("----------------\n");
 	}
 
 	if (emptySlabsHead) {
 		Console::puts("Empty slabs: \n");
 		
-		for (auto currSlab = emptySlabsHead; currSlab; currSlab = currSlab->nextSlab, i++) {
-			Console::putc('\t');
-			Console::puti(i);
-			Console::puts(") ");
-
-			Console::putc('\n');
-			
+		auto initialNumOfSlabs = numOfSlabs;
+		for (auto currSlab = emptySlabsHead; currSlab; currSlab = currSlab->nextSlab)
 			numOfSlabs++;
-		}
-		
-		Console::puts("----------------\n");
+
+		Console::puti(numOfSlabs - initialNumOfSlabs);
+		Console::putc('\n');
 	}
+
+	Console::puts("----------------\n");
 
 	size_t totalSlots = slotsPerSlab * numOfSlabs;
 
