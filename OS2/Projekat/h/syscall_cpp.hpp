@@ -10,7 +10,7 @@ class Thread {
 public:
     Thread(void (*body)(void*), void* arg) { thread_init(&myHandle,body,arg); }
     virtual ~Thread() = default;
-    void start() { thread_start(myHandle); }
+    int start() { return thread_start(myHandle); }
     static void dispatch() { thread_dispatch(); }
     static void sleep(time_t ticks) { time_sleep(ticks); }
 protected:
