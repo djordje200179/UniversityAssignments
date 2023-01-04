@@ -162,8 +162,8 @@ void Kernel::MemoryAllocators::Cache::printInfo() {
 		
 		for (auto currSlab = fullSlabsHead; currSlab; currSlab = currSlab->nextSlab, i++) {
 			Console::putc('\t');
-			Console::puts(") ");
 			Console::puti(i);
+			Console::puts(") ");
 
 			Console::putc('\n');
 			
