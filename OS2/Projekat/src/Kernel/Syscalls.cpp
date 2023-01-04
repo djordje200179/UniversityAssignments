@@ -37,7 +37,7 @@ static void thread_init() {
 	auto arg = GET_PARAM(3, void*);
 	auto stack = GET_PARAM(4, uint64*);
 
-	*handle = new Thread(stack, startRoutine, arg);
+	*handle = (stack ? new Thread(stack, startRoutine, arg) : nullptr);
 }
 
 static void thread_start(bool just_created) {
