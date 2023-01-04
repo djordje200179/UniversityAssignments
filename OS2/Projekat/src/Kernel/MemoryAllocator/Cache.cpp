@@ -8,6 +8,10 @@ Kernel::MemoryAllocators::Cache* Kernel::MemoryAllocators::Cache::cachesHead;
 Kernel::MemoryAllocators::Cache* Kernel::MemoryAllocators::Cache::bufferCaches[MAX_BUFFER_CACHE_DEGREE - MIN_BUFFER_CACHE_DEGREE + 1];
 Kernel::MemoryAllocators::Cache* Kernel::MemoryAllocators::Cache::bigSlabsCache;
 
+static const char* NOT_ENOUGH_MEMORY_ERROR = "ERROR: Not enough memory";
+static const char* OBJECT_NOT_FROM_CACHE_ERROR = "ERROR: Object doesn't belong to this cache";
+
+
 void Kernel::MemoryAllocators::Cache::initCachesBlock() {
 	cachesBlock = (Cache*)Buddy::getInstance().allocate(1);
 	cachesCount = 0;
@@ -63,7 +67,17 @@ void* Kernel::MemoryAllocators::Cache::allocate() {
 		}
 	}
 
+	if (!partialSlabsHead) {
+		error = NOT_ENOUGH_MEMORY_ERROR;
+		return nullptr;
+	}
+
 	void* ret = partialSlabsHead->allocate();
+
+	if (!ret) {
+		error = NOT_ENOUGH_MEMORY_ERROR;
+		return nullptr;
+	}
 
 	if (partialSlabsHead->isEmpty()) {
 		auto temp = partialSlabsHead;
@@ -100,6 +114,7 @@ bool Kernel::MemoryAllocators::Cache::deallocate(void* ptr) {
 		return true;
 	}
 
+	error = OBJECT_NOT_FROM_CACHE_ERROR;
 	return false;
 }
 
@@ -219,5 +234,9 @@ void Kernel::MemoryAllocators::Cache::printInfo() {
 }
 
 int Kernel::MemoryAllocators::Cache::printError() {
-	return 0;
+	if(!error)
+		return 0;
+	
+	Console::puts(error);
+	return 1;
 }

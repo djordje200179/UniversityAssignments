@@ -69,6 +69,8 @@ private:
 	Slab* emptySlabsHead = nullptr;
 
 	bool canShrink = true;
+
+	const char* error = nullptr;
 };
 }
 }

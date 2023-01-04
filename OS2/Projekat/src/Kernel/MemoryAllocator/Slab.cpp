@@ -25,6 +25,7 @@ Kernel::MemoryAllocators::Slab::Slab(size_t typeSize, OBJ_FUN ctor, OBJ_FUN dtor
 	} else {
 		numOfSlots = 1;
 		slots = Buddy::getInstance().allocate((typeSize + BLOCK_SIZE - 1) / BLOCK_SIZE);
+		// TODO: what if no memory?
 	}
 	
 	auto slotsList = getFreeSlotsList();
