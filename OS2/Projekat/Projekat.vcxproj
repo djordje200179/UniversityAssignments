@@ -35,6 +35,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="h\cache_allocated.h" />
     <ClInclude Include="h\Kernel\Console.hpp" />
     <ClInclude Include="h\Kernel\MemoryAllocators\Buddy.hpp" />
     <ClInclude Include="h\Kernel\MemoryAllocators\Cache.hpp" />
@@ -66,8 +67,10 @@
     <ClCompile Include="src\Kernel\Thread.cpp" />
     <ClCompile Include="src\Kernel\Timer.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\slab.cpp" />
     <ClCompile Include="src\syscall_c.cpp" />
     <ClCompile Include="src\syscall_cpp.cpp" />
+    <ClCompile Include="src\userMain.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gdbinit.tmpl-riscv" />
@@ -111,6 +114,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <UseDebugLibraries>true</UseDebugLibraries>
     <ConfigurationType>Makefile</ConfigurationType>
+    <RemoteRootDir>~/OS2</RemoteRootDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <UseDebugLibraries>false</UseDebugLibraries>

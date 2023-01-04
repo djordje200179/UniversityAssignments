@@ -75,6 +75,9 @@
     <ClInclude Include="lib\mem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="h\cache_allocated.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -118,6 +121,12 @@
     </ClCompile>
     <ClCompile Include="src\Kernel\MemoryAllocator\Slab.cpp">
       <Filter>Source Files\Kernel\MemoryAllocators</Filter>
+    </ClCompile>
+    <ClCompile Include="src\slab.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\userMain.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

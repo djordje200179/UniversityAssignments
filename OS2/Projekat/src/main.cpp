@@ -12,16 +12,7 @@ inline void startTimer() {
 	asm volatile("csrs sstatus, 0b10");
 }
 
-void userMain() {
-	using namespace Kernel::MemoryAllocators;
-	
-	time_sleep(1);
-
-	kmalloc(1ul << 14);
-	
-	for (auto currCache = Cache::cachesHead; currCache; currCache = currCache->nextCache)
-		currCache->printInfo();
-}
+void userMain();
 
 void main() {
 	registerInterrupts();
