@@ -52,9 +52,9 @@ void Kernel::MemoryAllocators::Cache::operator delete(void* ptr) {
 
 void* Kernel::MemoryAllocators::Cache::allocate() {
 	if (!partialSlabsHead) {
-		if (fullSlabsHead) {
-			partialSlabsHead = fullSlabsHead;
-			fullSlabsHead = fullSlabsHead->nextSlab;
+		if (fullyFreeSlabsHead) {
+			partialSlabsHead = fullyFreeSlabsHead;
+			fullyFreeSlabsHead = fullyFreeSlabsHead->nextSlab;
 			partialSlabsHead->nextSlab = nullptr;
 		} else {
 			partialSlabsHead = (
@@ -62,14 +62,14 @@ void* Kernel::MemoryAllocators::Cache::allocate() {
 				? new Slab(typeSize, ctor, dtor) 
 				: new (bigSlabsCache) Slab(typeSize, ctor, dtor)
 			);
+
+			if (!partialSlabsHead) {
+				error = NOT_ENOUGH_MEMORY_ERROR;
+				return nullptr;
+			}
 			
 			canShrink = false;
 		}
-	}
-
-	if (!partialSlabsHead) {
-		error = NOT_ENOUGH_MEMORY_ERROR;
-		return nullptr;
 	}
 
 	void* ret = partialSlabsHead->allocate();
@@ -79,11 +79,11 @@ void* Kernel::MemoryAllocators::Cache::allocate() {
 		return nullptr;
 	}
 
-	if (partialSlabsHead->isEmpty()) {
+	if (partialSlabsHead->hasNoFreeSlots()) {
 		auto temp = partialSlabsHead;
 		partialSlabsHead = partialSlabsHead->nextSlab;
-		temp->nextSlab = fullSlabsHead;
-		fullSlabsHead = temp;
+		temp->nextSlab = fullyAllocatedSlabsHead;
+		fullyAllocatedSlabsHead = temp;
 	}
 
 	return ret;
@@ -94,22 +94,28 @@ bool Kernel::MemoryAllocators::Cache::deallocate(void* ptr) {
 		if (!currSlab->deallocate(ptr))
 			continue;
 
-		if (currSlab->isFull()) {
+		if (currSlab->hasNoAllocatedSlots()) {
 			(prevSlab ? prevSlab->nextSlab : partialSlabsHead) = currSlab->nextSlab;
-			currSlab->nextSlab = emptySlabsHead;
-			emptySlabsHead = currSlab;
+			currSlab->nextSlab = fullyFreeSlabsHead;
+			fullyFreeSlabsHead = currSlab;
 		}
 
 		return true;
 	}
 
-	for (auto prevSlab = (Slab*)nullptr, currSlab = emptySlabsHead; currSlab; prevSlab = currSlab, currSlab = currSlab->nextSlab) {
+	for (auto prevSlab = (Slab*)nullptr, currSlab = fullyAllocatedSlabsHead; currSlab; prevSlab = currSlab, currSlab = currSlab->nextSlab) {
 		if (!currSlab->deallocate(ptr))
 			continue;
 
-		(prevSlab ? prevSlab->nextSlab : emptySlabsHead) = currSlab->nextSlab;
-		currSlab->nextSlab = partialSlabsHead;
-		partialSlabsHead = currSlab;
+		if (currSlab->hasNoAllocatedSlots()) {
+			(prevSlab ? prevSlab->nextSlab : fullyAllocatedSlabsHead) = currSlab->nextSlab;
+			currSlab->nextSlab = fullyFreeSlabsHead;
+			fullyFreeSlabsHead = currSlab;
+		} else {
+			(prevSlab ? prevSlab->nextSlab : fullyAllocatedSlabsHead) = currSlab->nextSlab;
+			currSlab->nextSlab = partialSlabsHead;
+			partialSlabsHead = currSlab;
+		}
 
 		return true;
 	}
@@ -125,7 +131,7 @@ size_t Kernel::MemoryAllocators::Cache::shrink() {
 	}
 
 	size_t res = 0;
-	for (auto currSlab = emptySlabsHead; currSlab;) {
+	for (auto currSlab = fullyFreeSlabsHead; currSlab;) {
 		auto nextSlab = currSlab->nextSlab;
 
 		res += 1;
@@ -133,7 +139,7 @@ size_t Kernel::MemoryAllocators::Cache::shrink() {
 
 		currSlab = nextSlab;
 	}
-	emptySlabsHead = nullptr;
+	fullyFreeSlabsHead = nullptr;
 
 	return res;
 }
@@ -152,12 +158,12 @@ void Kernel::MemoryAllocators::Cache::printInfo() {
 	if (partialSlabsHead) {
 		slotsPerSlab = partialSlabsHead->getNumOfSlots();
 		allocatedBlocks = partialSlabsHead->getAllocatedBlocks();
-	} else if (fullSlabsHead) {
-		slotsPerSlab = fullSlabsHead->getNumOfSlots();
-		allocatedBlocks = fullSlabsHead->getAllocatedBlocks();
-	} else if (emptySlabsHead) {
-		slotsPerSlab = emptySlabsHead->getNumOfSlots();
-		allocatedBlocks = emptySlabsHead->getAllocatedBlocks();
+	} else if (fullyAllocatedSlabsHead) {
+		slotsPerSlab = fullyAllocatedSlabsHead->getNumOfSlots();
+		allocatedBlocks = fullyAllocatedSlabsHead->getAllocatedBlocks();
+	} else if (fullyFreeSlabsHead) {
+		slotsPerSlab = fullyFreeSlabsHead->getNumOfSlots();
+		allocatedBlocks = fullyFreeSlabsHead->getAllocatedBlocks();
 	}
 
 	Console::puts("Slots per slab: ");
@@ -172,10 +178,10 @@ void Kernel::MemoryAllocators::Cache::printInfo() {
 	
 	size_t allocatedSlots = 0, numOfSlabs = 0;
 
-	if (fullSlabsHead) {
+	if (fullyAllocatedSlabsHead) {
 		Console::puts("Full slabs: ");
 		
-		for (auto currSlab = fullSlabsHead; currSlab; currSlab = currSlab->nextSlab)
+		for (auto currSlab = fullyAllocatedSlabsHead; currSlab; currSlab = currSlab->nextSlab)
 			numOfSlabs++;
 		
 		Console::puti(numOfSlabs);
@@ -205,11 +211,11 @@ void Kernel::MemoryAllocators::Cache::printInfo() {
 		}
 	}
 
-	if (emptySlabsHead) {
+	if (fullyFreeSlabsHead) {
 		Console::puts("Empty slabs: \n");
 		
 		auto initialNumOfSlabs = numOfSlabs;
-		for (auto currSlab = emptySlabsHead; currSlab; currSlab = currSlab->nextSlab)
+		for (auto currSlab = fullyFreeSlabsHead; currSlab; currSlab = currSlab->nextSlab)
 			numOfSlabs++;
 
 		Console::puti(numOfSlabs - initialNumOfSlabs);

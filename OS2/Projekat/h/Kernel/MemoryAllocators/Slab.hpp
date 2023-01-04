@@ -33,8 +33,8 @@ public:
 	bool deallocate(void* ptr);
 
 	size_t getAllocatedSlots() { return allocatedSlots; }
-	bool isFull() { return allocatedSlots == 0; }
-	bool isEmpty() { return allocatedSlots == numOfSlots; }
+	bool hasNoAllocatedSlots() { return allocatedSlots == 0; }
+	bool hasNoFreeSlots() { return allocatedSlots == numOfSlots; }
 
 	size_t getAllocatedBlocks() { return 1; }
 	size_t getNumOfSlots() { return numOfSlots; }

@@ -4,7 +4,6 @@
 #include "Buddy.hpp"
 #include "Slab.hpp"
 
-void userMain();
 void* kmalloc(size_t);
 void kfree(const void*);
 
@@ -13,7 +12,6 @@ namespace MemoryAllocators {
 class Cache {
 // Misc
 public:
-	friend void ::userMain();
 	friend void* ::kmalloc(size_t);
 	friend void ::kfree(const void*);
 	
@@ -64,9 +62,9 @@ private:
 
 	Cache* nextCache = nullptr;
 
-	Slab* fullSlabsHead = nullptr;
+	Slab* fullyAllocatedSlabsHead = nullptr;
 	Slab* partialSlabsHead = nullptr;
-	Slab* emptySlabsHead = nullptr;
+	Slab* fullyFreeSlabsHead = nullptr;
 
 	bool canShrink = true;
 
