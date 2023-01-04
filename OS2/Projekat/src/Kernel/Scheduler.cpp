@@ -22,9 +22,9 @@ Kernel::Thread* Kernel::Scheduler::get() {
 	} else {
 		if(!idleThread)
 			idleThread = new Thread(
-					nullptr, // (uint64*)MemoryAllocators::Heap::getInstance().allocateBytes(DEFAULT_STACK_SIZE),
-					[](void*) { while (true); },
-					nullptr
+				(uint64*)kmalloc(1 << 7), // (uint64*)MemoryAllocators::Heap::getInstance().allocateBytes(DEFAULT_STACK_SIZE),
+				[](void*) { while (true); },
+				nullptr
 			);
 
 		return idleThread;
