@@ -125,7 +125,7 @@
     <ClCompile Include="src\slab.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\userMain.cpp">
+    <ClCompile Include="src\test1.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

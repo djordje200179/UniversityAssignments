@@ -70,7 +70,7 @@
     <ClCompile Include="src\slab.cpp" />
     <ClCompile Include="src\syscall_c.cpp" />
     <ClCompile Include="src\syscall_cpp.cpp" />
-    <ClCompile Include="src\userMain.cpp" />
+    <ClCompile Include="src\test1.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gdbinit.tmpl-riscv" />

@@ -16,7 +16,7 @@ public:
 
         ForkThread* thread = new ForkThread(id + 1);
         ForkThread** threads = (ForkThread**)mem_alloc(sizeof(ForkThread*) * id);
-
+ 
         if (threads != nullptr) {
             for (long i = 0; i < id; i++) {
                 threads[i] = new ForkThread(id);
