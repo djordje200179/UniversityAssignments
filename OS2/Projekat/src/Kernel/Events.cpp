@@ -38,6 +38,10 @@ void Kernel::Events::handle() {
 		case Type::ERR_READ:
 		case Type::ERR_WRITE:
 		default:
+			Console::getInstance().writeChar('\n');
+			Console::getInstance().writeChar('X');
+			Console::getInstance().writeChar('0' + (char)type);
+			while (true);
 			break;
 	}
 }
