@@ -63,7 +63,7 @@ private:
 };
 
 
-void userMain() {
+/*void userMain() {
     ForkThread thread(1);
 
     thread.start();
@@ -73,4 +73,4 @@ void userMain() {
     }
     
 	Console::puts("User main finished\n");
-}
+}*/

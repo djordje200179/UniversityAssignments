@@ -34,7 +34,7 @@ void construct(void* data) {
 	memset(data, shared_size, MASK);
 }
 
-int check(void* data, size_t size) {
+int check(void* data, int size) {
 	int ret = 1;
 	for (int i = 0; i < size; i++) {
 		if (((unsigned char*)data)[i] != MASK) {

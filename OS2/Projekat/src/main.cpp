@@ -20,7 +20,7 @@ void main() {
 	
 	Kernel::Thread::init();
 	startTimer();
-	exit_sys();
+	//exit_sys();
 
 	userMain();
 }
