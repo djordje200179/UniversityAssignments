@@ -35,7 +35,7 @@ int mem_free(void* ptr) {
 }
 
 int thread_create(thread_t* handle, void(* start_routine)(void*), void* arg) {
-	void* stack_space = mem_alloc(DEFAULT_STACK_SIZE * sizeof(uint64));
+	void* stack_space = mem_alloc(DEFAULT_STACK_SIZE);
 
 	SET_PARAM(4, stack_space);
 	SET_PARAM(3, arg);
@@ -46,7 +46,7 @@ int thread_create(thread_t* handle, void(* start_routine)(void*), void* arg) {
 }
 
 void thread_init(thread_t* handle, void(* start_routine)(void*), void* arg) {
-	void* stack_space = mem_alloc(DEFAULT_STACK_SIZE * sizeof(uint64));
+	void* stack_space = mem_alloc(DEFAULT_STACK_SIZE);
 
 	SET_PARAM(4, stack_space);
 	SET_PARAM(3, arg);
