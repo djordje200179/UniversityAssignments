@@ -59,7 +59,7 @@ void* Kernel::MemoryAllocators::Slab::allocate() {
 }
 
 bool Kernel::MemoryAllocators::Slab::deallocate(void* ptr) {
-	if (getSlot(0) < (char*)ptr || (char*)ptr > getSlot(numOfSlots - 1))
+	if ((char*)ptr < getSlot(0) || (char*)ptr > getSlot(numOfSlots - 1))
 		return false;
 
 	size_t index = ((char*)ptr - (char*)slots) / typeSize;
