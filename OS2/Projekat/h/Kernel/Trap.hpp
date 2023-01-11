@@ -12,8 +12,8 @@ enum class Type : uint64 {
 	ECALL_USER	= 0x08,
 	ECALL_SYS 	= 0x09,
 
-	TIMER 		= 0x1UL << 63 | 0x01,
-	EXTERNAL 	= 0x1UL << 63 | 0x09
+	TIMER 		= (0x1UL << 63) | 0x01,
+	EXTERNAL 	= (0x1UL << 63) | 0x09
 };
 
 void handle() asm("handle_trap");
