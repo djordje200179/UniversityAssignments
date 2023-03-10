@@ -202,7 +202,7 @@ class scoreboard extends uvm_scoreboard;
     
     virtual function write(ps2_item item);
         data = item.data_in[8:1];
-        data_err = ~^item.data_in[8:1] == item.data_in[9];
+        data_err = ^item.data_in[8:1] == item.data_in[9];
 
         if (data == item.data_out && data_err == item.data_err)
             `uvm_info("Scoreboard", "PASS!", UVM_LOW)

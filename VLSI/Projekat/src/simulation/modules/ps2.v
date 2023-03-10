@@ -30,7 +30,7 @@ module ps2 (
 	task save_data;
 		begin
 			data <= incoming_data[8:1];
-			data_err <= ~^incoming_data[8:1] == incoming_data[9];
+			data_err <= ^incoming_data[8:1] == incoming_data[9];
 			data_ack <= 1'b1;
 		end
 	endtask
