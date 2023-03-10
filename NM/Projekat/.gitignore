@@ -1,5 +1,4 @@
 data
-models
-logs
 __pycache__
 .idea
+model.h5
