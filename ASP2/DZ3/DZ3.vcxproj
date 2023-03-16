@@ -163,6 +163,7 @@
     <ClInclude Include="Student.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include=".gitignore" />
     <None Include="students_10.csv" />
     <None Include="students_1000.csv" />
     <None Include="students_10000.csv" />

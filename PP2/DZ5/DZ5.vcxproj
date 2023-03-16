@@ -361,6 +361,9 @@
     <Text Include="9_dirA.txt" />
     <Text Include="9_dirB.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include=".gitignore" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

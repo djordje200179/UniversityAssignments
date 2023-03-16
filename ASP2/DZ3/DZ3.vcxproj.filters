@@ -85,5 +85,6 @@
     <None Include="students_100000.csv">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include=".gitignore" />
   </ItemGroup>
 </Project>
