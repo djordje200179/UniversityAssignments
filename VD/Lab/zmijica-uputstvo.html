@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="rs">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport"
+	      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+	<title>Zmijica</title>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"
+	        integrity="sha512-pumBsjNRGGqkPzKHndZMaAG+bir374sORyzM3uulLV14lN5LyykqNk8eEeUlUkB3U0M4FApyaHraT65ihJhDpQ=="
+	        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
+	      integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+
+	<script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
+	        integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
+	        crossorigin="anonymous"></script>
+
+	<script src="zmijica-uputstvo.js"></script>
+</head>
+<body class="bg-dark text-light">
+	<a href="zmijica-uputstvo.html" class="display-4 text-center text-light d-block" style="text-decoration: none;">Zmijica</a>
+
+	<main class="w-50 mx-auto">
+		<h2 class="text-center">Uputstvo</h2>
+		<p>
+			Igra se igra pomoću tastera sa strelicama
+			(
+			<kbd class="bg-white text-dark">←</kbd>,
+			<kbd class="bg-white text-dark">↑</kbd>,
+			<kbd class="bg-white text-dark">→</kbd>,
+			<kbd  class="bg-white text-dark">↓</kbd>
+			).
+
+			Moguće je privremeno pauzirati igru pritiskajući
+			taster <kbd class="bg-white text-dark">Space</kbd>.
+		</p>
+		<p>
+			Cilj igre je da se pojede što više jabuka, a da se ne udari u zid ili u ostatak zmijice.
+			Svaka pojedena jabuka vrijedi 1 poen.
+			A na svakih 10 sekundi se stvara super-jabuka koja nosi 10 poena.
+		</p>
+
+		<h2 class="text-center">Igra</h2>
+		<form id="game_config_form" class="mx-auto p-1 w-50" onsubmit="startGame()"
+		      action="zmijica-igra.html" method="get">
+			<select class="form-select my-1" name="map_size">
+				<option value="0" selected>Odaberi veličinu mape...</option>
+				<option value="10">10*10</option>
+				<option value="20">20*20</option>
+				<option value="30">30*30</option>
+				<option value="40">40*40</option>
+			</select>
+
+			<select class="form-select my-1" name="difficulty">
+				<option value="0" selected>Odaberi težinu...</option>
+				<option value="1">Lako</option>
+				<option value="2">Srednje</option>
+				<option value="3">Brzo</option>
+			</select>
+
+			<button type="submit" class="btn btn-primary d-block mx-auto px-4">Kreni</button>
+		</form>
+
+		<a href="zmijica-rezultati.html" class="h2 text-center d-block" style="text-decoration: none;">Rezultati</a>
+		<p>
+			Možete pogledati najbolje rezultate tokom prethodnih igranja igrice.
+
+			Čuvaju se svi rezultati, ali prikazuje samo najboljih 5 (tako asistenti tražili). 🤷‍♂️
+		</p>
+	</main>
+</body>
+</html>
