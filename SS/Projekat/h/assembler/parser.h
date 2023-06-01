@@ -44,6 +44,12 @@
 #if YYDEBUG
 extern int yydebug;
 #endif
+/* "%code requires" blocks.  */
+#line 14 "misc/assembler/parser.y"
+
+	#include "syntax.h"
+
+#line 53 "h/assembler/parser.h"
 
 /* Token kinds.  */
 #ifndef YYTOKENTYPE
@@ -101,13 +107,22 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 16 "misc/assembler/parser.y"
+#line 18 "misc/assembler/parser.y"
 
 	int ival;	
 	float fval;
-	char *sval;
+	char* sval;
 
-#line 111 "h/assembler/parser.h"
+	struct symbol_list symbols;
+	struct word_args word_args;
+	struct operand operand;
+
+	struct dir dir;
+	struct inst inst;
+	struct line line;
+	struct line_list lines;
+
+#line 126 "h/assembler/parser.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -119,7 +134,7 @@ typedef union YYSTYPE YYSTYPE;
 extern YYSTYPE yylval;
 
 
-int yyparse (void);
+int yyparse (struct line_list* ret_lines);
 
 
 #endif /* !YY_YY_H_ASSEMBLER_PARSER_H_INCLUDED  */

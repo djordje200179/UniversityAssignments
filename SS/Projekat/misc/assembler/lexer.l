@@ -16,8 +16,8 @@
 #			{ BEGIN(COMMENT); }
 <COMMENT>.	;
 
-[ \t]			;
-,				return ',';
+[ \t]	;
+,		return ',';
 
 \.global	return DIR_GLOBAL;
 \.extern	return DIR_EXTERN;
@@ -56,8 +56,8 @@ csrrd	return INST_CSRRD;
 csrwr	return INST_CSRWR;
 
 %r([0-9]|1[0-5])	{ yylval.ival = atoi(yytext+2); return REG; }
-%sp				 	{ yylval.ival = 14; return REG; }
-%pc				 	{ yylval.ival = 15; return REG; }
+%sp					{ yylval.ival = 14; return REG; }
+%pc					{ yylval.ival = 15; return REG; }
 %status				{ yylval.ival = 0; return CREG; }
 %handler			{ yylval.ival = 1; return CREG; }
 %cause				{ yylval.ival = 2; return CREG; }
@@ -66,6 +66,7 @@ csrwr	return INST_CSRWR;
 
 \".*\"					{ yylval.sval = strdup(yytext+1); yylval.sval[strlen(yylval.sval)-1] = '\0'; return STR_LITERAL; }
 [0-9]+					{ yylval.ival = atoi(yytext); return INT_LITERAL; }
+0(x|X)[0-9a-fA-F]+		{ yylval.ival = strtol(yytext, NULL, 16); return INT_LITERAL; }
 [a-zA-Z][a-zA-Z0-9]*	{ yylval.sval = strdup(yytext); return SYMBOL; }
 
 .	;

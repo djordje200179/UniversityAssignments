@@ -72,17 +72,15 @@
 	#include <stdio.h>
 	#include <stdlib.h>
 	#include "../../h/assembler/syntax.h"
-	
+
 	extern int yylex();
-	extern int yyparse();
 	extern FILE *yyin;
-	extern struct lines lines;
 
 	extern int line_num;
 	
-	void yyerror(const char *s);
+	void yyerror(struct line_list* ret_lines, const char *s);
 
-#line 86 "src/assembler/parser.c"
+#line 84 "src/assembler/parser.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -153,19 +151,27 @@ enum yysymbol_kind_t
   YYSYMBOL_STR_LITERAL = 40,               /* STR_LITERAL  */
   YYSYMBOL_SYMBOL = 41,                    /* SYMBOL  */
   YYSYMBOL_42_ = 42,                       /* ','  */
-  YYSYMBOL_43_ = 43,                       /* ':'  */
-  YYSYMBOL_YYACCEPT = 44,                  /* $accept  */
-  YYSYMBOL_assembly_file = 45,             /* assembly_file  */
-  YYSYMBOL_directive = 46,                 /* directive  */
-  YYSYMBOL_directive_list = 47,            /* directive_list  */
-  YYSYMBOL_CSL = 48,                       /* CSL  */
-  YYSYMBOL_global_def = 49,                /* global_def  */
-  YYSYMBOL_extern_def = 50,                /* extern_def  */
-  YYSYMBOL_section_def = 51,               /* section_def  */
-  YYSYMBOL_skip_def = 52,                  /* skip_def  */
-  YYSYMBOL_string_def = 53,                /* string_def  */
-  YYSYMBOL_label_def = 54,                 /* label_def  */
-  YYSYMBOL_ENDLS = 55                      /* ENDLS  */
+  YYSYMBOL_YYACCEPT = 43,                  /* $accept  */
+  YYSYMBOL_assembly_file = 44,             /* assembly_file  */
+  YYSYMBOL_lines = 45,                     /* lines  */
+  YYSYMBOL_line = 46,                      /* line  */
+  YYSYMBOL_ENDLS = 47,                     /* ENDLS  */
+  YYSYMBOL_directive = 48,                 /* directive  */
+  YYSYMBOL_symbol_list = 49,               /* symbol_list  */
+  YYSYMBOL_global = 50,                    /* global  */
+  YYSYMBOL_extrn = 51,                     /* extrn  */
+  YYSYMBOL_section = 52,                   /* section  */
+  YYSYMBOL_word_args = 53,                 /* word_args  */
+  YYSYMBOL_word = 54,                      /* word  */
+  YYSYMBOL_skip = 55,                      /* skip  */
+  YYSYMBOL_ascii = 56,                     /* ascii  */
+  YYSYMBOL_instruction = 57,               /* instruction  */
+  YYSYMBOL_halt = 58,                      /* halt  */
+  YYSYMBOL_interrupt = 59,                 /* interrupt  */
+  YYSYMBOL_iret = 60,                      /* iret  */
+  YYSYMBOL_call = 61,                      /* call  */
+  YYSYMBOL_ret = 62,                       /* ret  */
+  YYSYMBOL_jmp = 63                        /* jmp  */
 };
 typedef enum yysymbol_kind_t yysymbol_kind_t;
 
@@ -491,18 +497,18 @@ union yyalloc
 #endif /* !YYCOPY_NEEDED */
 
 /* YYFINAL -- State number of the termination state.  */
-#define YYFINAL  23
+#define YYFINAL  43
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   40
+#define YYLAST   32
 
 /* YYNTOKENS -- Number of terminals.  */
-#define YYNTOKENS  44
+#define YYNTOKENS  43
 /* YYNNTS -- Number of nonterminals.  */
-#define YYNNTS  12
+#define YYNNTS  21
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  21
+#define YYNRULES  40
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  35
+#define YYNSTATES  54
 
 /* YYMAXUTOK -- Last valid token kind.  */
 #define YYMAXUTOK   296
@@ -524,7 +530,7 @@ static const yytype_int8 yytranslate[] =
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,    42,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,    43,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
@@ -553,11 +559,13 @@ static const yytype_int8 yytranslate[] =
 
 #if YYDEBUG
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
-static const yytype_int8 yyrline[] =
+static const yytype_uint8 yyrline[] =
 {
-       0,    44,    44,    49,    49,    49,    49,    49,    49,    52,
-      52,    55,    55,    58,    68,    73,    78,    83,    88,    88,
-      93,    93
+       0,    76,    76,    82,    84,    91,    94,   100,   100,   103,
+     106,   109,   112,   115,   118,   124,   126,   133,   136,   139,
+     142,   148,   154,   162,   172,   175,   178,   186,   188,   190,
+     192,   195,   197,   203,   206,   209,   212,   215,   221,   224,
+     227
 };
 #endif
 
@@ -580,9 +588,10 @@ static const char *const yytname[] =
   "INST_ADD", "INST_SUB", "INST_MUL", "INST_DIV", "INST_NOT", "INST_AND",
   "INST_OR", "INST_XOR", "INST_SHL", "INST_SHR", "INST_LD", "INST_ST",
   "INST_XCHG", "INST_CSRRD", "INST_CSRWR", "REG", "CREG", "INT_LITERAL",
-  "STR_LITERAL", "SYMBOL", "','", "':'", "$accept", "assembly_file",
-  "directive", "directive_list", "CSL", "global_def", "extern_def",
-  "section_def", "skip_def", "string_def", "label_def", "ENDLS", YY_NULLPTR
+  "STR_LITERAL", "SYMBOL", "','", "$accept", "assembly_file", "lines",
+  "line", "ENDLS", "directive", "symbol_list", "global", "extrn",
+  "section", "word_args", "word", "skip", "ascii", "instruction", "halt",
+  "interrupt", "iret", "call", "ret", "jmp", YY_NULLPTR
 };
 
 static const char *
@@ -592,7 +601,7 @@ yysymbol_name (yysymbol_kind_t yysymbol)
 }
 #endif
 
-#define YYPACT_NINF (-41)
+#define YYPACT_NINF (-36)
 
 #define yypact_value_is_default(Yyn) \
   ((Yyn) == YYPACT_NINF)
@@ -606,10 +615,12 @@ yysymbol_name (yysymbol_kind_t yysymbol)
    STATE-NUM.  */
 static const yytype_int8 yypact[] =
 {
-      -1,   -40,   -40,   -39,   -33,   -26,   -28,    16,   -41,    -1,
-     -41,   -41,   -41,   -41,   -41,   -41,   -41,    -3,    -3,    14,
-      14,    14,    14,   -41,   -41,   -41,   -23,    17,    17,    17,
-      17,    17,    17,   -41,   -41
+      -4,   -35,   -35,   -20,   -26,   -17,   -16,   -36,   -36,   -36,
+     -25,   -36,   -22,    23,    -4,   -36,    22,   -36,   -36,   -36,
+     -36,   -36,   -36,    22,   -36,   -36,   -36,   -36,   -36,   -36,
+     -36,   -15,   -15,   -36,   -36,   -36,   -14,   -36,   -36,   -36,
+     -36,   -36,   -36,   -36,   -36,   -36,    26,    26,   -11,   -21,
+     -36,   -36,   -36,   -36
 };
 
 /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -617,24 +628,28 @@ static const yytype_int8 yypact[] =
    means the default is an error.  */
 static const yytype_int8 yydefact[] =
 {
-       0,     0,     0,     0,     0,     0,     0,     0,    10,     2,
-       3,     4,     5,     6,     7,     8,    12,     0,     0,     0,
-       0,     0,    19,     1,     9,    21,     0,    13,    14,    15,
-      16,    17,    18,    11,    20
+       0,     0,     0,     0,     0,     0,     0,    33,    34,    35,
+       0,    38,     0,     0,     2,     4,     0,     9,    10,    11,
+      12,    13,    14,     0,    27,    28,    29,    30,    31,    32,
+      16,    17,    18,    19,    22,    23,    24,    25,    26,    37,
+      36,    40,    39,     1,     3,     8,     5,     6,     0,     0,
+       7,    15,    20,    21
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-     -41,   -41,    10,   -41,    19,   -41,   -41,   -41,   -41,   -41,
-     -41,    -9
+     -36,   -36,   -36,    12,     8,   -36,    30,   -36,   -36,   -36,
+     -36,   -36,   -36,   -36,   -36,   -36,   -36,   -36,   -36,   -36,
+     -36
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-       0,     7,     8,     9,    17,    10,    11,    12,    13,    14,
-      15,    27
+       0,    13,    14,    15,    46,    16,    31,    17,    18,    19,
+      36,    20,    21,    22,    23,    24,    25,    26,    27,    28,
+      29
 };
 
 /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
@@ -642,46 +657,50 @@ static const yytype_int8 yydefgoto[] =
    number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_int8 yytable[] =
 {
-      25,    16,    19,     1,     2,     3,    20,     4,     5,    28,
-      29,    30,    31,    32,    21,    22,    23,    25,    33,    24,
-      34,    18,     0,     0,     0,     0,     0,     0,     0,     0,
-       0,     0,     0,     0,     0,     0,     0,     0,     0,    26,
-       6
+       1,     2,     3,     4,     5,     6,    30,     7,     8,     9,
+      10,    11,    12,    34,    39,    35,    40,    41,    52,    42,
+      53,    33,    37,    43,    38,    45,    44,    48,    49,    50,
+      51,    47,    32
 };
 
 static const yytype_int8 yycheck[] =
 {
-       3,    41,    41,     4,     5,     6,    39,     8,     9,    18,
-      19,    20,    21,    22,    40,    43,     0,     3,    41,     9,
-       3,     2,    -1,    -1,    -1,    -1,    -1,    -1,    -1,    -1,
-      -1,    -1,    -1,    -1,    -1,    -1,    -1,    -1,    -1,    42,
-      41
+       4,     5,     6,     7,     8,     9,    41,    11,    12,    13,
+      14,    15,    16,    39,    39,    41,    41,    39,    39,    41,
+      41,    41,    39,     0,    40,     3,    14,    42,    42,     3,
+      41,    23,     2
 };
 
 /* YYSTOS[STATE-NUM] -- The symbol kind of the accessing symbol of
    state STATE-NUM.  */
 static const yytype_int8 yystos[] =
 {
-       0,     4,     5,     6,     8,     9,    41,    45,    46,    47,
-      49,    50,    51,    52,    53,    54,    41,    48,    48,    41,
-      39,    40,    43,     0,    46,     3,    42,    55,    55,    55,
-      55,    55,    55,    41,     3
+       0,     4,     5,     6,     7,     8,     9,    11,    12,    13,
+      14,    15,    16,    44,    45,    46,    48,    50,    51,    52,
+      54,    55,    56,    57,    58,    59,    60,    61,    62,    63,
+      41,    49,    49,    41,    39,    41,    53,    39,    40,    39,
+      41,    39,    41,     0,    46,     3,    47,    47,    42,    42,
+       3,    41,    39,    41
 };
 
 /* YYR1[RULE-NUM] -- Symbol kind of the left-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr1[] =
 {
-       0,    44,    45,    46,    46,    46,    46,    46,    46,    47,
-      47,    48,    48,    49,    50,    51,    52,    53,    54,    54,
-      55,    55
+       0,    43,    44,    45,    45,    46,    46,    47,    47,    48,
+      48,    48,    48,    48,    48,    49,    49,    50,    51,    52,
+      53,    53,    53,    53,    54,    55,    56,    57,    57,    57,
+      57,    57,    57,    58,    59,    60,    61,    61,    62,    63,
+      63
 };
 
 /* YYR2[RULE-NUM] -- Number of symbols on the right-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr2[] =
 {
-       0,     2,     1,     1,     1,     1,     1,     1,     1,     2,
-       1,     3,     1,     3,     3,     3,     3,     3,     3,     2,
-       2,     1
+       0,     2,     1,     2,     1,     2,     2,     2,     1,     1,
+       1,     1,     1,     1,     1,     3,     1,     2,     2,     2,
+       3,     3,     1,     1,     2,     2,     2,     1,     1,     1,
+       1,     1,     1,     1,     1,     1,     2,     2,     1,     2,
+       2
 };
 
 
@@ -710,7 +729,7 @@ enum { YYENOMEM = -2 };
       }                                                           \
     else                                                          \
       {                                                           \
-        yyerror (YY_("syntax error: cannot back up")); \
+        yyerror (ret_lines, YY_("syntax error: cannot back up")); \
         YYERROR;                                                  \
       }                                                           \
   while (0)
@@ -743,7 +762,7 @@ do {                                                                      \
     {                                                                     \
       YYFPRINTF (stderr, "%s ", Title);                                   \
       yy_symbol_print (stderr,                                            \
-                  Kind, Value); \
+                  Kind, Value, ret_lines); \
       YYFPRINTF (stderr, "\n");                                           \
     }                                                                     \
 } while (0)
@@ -755,10 +774,11 @@ do {                                                                      \
 
 static void
 yy_symbol_value_print (FILE *yyo,
-                       yysymbol_kind_t yykind, YYSTYPE const * const yyvaluep)
+                       yysymbol_kind_t yykind, YYSTYPE const * const yyvaluep, struct line_list* ret_lines)
 {
   FILE *yyoutput = yyo;
   YY_USE (yyoutput);
+  YY_USE (ret_lines);
   if (!yyvaluep)
     return;
   YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN
@@ -773,12 +793,12 @@ yy_symbol_value_print (FILE *yyo,
 
 static void
 yy_symbol_print (FILE *yyo,
-                 yysymbol_kind_t yykind, YYSTYPE const * const yyvaluep)
+                 yysymbol_kind_t yykind, YYSTYPE const * const yyvaluep, struct line_list* ret_lines)
 {
   YYFPRINTF (yyo, "%s %s (",
              yykind < YYNTOKENS ? "token" : "nterm", yysymbol_name (yykind));
 
-  yy_symbol_value_print (yyo, yykind, yyvaluep);
+  yy_symbol_value_print (yyo, yykind, yyvaluep, ret_lines);
   YYFPRINTF (yyo, ")");
 }
 
@@ -812,7 +832,7 @@ do {                                                            \
 
 static void
 yy_reduce_print (yy_state_t *yyssp, YYSTYPE *yyvsp,
-                 int yyrule)
+                 int yyrule, struct line_list* ret_lines)
 {
   int yylno = yyrline[yyrule];
   int yynrhs = yyr2[yyrule];
@@ -825,7 +845,7 @@ yy_reduce_print (yy_state_t *yyssp, YYSTYPE *yyvsp,
       YYFPRINTF (stderr, "   $%d = ", yyi + 1);
       yy_symbol_print (stderr,
                        YY_ACCESSING_SYMBOL (+yyssp[yyi + 1 - yynrhs]),
-                       &yyvsp[(yyi + 1) - (yynrhs)]);
+                       &yyvsp[(yyi + 1) - (yynrhs)], ret_lines);
       YYFPRINTF (stderr, "\n");
     }
 }
@@ -833,7 +853,7 @@ yy_reduce_print (yy_state_t *yyssp, YYSTYPE *yyvsp,
 # define YY_REDUCE_PRINT(Rule)          \
 do {                                    \
   if (yydebug)                          \
-    yy_reduce_print (yyssp, yyvsp, Rule); \
+    yy_reduce_print (yyssp, yyvsp, Rule, ret_lines); \
 } while (0)
 
 /* Nonzero means print parse trace.  It is left uninitialized so that
@@ -874,9 +894,10 @@ int yydebug;
 
 static void
 yydestruct (const char *yymsg,
-            yysymbol_kind_t yykind, YYSTYPE *yyvaluep)
+            yysymbol_kind_t yykind, YYSTYPE *yyvaluep, struct line_list* ret_lines)
 {
   YY_USE (yyvaluep);
+  YY_USE (ret_lines);
   if (!yymsg)
     yymsg = "Deleting";
   YY_SYMBOL_PRINT (yymsg, yykind, yyvaluep, yylocationp);
@@ -903,7 +924,7 @@ int yynerrs;
 `----------*/
 
 int
-yyparse (void)
+yyparse (struct line_list* ret_lines)
 {
     yy_state_fast_t yystate = 0;
     /* Number of tokens to shift before error messages enabled.  */
@@ -1144,70 +1165,323 @@ yyreduce:
   YY_REDUCE_PRINT (yyn);
   switch (yyn)
     {
-  case 2: /* assembly_file: directive_list  */
-#line 44 "misc/assembler/parser.y"
-                       {
+  case 2: /* assembly_file: lines  */
+#line 76 "misc/assembler/parser.y"
+              {
 		printf("Done with assembly file\n");
-	}
-#line 1153 "src/assembler/parser.c"
-    break;
-
-  case 13: /* global_def: DIR_GLOBAL CSL ENDLS  */
-#line 58 "misc/assembler/parser.y"
-                             {
-		struct line line = {
-			.type = LINE_DIR,
-			.label = NULL,
-			.dir = DIR_GLOBAL
-		};
-
-		lines_append(&lines, line);
-	}
-#line 1167 "src/assembler/parser.c"
-    break;
-
-  case 14: /* extern_def: DIR_EXTERN CSL ENDLS  */
-#line 68 "misc/assembler/parser.y"
-                             {
-		printf("Extern definition\n");
+		*ret_lines = (yyvsp[0].lines);
 	}
 #line 1175 "src/assembler/parser.c"
     break;
 
-  case 15: /* section_def: DIR_SECTION SYMBOL ENDLS  */
-#line 73 "misc/assembler/parser.y"
-                                 {
-		printf("Section %s definition\n", (yyvsp[-1].sval));
+  case 3: /* lines: lines line  */
+#line 82 "misc/assembler/parser.y"
+                   {
+		line_append(&(yyval.lines), (yyvsp[0].line));
 	}
 #line 1183 "src/assembler/parser.c"
     break;
 
-  case 16: /* skip_def: DIR_SKIP INT_LITERAL ENDLS  */
-#line 78 "misc/assembler/parser.y"
-                                   {
-		printf("Skip of %d bytes definition\n", (yyvsp[-1].ival));
+  case 4: /* lines: line  */
+#line 84 "misc/assembler/parser.y"
+                 {
+		(yyval.lines) = (struct line_list){NULL, 0};
+
+		line_append(&(yyval.lines), (yyvsp[0].line));
 	}
-#line 1191 "src/assembler/parser.c"
+#line 1193 "src/assembler/parser.c"
     break;
 
-  case 17: /* string_def: DIR_ASCII STR_LITERAL ENDLS  */
-#line 83 "misc/assembler/parser.y"
-                                    {
-		printf("String \"%s\" definition\n", (yyvsp[-1].sval));
+  case 5: /* line: directive ENDLS  */
+#line 91 "misc/assembler/parser.y"
+                        {
+		(yyval.line).type = LINE_DIR;
+		(yyval.line).dir = (yyvsp[-1].dir);
 	}
-#line 1199 "src/assembler/parser.c"
+#line 1202 "src/assembler/parser.c"
     break;
 
-  case 19: /* label_def: SYMBOL ':'  */
-#line 88 "misc/assembler/parser.y"
-                                      {
-		printf("Label %s definition\n", (yyvsp[-1].sval));
+  case 6: /* line: instruction ENDLS  */
+#line 94 "misc/assembler/parser.y"
+                              {
+		(yyval.line).type = LINE_INST;
+		(yyval.line).inst = (yyvsp[-1].inst);
 	}
-#line 1207 "src/assembler/parser.c"
-    break;
-
-
 #line 1211 "src/assembler/parser.c"
+    break;
+
+  case 9: /* directive: global  */
+#line 103 "misc/assembler/parser.y"
+               {
+		(yyval.dir).type = DIR_GLOBAL;
+		(yyval.dir).symbols = (yyvsp[0].symbols);
+	}
+#line 1220 "src/assembler/parser.c"
+    break;
+
+  case 10: /* directive: extrn  */
+#line 106 "misc/assembler/parser.y"
+                  {
+		(yyval.dir).type = DIR_EXTERN;
+		(yyval.dir).symbols = (yyvsp[0].symbols);
+	}
+#line 1229 "src/assembler/parser.c"
+    break;
+
+  case 11: /* directive: section  */
+#line 109 "misc/assembler/parser.y"
+                    {
+		(yyval.dir).type = DIR_SECTION;
+		(yyval.dir).name = (yyvsp[0].sval);
+	}
+#line 1238 "src/assembler/parser.c"
+    break;
+
+  case 12: /* directive: word  */
+#line 112 "misc/assembler/parser.y"
+                 {
+		(yyval.dir).type = DIR_WORD;
+		(yyval.dir).word_args = (yyvsp[0].word_args);
+	}
+#line 1247 "src/assembler/parser.c"
+    break;
+
+  case 13: /* directive: skip  */
+#line 115 "misc/assembler/parser.y"
+                 {
+		(yyval.dir).type = DIR_SKIP;
+		(yyval.dir).size = (yyvsp[0].ival);
+	}
+#line 1256 "src/assembler/parser.c"
+    break;
+
+  case 14: /* directive: ascii  */
+#line 118 "misc/assembler/parser.y"
+                  {
+		(yyval.dir).type = DIR_ASCII;
+		(yyval.dir).literal = (yyvsp[0].sval);
+	}
+#line 1265 "src/assembler/parser.c"
+    break;
+
+  case 15: /* symbol_list: symbol_list ',' SYMBOL  */
+#line 124 "misc/assembler/parser.y"
+                               {
+		symbol_append(&(yyval.symbols), (yyvsp[0].sval));
+	}
+#line 1273 "src/assembler/parser.c"
+    break;
+
+  case 16: /* symbol_list: SYMBOL  */
+#line 126 "misc/assembler/parser.y"
+                   {
+		(yyval.symbols) = (struct symbol_list){NULL, 0};
+
+		symbol_append(&(yyval.symbols), (yyvsp[0].sval));
+	}
+#line 1283 "src/assembler/parser.c"
+    break;
+
+  case 17: /* global: DIR_GLOBAL symbol_list  */
+#line 133 "misc/assembler/parser.y"
+                               { (yyval.symbols) = (yyvsp[0].symbols); }
+#line 1289 "src/assembler/parser.c"
+    break;
+
+  case 18: /* extrn: DIR_EXTERN symbol_list  */
+#line 136 "misc/assembler/parser.y"
+                               { (yyval.symbols) = (yyvsp[0].symbols); }
+#line 1295 "src/assembler/parser.c"
+    break;
+
+  case 19: /* section: DIR_SECTION SYMBOL  */
+#line 139 "misc/assembler/parser.y"
+                           { (yyval.sval) = (yyvsp[0].sval); }
+#line 1301 "src/assembler/parser.c"
+    break;
+
+  case 20: /* word_args: word_args ',' INT_LITERAL  */
+#line 142 "misc/assembler/parser.y"
+                                  {
+		struct word_arg arg;
+		arg.type = WORD_ARG_LITERAL;
+		arg.literal = (yyvsp[0].ival);
+		
+		word_arg_append(&(yyval.word_args), arg);
+	}
+#line 1313 "src/assembler/parser.c"
+    break;
+
+  case 21: /* word_args: word_args ',' SYMBOL  */
+#line 148 "misc/assembler/parser.y"
+                                 {
+		struct word_arg arg;
+		arg.type = WORD_ARG_SYMBOL;
+		arg.symbol = (yyvsp[0].sval);
+
+		word_arg_append(&(yyval.word_args), arg);
+	}
+#line 1325 "src/assembler/parser.c"
+    break;
+
+  case 22: /* word_args: INT_LITERAL  */
+#line 154 "misc/assembler/parser.y"
+                        {
+		(yyval.word_args) = (struct word_args){NULL, 0};
+
+		struct word_arg arg;
+		arg.type = WORD_ARG_LITERAL;
+		arg.literal = (yyvsp[0].ival);
+
+		word_arg_append(&(yyval.word_args), arg);
+	}
+#line 1339 "src/assembler/parser.c"
+    break;
+
+  case 23: /* word_args: SYMBOL  */
+#line 162 "misc/assembler/parser.y"
+                   {
+		(yyval.word_args) = (struct word_args){NULL, 0};
+
+		struct word_arg arg;
+		arg.type = WORD_ARG_SYMBOL;
+		arg.symbol = (yyvsp[0].sval);
+
+		word_arg_append(&(yyval.word_args), arg);
+	}
+#line 1353 "src/assembler/parser.c"
+    break;
+
+  case 24: /* word: DIR_WORD word_args  */
+#line 172 "misc/assembler/parser.y"
+                           { (yyval.word_args) = (yyvsp[0].word_args); }
+#line 1359 "src/assembler/parser.c"
+    break;
+
+  case 25: /* skip: DIR_SKIP INT_LITERAL  */
+#line 175 "misc/assembler/parser.y"
+                             { (yyval.ival) = (yyvsp[0].ival);}
+#line 1365 "src/assembler/parser.c"
+    break;
+
+  case 26: /* ascii: DIR_ASCII STR_LITERAL  */
+#line 178 "misc/assembler/parser.y"
+                              { (yyval.sval) = (yyvsp[0].sval); }
+#line 1371 "src/assembler/parser.c"
+    break;
+
+  case 27: /* instruction: halt  */
+#line 186 "misc/assembler/parser.y"
+             {
+		(yyval.inst).type = INST_HALT;
+	}
+#line 1379 "src/assembler/parser.c"
+    break;
+
+  case 28: /* instruction: interrupt  */
+#line 188 "misc/assembler/parser.y"
+                      {
+		(yyval.inst).type = INST_INT;
+	}
+#line 1387 "src/assembler/parser.c"
+    break;
+
+  case 29: /* instruction: iret  */
+#line 190 "misc/assembler/parser.y"
+                 {
+		(yyval.inst).type = INST_IRET;
+	}
+#line 1395 "src/assembler/parser.c"
+    break;
+
+  case 30: /* instruction: call  */
+#line 192 "misc/assembler/parser.y"
+                 {
+		(yyval.inst).type = INST_CALL;
+		(yyval.inst).operand = (yyvsp[0].operand);
+	}
+#line 1404 "src/assembler/parser.c"
+    break;
+
+  case 31: /* instruction: ret  */
+#line 195 "misc/assembler/parser.y"
+                {
+		(yyval.inst).type = INST_RET;
+	}
+#line 1412 "src/assembler/parser.c"
+    break;
+
+  case 32: /* instruction: jmp  */
+#line 197 "misc/assembler/parser.y"
+                {
+		(yyval.inst).type = INST_JMP;
+		(yyval.inst).operand = (yyvsp[0].operand);
+	}
+#line 1421 "src/assembler/parser.c"
+    break;
+
+  case 33: /* halt: INST_HALT  */
+#line 203 "misc/assembler/parser.y"
+                  { }
+#line 1427 "src/assembler/parser.c"
+    break;
+
+  case 34: /* interrupt: INST_INT  */
+#line 206 "misc/assembler/parser.y"
+                 { }
+#line 1433 "src/assembler/parser.c"
+    break;
+
+  case 35: /* iret: INST_IRET  */
+#line 209 "misc/assembler/parser.y"
+                  { }
+#line 1439 "src/assembler/parser.c"
+    break;
+
+  case 36: /* call: INST_CALL SYMBOL  */
+#line 212 "misc/assembler/parser.y"
+                         {
+		(yyval.operand).type = OPERAND_SYMBOL_ADDR;
+		(yyval.operand).symbol = (yyvsp[0].sval);
+	}
+#line 1448 "src/assembler/parser.c"
+    break;
+
+  case 37: /* call: INST_CALL INT_LITERAL  */
+#line 215 "misc/assembler/parser.y"
+                                  {
+		(yyval.operand).type = OPERAND_LITERAL_ADDR;
+		(yyval.operand).literal = (yyvsp[0].ival);
+	}
+#line 1457 "src/assembler/parser.c"
+    break;
+
+  case 38: /* ret: INST_RET  */
+#line 221 "misc/assembler/parser.y"
+                 { }
+#line 1463 "src/assembler/parser.c"
+    break;
+
+  case 39: /* jmp: INST_JMP SYMBOL  */
+#line 224 "misc/assembler/parser.y"
+                        {
+		(yyval.operand).type = OPERAND_SYMBOL_ADDR;
+		(yyval.operand).symbol = (yyvsp[0].sval);
+	}
+#line 1472 "src/assembler/parser.c"
+    break;
+
+  case 40: /* jmp: INST_JMP INT_LITERAL  */
+#line 227 "misc/assembler/parser.y"
+                                 {
+		(yyval.operand).type = OPERAND_LITERAL_ADDR;
+		(yyval.operand).literal = (yyvsp[0].ival);
+	}
+#line 1481 "src/assembler/parser.c"
+    break;
+
+
+#line 1485 "src/assembler/parser.c"
 
       default: break;
     }
@@ -1254,7 +1528,7 @@ yyerrlab:
   if (!yyerrstatus)
     {
       ++yynerrs;
-      yyerror (YY_("syntax error"));
+      yyerror (ret_lines, YY_("syntax error"));
     }
 
   if (yyerrstatus == 3)
@@ -1271,7 +1545,7 @@ yyerrlab:
       else
         {
           yydestruct ("Error: discarding",
-                      yytoken, &yylval);
+                      yytoken, &yylval, ret_lines);
           yychar = YYEMPTY;
         }
     }
@@ -1327,7 +1601,7 @@ yyerrlab1:
 
 
       yydestruct ("Error: popping",
-                  YY_ACCESSING_SYMBOL (yystate), yyvsp);
+                  YY_ACCESSING_SYMBOL (yystate), yyvsp, ret_lines);
       YYPOPSTACK (1);
       yystate = *yyssp;
       YY_STACK_PRINT (yyss, yyssp);
@@ -1365,7 +1639,7 @@ yyabortlab:
 | yyexhaustedlab -- YYNOMEM (memory exhaustion) comes here.  |
 `-----------------------------------------------------------*/
 yyexhaustedlab:
-  yyerror (YY_("memory exhausted"));
+  yyerror (ret_lines, YY_("memory exhausted"));
   yyresult = 2;
   goto yyreturnlab;
 
@@ -1380,7 +1654,7 @@ yyreturnlab:
          user semantic actions for why this is necessary.  */
       yytoken = YYTRANSLATE (yychar);
       yydestruct ("Cleanup: discarding lookahead",
-                  yytoken, &yylval);
+                  yytoken, &yylval, ret_lines);
     }
   /* Do not reclaim the symbols of the rule whose action triggered
      this YYABORT or YYACCEPT.  */
@@ -1389,7 +1663,7 @@ yyreturnlab:
   while (yyssp != yyss)
     {
       yydestruct ("Cleanup: popping",
-                  YY_ACCESSING_SYMBOL (+*yyssp), yyvsp);
+                  YY_ACCESSING_SYMBOL (+*yyssp), yyvsp, ret_lines);
       YYPOPSTACK (1);
     }
 #ifndef yyoverflow
@@ -1400,10 +1674,10 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 94 "misc/assembler/parser.y"
+#line 231 "misc/assembler/parser.y"
 
 
-void yyerror(const char* message) {
+void yyerror(struct line_list* ret_lines, const char* message) {
 	printf("ERROR!\n");
 	printf("On line %d\n", line_num);
 	printf("Message: %s\n", message);
