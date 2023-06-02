@@ -1,33 +1,39 @@
 %{
 	#include <stdio.h>
 	#include <stdlib.h>
-	#include "../../h/assembler/syntax.h"
+	#include "assembler/syntax.h"
 
 	extern int yylex();
 	extern FILE *yyin;
 
-	extern int line_num;
-	
-	void yyerror(struct line_list* ret_lines, const char *s);
+	void yyerror(struct lines* ret_lines, const char* s);
+	// int yydebug = 1;
 %}
 
 %code requires {
-	#include "syntax.h"
+	#include "assembler/syntax.h"
+
+	// #define YYDEBUG 1
 }
 
 %union {
-	int ival;	
-	float fval;
-	char* sval;
+	int int_literal;
+	char* str_literal;
 
-	struct symbol_list symbols;
-	struct word_args word_args;
+	char* symbol;
+
+	int reg;
+	int inst_type;
+
+	struct const_operand const_operand;
+	struct const_operands const_operands;
 	struct operand operand;
+	struct inst_params inst_params;
 
 	struct dir dir;
 	struct inst inst;
 	struct line line;
-	struct line_list lines;
+	struct lines lines;
 }
 
 %token ENDL
@@ -35,141 +41,156 @@
 %token DIR_GLOBAL DIR_EXTERN DIR_SECTION
 %token DIR_WORD DIR_SKIP DIR_ASCII DIR_EQU
 
-%token INST_HALT INST_INT INST_IRET INST_CALL INST_RET
-%token INST_JMP INST_BEQ INST_BNE INST_BGT
-%token INST_PUSH INST_POP
-%token INST_ADD INST_SUB INST_MUL INST_DIV
-%token INST_NOT INST_AND INST_OR INST_XOR
-%token INST_SHL INST_SHR
-%token INST_LD INST_ST INST_XCHG INST_CSRRD INST_CSRWR
+%token INST_BEQ INST_BNE INST_BGT
+%token <inst_type> INST_COND_JUMP
 
-%token <ival> REG
-%token <ival> CREG
+%token INST_CALL INST_JMP
+%token <inst_type> INST_UNCOND_JUMP
 
-%token <ival> INT_LITERAL
-%token <sval> STR_LITERAL
-%token <sval> SYMBOL
+%token INST_HALT INST_INT INST_IRET INST_RET
+%token <inst_type> INST_PARAMLESS
 
-%type <symbols> symbol_list
+%token INST_PUSH INST_POP INST_NOT
+%token <inst_type> INST_UNIPARAM
 
-%type <symbols> global
-%type <symbols> extrn
-%type <sval> section
-%type <word_args> word_args
-%type <word_args> word
-%type <ival> skip
-%type <sval> ascii
+%token INST_XCHG INST_ADD INST_SUB INST_MUL INST_DIV
+%token INST_AND INST_OR INST_XOR INST_SHL INST_SHR
+%token <inst_type> INST_BIPARAM
 
-%type <operand> call
-%type <operand> jmp
+%token INST_LD INST_ST INST_CSRRD INST_CSRWR
+
+%token <reg> REG
+%token <reg> CREG
+
+%token <int_literal> INT_LITERAL
+%token <str_literal> STR_LITERAL
+%token <symbol> SYMBOL
+%type <const_operand> const_operand
+%type <const_operands> const_operands
+
+%type <const_operands> global
+%type <const_operands> extrn
+%type <const_operand> section
+%type <const_operands> word
+%type <int_literal> skip
+%type <str_literal> ascii
+
+%type <operand> operand
+
+%type <inst> unconditional_jump
+%type <inst> conditional_jump
+%type <inst> uniparam_inst
+%type <inst> biparam_inst
+
+%type <inst_params> ld
+%type <inst_params> st
+%type <inst_params> csrrd
+%type <inst_params> csrwr
+
+%type <symbol> label
 
 %type <dir> directive
 %type <inst> instruction
+%type <line> line_content
 %type <line> line
 
 %type <lines> lines
 
-%parse-param {struct line_list* ret_lines}
+%parse-param {struct lines* ret_lines}
+
+%define parse.lac full
+%define parse.error verbose
 
 %%
 assembly_file:
 	lines {
-		printf("Done with assembly file\n");
 		*ret_lines = $1;
 	}
 
 lines:
 	lines line {
-		line_append(&$$, $2);
+		lines_append(&$$, $2);
 	} | line {
-		$$ = (struct line_list){NULL, 0};
-
-		line_append(&$$, $1);
+		$$ = (struct lines){NULL, 0};
+		lines_append(&$$, $1);
 	};
 
 line:
-	directive ENDLS {
+	line_content ENDLS {
+		$$ = $1;
+		$$.label = NULL;
+	} | label line_content ENDLS {
+		$$ = $2;
+		$$.label = $1;
+	} | label ENDLS {
+		$$.type = LINE_EMPTY; 
+		$$.label = $1;
+	}
+
+line_content:
+	directive {
 		$$.type = LINE_DIR;
 		$$.dir = $1;
-	} | instruction ENDLS {
+	} | instruction {
 		$$.type = LINE_INST;
 		$$.inst = $1;
 	};
 
+label:
+	SYMBOL ':' { $$ = $1; };
+
 ENDLS:
 	ENDLS ENDL | ENDL;
 
+const_operand:
+	INT_LITERAL {
+		$$.type = CONST_OPERAND_LITERAL;
+		$$.literal = $1;
+	} | SYMBOL {
+		$$.type = CONST_OPERAND_SYMBOL;
+		$$.symbol = $1;
+	};
+
+const_operands:
+	const_operands ',' const_operand {
+		const_operands_append(&$$, $3);
+	} | const_operand {
+		$$ = (struct const_operands){NULL, 0};
+		const_operands_append(&$$, $1);
+	};
+	
 directive:
 	global {
 		$$.type = DIR_GLOBAL;
-		$$.symbols = $1;
+		$$.operands = $1;
 	} | extrn {
 		$$.type = DIR_EXTERN;
-		$$.symbols = $1;
+		$$.operands = $1;
 	} | section {
 		$$.type = DIR_SECTION;
-		$$.name = $1;
+		$$.operand = $1;
 	} | word {
 		$$.type = DIR_WORD;
-		$$.word_args = $1;
+		$$.operands = $1;
 	} | skip {
 		$$.type = DIR_SKIP;
 		$$.size = $1;
 	} | ascii {
 		$$.type = DIR_ASCII;
-		$$.literal = $1;
+		$$.str_literal = $1;
 	};
-
-symbol_list:
-	symbol_list ',' SYMBOL {
-		symbol_append(&$$, $3);
-	} | SYMBOL {
-		$$ = (struct symbol_list){NULL, 0};
-
-		symbol_append(&$$, $1);
-	}
 
 global:
-	DIR_GLOBAL symbol_list { $$ = $2; };
+	DIR_GLOBAL const_operands { $$ = $2; };
 
 extrn:
-	DIR_EXTERN symbol_list { $$ = $2; };
+	DIR_EXTERN const_operands { $$ = $2; };
 
 section:
-	DIR_SECTION SYMBOL { $$ = $2; };
+	DIR_SECTION const_operand { $$ = $2; };
 
-word_args:
-	word_args ',' INT_LITERAL {
-		struct word_arg arg;
-		arg.type = WORD_ARG_LITERAL;
-		arg.literal = $3;
-		
-		word_arg_append(&$$, arg);
-	} | word_args ',' SYMBOL {
-		struct word_arg arg;
-		arg.type = WORD_ARG_SYMBOL;
-		arg.symbol = $3;
-
-		word_arg_append(&$$, arg);
-	} | INT_LITERAL {
-		$$ = (struct word_args){NULL, 0};
-
-		struct word_arg arg;
-		arg.type = WORD_ARG_LITERAL;
-		arg.literal = $1;
-
-		word_arg_append(&$$, arg);
-	} | SYMBOL {
-		$$ = (struct word_args){NULL, 0};
-
-		struct word_arg arg;
-		arg.type = WORD_ARG_SYMBOL;
-		arg.symbol = $1;
-
-		word_arg_append(&$$, arg);
-	};
 word:
-	DIR_WORD word_args { $$ = $2; };
+	DIR_WORD const_operands { $$ = $2; };
 
 skip:
 	DIR_SKIP INT_LITERAL { $$ = $2;};
@@ -177,63 +198,108 @@ skip:
 ascii:
 	DIR_ASCII STR_LITERAL { $$ = $2; };
 
-// label_def:
-// 	SYMBOL ':' ENDLS | SYMBOL ':' {
-// 		printf("Label %s definition\n", $1);
-// 	};
-
 instruction:
-	halt {
-		$$.type = INST_HALT;
-	} | interrupt {
-		$$.type = INST_INT;
-	} | iret {
-		$$.type = INST_IRET;
-	} | call {
-		$$.type = INST_CALL;
-		$$.operand = $1;
-	} | ret {
-		$$.type = INST_RET;
-	} | jmp {
-		$$.type = INST_JMP;
-		$$.operand = $1;
+	INST_PARAMLESS {
+		$$.type = $1;
+	} | unconditional_jump {
+		$$ = $1;
+	} | conditional_jump {
+		$$ = $1;
+	} | uniparam_inst {
+		$$ = $1;
+	} | biparam_inst {
+		$$ = $1;
+	} | ld {
+		$$.type = INST_LD;
+		$$.params = $1;
+	} | st {
+		$$.type = INST_ST;
+		$$.params = $1;
+	} | csrrd {
+		$$.type = INST_CSRRD;
+		$$.params = $1;
+	} | csrwr {
+		$$.type = INST_CSRWR;
+		$$.params = $1;
 	};
 
-halt:
-	INST_HALT { };
+unconditional_jump:
+	INST_UNCOND_JUMP const_operand {
+		$$.type = $1;
+		$$.params.operand = const_operand_to_operand($2);
+	}
 
-interrupt:
-	INST_INT { };
-
-iret:
-	INST_IRET { };
-
-call:
-	INST_CALL SYMBOL {
-		$$.type = OPERAND_SYMBOL_ADDR;
+operand:
+	'$' INT_LITERAL {
+		$$.type = OPERAND_LITERAL_VALUE;
+		$$.int_literal = $2;
+	} | '$' SYMBOL {
+		$$.type = OPERAND_SYMBOL_VALUE;
 		$$.symbol = $2;
-	} | INST_CALL INT_LITERAL {
+	} | INT_LITERAL {
 		$$.type = OPERAND_LITERAL_ADDR;
-		$$.literal = $2;
-	};
-
-ret:
-	INST_RET { };
-
-jmp:
-	INST_JMP SYMBOL {
+		$$.int_literal = $1;
+	} | SYMBOL {
 		$$.type = OPERAND_SYMBOL_ADDR;
-		$$.symbol = $2;
-	} | INST_JMP INT_LITERAL {
-		$$.type = OPERAND_LITERAL_ADDR;
-		$$.literal = $2;
+		$$.symbol = $1;
+	} | REG {
+		$$.type = OPERAND_REG_VALUE;
+		$$.reg = $1;
+	} | '[' REG ']' {
+		$$.type = OPERAND_REG_ADDR;
+		$$.reg = $2;
+	} | '[' REG '+' INT_LITERAL ']' {
+		$$.type = OPERAND_REG_ADDR_WITH_LITERAL_OFFSET;
+		$$.reg = $2;
+		$$.int_literal = $4;
+	} | '[' REG '+' SYMBOL ']' {
+		$$.type = OPERAND_REG_ADDR_WITH_SYMBOL_OFFSET;
+		$$.reg = $2;
+		$$.symbol = $4;
 	};
+
+conditional_jump:
+	INST_COND_JUMP REG ',' REG ',' operand {
+		$$.type = $1;
+		$$.params.reg1 = $2;
+		$$.params.reg2 = $4;
+		$$.params.operand = $6;
+	};
+
+uniparam_inst:
+	INST_UNIPARAM REG {
+		$$.type = $1;
+		$$.params.reg1 = $2;
+	}
+
+biparam_inst:
+	INST_BIPARAM REG ',' REG {
+		$$.type = $1;
+		$$.params.reg1 = $2;
+		$$.params.reg2 = $4;
+	}
+
+ld:
+	INST_LD operand ',' REG {
+		$$.operand = $2;
+		$$.reg1 = $4;
+	}
+
+st:
+	INST_ST REG ',' operand {
+		$$.reg1 = $2;
+		$$.operand = $4;
+	}
+
+csrrd:
+	INST_CSRRD CREG ',' REG {
+		$$.reg1 = $2;
+		$$.reg2 = $4;
+	}
+	
+csrwr:
+	INST_CSRWR REG ',' CREG {
+		$$.reg1 = $2;
+		$$.reg2 = $4;
+	}
 %%
-
-void yyerror(struct line_list* ret_lines, const char* message) {
-	printf("ERROR!\n");
-	printf("On line %d\n", line_num);
-	printf("Message: %s\n", message);
-
-	exit(-1);
-}

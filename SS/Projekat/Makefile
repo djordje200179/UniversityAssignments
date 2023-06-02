@@ -1,7 +1,20 @@
-run:
-	bison --defines="h/assembler/parser.h" -o src/assembler/parser.c misc/assembler/parser.y
-	sed -i 's/\"parser\.h\"/\"\.\.\/\.\.\/h\/assembler\/parser\.h\"/' src/assembler/parser.c
+IDIR = h
+OBJDIR = obj
+SRCDIR = .
+CC = gcc
+CFLAGS = -Werror -I$(IDIR)
 
+clean:
+	rm -f $(OBJDIR)/*.o
+	rm -f *.d
+	rm -f $(PROGRAM)
+	rm -f *~
+
+assembler:
+	bison --defines="h/assembler/parser.h" -o src/assembler/parser.c misc/assembler/parser.y
+	sed -i 's/parser\.h/assembler\/parser\.h/g' src/assembler/parser.c
 	flex -o src/assembler/lexer.c misc/assembler/lexer.l 
-	gcc src/assembler/main.c src/assembler/syntax.c src/assembler/parser.c src/assembler/lexer.c -lfl -o test
-	./test test.s
+	gcc -Ih/ -g src/common/*.c src/assembler/*.c -lfl -o test
+	./test tests/test.s
+
+.PHONY: clean

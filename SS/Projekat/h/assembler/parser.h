@@ -45,11 +45,13 @@
 extern int yydebug;
 #endif
 /* "%code requires" blocks.  */
-#line 14 "misc/assembler/parser.y"
+#line 13 "misc/assembler/parser.y"
 
-	#include "syntax.h"
+	#include "assembler/syntax.h"
 
-#line 53 "h/assembler/parser.h"
+	// #define YYDEBUG 1
+
+#line 55 "h/assembler/parser.h"
 
 /* Token kinds.  */
 #ifndef YYTOKENTYPE
@@ -68,37 +70,42 @@ extern int yydebug;
     DIR_SKIP = 263,                /* DIR_SKIP  */
     DIR_ASCII = 264,               /* DIR_ASCII  */
     DIR_EQU = 265,                 /* DIR_EQU  */
-    INST_HALT = 266,               /* INST_HALT  */
-    INST_INT = 267,                /* INST_INT  */
-    INST_IRET = 268,               /* INST_IRET  */
-    INST_CALL = 269,               /* INST_CALL  */
-    INST_RET = 270,                /* INST_RET  */
+    INST_BEQ = 266,                /* INST_BEQ  */
+    INST_BNE = 267,                /* INST_BNE  */
+    INST_BGT = 268,                /* INST_BGT  */
+    INST_COND_JUMP = 269,          /* INST_COND_JUMP  */
+    INST_CALL = 270,               /* INST_CALL  */
     INST_JMP = 271,                /* INST_JMP  */
-    INST_BEQ = 272,                /* INST_BEQ  */
-    INST_BNE = 273,                /* INST_BNE  */
-    INST_BGT = 274,                /* INST_BGT  */
-    INST_PUSH = 275,               /* INST_PUSH  */
-    INST_POP = 276,                /* INST_POP  */
-    INST_ADD = 277,                /* INST_ADD  */
-    INST_SUB = 278,                /* INST_SUB  */
-    INST_MUL = 279,                /* INST_MUL  */
-    INST_DIV = 280,                /* INST_DIV  */
-    INST_NOT = 281,                /* INST_NOT  */
-    INST_AND = 282,                /* INST_AND  */
-    INST_OR = 283,                 /* INST_OR  */
-    INST_XOR = 284,                /* INST_XOR  */
-    INST_SHL = 285,                /* INST_SHL  */
-    INST_SHR = 286,                /* INST_SHR  */
-    INST_LD = 287,                 /* INST_LD  */
-    INST_ST = 288,                 /* INST_ST  */
-    INST_XCHG = 289,               /* INST_XCHG  */
-    INST_CSRRD = 290,              /* INST_CSRRD  */
-    INST_CSRWR = 291,              /* INST_CSRWR  */
-    REG = 292,                     /* REG  */
-    CREG = 293,                    /* CREG  */
-    INT_LITERAL = 294,             /* INT_LITERAL  */
-    STR_LITERAL = 295,             /* STR_LITERAL  */
-    SYMBOL = 296                   /* SYMBOL  */
+    INST_UNCOND_JUMP = 272,        /* INST_UNCOND_JUMP  */
+    INST_HALT = 273,               /* INST_HALT  */
+    INST_INT = 274,                /* INST_INT  */
+    INST_IRET = 275,               /* INST_IRET  */
+    INST_RET = 276,                /* INST_RET  */
+    INST_PARAMLESS = 277,          /* INST_PARAMLESS  */
+    INST_PUSH = 278,               /* INST_PUSH  */
+    INST_POP = 279,                /* INST_POP  */
+    INST_NOT = 280,                /* INST_NOT  */
+    INST_UNIPARAM = 281,           /* INST_UNIPARAM  */
+    INST_XCHG = 282,               /* INST_XCHG  */
+    INST_ADD = 283,                /* INST_ADD  */
+    INST_SUB = 284,                /* INST_SUB  */
+    INST_MUL = 285,                /* INST_MUL  */
+    INST_DIV = 286,                /* INST_DIV  */
+    INST_AND = 287,                /* INST_AND  */
+    INST_OR = 288,                 /* INST_OR  */
+    INST_XOR = 289,                /* INST_XOR  */
+    INST_SHL = 290,                /* INST_SHL  */
+    INST_SHR = 291,                /* INST_SHR  */
+    INST_BIPARAM = 292,            /* INST_BIPARAM  */
+    INST_LD = 293,                 /* INST_LD  */
+    INST_ST = 294,                 /* INST_ST  */
+    INST_CSRRD = 295,              /* INST_CSRRD  */
+    INST_CSRWR = 296,              /* INST_CSRWR  */
+    REG = 297,                     /* REG  */
+    CREG = 298,                    /* CREG  */
+    INT_LITERAL = 299,             /* INT_LITERAL  */
+    STR_LITERAL = 300,             /* STR_LITERAL  */
+    SYMBOL = 301                   /* SYMBOL  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -107,22 +114,27 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 18 "misc/assembler/parser.y"
+#line 19 "misc/assembler/parser.y"
 
-	int ival;	
-	float fval;
-	char* sval;
+	int int_literal;
+	char* str_literal;
 
-	struct symbol_list symbols;
-	struct word_args word_args;
+	char* symbol;
+
+	int reg;
+	int inst_type;
+
+	struct const_operand const_operand;
+	struct const_operands const_operands;
 	struct operand operand;
+	struct inst_params inst_params;
 
 	struct dir dir;
 	struct inst inst;
 	struct line line;
-	struct line_list lines;
+	struct lines lines;
 
-#line 126 "h/assembler/parser.h"
+#line 138 "h/assembler/parser.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -134,7 +146,7 @@ typedef union YYSTYPE YYSTYPE;
 extern YYSTYPE yylval;
 
 
-int yyparse (struct line_list* ret_lines);
+int yyparse (struct lines* ret_lines);
 
 
 #endif /* !YY_YY_H_ASSEMBLER_PARSER_H_INCLUDED  */

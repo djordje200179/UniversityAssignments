@@ -1,12 +1,16 @@
 {
 	"files.associations": {
-		"syntax.h": "c",
-		"stdlib.h": "c",
+		"random": "c",
+		"typeinfo": "c",
 		"array": "c",
-		"compare": "c",
-		"functional": "c",
-		"tuple": "c",
-		"type_traits": "c",
-		"utility": "c"
-	}
+		"string_view": "c",
+		"initializer_list": "c"
+	},
+	"makefile.launchConfigurations": [
+		{
+			"cwd": "/mnt/d/Fakultet/SS/Projekat",
+			"binaryPath": "/mnt/d/Fakultet/SS/Projekat/test",
+			"binaryArgs": []
+		}
+	]
 }

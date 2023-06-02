@@ -2,15 +2,8 @@
 
 #include <stdlib.h>
 
-struct symbol_list {
-	char** arr;
-	size_t size;
-};
-
-void symbol_append(struct symbol_list* symbols_list, char* symbol);
-
-struct word_arg {
-	enum { WORD_ARG_SYMBOL, WORD_ARG_LITERAL } type;
+struct const_operand {
+	enum { CONST_OPERAND_SYMBOL, CONST_OPERAND_LITERAL } type;
 
 	union {
 		char* symbol;
@@ -18,23 +11,23 @@ struct word_arg {
 	};
 };
 
-struct word_args {
-	struct word_arg* arr;
+struct const_operands {
+	struct const_operand* arr;
 	size_t size;
 };
 
-void word_arg_append(struct word_args* word_args, struct word_arg word_arg);
+void const_operands_append(struct const_operands* const_operands,
+						   struct const_operand const_operand);
 
 struct dir {
 	int type;
 
 	union {
-		struct symbol_list symbols;
-		struct word_args word_args;
+		struct const_operand operand;
+		struct const_operands operands;
 
-		char* name;
 		size_t size;
-		char* literal;
+		char* str_literal;
 	};
 };
 
@@ -51,20 +44,28 @@ struct operand {
 	} type;
 
 	union {
-		size_t literal;
+		size_t int_literal;
 		char* symbol;
-		int reg;
+
+		struct {
+			int reg;
+			struct const_operand offset;
+		};
 	};
+};
+
+struct operand const_operand_to_operand(struct const_operand const_operand);
+
+struct inst_params {
+	int reg1;
+	int reg2;
+	struct operand operand;
 };
 
 struct inst {
 	int type;
 
-	struct {
-		int reg1;
-		int reg2;
-		struct operand operand;
-	};
+	struct inst_params params;
 };
 
 struct line {
@@ -78,11 +79,11 @@ struct line {
 	};
 };
 
-void line_print(struct line line);
-
-struct line_list {
+struct lines {
 	struct line* arr;
 	size_t size;
 };
 
-void line_append(struct line_list* lines, struct line line);
+void lines_append(struct lines* lines, struct line line);
+void line_print(struct line line);
+void lines_print(struct lines lines);
