@@ -227,18 +227,18 @@ static void print_dir(struct dir dir) {
 					case CONST_OPERAND_SYMBOL:
 						printf("%s", dir.operands.arr[i].symbol);
 						break;
-					case CONST_OPERAND_LITERAL:
-						printf("%zu", dir.operands.arr[i].literal);
+					case CONST_OPERAND_INT_LITERAL:
+						printf("%zu", dir.operands.arr[i].int_literal);
 						break;
 				}
 			}
 			printf(")");
 			break;
 		case DIR_SKIP:
-			printf("SKIP (%zu bytes)", dir.size);
+			printf("SKIP (%zu bytes)", dir.operand.int_literal);
 			break;
 		case DIR_ASCII:
-			printf("ASCII (\"%s\")", dir.str_literal);
+			printf("ASCII (\"%s\")", dir.operand.str_literal);
 			break;
 		default:
 			printf("DIR UNKNOWN");
@@ -286,9 +286,9 @@ struct operand const_operand_to_operand(struct const_operand const_operand) {
 	struct operand operand;
 
 	switch (const_operand.type) {
-		case CONST_OPERAND_LITERAL:
+		case CONST_OPERAND_INT_LITERAL:
 			operand.type = OPERAND_LITERAL_ADDR;
-			operand.int_literal = const_operand.literal;
+			operand.int_literal = const_operand.int_literal;
 			break;
 		case CONST_OPERAND_SYMBOL:
 			operand.type = OPERAND_SYMBOL_ADDR;

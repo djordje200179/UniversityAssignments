@@ -45,13 +45,13 @@
 extern int yydebug;
 #endif
 /* "%code requires" blocks.  */
-#line 13 "misc/assembler/parser.y"
+#line 13 "parser.y"
 
 	#include "assembler/syntax.h"
 
 	// #define YYDEBUG 1
 
-#line 55 "h/assembler/parser.h"
+#line 55 "../../h/assembler/parser.h"
 
 /* Token kinds.  */
 #ifndef YYTOKENTYPE
@@ -114,7 +114,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 19 "misc/assembler/parser.y"
+#line 19 "parser.y"
 
 	int int_literal;
 	char* str_literal;
@@ -134,7 +134,7 @@ union YYSTYPE
 	struct line line;
 	struct lines lines;
 
-#line 138 "h/assembler/parser.h"
+#line 138 "../../h/assembler/parser.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

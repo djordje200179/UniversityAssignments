@@ -3,11 +3,12 @@
 #include <stdlib.h>
 
 struct const_operand {
-	enum { CONST_OPERAND_SYMBOL, CONST_OPERAND_LITERAL } type;
+	enum { CONST_OPERAND_SYMBOL, CONST_OPERAND_INT_LITERAL, CONST_OPERAND_STR_LITERAL  } type;
 
 	union {
 		char* symbol;
-		size_t literal;
+		size_t int_literal;
+		char* str_literal;
 	};
 };
 
@@ -25,9 +26,6 @@ struct dir {
 	union {
 		struct const_operand operand;
 		struct const_operands operands;
-
-		size_t size;
-		char* str_literal;
 	};
 };
 

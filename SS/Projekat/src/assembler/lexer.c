@@ -1,6 +1,6 @@
-#line 2 "src/assembler/lexer.c"
+#line 2 "../../src/assembler/lexer.c"
 
-#line 4 "src/assembler/lexer.c"
+#line 4 "../../src/assembler/lexer.c"
 
 #define  YY_INT_ALIGNED short int
 
@@ -541,15 +541,17 @@ int yy_flex_debug = 0;
 #define YY_MORE_ADJ 0
 #define YY_RESTORE_YY_MORE_OFFSET
 char *yytext;
-#line 1 "misc/assembler/lexer.l"
-#line 2 "misc/assembler/lexer.l"
+#line 1 "lexer.l"
+#line 2 "lexer.l"
 	#include <stdio.h>
 	#include "assembler/parser.h"
 
-	int line_num = 1;
-#line 551 "src/assembler/lexer.c"
+	int fileno(FILE *stream);
 
-#line 553 "src/assembler/lexer.c"
+	int line_num = 1;
+#line 553 "../../src/assembler/lexer.c"
+
+#line 555 "../../src/assembler/lexer.c"
 
 #define INITIAL 0
 #define COMMENT 1
@@ -768,9 +770,9 @@ YY_DECL
 		}
 
 	{
-#line 11 "misc/assembler/lexer.l"
+#line 13 "lexer.l"
 
-#line 774 "src/assembler/lexer.c"
+#line 776 "../../src/assembler/lexer.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -830,277 +832,277 @@ do_action:	/* This label is used only to access EOF actions. */
 case 1:
 /* rule 1 can match eol */
 YY_RULE_SETUP
-#line 12 "misc/assembler/lexer.l"
+#line 14 "lexer.l"
 ;
 	YY_BREAK
 case 2:
 /* rule 2 can match eol */
 YY_RULE_SETUP
-#line 14 "misc/assembler/lexer.l"
+#line 16 "lexer.l"
 { ++line_num; return ENDL; }
 	YY_BREAK
 case 3:
 /* rule 3 can match eol */
 YY_RULE_SETUP
-#line 15 "misc/assembler/lexer.l"
+#line 17 "lexer.l"
 { ++line_num; BEGIN(INITIAL); return ENDL; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 16 "misc/assembler/lexer.l"
+#line 18 "lexer.l"
 { BEGIN(COMMENT); }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 17 "misc/assembler/lexer.l"
+#line 19 "lexer.l"
 ;
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 19 "misc/assembler/lexer.l"
+#line 21 "lexer.l"
 ;
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 20 "misc/assembler/lexer.l"
+#line 22 "lexer.l"
 return yytext[0];
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 22 "misc/assembler/lexer.l"
+#line 24 "lexer.l"
 return DIR_GLOBAL;
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 23 "misc/assembler/lexer.l"
+#line 25 "lexer.l"
 return DIR_EXTERN;
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 24 "misc/assembler/lexer.l"
+#line 26 "lexer.l"
 return DIR_SECTION;
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 25 "misc/assembler/lexer.l"
+#line 27 "lexer.l"
 return DIR_WORD;
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 26 "misc/assembler/lexer.l"
+#line 28 "lexer.l"
 return DIR_SKIP;
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 27 "misc/assembler/lexer.l"
+#line 29 "lexer.l"
 return DIR_ASCII;
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 28 "misc/assembler/lexer.l"
+#line 30 "lexer.l"
 return DIR_EQU;
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 29 "misc/assembler/lexer.l"
+#line 31 "lexer.l"
 BEGIN(END);
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 31 "misc/assembler/lexer.l"
+#line 33 "lexer.l"
 { yylval.inst_type = INST_HALT;	return INST_PARAMLESS; }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 32 "misc/assembler/lexer.l"
+#line 34 "lexer.l"
 { yylval.inst_type = INST_INT;	return INST_PARAMLESS; }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 33 "misc/assembler/lexer.l"
+#line 35 "lexer.l"
 { yylval.inst_type = INST_IRET;	return INST_PARAMLESS; }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 34 "misc/assembler/lexer.l"
+#line 36 "lexer.l"
 { yylval.inst_type = INST_CALL;	return INST_UNCOND_JUMP; }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 35 "misc/assembler/lexer.l"
+#line 37 "lexer.l"
 { yylval.inst_type = INST_RET;	return INST_PARAMLESS; }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 36 "misc/assembler/lexer.l"
+#line 38 "lexer.l"
 { yylval.inst_type = INST_JMP;	return INST_UNCOND_JUMP; }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 37 "misc/assembler/lexer.l"
+#line 39 "lexer.l"
 { yylval.inst_type = INST_BEQ;	return INST_COND_JUMP; }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 38 "misc/assembler/lexer.l"
+#line 40 "lexer.l"
 { yylval.inst_type = INST_BNE;	return INST_COND_JUMP; }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 39 "misc/assembler/lexer.l"
+#line 41 "lexer.l"
 { yylval.inst_type = INST_BGT;	return INST_COND_JUMP; }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 40 "misc/assembler/lexer.l"
+#line 42 "lexer.l"
 { yylval.inst_type = INST_PUSH;	return INST_UNIPARAM; }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 41 "misc/assembler/lexer.l"
+#line 43 "lexer.l"
 { yylval.inst_type = INST_POP;	return INST_UNIPARAM; }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 42 "misc/assembler/lexer.l"
+#line 44 "lexer.l"
 { yylval.inst_type = INST_ADD;	return INST_BIPARAM; }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 43 "misc/assembler/lexer.l"
+#line 45 "lexer.l"
 { yylval.inst_type = INST_SUB;	return INST_BIPARAM; }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 44 "misc/assembler/lexer.l"
+#line 46 "lexer.l"
 { yylval.inst_type = INST_MUL;	return INST_BIPARAM; }
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 45 "misc/assembler/lexer.l"
+#line 47 "lexer.l"
 { yylval.inst_type = INST_DIV;	return INST_BIPARAM; }
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 46 "misc/assembler/lexer.l"
+#line 48 "lexer.l"
 { yylval.inst_type = INST_NOT;	return INST_UNIPARAM; }
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 47 "misc/assembler/lexer.l"
+#line 49 "lexer.l"
 { yylval.inst_type = INST_AND;	return INST_BIPARAM; }
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 48 "misc/assembler/lexer.l"
+#line 50 "lexer.l"
 { yylval.inst_type = INST_OR;	return INST_BIPARAM; }
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 49 "misc/assembler/lexer.l"
+#line 51 "lexer.l"
 { yylval.inst_type = INST_XOR;	return INST_BIPARAM; }
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 50 "misc/assembler/lexer.l"
+#line 52 "lexer.l"
 { yylval.inst_type = INST_SHL;	return INST_BIPARAM; }
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 51 "misc/assembler/lexer.l"
+#line 53 "lexer.l"
 { yylval.inst_type = INST_SHR;	return INST_BIPARAM; }
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 52 "misc/assembler/lexer.l"
+#line 54 "lexer.l"
 return INST_LD;
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 53 "misc/assembler/lexer.l"
+#line 55 "lexer.l"
 return INST_ST;
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 54 "misc/assembler/lexer.l"
+#line 56 "lexer.l"
 { yylval.inst_type = INST_XCHG; return INST_BIPARAM; }
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 55 "misc/assembler/lexer.l"
+#line 57 "lexer.l"
 return INST_CSRRD;
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 56 "misc/assembler/lexer.l"
+#line 58 "lexer.l"
 return INST_CSRWR;
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 58 "misc/assembler/lexer.l"
+#line 60 "lexer.l"
 { yylval.reg = atoi(yytext+2); return REG; }
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 59 "misc/assembler/lexer.l"
+#line 61 "lexer.l"
 { yylval.reg = 14; return REG; }
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 60 "misc/assembler/lexer.l"
+#line 62 "lexer.l"
 { yylval.reg = 15; return REG; }
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 61 "misc/assembler/lexer.l"
+#line 63 "lexer.l"
 { yylval.reg = 0; return CREG; }
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 62 "misc/assembler/lexer.l"
+#line 64 "lexer.l"
 { yylval.reg = 1; return CREG; }
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
-#line 63 "misc/assembler/lexer.l"
+#line 65 "lexer.l"
 { yylval.reg = 2; return CREG; }
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
-#line 65 "misc/assembler/lexer.l"
+#line 67 "lexer.l"
 return yytext[0];
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
-#line 67 "misc/assembler/lexer.l"
+#line 69 "lexer.l"
 { yylval.str_literal = strdup(yytext+1); yylval.str_literal[strlen(yylval.str_literal)-1] = '\0'; return STR_LITERAL; }
 	YY_BREAK
 case 50:
 YY_RULE_SETUP
-#line 68 "misc/assembler/lexer.l"
+#line 70 "lexer.l"
 { yylval.int_literal = atoi(yytext); return INT_LITERAL; }
 	YY_BREAK
 case 51:
 YY_RULE_SETUP
-#line 69 "misc/assembler/lexer.l"
+#line 71 "lexer.l"
 { yylval.int_literal = strtol(yytext, NULL, 16); return INT_LITERAL; }
 	YY_BREAK
 case 52:
 YY_RULE_SETUP
-#line 70 "misc/assembler/lexer.l"
+#line 72 "lexer.l"
 { yylval.symbol = strdup(yytext); return SYMBOL; }
 	YY_BREAK
 case 53:
 YY_RULE_SETUP
-#line 72 "misc/assembler/lexer.l"
+#line 74 "lexer.l"
 ;
 	YY_BREAK
 case 54:
 YY_RULE_SETUP
-#line 73 "misc/assembler/lexer.l"
+#line 75 "lexer.l"
 ECHO;
 	YY_BREAK
-#line 1104 "src/assembler/lexer.c"
+#line 1106 "../../src/assembler/lexer.c"
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(COMMENT):
 case YY_STATE_EOF(END):
@@ -2107,5 +2109,5 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 73 "misc/assembler/lexer.l"
+#line 75 "lexer.l"
 

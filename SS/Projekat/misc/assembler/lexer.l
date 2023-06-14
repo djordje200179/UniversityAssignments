@@ -2,6 +2,8 @@
 	#include <stdio.h>
 	#include "assembler/parser.h"
 
+	int fileno(FILE *stream);
+
 	int line_num = 1;
 %}
 

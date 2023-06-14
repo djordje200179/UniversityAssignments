@@ -1,20 +1,8 @@
-IDIR = h
-OBJDIR = obj
-SRCDIR = .
-CC = gcc
-CFLAGS = -Werror -I$(IDIR)
+assembler:
+	@cd misc/assembler && make --debug=n
 
 clean:
-	rm -f $(OBJDIR)/*.o
-	rm -f *.d
-	rm -f $(PROGRAM)
-	rm -f *~
+	@cd misc/common && make --debug=n clean
+	@cd misc/assembler && make --debug=n clean
 
-assembler:
-	bison --defines="h/assembler/parser.h" -o src/assembler/parser.c misc/assembler/parser.y
-	sed -i 's/parser\.h/assembler\/parser\.h/g' src/assembler/parser.c
-	flex -o src/assembler/lexer.c misc/assembler/lexer.l 
-	gcc -Ih/ -g src/common/*.c src/assembler/*.c -lfl -o test
-	./test tests/test.s
-
-.PHONY: clean
+.PHONY: assembler clean

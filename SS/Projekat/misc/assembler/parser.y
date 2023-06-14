@@ -144,8 +144,11 @@ ENDLS:
 
 const_operand:
 	INT_LITERAL {
-		$$.type = CONST_OPERAND_LITERAL;
-		$$.literal = $1;
+		$$.type = CONST_OPERAND_INT_LITERAL;
+		$$.int_literal = $1;
+	} | STR_LITERAL {
+		$$.type = CONST_OPERAND_STR_LITERAL;
+		$$.str_literal = $1;
 	} | SYMBOL {
 		$$.type = CONST_OPERAND_SYMBOL;
 		$$.symbol = $1;
@@ -174,10 +177,10 @@ directive:
 		$$.operands = $1;
 	} | skip {
 		$$.type = DIR_SKIP;
-		$$.size = $1;
+		$$.operand.int_literal = $1;
 	} | ascii {
 		$$.type = DIR_ASCII;
-		$$.str_literal = $1;
+		$$.operand.str_literal = $1;
 	};
 
 global:
