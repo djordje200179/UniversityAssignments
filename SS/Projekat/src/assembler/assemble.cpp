@@ -83,12 +83,12 @@ symbol_table first_phase(const lines& lines) {
 						address += strlen(line.dir.operand.str_literal) + 1;
 						break;
 					case DIR_EQU:
-						// FIXME
+						// TODO: Process 'equ' directive
 						break;
 				}
 				break;
 			case line::LINE_INST:
-				/* code */
+				// FIXME: Process instruction
 
 				address += 4;
 
@@ -115,7 +115,6 @@ static void second_phase(const lines& lines,
 						 symbol_table& symbol_table,
 						 std::vector<section>& sections) {
 	section* section = NULL;
-	size_t address = 0;
 	for (int i = 0; i < lines.size; i++) {
 		const auto& line = lines.arr[i];
 
@@ -133,7 +132,6 @@ static void second_phase(const lines& lines,
 						break;
 					case DIR_SECTION:
 						section = section ? section + 1 : &sections[0];
-						address = 0;
 						break;
 					case DIR_WORD:
 						for (size_t j = 0; j < line.dir.operands.size; j++) {
@@ -141,14 +139,16 @@ static void second_phase(const lines& lines,
 
 							switch (operand.type) {
 								case const_operand::CONST_OPERAND_INT_LITERAL:
-									/*section_write(section,
-									   &operand.int_literal, 4);*/
+									section->append(
+										(const uint8_t*)&operand.int_literal,
+										sizeof(int));
 									break;
 								case const_operand::CONST_OPERAND_SYMBOL: {
 									auto symbol =
 										symbol_table.find(operand.symbol);
 
-									relocation relocation = {.offset = address};
+									relocation relocation = {
+										.offset = section->size()};
 
 									if (!symbol) {
 										fprintf(stderr,
@@ -167,25 +167,26 @@ static void second_phase(const lines& lines,
 
 									section->relocation_table.push_back(
 										relocation);
+
+									section->append(nullptr, sizeof(int));
+
 									break;
 								}
 							}
-							address += 4;
 						}
 						break;
 					case DIR_SKIP:
-						address += line.dir.operand.int_literal;
+						section->append(nullptr, line.dir.operand.int_literal);
 						break;
 					case DIR_ASCII: {
 						auto literal = line.dir.operand.str_literal;
-						auto literal_size = strlen(literal) + 1;
-						// section_write(section, literal, literal_size);
-						address += literal_size;
+						section->append((const uint8_t*)literal,
+										strlen(literal) + 1);
 
 						break;
 					}
 					case DIR_EQU:
-						// FIXME
+						// TODO: Implement 'equ' directive
 						break;
 				}
 				break;
@@ -257,7 +258,7 @@ static void second_phase(const lines& lines,
 						break;
 				}
 
-				address += 4;
+				section->append(nullptr, 4);
 
 				break;
 			}

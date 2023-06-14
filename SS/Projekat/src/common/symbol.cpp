@@ -3,7 +3,12 @@
 #include <iomanip>
 
 std::ostream& operator<<(std::ostream& os, const symbol& symbol) {
-	os << std::setw(7) << std::left << symbol.name << "\t";
+	if (symbol.name.size() > 7)
+		os << symbol.name.substr(0, 6) << "~";
+	else
+		os << std::setw(7) << std::left << symbol.name;
+	os << '\t';
+
 	switch (symbol.type) {
 		case symbol::type::NOTYPE:
 			os << "NOTYP\t";

@@ -11,6 +11,10 @@ struct section {
 	std::vector<uint8_t> content;
 	std::vector<relocation> relocation_table;
 
-	section(symbol section_symbol);
+	section(symbol section_symbol) { name = section_symbol.name; }
+
+	void append(const uint8_t* data, size_t size);
+	size_t size() const { return content.size(); }
+
 	friend std::ostream& operator<<(std::ostream& os, const section& section);
 };
