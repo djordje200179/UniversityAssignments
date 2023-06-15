@@ -8,8 +8,10 @@
 			"name": "(gdb) Launch",
 			"type": "cppdbg",
 			"request": "launch",
-			"program": "${workspaceFolder}/test",
-			"args": ["${workspaceFolder}/tests/test.s"],
+			"program": "${workspaceFolder}/assembler",
+			"args": [
+				"${workspaceFolder}/tests/test.s"
+			],
 			"stopAtEntry": false,
 			"cwd": "${fileDirname}",
 			"environment": [],
@@ -28,6 +30,5 @@
 				}
 			]
 		}
-
 	]
 }

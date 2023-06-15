@@ -3,11 +3,31 @@
 #include <stdlib.h>
 #include "assembler/parser.h"
 
-void lines_append(struct lines* lines, struct line line) {
-	lines->size++;
-	lines->arr = realloc(lines->arr, lines->size * sizeof(struct line));
+void const_operands_append(struct const_operands* const_operands,
+						   struct const_operand const_operand) {
+	const_operands->size++;
+	const_operands->arr =
+		realloc(const_operands->arr,
+				const_operands->size * sizeof(struct const_operand));
 
-	lines->arr[lines->size - 1] = line;
+	const_operands->arr[const_operands->size - 1] = const_operand;
+}
+
+struct operand const_operand_to_operand(struct const_operand const_operand) {
+	struct operand operand;
+
+	switch (const_operand.type) {
+		case CONST_OPERAND_INT_LITERAL:
+			operand.type = OPERAND_LITERAL_ADDR;
+			operand.int_literal = const_operand.int_literal;
+			break;
+		case CONST_OPERAND_SYMBOL:
+			operand.type = OPERAND_SYMBOL_ADDR;
+			operand.symbol = const_operand.symbol;
+			break;
+	}
+
+	return operand;
 }
 
 static void print_inst_type(int inst_type) {
@@ -267,34 +287,28 @@ void line_print(struct line line) {
 	putchar('\n');
 }
 
+void line_free(struct line line) {
+	if (line.label)
+		free(line.label);
+
+	// FIXME: free dir and inst
+}
+
+void lines_append(struct lines* lines, struct line line) {
+	lines->size++;
+	lines->arr = realloc(lines->arr, lines->size * sizeof(struct line));
+
+	lines->arr[lines->size - 1] = line;
+}
+
 void lines_print(struct lines lines) {
 	for (size_t i = 0; i < lines.size; i++)
 		line_print(lines.arr[i]);
 }
 
-void const_operands_append(struct const_operands* const_operands,
-						   struct const_operand const_operand) {
-	const_operands->size++;
-	const_operands->arr =
-		realloc(const_operands->arr,
-				const_operands->size * sizeof(struct const_operand));
+void lines_free(struct lines lines) {
+	for (size_t i = 0; i < lines.size; i++)
+		line_free(lines.arr[i]);
 
-	const_operands->arr[const_operands->size - 1] = const_operand;
-}
-
-struct operand const_operand_to_operand(struct const_operand const_operand) {
-	struct operand operand;
-
-	switch (const_operand.type) {
-		case CONST_OPERAND_INT_LITERAL:
-			operand.type = OPERAND_LITERAL_ADDR;
-			operand.int_literal = const_operand.int_literal;
-			break;
-		case CONST_OPERAND_SYMBOL:
-			operand.type = OPERAND_SYMBOL_ADDR;
-			operand.symbol = const_operand.symbol;
-			break;
-	}
-
-	return operand;
+	free(lines.arr);
 }

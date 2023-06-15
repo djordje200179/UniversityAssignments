@@ -20,6 +20,7 @@ struct args read_args(int argc, char** argv) {
 				else
 					fprintf(stderr, "Unknown option `-%c'.\n", optopt);
 
+				// FIXME: Convert exit to try-catch
 				exit(1);
 			default:
 				abort();
@@ -28,6 +29,7 @@ struct args read_args(int argc, char** argv) {
 
 	int leftover_args_count = argc - optind;
 	if (leftover_args_count != 1) {
+		// FIXME: Convert exit to try-catch
 		fprintf(stderr, "Expected 1 argument, got %d\n", leftover_args_count);
 		exit(1);
 	}

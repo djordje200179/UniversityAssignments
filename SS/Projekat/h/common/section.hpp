@@ -13,7 +13,9 @@ struct section {
 
 	section(symbol section_symbol) { name = section_symbol.name; }
 
-	void append(const uint8_t* data, size_t size);
+	void append(const void* data, size_t size);
+	void append_literal(const uint32_t data);
+
 	size_t size() const { return content.size(); }
 
 	friend std::ostream& operator<<(std::ostream& os, const section& section);

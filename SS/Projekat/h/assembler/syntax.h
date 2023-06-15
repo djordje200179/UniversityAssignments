@@ -77,11 +77,14 @@ struct line {
 	};
 };
 
+void line_print(struct line line);
+void line_free(struct line line);
+
 struct lines {
 	struct line* arr;
 	size_t size;
 };
 
 void lines_append(struct lines* lines, struct line line);
-void line_print(struct line line);
 void lines_print(struct lines lines);
+void lines_free(struct lines lines);
