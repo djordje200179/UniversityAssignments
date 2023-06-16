@@ -188,15 +188,6 @@ static void second_phase(lines lines,
 			break;
 		case line::LINE_INST: {
 			switch (line.inst.type) {
-			case INST_BEQ:
-				// TODO: Implement 'beq' instruction
-				break;
-			case INST_BNE:
-				// TODO: Implement 'bne' instruction
-				break;
-			case INST_BGT:
-				// TODO: Implement 'bgt' instruction
-				break;
 			case INST_CALL: {
 				auto inst_1 = instruction::make_arithmetic(
 					instruction::arithmetic_operation::SUB,
@@ -215,8 +206,30 @@ static void second_phase(lines lines,
 				);
 				section->append(&inst_2, 4);
 			}
+			case INST_BEQ:
+			case INST_BNE:
+			case INST_BGT:
 			case INST_JMP: {
+				instruction::jump_mode jump_mode;
+				switch(line.inst.type) {
+				case INST_BEQ:
+					jump_mode = instruction::jump_mode::EQUAL;
+					break;
+				case INST_BNE:
+					jump_mode = instruction::jump_mode::NOT_EQUAL;
+					break;
+				case INST_BGT:
+					jump_mode = instruction::jump_mode::GREATER;
+					break;
+				default:
+					jump_mode = instruction::jump_mode::UNCONDITIONAL;
+					break;
+				}
+
+				switch (line.inst.params.operand.type) {
 				// TODO: Implement 'jmp' instruction
+				};				
+				
 				break;
 			}
 			case INST_HALT: {
@@ -447,12 +460,74 @@ static void second_phase(lines lines,
 						4
 					);
 					section->append(&inst, 4);
+
+					if(line.inst.params.operand.type == operand::OPERAND_SYMBOL_VALUE) {
+						auto symbol_name = line.inst.params.operand.symbol;
+						auto symbol = symbol_table.find(symbol_name);
+						if (!symbol)
+							throw symbol_not_found_error(symbol_name);
+
+						relocation relocation = {
+							.offset = section->size()
+						};
+
+						if (symbol->global) {
+							relocation.symbol = symbol - &symbol_table[0];
+							relocation.addend = 0;
+						} else {
+							relocation.symbol = symbol->section;
+							relocation.addend = symbol->value;
+						}
+
+						section->relocation_table.push_back(relocation);
+					}
+					
 					section->append_literal(line.inst.params.operand.int_literal);
 					break;
 				}
 				case operand::OPERAND_LITERAL_ADDR:
 				case operand::OPERAND_SYMBOL_ADDR: {
-					// TODO: Implement 'ld' instruction with literal/symbol address operand
+					auto inst_1 = instruction::make_load(
+						instruction::load_mode::MEMDIR,
+						line.inst.params.reg1,
+						15,
+						0,
+						4
+					);
+					section->append(&inst_1, 4);
+
+					if(line.inst.params.operand.type == operand::OPERAND_SYMBOL_VALUE) {
+						auto symbol_name = line.inst.params.operand.symbol;
+						auto symbol = symbol_table.find(symbol_name);
+						if (!symbol)
+							throw symbol_not_found_error(symbol_name);
+
+						relocation relocation = {
+							.offset = section->size()
+						};
+
+						if (symbol->global) {
+							relocation.symbol = symbol - &symbol_table[0];
+							relocation.addend = 0;
+						} else {
+							relocation.symbol = symbol->section;
+							relocation.addend = symbol->value;
+						}
+
+						section->relocation_table.push_back(relocation);
+					}
+					
+					section->append_literal(line.inst.params.operand.int_literal);
+
+					auto inst_2 = instruction::make_load(
+						instruction::load_mode::MEMDIR,
+						line.inst.params.reg1,
+						line.inst.params.reg1,
+						0,
+						0
+					);
+					section->append(&inst_2, 4);
+
 					break;
 				}
 				case operand::OPERAND_REG_VALUE: {
@@ -508,6 +583,28 @@ static void second_phase(lines lines,
 						4
 					);
 					section->append(&inst, 4);
+
+					if(line.inst.params.operand.type == operand::OPERAND_SYMBOL_VALUE) {
+						auto symbol_name = line.inst.params.operand.symbol;
+						auto symbol = symbol_table.find(symbol_name);
+						if (!symbol)
+							throw symbol_not_found_error(symbol_name);
+
+						relocation relocation = {
+							.offset = section->size()
+						};
+
+						if (symbol->global) {
+							relocation.symbol = symbol - &symbol_table[0];
+							relocation.addend = 0;
+						} else {
+							relocation.symbol = symbol->section;
+							relocation.addend = symbol->value;
+						}
+
+						section->relocation_table.push_back(relocation);
+					}
+					
 					section->append_literal(line.inst.params.operand.int_literal);
 					break;
 				}
