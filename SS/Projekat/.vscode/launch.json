@@ -10,7 +10,7 @@
 			"request": "launch",
 			"program": "${workspaceFolder}/assembler",
 			"args": [
-				"${workspaceFolder}/tests/test.s"
+				"${workspaceFolder}/tests/main.s"
 			],
 			"stopAtEntry": false,
 			"cwd": "${fileDirname}",
