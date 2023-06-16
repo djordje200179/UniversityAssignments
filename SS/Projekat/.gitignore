@@ -1,3 +1,4 @@
 obj
 *.d
+tests/*.o
 assembler
