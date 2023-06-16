@@ -78,9 +78,37 @@ symbol_table first_phase(lines lines) {
 			break;
 		case line::LINE_INST:
 			switch(line.inst.type) {
+			case INST_CALL:
+				address += 2*4;
 			case INST_UNCOND_JUMP:
 			case INST_COND_JUMP:
 				address += 8;
+				address += 4;
+				break;
+			case INST_HALT:
+			case INST_INT:
+			case INST_NOT:
+			case INST_XCHG:
+			case INST_ADD:
+			case INST_SUB:
+			case INST_MUL:
+			case INST_DIV:
+			case INST_AND:
+			case INST_OR:
+			case INST_XOR:
+			case INST_SHL:
+			case INST_SHR:
+			case INST_CSRRD:
+			case INST_CSRWR:
+				address += 4;
+				break;
+			case INST_IRET:
+				address += 4*4;
+				break;
+			case INST_RET:
+			case INST_PUSH:
+			case INST_POP:
+				address += 2*4;
 				break;
 			case INST_LD:
 			case INST_ST:
@@ -92,10 +120,10 @@ symbol_table first_phase(lines lines) {
 					address += 8;
 					break;
 				}
+
+				address += 4;
 				break;
 			}
-
-			address += 4;
 
 			break;
 		}
