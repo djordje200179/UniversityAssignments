@@ -14,7 +14,7 @@ $(obj_dir)/%.o: $(src_dir)/%.cpp
 	g++ $(cpp_flags) -c -o $@ $<
 
 %.d: %.cpp
-	@g++ $(cpp_flags) -MM -MT $(patsubst $(src_dir)/%.cpp, $(obj_dir)/%.o, $<) $< > $@
+	@g++ $(cpp_flags) -MM -MT $(obj_dir)/$*.o $< > $@
 
 include $(dep)
 

@@ -34,10 +34,10 @@ $(obj_dir)/%.o: $(src_dir)/%.cpp
 	g++ $(cpp_flags) -c -o $@ $<
 
 %.d: %.c
-	@gcc $(c_flags) -MM -MT $(patsubst $(src_dir)/%.c, $(obj_dir)/%.o, $<) $< > $@
+	@gcc $(c_flags) -MM -MT $(obj_dir)/$*.o $< > $@
 
 %.d: %.cpp
-	@g++ $(cpp_flags) -MM -MT $(patsubst $(src_dir)/%.cpp, $(obj_dir)/%.o, $<) $< > $@
+	@g++ $(cpp_flags) -MM -MT $(obj_dir)/$*.o $< > $@
 
 include $(c_dep)
 include $(cpp_dep)

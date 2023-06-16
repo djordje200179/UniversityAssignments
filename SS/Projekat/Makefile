@@ -1,3 +1,5 @@
+all: assembler linker emulator
+
 assembler:
 	@cd misc/assembler && make --no-print-directory
 
@@ -10,5 +12,7 @@ emulator:
 clean:
 	@cd misc/common && make clean --no-print-directory
 	@cd misc/assembler && make clean --no-print-directory
+	@cd misc/linker && make clean --no-print-directory
+	@cd misc/emulator && make clean --no-print-directory
 
-.PHONY: assembler clean
+.PHONY: assembler linker emulator clean
