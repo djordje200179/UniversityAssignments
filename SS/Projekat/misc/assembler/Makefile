@@ -4,8 +4,8 @@ common_obj_dir = ../../obj/common
 src_dir = ../../src/assembler
 out_dir = ../..
 
-c_flags = -Werror -I$(inc_dir) -g -std=c2x
-cpp_flags = -Werror -I$(inc_dir) -g -std=c++20
+c_flags = -Wall -flto -I$(inc_dir) -g -std=c2x
+cpp_flags = -Wall -flto -I$(inc_dir) -g -std=c++20
 
 c_src = $(wildcard $(src_dir)/*.c)
 c_dep = $(patsubst $(src_dir)/%.c, $(src_dir)/%.d, $(c_src))
@@ -18,7 +18,7 @@ cpp_obj = $(patsubst $(src_dir)/%.cpp, $(obj_dir)/%.o, $(cpp_src))
 build: $(c_obj) $(cpp_obj)
 	@cd ../common && make --no-print-directory
 
-	g++ -lfl -g -o $(out_dir)/assembler $^ $(common_obj_dir)/*.o
+	g++ $(cpp_flags) -lfl -o $(out_dir)/assembler $^ $(common_obj_dir)/*.o
 
 $(src_dir)/parser.c: parser.y
 	bison --defines="$(inc_dir)/assembler/parser.h" -o $@ $<

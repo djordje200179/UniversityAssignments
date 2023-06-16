@@ -2,7 +2,7 @@ inc_dir = ../../h
 obj_dir = ../../obj/common
 src_dir = ../../src/common
 
-cpp_flags = -Werror -I$(inc_dir) -g -std=c++20
+cpp_flags = -Wall -flto -I$(inc_dir) -g -std=c++20
 
 src = $(wildcard $(src_dir)/*.cpp)
 obj = $(patsubst $(src_dir)/%.cpp, $(obj_dir)/%.o, $(src))

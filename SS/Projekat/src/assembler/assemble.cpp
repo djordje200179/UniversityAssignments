@@ -12,7 +12,7 @@ extern "C" {
 #include "common/symbol.hpp"
 #include "common/object_file.hpp"
 
-symbol_table first_phase(const lines& lines) {
+symbol_table first_phase(lines lines) {
 	symbol_table symbol_table;
 
 	size_t address = 0;
@@ -116,11 +116,11 @@ static std::vector<section> create_sections(const symbol_table& symbol_table) {
 	return sections;
 };
 
-static void second_phase(const lines& lines,
+static void second_phase(lines lines,
 						 symbol_table& symbol_table,
 						 std::vector<section>& sections) {
 	section* section = NULL;
-	for (int i = 0; i < lines.size; i++) {
+	for (size_t i = 0; i < lines.size; i++) {
 		const auto& line = lines.arr[i];
 
 		switch (line.type) {
