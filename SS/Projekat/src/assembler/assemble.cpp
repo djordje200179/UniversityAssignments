@@ -130,6 +130,8 @@ static void second_phase(lines lines,
 				for (size_t j = 0; j < line.dir.operands.size; j++) {
 					auto symbol_name = line.dir.operands.arr[j].symbol;
 					auto symbol = symbol_table.find(symbol_name);
+					if(!symbol)
+						throw symbol_not_found_error(symbol_name);
 
 					symbol->global = true;
 				}

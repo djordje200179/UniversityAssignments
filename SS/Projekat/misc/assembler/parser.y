@@ -103,8 +103,8 @@
 
 %%
 assembly_file:
-	lines {
-		*ret_lines = $1;
+	OPT_ENDLS lines {
+		*ret_lines = $2;
 	}
 
 lines:
@@ -141,6 +141,9 @@ label:
 
 ENDLS:
 	ENDLS ENDL | ENDL;
+
+OPT_ENDLS:
+	ENDLS |;
 
 const_operand:
 	INT_LITERAL {

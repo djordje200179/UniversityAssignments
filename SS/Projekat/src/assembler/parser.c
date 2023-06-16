@@ -167,25 +167,26 @@ enum yysymbol_kind_t
   YYSYMBOL_line_content = 57,              /* line_content  */
   YYSYMBOL_label = 58,                     /* label  */
   YYSYMBOL_ENDLS = 59,                     /* ENDLS  */
-  YYSYMBOL_const_operand = 60,             /* const_operand  */
-  YYSYMBOL_const_operands = 61,            /* const_operands  */
-  YYSYMBOL_directive = 62,                 /* directive  */
-  YYSYMBOL_global = 63,                    /* global  */
-  YYSYMBOL_extrn = 64,                     /* extrn  */
-  YYSYMBOL_section = 65,                   /* section  */
-  YYSYMBOL_word = 66,                      /* word  */
-  YYSYMBOL_skip = 67,                      /* skip  */
-  YYSYMBOL_ascii = 68,                     /* ascii  */
-  YYSYMBOL_instruction = 69,               /* instruction  */
-  YYSYMBOL_unconditional_jump = 70,        /* unconditional_jump  */
-  YYSYMBOL_operand = 71,                   /* operand  */
-  YYSYMBOL_conditional_jump = 72,          /* conditional_jump  */
-  YYSYMBOL_uniparam_inst = 73,             /* uniparam_inst  */
-  YYSYMBOL_biparam_inst = 74,              /* biparam_inst  */
-  YYSYMBOL_ld = 75,                        /* ld  */
-  YYSYMBOL_st = 76,                        /* st  */
-  YYSYMBOL_csrrd = 77,                     /* csrrd  */
-  YYSYMBOL_csrwr = 78                      /* csrwr  */
+  YYSYMBOL_OPT_ENDLS = 60,                 /* OPT_ENDLS  */
+  YYSYMBOL_const_operand = 61,             /* const_operand  */
+  YYSYMBOL_const_operands = 62,            /* const_operands  */
+  YYSYMBOL_directive = 63,                 /* directive  */
+  YYSYMBOL_global = 64,                    /* global  */
+  YYSYMBOL_extrn = 65,                     /* extrn  */
+  YYSYMBOL_section = 66,                   /* section  */
+  YYSYMBOL_word = 67,                      /* word  */
+  YYSYMBOL_skip = 68,                      /* skip  */
+  YYSYMBOL_ascii = 69,                     /* ascii  */
+  YYSYMBOL_instruction = 70,               /* instruction  */
+  YYSYMBOL_unconditional_jump = 71,        /* unconditional_jump  */
+  YYSYMBOL_operand = 72,                   /* operand  */
+  YYSYMBOL_conditional_jump = 73,          /* conditional_jump  */
+  YYSYMBOL_uniparam_inst = 74,             /* uniparam_inst  */
+  YYSYMBOL_biparam_inst = 75,              /* biparam_inst  */
+  YYSYMBOL_ld = 76,                        /* ld  */
+  YYSYMBOL_st = 77,                        /* st  */
+  YYSYMBOL_csrrd = 78,                     /* csrrd  */
+  YYSYMBOL_csrwr = 79                      /* csrwr  */
 };
 typedef enum yysymbol_kind_t yysymbol_kind_t;
 
@@ -488,18 +489,18 @@ union yyalloc
 #endif /* !YYCOPY_NEEDED */
 
 /* YYFINAL -- State number of the termination state.  */
-#define YYFINAL  62
+#define YYFINAL  5
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   88
+#define YYLAST   87
 
 /* YYNTOKENS -- Number of terminals.  */
 #define YYNTOKENS  53
 /* YYNNTS -- Number of nonterminals.  */
-#define YYNNTS  26
+#define YYNNTS  27
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  54
+#define YYNRULES  56
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  95
+#define YYNSTATES  97
 
 /* YYMAXUTOK -- Last valid token kind.  */
 #define YYMAXUTOK   301
@@ -554,11 +555,11 @@ static const yytype_int8 yytranslate[] =
 static const yytype_int16 yyrline[] =
 {
        0,   106,   106,   111,   113,   119,   122,   125,   131,   134,
-     140,   143,   143,   146,   149,   152,   158,   160,   166,   169,
-     172,   175,   178,   181,   187,   190,   193,   196,   199,   202,
-     205,   207,   209,   211,   213,   215,   218,   221,   224,   230,
-     236,   239,   242,   245,   248,   251,   254,   258,   265,   273,
-     279,   286,   292,   298,   304
+     140,   143,   143,   146,   146,   149,   152,   155,   161,   163,
+     169,   172,   175,   178,   181,   184,   190,   193,   196,   199,
+     202,   205,   208,   210,   212,   214,   216,   218,   221,   224,
+     227,   233,   239,   242,   245,   248,   251,   254,   257,   261,
+     268,   276,   282,   289,   295,   301,   307
 };
 #endif
 
@@ -584,11 +585,11 @@ static const char *const yytname[] =
   "INST_SHR", "INST_BIPARAM", "INST_LD", "INST_ST", "INST_CSRRD",
   "INST_CSRWR", "REG", "CREG", "INT_LITERAL", "STR_LITERAL", "SYMBOL",
   "':'", "','", "'$'", "'['", "']'", "'+'", "$accept", "assembly_file",
-  "lines", "line", "line_content", "label", "ENDLS", "const_operand",
-  "const_operands", "directive", "global", "extrn", "section", "word",
-  "skip", "ascii", "instruction", "unconditional_jump", "operand",
-  "conditional_jump", "uniparam_inst", "biparam_inst", "ld", "st", "csrrd",
-  "csrwr", YY_NULLPTR
+  "lines", "line", "line_content", "label", "ENDLS", "OPT_ENDLS",
+  "const_operand", "const_operands", "directive", "global", "extrn",
+  "section", "word", "skip", "ascii", "instruction", "unconditional_jump",
+  "operand", "conditional_jump", "uniparam_inst", "biparam_inst", "ld",
+  "st", "csrrd", "csrwr", YY_NULLPTR
 };
 
 static const char *
@@ -598,7 +599,7 @@ yysymbol_name (yysymbol_kind_t yysymbol)
 }
 #endif
 
-#define YYPACT_NINF (-73)
+#define YYPACT_NINF (-75)
 
 #define yypact_value_is_default(Yyn) \
   ((Yyn) == YYPACT_NINF)
@@ -612,16 +613,16 @@ yysymbol_name (yysymbol_kind_t yysymbol)
    STATE-NUM.  */
 static const yytype_int8 yypact[] =
 {
-       2,   -32,   -32,   -32,   -32,   -29,   -13,    -9,   -32,   -73,
-      -8,    -7,   -24,    -6,    -5,     3,   -10,    44,     2,   -73,
-      53,    46,   -73,   -73,   -73,   -73,   -73,   -73,   -73,   -73,
-     -73,   -73,   -73,   -73,   -73,   -73,   -73,   -73,   -73,   -73,
-     -73,   -73,    -1,    -1,   -73,    -1,   -73,   -73,     9,   -73,
-     -73,    10,   -73,   -73,   -73,   -42,    17,    13,    14,    16,
-      18,   -73,   -73,   -73,   -73,    64,    53,    64,   -32,    27,
-      28,   -73,   -73,   -21,    29,   -24,    31,    32,   -73,    64,
-     -73,    26,   -73,   -73,   -23,   -73,   -73,   -73,   -73,   -24,
-      30,    37,   -73,   -73,   -73
+       0,   -75,    15,    23,     2,   -75,   -75,   -32,   -32,   -32,
+     -32,   -15,    -8,    -6,   -32,   -75,    -4,     4,   -19,     5,
+       1,    14,    10,     2,   -75,     0,    46,   -75,   -75,   -75,
+     -75,   -75,   -75,   -75,   -75,   -75,   -75,   -75,   -75,   -75,
+     -75,   -75,   -75,   -75,   -75,   -75,   -75,    11,    11,   -75,
+      11,   -75,   -75,    13,   -75,   -75,    16,   -75,   -75,   -75,
+     -26,    24,    17,    19,    21,    22,   -75,   -75,    23,     0,
+      23,   -32,    29,    31,   -75,   -75,   -30,    32,   -19,    33,
+      34,    23,   -75,    28,   -75,   -75,   -12,   -75,   -75,   -75,
+     -75,   -19,     7,    27,   -75,   -75,   -75
 };
 
 /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -629,32 +630,32 @@ static const yytype_int8 yypact[] =
    means the default is an error.  */
 static const yytype_int8 yydefact[] =
 {
-       0,     0,     0,     0,     0,     0,     0,     0,     0,    30,
-       0,     0,     0,     0,     0,     0,     0,     0,     2,     4,
-       0,     0,     8,    18,    19,    20,    21,    22,    23,     9,
-      31,    32,    33,    34,    35,    36,    37,    38,    13,    14,
-      15,    17,    24,    25,    26,    27,    28,    29,     0,    39,
-      49,     0,    44,    42,    43,     0,     0,     0,     0,     0,
-       0,    10,     1,     3,    12,     5,     0,     7,     0,     0,
-       0,    40,    41,     0,     0,     0,     0,     0,    11,     6,
-      16,     0,    50,    45,     0,    51,    52,    53,    54,     0,
-       0,     0,    48,    46,    47
+      14,    12,     0,    13,     0,     1,    11,     0,     0,     0,
+       0,     0,     0,     0,     0,    32,     0,     0,     0,     0,
+       0,     0,     0,     2,     4,     0,     0,     8,    20,    21,
+      22,    23,    24,    25,     9,    33,    34,    35,    36,    37,
+      38,    39,    40,    15,    16,    17,    19,    26,    27,    28,
+      29,    30,    31,     0,    41,    51,     0,    46,    44,    45,
+       0,     0,     0,     0,     0,     0,    10,     3,     5,     0,
+       7,     0,     0,     0,    42,    43,     0,     0,     0,     0,
+       0,     6,    18,     0,    52,    47,     0,    53,    54,    55,
+      56,     0,     0,     0,    50,    48,    49
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-     -73,   -73,   -73,    58,    56,   -73,   -20,    -3,    25,   -73,
-     -73,   -73,   -73,   -73,   -73,   -73,   -73,   -73,   -72,   -73,
-     -73,   -73,   -73,   -73,   -73,   -73
+     -75,   -75,   -75,    56,    54,   -75,   -24,   -75,    -9,    25,
+     -75,   -75,   -75,   -75,   -75,   -75,   -75,   -75,   -75,   -74,
+     -75,   -75,   -75,   -75,   -75,   -75,   -75
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-       0,    17,    18,    19,    20,    21,    65,    41,    42,    22,
-      23,    24,    25,    26,    27,    28,    29,    30,    57,    31,
-      32,    33,    34,    35,    36,    37
+       0,     2,    23,    24,    25,    26,     3,     4,    46,    47,
+      27,    28,    29,    30,    31,    32,    33,    34,    35,    62,
+      36,    37,    38,    39,    40,    41,    42
 };
 
 /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
@@ -662,66 +663,66 @@ static const yytype_int8 yydefgoto[] =
    number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_int8 yytable[] =
 {
-      44,    67,    71,    86,    72,    49,     1,     2,     3,     4,
-       5,     6,    38,    39,    40,    46,     7,    92,    52,     8,
-      53,    90,    54,    91,     9,    55,    56,    43,    10,    45,
-      83,    84,    47,    48,    50,    51,    58,    61,    59,    11,
-      12,    13,    14,    15,    62,    60,    79,    68,    16,    64,
-       1,     2,     3,     4,     5,     6,    64,    69,    70,    73,
-       7,    74,    75,     8,    76,    80,    77,    78,     9,    81,
-      82,    85,    10,    87,    89,    88,    63,    66,     0,     0,
-       0,    93,     0,    11,    12,    13,    14,    15,    94
+      49,    68,    70,     1,    88,    54,     7,     8,     9,    10,
+      11,    12,    43,    44,    45,     5,    13,    94,    74,    14,
+      75,    85,    86,    57,    15,    58,     6,    59,    16,    51,
+      60,    61,    92,    48,    93,    50,    53,    52,    55,    17,
+      18,    19,    20,    21,    64,    81,    56,    63,    22,     1,
+       7,     8,     9,    10,    11,    12,    65,    66,    95,    71,
+      13,    72,    82,    14,    73,    77,    76,    78,    15,    79,
+      80,    83,    16,    84,    87,    89,    91,    90,    96,    67,
+      69,     0,     0,    17,    18,    19,    20,    21
 };
 
 static const yytype_int8 yycheck[] =
 {
-       3,    21,    44,    75,    46,     8,     4,     5,     6,     7,
-       8,     9,    44,    45,    46,    44,    14,    89,    42,    17,
-      44,    44,    46,    46,    22,    49,    50,     2,    26,     4,
-      51,    52,    45,    42,    42,    42,    42,    47,    43,    37,
-      38,    39,    40,    41,     0,    42,    66,    48,    46,     3,
-       4,     5,     6,     7,     8,     9,     3,    48,    48,    42,
-      14,    48,    48,    17,    48,    68,    48,     3,    22,    42,
-      42,    42,    26,    42,    48,    43,    18,    21,    -1,    -1,
-      -1,    51,    -1,    37,    38,    39,    40,    41,    51
+       9,    25,    26,     3,    78,    14,     4,     5,     6,     7,
+       8,     9,    44,    45,    46,     0,    14,    91,    44,    17,
+      46,    51,    52,    42,    22,    44,     3,    46,    26,    44,
+      49,    50,    44,     8,    46,    10,    42,    45,    42,    37,
+      38,    39,    40,    41,    43,    69,    42,    42,    46,     3,
+       4,     5,     6,     7,     8,     9,    42,    47,    51,    48,
+      14,    48,    71,    17,    48,    48,    42,    48,    22,    48,
+      48,    42,    26,    42,    42,    42,    48,    43,    51,    23,
+      26,    -1,    -1,    37,    38,    39,    40,    41
 };
 
 /* YYSTOS[STATE-NUM] -- The symbol kind of the accessing symbol of
    state STATE-NUM.  */
 static const yytype_int8 yystos[] =
 {
-       0,     4,     5,     6,     7,     8,     9,    14,    17,    22,
-      26,    37,    38,    39,    40,    41,    46,    54,    55,    56,
-      57,    58,    62,    63,    64,    65,    66,    67,    68,    69,
-      70,    72,    73,    74,    75,    76,    77,    78,    44,    45,
-      46,    60,    61,    61,    60,    61,    44,    45,    42,    60,
-      42,    42,    42,    44,    46,    49,    50,    71,    42,    43,
-      42,    47,     0,    56,     3,    59,    57,    59,    48,    48,
-      48,    44,    46,    42,    48,    48,    48,    48,     3,    59,
-      60,    42,    42,    51,    52,    42,    71,    42,    43,    48,
-      44,    46,    71,    51,    51
+       0,     3,    54,    59,    60,     0,     3,     4,     5,     6,
+       7,     8,     9,    14,    17,    22,    26,    37,    38,    39,
+      40,    41,    46,    55,    56,    57,    58,    63,    64,    65,
+      66,    67,    68,    69,    70,    71,    73,    74,    75,    76,
+      77,    78,    79,    44,    45,    46,    61,    62,    62,    61,
+      62,    44,    45,    42,    61,    42,    42,    42,    44,    46,
+      49,    50,    72,    42,    43,    42,    47,    56,    59,    57,
+      59,    48,    48,    48,    44,    46,    42,    48,    48,    48,
+      48,    59,    61,    42,    42,    51,    52,    42,    72,    42,
+      43,    48,    44,    46,    72,    51,    51
 };
 
 /* YYR1[RULE-NUM] -- Symbol kind of the left-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr1[] =
 {
        0,    53,    54,    55,    55,    56,    56,    56,    57,    57,
-      58,    59,    59,    60,    60,    60,    61,    61,    62,    62,
-      62,    62,    62,    62,    63,    64,    65,    66,    67,    68,
-      69,    69,    69,    69,    69,    69,    69,    69,    69,    70,
-      71,    71,    71,    71,    71,    71,    71,    71,    72,    73,
-      74,    75,    76,    77,    78
+      58,    59,    59,    60,    60,    61,    61,    61,    62,    62,
+      63,    63,    63,    63,    63,    63,    64,    65,    66,    67,
+      68,    69,    70,    70,    70,    70,    70,    70,    70,    70,
+      70,    71,    72,    72,    72,    72,    72,    72,    72,    72,
+      73,    74,    75,    76,    77,    78,    79
 };
 
 /* YYR2[RULE-NUM] -- Number of symbols on the right-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr2[] =
 {
-       0,     2,     1,     2,     1,     2,     3,     2,     1,     1,
-       2,     2,     1,     1,     1,     1,     3,     1,     1,     1,
-       1,     1,     1,     1,     2,     2,     2,     2,     2,     2,
-       1,     1,     1,     1,     1,     1,     1,     1,     1,     2,
-       2,     2,     1,     1,     1,     3,     5,     5,     6,     2,
-       4,     4,     4,     4,     4
+       0,     2,     2,     2,     1,     2,     3,     2,     1,     1,
+       2,     2,     1,     1,     0,     1,     1,     1,     3,     1,
+       1,     1,     1,     1,     1,     1,     2,     2,     2,     2,
+       2,     2,     1,     1,     1,     1,     1,     1,     1,     1,
+       1,     2,     2,     2,     1,     1,     1,     3,     5,     5,
+       6,     2,     4,     4,     4,     4,     4
 };
 
 
@@ -1716,12 +1717,12 @@ yyreduce:
     int yychar_backup = yychar;
     switch (yyn)
       {
-  case 2: /* assembly_file: lines  */
+  case 2: /* assembly_file: OPT_ENDLS lines  */
 #line 106 "parser.y"
-              {
+                        {
 		*ret_lines = (yyvsp[0].lines);
 	}
-#line 1725 "../../src/assembler/parser.c"
+#line 1726 "../../src/assembler/parser.c"
     break;
 
   case 3: /* lines: lines line  */
@@ -1729,7 +1730,7 @@ yyreduce:
                    {
 		lines_append(&(yyval.lines), (yyvsp[0].line));
 	}
-#line 1733 "../../src/assembler/parser.c"
+#line 1734 "../../src/assembler/parser.c"
     break;
 
   case 4: /* lines: line  */
@@ -1738,7 +1739,7 @@ yyreduce:
 		(yyval.lines) = (struct lines){NULL, 0};
 		lines_append(&(yyval.lines), (yyvsp[0].line));
 	}
-#line 1742 "../../src/assembler/parser.c"
+#line 1743 "../../src/assembler/parser.c"
     break;
 
   case 5: /* line: line_content ENDLS  */
@@ -1747,7 +1748,7 @@ yyreduce:
 		(yyval.line) = (yyvsp[-1].line);
 		(yyval.line).label = NULL;
 	}
-#line 1751 "../../src/assembler/parser.c"
+#line 1752 "../../src/assembler/parser.c"
     break;
 
   case 6: /* line: label line_content ENDLS  */
@@ -1756,7 +1757,7 @@ yyreduce:
 		(yyval.line) = (yyvsp[-1].line);
 		(yyval.line).label = (yyvsp[-2].symbol);
 	}
-#line 1760 "../../src/assembler/parser.c"
+#line 1761 "../../src/assembler/parser.c"
     break;
 
   case 7: /* line: label ENDLS  */
@@ -1765,7 +1766,7 @@ yyreduce:
 		(yyval.line).type = LINE_EMPTY; 
 		(yyval.line).label = (yyvsp[-1].symbol);
 	}
-#line 1769 "../../src/assembler/parser.c"
+#line 1770 "../../src/assembler/parser.c"
     break;
 
   case 8: /* line_content: directive  */
@@ -1774,7 +1775,7 @@ yyreduce:
 		(yyval.line).type = LINE_DIR;
 		(yyval.line).dir = (yyvsp[0].dir);
 	}
-#line 1778 "../../src/assembler/parser.c"
+#line 1779 "../../src/assembler/parser.c"
     break;
 
   case 9: /* line_content: instruction  */
@@ -1783,376 +1784,376 @@ yyreduce:
 		(yyval.line).type = LINE_INST;
 		(yyval.line).inst = (yyvsp[0].inst);
 	}
-#line 1787 "../../src/assembler/parser.c"
+#line 1788 "../../src/assembler/parser.c"
     break;
 
   case 10: /* label: SYMBOL ':'  */
 #line 140 "parser.y"
                    { (yyval.symbol) = (yyvsp[-1].symbol); }
-#line 1793 "../../src/assembler/parser.c"
+#line 1794 "../../src/assembler/parser.c"
     break;
 
-  case 13: /* const_operand: INT_LITERAL  */
-#line 146 "parser.y"
+  case 15: /* const_operand: INT_LITERAL  */
+#line 149 "parser.y"
                     {
 		(yyval.const_operand).type = CONST_OPERAND_INT_LITERAL;
 		(yyval.const_operand).int_literal = (yyvsp[0].int_literal);
 	}
-#line 1802 "../../src/assembler/parser.c"
+#line 1803 "../../src/assembler/parser.c"
     break;
 
-  case 14: /* const_operand: STR_LITERAL  */
-#line 149 "parser.y"
+  case 16: /* const_operand: STR_LITERAL  */
+#line 152 "parser.y"
                         {
 		(yyval.const_operand).type = CONST_OPERAND_STR_LITERAL;
 		(yyval.const_operand).str_literal = (yyvsp[0].str_literal);
 	}
-#line 1811 "../../src/assembler/parser.c"
+#line 1812 "../../src/assembler/parser.c"
     break;
 
-  case 15: /* const_operand: SYMBOL  */
-#line 152 "parser.y"
+  case 17: /* const_operand: SYMBOL  */
+#line 155 "parser.y"
                    {
 		(yyval.const_operand).type = CONST_OPERAND_SYMBOL;
 		(yyval.const_operand).symbol = (yyvsp[0].symbol);
 	}
-#line 1820 "../../src/assembler/parser.c"
+#line 1821 "../../src/assembler/parser.c"
     break;
 
-  case 16: /* const_operands: const_operands ',' const_operand  */
-#line 158 "parser.y"
+  case 18: /* const_operands: const_operands ',' const_operand  */
+#line 161 "parser.y"
                                          {
 		const_operands_append(&(yyval.const_operands), (yyvsp[0].const_operand));
 	}
-#line 1828 "../../src/assembler/parser.c"
+#line 1829 "../../src/assembler/parser.c"
     break;
 
-  case 17: /* const_operands: const_operand  */
-#line 160 "parser.y"
+  case 19: /* const_operands: const_operand  */
+#line 163 "parser.y"
                           {
 		(yyval.const_operands) = (struct const_operands){NULL, 0};
 		const_operands_append(&(yyval.const_operands), (yyvsp[0].const_operand));
 	}
-#line 1837 "../../src/assembler/parser.c"
+#line 1838 "../../src/assembler/parser.c"
     break;
 
-  case 18: /* directive: global  */
-#line 166 "parser.y"
+  case 20: /* directive: global  */
+#line 169 "parser.y"
                {
 		(yyval.dir).type = DIR_GLOBAL;
 		(yyval.dir).operands = (yyvsp[0].const_operands);
 	}
-#line 1846 "../../src/assembler/parser.c"
+#line 1847 "../../src/assembler/parser.c"
     break;
 
-  case 19: /* directive: extrn  */
-#line 169 "parser.y"
+  case 21: /* directive: extrn  */
+#line 172 "parser.y"
                   {
 		(yyval.dir).type = DIR_EXTERN;
 		(yyval.dir).operands = (yyvsp[0].const_operands);
 	}
-#line 1855 "../../src/assembler/parser.c"
+#line 1856 "../../src/assembler/parser.c"
     break;
 
-  case 20: /* directive: section  */
-#line 172 "parser.y"
+  case 22: /* directive: section  */
+#line 175 "parser.y"
                     {
 		(yyval.dir).type = DIR_SECTION;
 		(yyval.dir).operand = (yyvsp[0].const_operand);
 	}
-#line 1864 "../../src/assembler/parser.c"
+#line 1865 "../../src/assembler/parser.c"
     break;
 
-  case 21: /* directive: word  */
-#line 175 "parser.y"
+  case 23: /* directive: word  */
+#line 178 "parser.y"
                  {
 		(yyval.dir).type = DIR_WORD;
 		(yyval.dir).operands = (yyvsp[0].const_operands);
 	}
-#line 1873 "../../src/assembler/parser.c"
+#line 1874 "../../src/assembler/parser.c"
     break;
 
-  case 22: /* directive: skip  */
-#line 178 "parser.y"
+  case 24: /* directive: skip  */
+#line 181 "parser.y"
                  {
 		(yyval.dir).type = DIR_SKIP;
 		(yyval.dir).operand.int_literal = (yyvsp[0].int_literal);
 	}
-#line 1882 "../../src/assembler/parser.c"
+#line 1883 "../../src/assembler/parser.c"
     break;
 
-  case 23: /* directive: ascii  */
-#line 181 "parser.y"
+  case 25: /* directive: ascii  */
+#line 184 "parser.y"
                   {
 		(yyval.dir).type = DIR_ASCII;
 		(yyval.dir).operand.str_literal = (yyvsp[0].str_literal);
 	}
-#line 1891 "../../src/assembler/parser.c"
+#line 1892 "../../src/assembler/parser.c"
     break;
 
-  case 24: /* global: DIR_GLOBAL const_operands  */
-#line 187 "parser.y"
-                                  { (yyval.const_operands) = (yyvsp[0].const_operands); }
-#line 1897 "../../src/assembler/parser.c"
-    break;
-
-  case 25: /* extrn: DIR_EXTERN const_operands  */
+  case 26: /* global: DIR_GLOBAL const_operands  */
 #line 190 "parser.y"
                                   { (yyval.const_operands) = (yyvsp[0].const_operands); }
-#line 1903 "../../src/assembler/parser.c"
+#line 1898 "../../src/assembler/parser.c"
     break;
 
-  case 26: /* section: DIR_SECTION const_operand  */
+  case 27: /* extrn: DIR_EXTERN const_operands  */
 #line 193 "parser.y"
-                                  { (yyval.const_operand) = (yyvsp[0].const_operand); }
-#line 1909 "../../src/assembler/parser.c"
+                                  { (yyval.const_operands) = (yyvsp[0].const_operands); }
+#line 1904 "../../src/assembler/parser.c"
     break;
 
-  case 27: /* word: DIR_WORD const_operands  */
+  case 28: /* section: DIR_SECTION const_operand  */
 #line 196 "parser.y"
-                                { (yyval.const_operands) = (yyvsp[0].const_operands); }
-#line 1915 "../../src/assembler/parser.c"
+                                  { (yyval.const_operand) = (yyvsp[0].const_operand); }
+#line 1910 "../../src/assembler/parser.c"
     break;
 
-  case 28: /* skip: DIR_SKIP INT_LITERAL  */
+  case 29: /* word: DIR_WORD const_operands  */
 #line 199 "parser.y"
-                             { (yyval.int_literal) = (yyvsp[0].int_literal);}
-#line 1921 "../../src/assembler/parser.c"
+                                { (yyval.const_operands) = (yyvsp[0].const_operands); }
+#line 1916 "../../src/assembler/parser.c"
     break;
 
-  case 29: /* ascii: DIR_ASCII STR_LITERAL  */
+  case 30: /* skip: DIR_SKIP INT_LITERAL  */
 #line 202 "parser.y"
-                              { (yyval.str_literal) = (yyvsp[0].str_literal); }
-#line 1927 "../../src/assembler/parser.c"
+                             { (yyval.int_literal) = (yyvsp[0].int_literal);}
+#line 1922 "../../src/assembler/parser.c"
     break;
 
-  case 30: /* instruction: INST_PARAMLESS  */
+  case 31: /* ascii: DIR_ASCII STR_LITERAL  */
 #line 205 "parser.y"
+                              { (yyval.str_literal) = (yyvsp[0].str_literal); }
+#line 1928 "../../src/assembler/parser.c"
+    break;
+
+  case 32: /* instruction: INST_PARAMLESS  */
+#line 208 "parser.y"
                        {
 		(yyval.inst).type = (yyvsp[0].inst_type);
 	}
-#line 1935 "../../src/assembler/parser.c"
+#line 1936 "../../src/assembler/parser.c"
     break;
 
-  case 31: /* instruction: unconditional_jump  */
-#line 207 "parser.y"
+  case 33: /* instruction: unconditional_jump  */
+#line 210 "parser.y"
                                {
 		(yyval.inst) = (yyvsp[0].inst);
 	}
-#line 1943 "../../src/assembler/parser.c"
+#line 1944 "../../src/assembler/parser.c"
     break;
 
-  case 32: /* instruction: conditional_jump  */
-#line 209 "parser.y"
+  case 34: /* instruction: conditional_jump  */
+#line 212 "parser.y"
                              {
 		(yyval.inst) = (yyvsp[0].inst);
 	}
-#line 1951 "../../src/assembler/parser.c"
+#line 1952 "../../src/assembler/parser.c"
     break;
 
-  case 33: /* instruction: uniparam_inst  */
-#line 211 "parser.y"
+  case 35: /* instruction: uniparam_inst  */
+#line 214 "parser.y"
                           {
 		(yyval.inst) = (yyvsp[0].inst);
 	}
-#line 1959 "../../src/assembler/parser.c"
+#line 1960 "../../src/assembler/parser.c"
     break;
 
-  case 34: /* instruction: biparam_inst  */
-#line 213 "parser.y"
+  case 36: /* instruction: biparam_inst  */
+#line 216 "parser.y"
                          {
 		(yyval.inst) = (yyvsp[0].inst);
 	}
-#line 1967 "../../src/assembler/parser.c"
+#line 1968 "../../src/assembler/parser.c"
     break;
 
-  case 35: /* instruction: ld  */
-#line 215 "parser.y"
+  case 37: /* instruction: ld  */
+#line 218 "parser.y"
                {
 		(yyval.inst).type = INST_LD;
 		(yyval.inst).params = (yyvsp[0].inst_params);
 	}
-#line 1976 "../../src/assembler/parser.c"
+#line 1977 "../../src/assembler/parser.c"
     break;
 
-  case 36: /* instruction: st  */
-#line 218 "parser.y"
+  case 38: /* instruction: st  */
+#line 221 "parser.y"
                {
 		(yyval.inst).type = INST_ST;
 		(yyval.inst).params = (yyvsp[0].inst_params);
 	}
-#line 1985 "../../src/assembler/parser.c"
+#line 1986 "../../src/assembler/parser.c"
     break;
 
-  case 37: /* instruction: csrrd  */
-#line 221 "parser.y"
+  case 39: /* instruction: csrrd  */
+#line 224 "parser.y"
                   {
 		(yyval.inst).type = INST_CSRRD;
 		(yyval.inst).params = (yyvsp[0].inst_params);
 	}
-#line 1994 "../../src/assembler/parser.c"
+#line 1995 "../../src/assembler/parser.c"
     break;
 
-  case 38: /* instruction: csrwr  */
-#line 224 "parser.y"
+  case 40: /* instruction: csrwr  */
+#line 227 "parser.y"
                   {
 		(yyval.inst).type = INST_CSRWR;
 		(yyval.inst).params = (yyvsp[0].inst_params);
 	}
-#line 2003 "../../src/assembler/parser.c"
+#line 2004 "../../src/assembler/parser.c"
     break;
 
-  case 39: /* unconditional_jump: INST_UNCOND_JUMP const_operand  */
-#line 230 "parser.y"
+  case 41: /* unconditional_jump: INST_UNCOND_JUMP const_operand  */
+#line 233 "parser.y"
                                        {
 		(yyval.inst).type = (yyvsp[-1].inst_type);
 		(yyval.inst).params.operand = const_operand_to_operand((yyvsp[0].const_operand));
 	}
-#line 2012 "../../src/assembler/parser.c"
+#line 2013 "../../src/assembler/parser.c"
     break;
 
-  case 40: /* operand: '$' INT_LITERAL  */
-#line 236 "parser.y"
+  case 42: /* operand: '$' INT_LITERAL  */
+#line 239 "parser.y"
                         {
 		(yyval.operand).type = OPERAND_LITERAL_VALUE;
 		(yyval.operand).int_literal = (yyvsp[0].int_literal);
 	}
-#line 2021 "../../src/assembler/parser.c"
+#line 2022 "../../src/assembler/parser.c"
     break;
 
-  case 41: /* operand: '$' SYMBOL  */
-#line 239 "parser.y"
+  case 43: /* operand: '$' SYMBOL  */
+#line 242 "parser.y"
                        {
 		(yyval.operand).type = OPERAND_SYMBOL_VALUE;
 		(yyval.operand).symbol = (yyvsp[0].symbol);
 	}
-#line 2030 "../../src/assembler/parser.c"
+#line 2031 "../../src/assembler/parser.c"
     break;
 
-  case 42: /* operand: INT_LITERAL  */
-#line 242 "parser.y"
+  case 44: /* operand: INT_LITERAL  */
+#line 245 "parser.y"
                         {
 		(yyval.operand).type = OPERAND_LITERAL_ADDR;
 		(yyval.operand).int_literal = (yyvsp[0].int_literal);
 	}
-#line 2039 "../../src/assembler/parser.c"
+#line 2040 "../../src/assembler/parser.c"
     break;
 
-  case 43: /* operand: SYMBOL  */
-#line 245 "parser.y"
+  case 45: /* operand: SYMBOL  */
+#line 248 "parser.y"
                    {
 		(yyval.operand).type = OPERAND_SYMBOL_ADDR;
 		(yyval.operand).symbol = (yyvsp[0].symbol);
 	}
-#line 2048 "../../src/assembler/parser.c"
+#line 2049 "../../src/assembler/parser.c"
     break;
 
-  case 44: /* operand: REG  */
-#line 248 "parser.y"
+  case 46: /* operand: REG  */
+#line 251 "parser.y"
                 {
 		(yyval.operand).type = OPERAND_REG_VALUE;
 		(yyval.operand).reg = (yyvsp[0].reg);
 	}
-#line 2057 "../../src/assembler/parser.c"
+#line 2058 "../../src/assembler/parser.c"
     break;
 
-  case 45: /* operand: '[' REG ']'  */
-#line 251 "parser.y"
+  case 47: /* operand: '[' REG ']'  */
+#line 254 "parser.y"
                         {
 		(yyval.operand).type = OPERAND_REG_ADDR;
 		(yyval.operand).reg = (yyvsp[-1].reg);
 	}
-#line 2066 "../../src/assembler/parser.c"
+#line 2067 "../../src/assembler/parser.c"
     break;
 
-  case 46: /* operand: '[' REG '+' INT_LITERAL ']'  */
-#line 254 "parser.y"
+  case 48: /* operand: '[' REG '+' INT_LITERAL ']'  */
+#line 257 "parser.y"
                                         {
 		(yyval.operand).type = OPERAND_REG_ADDR_WITH_LITERAL_OFFSET;
 		(yyval.operand).reg = (yyvsp[-3].reg);
 		(yyval.operand).int_literal = (yyvsp[-1].int_literal);
 	}
-#line 2076 "../../src/assembler/parser.c"
+#line 2077 "../../src/assembler/parser.c"
     break;
 
-  case 47: /* operand: '[' REG '+' SYMBOL ']'  */
-#line 258 "parser.y"
+  case 49: /* operand: '[' REG '+' SYMBOL ']'  */
+#line 261 "parser.y"
                                    {
 		(yyval.operand).type = OPERAND_REG_ADDR_WITH_SYMBOL_OFFSET;
 		(yyval.operand).reg = (yyvsp[-3].reg);
 		(yyval.operand).symbol = (yyvsp[-1].symbol);
 	}
-#line 2086 "../../src/assembler/parser.c"
+#line 2087 "../../src/assembler/parser.c"
     break;
 
-  case 48: /* conditional_jump: INST_COND_JUMP REG ',' REG ',' operand  */
-#line 265 "parser.y"
+  case 50: /* conditional_jump: INST_COND_JUMP REG ',' REG ',' operand  */
+#line 268 "parser.y"
                                                {
 		(yyval.inst).type = (yyvsp[-5].inst_type);
 		(yyval.inst).params.reg1 = (yyvsp[-4].reg);
 		(yyval.inst).params.reg2 = (yyvsp[-2].reg);
 		(yyval.inst).params.operand = (yyvsp[0].operand);
 	}
-#line 2097 "../../src/assembler/parser.c"
+#line 2098 "../../src/assembler/parser.c"
     break;
 
-  case 49: /* uniparam_inst: INST_UNIPARAM REG  */
-#line 273 "parser.y"
+  case 51: /* uniparam_inst: INST_UNIPARAM REG  */
+#line 276 "parser.y"
                           {
 		(yyval.inst).type = (yyvsp[-1].inst_type);
 		(yyval.inst).params.reg1 = (yyvsp[0].reg);
 	}
-#line 2106 "../../src/assembler/parser.c"
+#line 2107 "../../src/assembler/parser.c"
     break;
 
-  case 50: /* biparam_inst: INST_BIPARAM REG ',' REG  */
-#line 279 "parser.y"
+  case 52: /* biparam_inst: INST_BIPARAM REG ',' REG  */
+#line 282 "parser.y"
                                  {
 		(yyval.inst).type = (yyvsp[-3].inst_type);
 		(yyval.inst).params.reg1 = (yyvsp[-2].reg);
 		(yyval.inst).params.reg2 = (yyvsp[0].reg);
 	}
-#line 2116 "../../src/assembler/parser.c"
+#line 2117 "../../src/assembler/parser.c"
     break;
 
-  case 51: /* ld: INST_LD operand ',' REG  */
-#line 286 "parser.y"
+  case 53: /* ld: INST_LD operand ',' REG  */
+#line 289 "parser.y"
                                 {
 		(yyval.inst_params).operand = (yyvsp[-2].operand);
 		(yyval.inst_params).reg1 = (yyvsp[0].reg);
 	}
-#line 2125 "../../src/assembler/parser.c"
+#line 2126 "../../src/assembler/parser.c"
     break;
 
-  case 52: /* st: INST_ST REG ',' operand  */
-#line 292 "parser.y"
+  case 54: /* st: INST_ST REG ',' operand  */
+#line 295 "parser.y"
                                 {
 		(yyval.inst_params).reg1 = (yyvsp[-2].reg);
 		(yyval.inst_params).operand = (yyvsp[0].operand);
 	}
-#line 2134 "../../src/assembler/parser.c"
+#line 2135 "../../src/assembler/parser.c"
     break;
 
-  case 53: /* csrrd: INST_CSRRD CREG ',' REG  */
-#line 298 "parser.y"
+  case 55: /* csrrd: INST_CSRRD CREG ',' REG  */
+#line 301 "parser.y"
                                 {
 		(yyval.inst_params).reg1 = (yyvsp[-2].reg);
 		(yyval.inst_params).reg2 = (yyvsp[0].reg);
 	}
-#line 2143 "../../src/assembler/parser.c"
+#line 2144 "../../src/assembler/parser.c"
     break;
 
-  case 54: /* csrwr: INST_CSRWR REG ',' CREG  */
-#line 304 "parser.y"
+  case 56: /* csrwr: INST_CSRWR REG ',' CREG  */
+#line 307 "parser.y"
                                 {
 		(yyval.inst_params).reg1 = (yyvsp[-2].reg);
 		(yyval.inst_params).reg2 = (yyvsp[0].reg);
 	}
-#line 2152 "../../src/assembler/parser.c"
+#line 2153 "../../src/assembler/parser.c"
     break;
 
 
-#line 2156 "../../src/assembler/parser.c"
+#line 2157 "../../src/assembler/parser.c"
 
         default: break;
       }
@@ -2387,4 +2388,4 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 308 "parser.y"
+#line 311 "parser.y"
