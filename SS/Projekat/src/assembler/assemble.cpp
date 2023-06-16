@@ -197,12 +197,28 @@ static void second_phase(lines lines,
 			case INST_BGT:
 				// TODO: Implement 'bgt' instruction
 				break;
-			case INST_CALL:
-				// TODO: Implement 'call' instruction
-				break;
-			case INST_JMP:
+			case INST_CALL: {
+				auto inst_1 = instruction::make_arithmetic(
+					instruction::arithmetic_operation::SUB,
+					14,
+					14,
+					4
+				);
+				section->append(&inst_1, 4);
+
+				auto inst_2 = instruction::make_store(
+					instruction::store_mode::MEMDIR,
+					14,
+					0,
+					15,
+					0
+				);
+				section->append(&inst_2, 4);
+			}
+			case INST_JMP: {
 				// TODO: Implement 'jmp' instruction
 				break;
+			}
 			case INST_HALT: {
 				auto inst = instruction::make_halt();
 				section->append(&inst, 4);
