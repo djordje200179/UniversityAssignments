@@ -8,6 +8,8 @@ struct relocation {
 	uint64_t symbol;
 	uint64_t addend;
 
-	friend std::ostream& operator<<(std::ostream& os,
-									const relocation& relocation);
+	void serialize(std::ofstream& os) const;
+	void deserialize(std::ifstream& is);
+
+	friend std::ostream& operator<<(std::ostream& os, const relocation& relocation);
 };

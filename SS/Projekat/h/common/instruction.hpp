@@ -35,36 +35,21 @@ struct instruction {
 	static instruction make_halt();
 	static instruction make_int();
 	static instruction make_call(bool mem_indirect,
-								 uint8_t reg1,
-								 uint8_t reg2,
+								 uint8_t reg1, uint8_t reg2,
 								 uint16_t displacement);
-	static instruction make_jump(enum jump_mode mode,
-								 bool mem_indirect,
-								 uint8_t reg1,
-								 uint8_t reg2,
-								 uint8_t reg3,
+	static instruction make_jump(jump_mode mode, bool mem_indirect,
+								 uint8_t reg1, uint8_t reg2,  uint8_t reg3,
 								 uint16_t displacement);
 	static instruction make_xchg(uint8_t reg1, uint8_t reg2);
-	static instruction make_arithmetic(enum arithmetic_operation operation,
-									   uint8_t reg1,
-									   uint8_t reg2,
-									   uint8_t reg3);
-	static instruction make_logical(enum logical_operation operation,
-									uint8_t reg1,
-									uint8_t reg2,
-									uint8_t reg3);
+	static instruction make_arithmetic(arithmetic_operation operation,
+									   uint8_t reg1, uint8_t reg2, uint8_t reg3);
+	static instruction make_logical(logical_operation operation,
+									uint8_t reg1, uint8_t reg2, uint8_t reg3);
 	static instruction make_shift(bool right,
-								  uint8_t reg1,
-								  uint8_t reg2,
-								  uint8_t reg3);
-	static instruction make_store(enum store_mode mode,
-								  uint8_t reg1,
-								  uint8_t reg2,
-								  uint8_t reg3,
+								  uint8_t reg1, uint8_t reg2, uint8_t reg3);
+	static instruction make_store(store_mode mode,
+								  uint8_t reg1, uint8_t reg2, uint8_t reg3,
 								  uint16_t displacement);
-	static instruction make_load(enum load_mode mode,
-								 uint8_t reg1,
-								 uint8_t reg2,
-								 uint8_t reg3,
-								 uint16_t displacement);
+	static instruction make_load(load_mode mode,
+								 uint8_t reg1, uint8_t reg2, uint8_t reg3, uint16_t displacement);
 };

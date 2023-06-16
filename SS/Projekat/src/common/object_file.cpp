@@ -1,4 +1,18 @@
 #include "common/object_file.hpp"
+#include <fstream>
+
+void object_file::serialize(std::ofstream& os) const {
+	symbols.serialize(os);
+
+	auto sections_count = sections.size();
+	os.write((const char*)(&sections_count), sizeof(sections_count));
+	for (const auto& section : sections)
+		section.serialize(os);
+}
+
+void object_file::deserialize(std::ifstream& is) {
+	
+}
 
 std::ostream& operator<<(std::ostream& os, const object_file& object_file) {
 	os << "-- Symbol table --" << std::endl;

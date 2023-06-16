@@ -7,6 +7,7 @@ extern "C" {
 #include <cstdlib>
 #include <iostream>
 #include <string>
+#include <fstream>
 #include "assembler/exceptions.hpp"
 #include "common/instruction.hpp"
 #include "common/section.hpp"
@@ -38,7 +39,13 @@ int main(int argc, char** argv) {
 		auto lines = read_input_file(args.input_file_path);
 
 		auto object_file = assemble(lines);
+		
 		std::cout << object_file << std::endl;
+
+		std::ofstream output_file(args.output_file_path, std::ios::binary);
+
+		object_file.serialize(output_file);
+		output_file.close();
 	} catch (const std::exception& e) {
 		std::cerr << e.what() << std::endl;
 	}

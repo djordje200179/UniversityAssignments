@@ -1,6 +1,19 @@
 #include "common/symbol.hpp"
 #include <algorithm>
 #include <iomanip>
+#include <fstream>
+
+void symbol::serialize(std::ofstream& os) const {
+	os.write((const char*)(&type), sizeof(type));
+	os.write(name.data(), name.size() + 1);
+	os.write((const char*)(&value), sizeof(value));
+	os.write((const char*)(&section), sizeof(section));
+	os.write((const char*)(&global), sizeof(global));
+}
+
+void symbol::deserialize(std::ifstream& is) {
+	
+}
 
 std::ostream& operator<<(std::ostream& os, const symbol& symbol) {
 	if (symbol.name.size() > 7)
@@ -41,6 +54,18 @@ symbol* symbol_table::find(const std::string& name) {
 		return nullptr;
 
 	return std::addressof(*it);
+}
+
+
+void symbol_table::serialize(std::ofstream& os) const {
+	auto symbols_count = this->size();
+	os.write((const char*)(&symbols_count), sizeof(symbols_count));
+	for (const auto& symbol : *this)
+		symbol.serialize(os);
+}
+
+void symbol_table::deserialize(std::ifstream& is) {
+	
 }
 
 std::ostream& operator<<(std::ostream& os, const symbol_table& table) {

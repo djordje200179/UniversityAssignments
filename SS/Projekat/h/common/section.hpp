@@ -18,5 +18,8 @@ struct section {
 
 	size_t size() const { return content.size(); }
 
+	void serialize(std::ofstream& os) const;
+	void deserialize(std::ifstream& is);
+
 	friend std::ostream& operator<<(std::ostream& os, const section& section);
 };

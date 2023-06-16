@@ -187,70 +187,163 @@ static void second_phase(lines lines,
 			}
 			break;
 		case line::LINE_INST: {
-			instruction inst;
 			switch (line.inst.type) {
 			case INST_BEQ:
+				// TODO: Implement 'beq' instruction
+				break;
 			case INST_BNE:
+				// TODO: Implement 'bne' instruction
+				break;
 			case INST_BGT:
+				// TODO: Implement 'bgt' instruction
+				break;
 			case INST_CALL:
+				// TODO: Implement 'call' instruction
+				break;
 			case INST_JMP:
-			case INST_HALT:
-				inst = instruction::make_halt();
+				// TODO: Implement 'jmp' instruction
 				break;
-			case INST_INT:
-				inst = instruction::make_int();
+			case INST_HALT: {
+				auto inst = instruction::make_halt();
+				section->append(&inst, 4);
 				break;
-			case INST_IRET:
-			case INST_RET:
-			case INST_PUSH:
-			case INST_POP:
-			case INST_NOT:
-			case INST_XCHG:
-			case INST_ADD:
-			case INST_SUB:
-			case INST_MUL:
-			case INST_DIV:
-			case INST_AND:
-			case INST_OR:
-			case INST_XOR:
-			case INST_SHL:
-			case INST_SHR:
-			case INST_LD:
-			case INST_ST:
-			case INST_CSRRD:
-			case INST_CSRWR:
+			}	
+			case INST_INT: {
+				auto inst = instruction::make_int();
+				section->append(&inst, 4);
 				break;
 			}
-
-			section->append(&inst, 4);
-
-			switch (line.inst.type) {
-			case INST_BEQ:
-			case INST_BNE:
-			case INST_BGT:
-			case INST_CALL:
-			case INST_JMP:
-			case INST_HALT:
-			case INST_INT:
 			case INST_IRET:
+				// TODO: Implement 'iret' instruction
+				break;
 			case INST_RET:
+				// TODO: Implement 'ret' instruction
+				break;
 			case INST_PUSH:
+				// TODO: Implement 'push' instruction
+				break;
 			case INST_POP:
-			case INST_NOT:
-			case INST_XCHG:
-			case INST_ADD:
-			case INST_SUB:
-			case INST_MUL:
-			case INST_DIV:
-			case INST_AND:
-			case INST_OR:
-			case INST_XOR:
-			case INST_SHL:
-			case INST_SHR:
+				// TODO: Implement 'pop' instruction
+				break;
+			case INST_NOT: {
+				auto inst = instruction::make_logical(
+					instruction::logical_operation::NOT,
+					line.inst.params.reg1,
+					line.inst.params.reg1,
+					0
+				);
+				section->append(&inst, 4);
+				break;
+			}
+			case INST_XCHG: {
+				auto inst = instruction::make_xchg(
+					line.inst.params.reg1,
+					line.inst.params.reg2
+				);
+				section->append(&inst, 4);
+				break;
+			}
+			case INST_ADD: {
+				auto inst = instruction::make_arithmetic(
+					instruction::arithmetic_operation::ADD,
+					line.inst.params.reg2,
+					line.inst.params.reg2,
+					line.inst.params.reg1
+				);
+				section->append(&inst, 4);
+				break;
+			}
+			case INST_SUB: {
+				auto inst = instruction::make_arithmetic(
+					instruction::arithmetic_operation::SUB,
+					line.inst.params.reg2,
+					line.inst.params.reg2,
+					line.inst.params.reg1
+				);
+				section->append(&inst, 4);
+				break;
+			}
+			case INST_MUL: {
+				auto inst = instruction::make_arithmetic(
+					instruction::arithmetic_operation::MUL,
+					line.inst.params.reg2,
+					line.inst.params.reg2,
+					line.inst.params.reg1
+				);
+				section->append(&inst, 4);
+				break;
+			}
+			case INST_DIV: {
+				auto inst = instruction::make_arithmetic(
+					instruction::arithmetic_operation::DIV,
+					line.inst.params.reg2,
+					line.inst.params.reg2,
+					line.inst.params.reg1
+				);
+				section->append(&inst, 4);
+				break;
+			}
+			case INST_AND: {
+				auto inst = instruction::make_logical(
+					instruction::logical_operation::AND,
+					line.inst.params.reg2,
+					line.inst.params.reg2,
+					line.inst.params.reg1
+				);
+				section->append(&inst, 4);
+				break;
+			}
+			case INST_OR: {
+				auto inst = instruction::make_logical(
+					instruction::logical_operation::OR,
+					line.inst.params.reg2,
+					line.inst.params.reg2,
+					line.inst.params.reg1
+				);
+				section->append(&inst, 4);
+				break;
+			}
+			case INST_XOR: {
+				auto inst = instruction::make_logical(
+					instruction::logical_operation::XOR,
+					line.inst.params.reg2,
+					line.inst.params.reg2,
+					line.inst.params.reg1
+				);
+				section->append(&inst, 4);
+				break;
+			}
+			case INST_SHL: {
+				auto inst = instruction::make_shift(
+					false,
+					line.inst.params.reg2,
+					line.inst.params.reg2,
+					line.inst.params.reg1
+				);
+				section->append(&inst, 4);
+				break;
+			}
+			case INST_SHR: {
+				auto inst = instruction::make_shift(
+					true,
+					line.inst.params.reg2,
+					line.inst.params.reg2,
+					line.inst.params.reg1
+				);
+				section->append(&inst, 4);
+				break;
+			}
 			case INST_LD:
+				// TODO: Implement 'ld' instruction
+				break;
 			case INST_ST:
+				// TODO: Implement 'st' instruction
+				break;
 			case INST_CSRRD:
+				// TODO: Implement 'csrrd' instruction
+				break;
 			case INST_CSRWR:
+				// TODO: Implement 'csrwr' instruction
 				break;
 			}
 

@@ -14,11 +14,18 @@ struct symbol {
 	uint64_t section;
 	bool global;
 
+	void serialize(std::ofstream& os) const;
+	void deserialize(std::ifstream& is);
+
 	friend std::ostream& operator<<(std::ostream& os, const symbol& symbol);
 };
 
 struct symbol_table : public std::vector<symbol> {
 	symbol* find(const std::string& name);
+
+	void serialize(std::ofstream& os) const;
+	void deserialize(std::ifstream& is);
+
 	friend std::ostream& operator<<(std::ostream& os,
 									const symbol_table& table);
 };
