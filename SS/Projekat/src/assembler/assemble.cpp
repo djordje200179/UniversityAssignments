@@ -114,7 +114,7 @@ static std::vector<section> create_sections(const symbol_table& symbol_table) {
 	}
 
 	return sections;
-};
+}
 
 static void second_phase(lines lines,
 						 symbol_table& symbol_table,
@@ -213,18 +213,103 @@ static void second_phase(lines lines,
 				section->append(&inst, 4);
 				break;
 			}
-			case INST_IRET:
-				// TODO: Implement 'iret' instruction
+			case INST_IRET: {
+				auto inst_1 = instruction::make_load(
+					instruction::load_mode::MEMDIR,
+					14,
+					0,
+					15,
+					0
+				);
+				section->append(&inst_1, 4);
+
+				auto inst_2 = instruction::make_arithmetic(
+					instruction::arithmetic_operation::ADD,
+					14,
+					14,
+					4
+				);
+				section->append(&inst_2, 4);
+
+				auto inst_3 = instruction::make_load(
+					instruction::load_mode::WRITE_CSR_MEMDIR,
+					0,
+					0,
+					15,
+					0
+				);
+				section->append(&inst_3, 4);
+
+				auto inst_4 = instruction::make_arithmetic(
+					instruction::arithmetic_operation::ADD,
+					14,
+					14,
+					4
+				);
+				section->append(&inst_4, 4);
+
 				break;
-			case INST_RET:
-				// TODO: Implement 'ret' instruction
+			}
+			case INST_RET: {
+				auto inst_1 = instruction::make_load(
+					instruction::load_mode::MEMDIR,
+					14,
+					0,
+					15,
+					0
+				);
+				section->append(&inst_1, 4);
+
+				auto inst_2 = instruction::make_arithmetic(
+					instruction::arithmetic_operation::ADD,
+					14,
+					14,
+					4
+				);
+				section->append(&inst_2, 4);
+
 				break;
-			case INST_PUSH:
-				// TODO: Implement 'push' instruction
+			}
+			case INST_PUSH: {
+				auto inst_1 = instruction::make_arithmetic(
+					instruction::arithmetic_operation::SUB,
+					14,
+					14,
+					4
+				);
+				section->append(&inst_1, 4);
+
+				auto inst_2 = instruction::make_store(
+					instruction::store_mode::MEMDIR,
+					14,
+					0,
+					line.inst.params.reg1,
+					0
+				);
+				section->append(&inst_2, 4);
+
 				break;
-			case INST_POP:
-				// TODO: Implement 'pop' instruction
+			}
+			case INST_POP: {
+				auto inst_1 = instruction::make_load(
+					instruction::load_mode::MEMDIR,
+					14,
+					0,
+					line.inst.params.reg1,
+					0
+				);
+				section->append(&inst_1, 4);
+
+				auto inst_2 = instruction::make_arithmetic(
+					instruction::arithmetic_operation::ADD,
+					14,
+					14,
+					4
+				);
+				section->append(&inst_2, 4);
+
 				break;
+			}
 			case INST_NOT: {
 				auto inst = instruction::make_logical(
 					instruction::logical_operation::NOT,
@@ -233,6 +318,7 @@ static void second_phase(lines lines,
 					0
 				);
 				section->append(&inst, 4);
+
 				break;
 			}
 			case INST_XCHG: {
@@ -334,20 +420,145 @@ static void second_phase(lines lines,
 				break;
 			}
 			case INST_LD:
-				// TODO: Implement 'ld' instruction
+				switch (line.inst.params.operand.type) {
+				case operand::OPERAND_LITERAL_VALUE:
+				case operand::OPERAND_SYMBOL_VALUE: {
+					auto inst = instruction::make_load(
+						instruction::load_mode::MEMDIR,
+						line.inst.params.reg1,
+						15,
+						0,
+						4
+					);
+					section->append(&inst, 4);
+					section->append_literal(line.inst.params.operand.int_literal);
+					break;
+				}
+				case operand::OPERAND_LITERAL_ADDR:
+				case operand::OPERAND_SYMBOL_ADDR: {
+					// TODO: Implement 'ld' instruction with literal/symbol address operand
+					break;
+				}
+				case operand::OPERAND_REG_VALUE: {
+					auto inst = instruction::make_load(
+						instruction::load_mode::REG_MOVE,
+						line.inst.params.reg2,
+						line.inst.params.reg1,
+						0,
+						0
+					);
+					section->append(&inst, 4);
+					break;
+				}
+				case operand::OPERAND_REG_ADDR: {
+					auto inst = instruction::make_load(
+						instruction::load_mode::MEMDIR,
+						line.inst.params.reg2,
+						line.inst.params.reg1,
+						0,
+						0
+					);
+					section->append(&inst, 4);
+					break;
+				}
+				case operand::OPERAND_REG_ADDR_WITH_LITERAL_OFFSET: {
+					auto inst = instruction::make_load(
+						instruction::load_mode::MEMDIR,
+						line.inst.params.reg2,
+						line.inst.params.reg1,
+						0,
+						line.inst.params.operand.int_literal
+					);
+					section->append(&inst, 4);
+					break;
+				}
+				case operand::OPERAND_REG_ADDR_WITH_SYMBOL_OFFSET:
+					throw std::runtime_error("Invalid operand type");
+					// FIXME: Create a new exception type
 				break;
 			case INST_ST:
-				// TODO: Implement 'st' instruction
+				switch (line.inst.params.operand.type) {
+				case operand::OPERAND_LITERAL_VALUE:
+				case operand::OPERAND_SYMBOL_VALUE:
+					throw std::runtime_error("Invalid operand type");
+					// FIXME: Create a new exception type
+				case operand::OPERAND_LITERAL_ADDR:
+				case operand::OPERAND_SYMBOL_ADDR: {
+					auto inst = instruction::make_store(
+						instruction::store_mode::MEMINDIR,
+						15,
+						0,
+						line.inst.params.reg1,
+						4
+					);
+					section->append(&inst, 4);
+					section->append_literal(line.inst.params.operand.int_literal);
+					break;
+				}
+				case operand::OPERAND_REG_VALUE: {
+					auto inst = instruction::make_load(
+						instruction::load_mode::REG_MOVE,
+						line.inst.params.reg2,
+						line.inst.params.reg1,
+						0,
+						0
+					);
+					section->append(&inst, 4);
+					break;
+				}
+				case operand::OPERAND_REG_ADDR: {
+					auto inst = instruction::make_store(
+						instruction::store_mode::MEMDIR,
+						line.inst.params.reg2,
+						0,
+						line.inst.params.reg1,
+						0
+					);
+					section->append(&inst, 4);
+					break;
+				}
+				case operand::OPERAND_REG_ADDR_WITH_LITERAL_OFFSET: {
+					auto inst = instruction::make_store(
+						instruction::store_mode::RELATIVE,
+						line.inst.params.reg2,
+						0,
+						line.inst.params.reg1,
+						line.inst.params.operand.int_literal
+					);
+					section->append(&inst, 4);
+					break;
+				}
+				case operand::OPERAND_REG_ADDR_WITH_SYMBOL_OFFSET: 
+					throw std::runtime_error("Invalid operand type");
+					// FIXME: Create a new exception type
 				break;
-			case INST_CSRRD:
-				// TODO: Implement 'csrrd' instruction
+			case INST_CSRRD: {
+				auto inst = instruction::make_load(
+					instruction::load_mode::READ_CSR,
+					line.inst.params.reg2,
+					line.inst.params.reg1,
+					0,
+					0
+				);
+				section->append(&inst, 4);
 				break;
-			case INST_CSRWR:
-				// TODO: Implement 'csrwr' instruction
+			}
+			case INST_CSRWR: {
+				auto inst = instruction::make_load(
+					instruction::load_mode::WRITE_CSR,
+					line.inst.params.reg2,
+					line.inst.params.reg1,
+					0,
+					0
+				);
+				section->append(&inst, 4);
 				break;
+			}
 			}
 
 			break;
+		}
+		}
 		}
 		}
 	}

@@ -14,7 +14,7 @@ void section::append(const void* data, size_t size) {
 }
 
 void section::append_literal(uint32_t data) {
-	auto jump_instruction = instruction::make_jump(instruction::jump_mode::UNCONDITIONAL, false, 14, 14, 0, 4);
+	auto jump_instruction = instruction::make_jump(instruction::jump_mode::UNCONDITIONAL, false, 15, 15, 0, 4);
 	
 	append(&jump_instruction, sizeof(jump_instruction));
 	append(&data, 4);
