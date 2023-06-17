@@ -257,7 +257,81 @@ static void second_phase(lines lines,
 				}
 
 				switch (line.inst.params.operand.type) {
-				// TODO: Implement 'jmp' instruction
+				case operand::OPERAND_LITERAL_VALUE:
+				case operand::OPERAND_SYMBOL_VALUE:
+					throw std::runtime_error("Invalid operand type");
+					// FIXME: Create a new exception type
+				case operand::OPERAND_LITERAL_ADDR:
+				case operand::OPERAND_SYMBOL_ADDR: {
+					auto inst = instruction::make_jump(
+						jump_mode, true,
+						15,
+						15,
+						0,
+						4
+					);
+					section->append(&inst, 4);
+
+					if(line.inst.params.operand.type == operand::OPERAND_SYMBOL_VALUE) {
+						auto symbol_name = line.inst.params.operand.symbol;
+						auto symbol = symbol_table.find(symbol_name);
+						if (!symbol)
+							throw symbol_not_found_error(symbol_name);
+
+						relocation relocation = {
+							.offset = section->size()
+						};
+
+						if (symbol->global) {
+							relocation.symbol = symbol - &symbol_table[0];
+							relocation.addend = 0;
+						} else {
+							relocation.symbol = symbol->section;
+							relocation.addend = symbol->value;
+						}
+
+						section->relocation_table.push_back(relocation);
+					}
+					section->append_literal(line.inst.params.operand.int_literal);
+
+					break;
+				}
+				case operand::OPERAND_REG_VALUE: {
+					auto inst = instruction::make_jump(
+						jump_mode, false,
+						15,
+						line.inst.params.reg1,
+						0,
+						0
+					);
+				}
+				case operand::OPERAND_REG_ADDR: {
+					auto inst = instruction::make_jump(
+						jump_mode, true,
+						15,
+						line.inst.params.reg1,
+						0,
+						0
+					);
+					section->append(&inst, 4);
+
+					break;
+				}
+				case operand::OPERAND_REG_ADDR_WITH_LITERAL_OFFSET: {
+					auto inst = instruction::make_jump(
+						jump_mode, true,
+						15,
+						line.inst.params.reg1,
+						0,
+						line.inst.params.operand.int_literal
+					);
+					section->append(&inst, 4);
+
+					break;
+				}
+				case operand::OPERAND_REG_ADDR_WITH_SYMBOL_OFFSET:
+					throw std::runtime_error("Invalid operand type");
+					// FIXME: Create a new exception type
 				};				
 				
 				break;
@@ -511,8 +585,8 @@ static void second_phase(lines lines,
 
 						section->relocation_table.push_back(relocation);
 					}
-					
 					section->append_literal(line.inst.params.operand.int_literal);
+
 					break;
 				}
 				case operand::OPERAND_LITERAL_ADDR:
@@ -546,7 +620,6 @@ static void second_phase(lines lines,
 
 						section->relocation_table.push_back(relocation);
 					}
-					
 					section->append_literal(line.inst.params.operand.int_literal);
 
 					auto inst_2 = instruction::make_load(
@@ -633,9 +706,9 @@ static void second_phase(lines lines,
 						}
 
 						section->relocation_table.push_back(relocation);
-					}
-					
+					}	
 					section->append_literal(line.inst.params.operand.int_literal);
+
 					break;
 				}
 				case operand::OPERAND_REG_VALUE: {
