@@ -34,7 +34,19 @@ void section::serialize(std::ofstream& os) const {
 }
 
 void section::deserialize(std::ifstream& is) {
-	
+	// Read name until null terminator
+	std::getline(is, name, '\0');
+
+	size_t content_size = 0;
+	is.read((char*)(&content_size), sizeof(content_size));
+	content.resize(content_size);
+	is.read((char*)(content.data()), content_size);
+
+	size_t relocations_count = 0;
+	is.read((char*)(&relocations_count), sizeof(relocations_count));
+	relocation_table.resize(relocations_count);
+	for (auto& relocation : relocation_table)
+		relocation.deserialize(is);
 }
 
 std::ostream& operator<<(std::ostream& os, const section& section) {

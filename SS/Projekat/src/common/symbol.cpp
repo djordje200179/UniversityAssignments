@@ -12,7 +12,11 @@ void symbol::serialize(std::ofstream& os) const {
 }
 
 void symbol::deserialize(std::ifstream& is) {
-	
+	is.read((char*)(&type), sizeof(type));
+	std::getline(is, name, '\0');
+	is.read((char*)(&value), sizeof(value));
+	is.read((char*)(&section), sizeof(section));
+	is.read((char*)(&global), sizeof(global));
 }
 
 std::ostream& operator<<(std::ostream& os, const symbol& symbol) {
@@ -65,7 +69,11 @@ void symbol_table::serialize(std::ofstream& os) const {
 }
 
 void symbol_table::deserialize(std::ifstream& is) {
-	
+	size_t symbols_count = 0;
+	is.read((char*)(&symbols_count), sizeof(symbols_count));
+	this->resize(symbols_count);
+	for (auto& symbol : *this)
+		symbol.deserialize(is);
 }
 
 std::ostream& operator<<(std::ostream& os, const symbol_table& table) {

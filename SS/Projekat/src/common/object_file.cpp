@@ -11,7 +11,13 @@ void object_file::serialize(std::ofstream& os) const {
 }
 
 void object_file::deserialize(std::ifstream& is) {
-	
+	symbols.deserialize(is);
+
+	size_t sections_count = 0;
+	is.read((char*)(&sections_count), sizeof(sections_count));
+	sections.resize(sections_count);
+	for (auto& section : sections)
+		section.deserialize(is);
 }
 
 std::ostream& operator<<(std::ostream& os, const object_file& object_file) {

@@ -11,6 +11,7 @@ struct section {
 	std::vector<uint8_t> content;
 	std::vector<relocation> relocation_table;
 
+	section() = default;
 	section(symbol section_symbol) { name = section_symbol.name; }
 
 	void append(const void* data, size_t size);

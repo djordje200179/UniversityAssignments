@@ -8,7 +8,9 @@ void relocation::serialize(std::ofstream& os) const {
 }
 
 void relocation::deserialize(std::ifstream& is) {
-	
+	is.read((char*)(&offset), sizeof(offset));
+	is.read((char*)(&symbol), sizeof(symbol));
+	is.read((char*)(&addend), sizeof(addend));
 }
 
 std::ostream& operator<<(std::ostream& os, const relocation& relocation) {

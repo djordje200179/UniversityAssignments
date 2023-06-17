@@ -4,7 +4,7 @@
 #include <vector>
 
 struct place {
-	std::string symbol;
+	std::string section_name;
 	uint32_t address;
 };
 
