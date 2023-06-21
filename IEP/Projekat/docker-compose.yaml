@@ -1,0 +1,123 @@
+version: "3.7"
+
+volumes:
+    auth_db_volume:
+    store_db_volume:
+    
+networks:
+    auth_net:
+    store_net:
+
+services:
+    auth_db:
+        image: mysql
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_DATABASE: users
+        volumes:
+            - auth_db_volume:/var/lib/mysql
+        networks:
+            - auth_net
+        healthcheck:
+            test: ["CMD", "mysqladmin", "ping", "-uroot", "-proot"]
+            interval: 10s
+            timeout: 5s
+            retries: 10
+    auth_adminer:
+        image: adminer
+        ports:
+            - "8081:8080"
+        networks:
+            - auth_net
+        depends_on:
+            auth_db:
+                condition: service_healthy
+    auth_app:
+        build: ./authentication
+        ports:
+            - "8082:5000"
+        environment:
+            DB_USERNAME: root
+            DB_PASSWORD: root
+            DB_HOST: auth_db
+            JWT_KEY: iep-projekat
+        networks:
+            - auth_net
+        depends_on:
+            auth_db:
+                condition: service_healthy
+    
+    store_db:
+        image: mysql
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_DATABASE: store
+        volumes:
+            - store_db_volume:/var/lib/mysql
+        networks:
+            - store_net
+        healthcheck:
+            test: [ "CMD", "mysqladmin", "ping", "-uroot", "-proot" ]
+            interval: 10s
+            timeout: 5s
+            retries: 10
+    store_adminer:
+        image: adminer
+        ports:
+            - "8083:8080"
+        networks:
+            - store_net
+        depends_on:
+            store_db:
+                condition: service_healthy
+    store_courier_app:
+        build:
+            context: ./store
+            args:
+                START_FILE: courier_app.py
+        ports:
+            - "8084:5000"
+        environment:
+            DB_USERNAME: root
+            DB_PASSWORD: root
+            DB_HOST: store_db
+            JWT_KEY: iep-projekat
+        networks:
+            - store_net
+        depends_on:
+            store_db:
+                condition: service_healthy
+    store_customer_app:
+        build:
+            context: ./store
+            args:
+                START_FILE: customer_app.py
+        ports:
+            - "8085:5000"
+        environment:
+            DB_USERNAME: root
+            DB_PASSWORD: root
+            DB_HOST: store_db
+            JWT_KEY: iep-projekat
+        networks:
+            - store_net
+        depends_on:
+            store_db:
+                condition: service_healthy
+    store_owner_app:
+        build:
+            context: ./store
+            args:
+                START_FILE: owner_app.py
+        ports:
+            - "8086:5000"
+        environment:
+            DB_USERNAME: root
+            DB_PASSWORD: root
+            DB_HOST: store_db
+            JWT_KEY: iep-projekat
+        networks:
+            - store_net
+        depends_on:
+            store_db:
+                condition: service_healthy
