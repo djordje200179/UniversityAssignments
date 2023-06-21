@@ -1,11 +1,12 @@
 #include "common/section.hpp"
 #include "common/instruction.hpp"
+#include "common/utils.hpp"
 #include <fstream>
 
 void section::append(const void* data, size_t size) {
 	auto null_data = !data;
 
-	auto byte_date = data ? reinterpret_cast<const uint8_t*>(data) : new uint8_t[size];
+	auto byte_date = data ? (const uint8_t*)data : new uint8_t[size];
 
 	content.insert(content.end(), byte_date, byte_date + size);
 
@@ -50,9 +51,25 @@ void section::deserialize(std::ifstream& is) {
 }
 
 std::ostream& operator<<(std::ostream& os, const section& section) {
-	os << "Section \"" << section.name << "\"\n";
+	os << "Section \"" << section.name << '\"' << std::endl;
+	os << "Content:" << std::endl;
+
+	for(size_t i = 0; i < section.content.size(); i += 4) {
+		os << to_hex(i) << ": ";
+
+		for (size_t j = 0; j < 4 && i + j < section.content.size(); j++) {
+			auto byte = section.content[i + j];
+			if (byte < 0x10)
+				os << '0';
+			os << std::hex << (byte & 0xFF) << std::dec << ' ';
+		}
+		
+		os << std::endl;
+	}
+
+	os << "Relocations:" << std::endl;
 	for (const auto& relocation : section.relocation_table)
-		os << relocation << "\n";
+		os << relocation << std::endl;
 
 	return os;
 }

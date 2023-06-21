@@ -15,7 +15,7 @@ struct args {
 
 	std::string output_file_path;
 
-	bool print_hex;
+	bool hex;
 	bool relocatable;
 };
 

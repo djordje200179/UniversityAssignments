@@ -1,5 +1,6 @@
 #include "common/object_file.hpp"
 #include <fstream>
+#include <algorithm>
 
 void object_file::serialize(std::ofstream& os) const {
 	symbols.serialize(os);

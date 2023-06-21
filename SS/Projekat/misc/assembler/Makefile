@@ -45,6 +45,7 @@ include $(cpp_dep)
 clean:
 	rm -f $(obj_dir)/*.o
 	rm -f $(src_dir)/*.d
+	rm -f $(src_dir)/parser.c $(src_dir)/lexer.c
 	rm -f $(out_dir)/assembler
 
 .PHONY: clean

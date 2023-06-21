@@ -1,16 +1,17 @@
 #pragma once
 
 #include <cstdint>
+#include <ostream>
 
 struct instruction {
-	uint8_t code : 4 = 0;
-	uint8_t mode : 4 = 0;
+	uint32_t code : 4 = 0;
+	uint32_t mode : 4 = 0;
 
-	uint8_t reg1 : 4 = 0;
-	uint8_t reg2 : 4 = 0;
-	uint8_t reg3 : 4 = 0;
+	uint32_t reg1 : 4 = 0;
+	uint32_t reg2 : 4 = 0;
+	uint32_t reg3 : 4 = 0;
 
-	uint16_t displacement : 12 = 0;
+	uint32_t displacement : 12 = 0;
 
 	enum struct jump_mode : uint8_t {
 		UNCONDITIONAL,
@@ -52,4 +53,8 @@ struct instruction {
 								  uint16_t displacement);
 	static instruction make_load(load_mode mode,
 								 uint8_t reg1, uint8_t reg2, uint8_t reg3, uint16_t displacement);
+
+	friend std::ostream& operator<<(std::ostream& os, const instruction& instruction);
 };
+
+static_assert(sizeof(instruction) == 4, "instruction must be 4 bytes long");

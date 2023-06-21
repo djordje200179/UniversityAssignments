@@ -50,7 +50,8 @@
 		"iomanip": "cpp",
 		"sstream": "cpp",
 		"fstream": "cpp",
-		"getopt.h": "c"
+		"getopt.h": "c",
+		"map": "cpp"
 	},
 	"makefile.launchConfigurations": [
 		{

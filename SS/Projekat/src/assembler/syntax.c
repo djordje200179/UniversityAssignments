@@ -53,6 +53,12 @@ static void print_inst_type(int inst_type) {
 		case INST_BEQ:
 			printf("BEQ");
 			break;
+		case INST_BNE:
+			printf("BNE");
+			break;
+		case INST_BGT:
+			printf("BGT");
+			break;
 		case INST_ADD:
 			printf("ADD");
 			break;

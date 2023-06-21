@@ -1,4 +1,5 @@
 #include "common/relocation.hpp"
+#include "common/utils.hpp"
 #include <fstream>
 
 void relocation::serialize(std::ofstream& os) const {
@@ -14,8 +15,7 @@ void relocation::deserialize(std::ifstream& is) {
 }
 
 std::ostream& operator<<(std::ostream& os, const relocation& relocation) {
-	os << "At " << relocation.offset << " write symbol " << relocation.symbol
-	   << " + " << relocation.addend;
+	os << "At " << to_hex(relocation.offset) << " write symbol " << relocation.symbol << " + " << relocation.addend;
 
 	return os;
 }

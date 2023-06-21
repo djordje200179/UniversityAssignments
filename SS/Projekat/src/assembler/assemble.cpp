@@ -182,7 +182,7 @@ static void second_phase(lines lines,
 								throw symbol_not_found_error(operand.symbol);
 
 							relocation relocation = {
-								.offset = section->size()
+								.offset = section->size() + 4
 							};
 
 							if (symbol->global) {
@@ -266,20 +266,20 @@ static void second_phase(lines lines,
 					auto inst = instruction::make_jump(
 						jump_mode, true,
 						15,
-						15,
-						0,
+						line.inst.params.reg1,
+						line.inst.params.reg2,
 						4
 					);
 					section->append(&inst, 4);
 
-					if(line.inst.params.operand.type == operand::OPERAND_SYMBOL_VALUE) {
+					if(line.inst.params.operand.type == operand::OPERAND_SYMBOL_ADDR) {
 						auto symbol_name = line.inst.params.operand.symbol;
 						auto symbol = symbol_table.find(symbol_name);
 						if (!symbol)
 							throw symbol_not_found_error(symbol_name);
 
 						relocation relocation = {
-							.offset = section->size()
+							.offset = section->size() + 4
 						};
 
 						if (symbol->global) {
@@ -304,6 +304,9 @@ static void second_phase(lines lines,
 						0,
 						0
 					);
+					section->append(&inst, 4);
+
+					break;
 				}
 				case operand::OPERAND_REG_ADDR: {
 					auto inst = instruction::make_jump(
@@ -572,7 +575,7 @@ static void second_phase(lines lines,
 							throw symbol_not_found_error(symbol_name);
 
 						relocation relocation = {
-							.offset = section->size()
+							.offset = section->size() + 4
 						};
 
 						if (symbol->global) {
@@ -607,7 +610,7 @@ static void second_phase(lines lines,
 							throw symbol_not_found_error(symbol_name);
 
 						relocation relocation = {
-							.offset = section->size()
+							.offset = section->size() + 4
 						};
 
 						if (symbol->global) {
@@ -669,6 +672,8 @@ static void second_phase(lines lines,
 				case operand::OPERAND_REG_ADDR_WITH_SYMBOL_OFFSET:
 					throw std::runtime_error("Invalid operand type");
 					// FIXME: Create a new exception type
+				}
+
 				break;
 			case INST_ST:
 				switch (line.inst.params.operand.type) {
@@ -694,7 +699,7 @@ static void second_phase(lines lines,
 							throw symbol_not_found_error(symbol_name);
 
 						relocation relocation = {
-							.offset = section->size()
+							.offset = section->size() + 4
 						};
 
 						if (symbol->global) {
@@ -747,6 +752,8 @@ static void second_phase(lines lines,
 				case operand::OPERAND_REG_ADDR_WITH_SYMBOL_OFFSET: 
 					throw std::runtime_error("Invalid operand type");
 					// FIXME: Create a new exception type
+				}
+				
 				break;
 			case INST_CSRRD: {
 				auto inst = instruction::make_load(
@@ -773,8 +780,6 @@ static void second_phase(lines lines,
 			}
 
 			break;
-		}
-		}
 		}
 		}
 	}

@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-constexpr size_t SECTION_ABS = 0;
+constexpr size_t SECTION_ABS = static_cast<size_t>(-2);
 constexpr size_t SECTION_UNDEF = static_cast<size_t>(-1);
 
 struct symbol {
