@@ -558,8 +558,8 @@ static const yytype_int16 yyrline[] =
      140,   143,   143,   146,   146,   149,   152,   155,   161,   163,
      169,   172,   175,   178,   181,   184,   190,   193,   196,   199,
      202,   205,   208,   210,   212,   214,   216,   218,   221,   224,
-     227,   233,   239,   242,   245,   248,   251,   254,   257,   261,
-     268,   276,   282,   289,   295,   301,   307
+     227,   233,   239,   242,   245,   248,   251,   254,   257,   263,
+     272,   280,   286,   293,   299,   305,   311
 };
 #endif
 
@@ -2071,89 +2071,93 @@ yyreduce:
                                         {
 		(yyval.operand).type = OPERAND_REG_ADDR_WITH_LITERAL_OFFSET;
 		(yyval.operand).reg = (yyvsp[-3].reg);
-		(yyval.operand).int_literal = (yyvsp[-1].int_literal);
+
+		(yyval.operand).offset.type = CONST_OPERAND_INT_LITERAL;
+		(yyval.operand).offset.int_literal = (yyvsp[-1].int_literal);
 	}
-#line 2077 "../../src/assembler/parser.c"
+#line 2079 "../../src/assembler/parser.c"
     break;
 
   case 49: /* operand: '[' REG '+' SYMBOL ']'  */
-#line 261 "parser.y"
+#line 263 "parser.y"
                                    {
 		(yyval.operand).type = OPERAND_REG_ADDR_WITH_SYMBOL_OFFSET;
 		(yyval.operand).reg = (yyvsp[-3].reg);
-		(yyval.operand).symbol = (yyvsp[-1].symbol);
+		
+		(yyval.operand).offset.type = CONST_OPERAND_SYMBOL;
+		(yyval.operand).offset.symbol = (yyvsp[-1].symbol);
 	}
-#line 2087 "../../src/assembler/parser.c"
+#line 2091 "../../src/assembler/parser.c"
     break;
 
   case 50: /* conditional_jump: INST_COND_JUMP REG ',' REG ',' operand  */
-#line 268 "parser.y"
+#line 272 "parser.y"
                                                {
 		(yyval.inst).type = (yyvsp[-5].inst_type);
 		(yyval.inst).params.reg1 = (yyvsp[-4].reg);
 		(yyval.inst).params.reg2 = (yyvsp[-2].reg);
 		(yyval.inst).params.operand = (yyvsp[0].operand);
 	}
-#line 2098 "../../src/assembler/parser.c"
+#line 2102 "../../src/assembler/parser.c"
     break;
 
   case 51: /* uniparam_inst: INST_UNIPARAM REG  */
-#line 276 "parser.y"
+#line 280 "parser.y"
                           {
 		(yyval.inst).type = (yyvsp[-1].inst_type);
 		(yyval.inst).params.reg1 = (yyvsp[0].reg);
 	}
-#line 2107 "../../src/assembler/parser.c"
+#line 2111 "../../src/assembler/parser.c"
     break;
 
   case 52: /* biparam_inst: INST_BIPARAM REG ',' REG  */
-#line 282 "parser.y"
+#line 286 "parser.y"
                                  {
 		(yyval.inst).type = (yyvsp[-3].inst_type);
 		(yyval.inst).params.reg1 = (yyvsp[-2].reg);
 		(yyval.inst).params.reg2 = (yyvsp[0].reg);
 	}
-#line 2117 "../../src/assembler/parser.c"
+#line 2121 "../../src/assembler/parser.c"
     break;
 
   case 53: /* ld: INST_LD operand ',' REG  */
-#line 289 "parser.y"
+#line 293 "parser.y"
                                 {
 		(yyval.inst_params).operand = (yyvsp[-2].operand);
 		(yyval.inst_params).reg1 = (yyvsp[0].reg);
 	}
-#line 2126 "../../src/assembler/parser.c"
+#line 2130 "../../src/assembler/parser.c"
     break;
 
   case 54: /* st: INST_ST REG ',' operand  */
-#line 295 "parser.y"
+#line 299 "parser.y"
                                 {
 		(yyval.inst_params).reg1 = (yyvsp[-2].reg);
 		(yyval.inst_params).operand = (yyvsp[0].operand);
 	}
-#line 2135 "../../src/assembler/parser.c"
+#line 2139 "../../src/assembler/parser.c"
     break;
 
   case 55: /* csrrd: INST_CSRRD CREG ',' REG  */
-#line 301 "parser.y"
+#line 305 "parser.y"
                                 {
 		(yyval.inst_params).reg1 = (yyvsp[-2].reg);
 		(yyval.inst_params).reg2 = (yyvsp[0].reg);
 	}
-#line 2144 "../../src/assembler/parser.c"
+#line 2148 "../../src/assembler/parser.c"
     break;
 
   case 56: /* csrwr: INST_CSRWR REG ',' CREG  */
-#line 307 "parser.y"
+#line 311 "parser.y"
                                 {
 		(yyval.inst_params).reg1 = (yyvsp[-2].reg);
 		(yyval.inst_params).reg2 = (yyvsp[0].reg);
 	}
-#line 2153 "../../src/assembler/parser.c"
+#line 2157 "../../src/assembler/parser.c"
     break;
 
 
-#line 2157 "../../src/assembler/parser.c"
+#line 2161 "../../src/assembler/parser.c"
 
         default: break;
       }
@@ -2388,4 +2392,4 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 311 "parser.y"
+#line 315 "parser.y"

@@ -43,8 +43,6 @@ symbol_table first_phase(lines lines) {
 						.section = SECTION_UNDEF,
 						.global = true
 					});
-
-					address += 4;
 				}
 
 				break;
@@ -79,14 +77,21 @@ symbol_table first_phase(lines lines) {
 		case line::LINE_INST:
 			switch(line.inst.type) {
 			case INST_CALL:
-				address += 2*4;
-			case INST_UNCOND_JUMP:
-			case INST_COND_JUMP:
-				address += 8;
+			case INST_BEQ:
+			case INST_BNE:
+			case INST_BGT:
+			case INST_JMP:
+				switch(line.inst.params.operand.type) {
+				case operand::OPERAND_LITERAL_ADDR:
+				case operand::OPERAND_SYMBOL_ADDR:
+					address += 8;
+					break;
+				}
 				address += 4;
 				break;
 			case INST_HALT:
 			case INST_INT:
+			case INST_RET:
 			case INST_NOT:
 			case INST_XCHG:
 			case INST_ADD:
@@ -98,23 +103,30 @@ symbol_table first_phase(lines lines) {
 			case INST_XOR:
 			case INST_SHL:
 			case INST_SHR:
+			case INST_PUSH:
+			case INST_POP:
 			case INST_CSRRD:
 			case INST_CSRWR:
 				address += 4;
 				break;
 			case INST_IRET:
-				address += 4*4;
-				break;
-			case INST_RET:
-			case INST_PUSH:
-			case INST_POP:
-				address += 2*4;
+				address += 8;
 				break;
 			case INST_LD:
-			case INST_ST:
 				switch(line.inst.params.operand.type) {
+				case operand::OPERAND_LITERAL_ADDR:
+				case operand::OPERAND_SYMBOL_ADDR:
+					address += 4;
 				case operand::OPERAND_LITERAL_VALUE:
 				case operand::OPERAND_SYMBOL_VALUE:
+					address += 8;
+					break;
+				}
+
+				address += 4;
+				break;
+			case INST_ST:
+				switch(line.inst.params.operand.type) {
 				case operand::OPERAND_LITERAL_ADDR:
 				case operand::OPERAND_SYMBOL_ADDR:
 					address += 8;
@@ -219,22 +231,62 @@ static void second_phase(lines lines,
 		case line::LINE_INST: {
 			switch (line.inst.type) {
 			case INST_CALL: {
-				auto inst_1 = instruction::make_arithmetic(
-					instruction::arithmetic_operation::SUB,
-					14,
-					14,
-					4
-				);
-				section->append(&inst_1, 4);
+				switch (line.inst.params.operand.type) {
+				case operand::OPERAND_LITERAL_VALUE:
+				case operand::OPERAND_SYMBOL_VALUE:
+				case operand::OPERAND_REG_VALUE: 
+					throw std::runtime_error("Invalid operand type");
+					// FIXME: Create a new exception type
+				case operand::OPERAND_LITERAL_ADDR:
+				case operand::OPERAND_SYMBOL_ADDR: {
+					auto inst = instruction::make_call(true, 15, 0, 4);
+					section->append(&inst, 4);
 
-				auto inst_2 = instruction::make_store(
-					instruction::store_mode::MEMDIR,
-					14,
-					0,
-					15,
-					0
-				);
-				section->append(&inst_2, 4);
+					if(line.inst.params.operand.type == operand::OPERAND_SYMBOL_ADDR) {
+						auto symbol_name = line.inst.params.operand.symbol;
+						auto symbol = symbol_table.find(symbol_name);
+						if (!symbol)
+							throw symbol_not_found_error(symbol_name);
+
+						relocation relocation = {
+							.offset = section->size() + 4
+						};
+
+						if (symbol->global) {
+							relocation.symbol = symbol - &symbol_table[0];
+							relocation.addend = 0;
+						} else {
+							relocation.symbol = symbol->section;
+							relocation.addend = symbol->value;
+						}
+
+						section->relocation_table.push_back(relocation);
+					}
+					section->append_literal(line.inst.params.operand.int_literal);
+
+					break;
+				}
+				case operand::OPERAND_REG_ADDR: {
+					auto inst = instruction::make_call(true, line.inst.params.reg1, 0, 0);
+					section->append(&inst, 4);
+
+					break;
+				}
+				case operand::OPERAND_REG_ADDR_WITH_LITERAL_OFFSET: {
+					auto inst = instruction::make_call(
+						true, line.inst.params.operand.reg, 0,
+						line.inst.params.operand.offset.int_literal
+					);
+					section->append(&inst, 4);
+
+					break;
+				}
+				case operand::OPERAND_REG_ADDR_WITH_SYMBOL_OFFSET:
+					throw std::runtime_error("Invalid operand type");
+					// FIXME: Create a new exception type
+				};
+
+				break;
 			}
 			case INST_BEQ:
 			case INST_BNE:
@@ -259,6 +311,7 @@ static void second_phase(lines lines,
 				switch (line.inst.params.operand.type) {
 				case operand::OPERAND_LITERAL_VALUE:
 				case operand::OPERAND_SYMBOL_VALUE:
+				case operand::OPERAND_REG_VALUE: 
 					throw std::runtime_error("Invalid operand type");
 					// FIXME: Create a new exception type
 				case operand::OPERAND_LITERAL_ADDR:
@@ -296,25 +349,9 @@ static void second_phase(lines lines,
 
 					break;
 				}
-				case operand::OPERAND_REG_VALUE: {
-					auto inst = instruction::make_jump(
-						jump_mode, false,
-						15,
-						line.inst.params.reg1,
-						0,
-						0
-					);
-					section->append(&inst, 4);
-
-					break;
-				}
 				case operand::OPERAND_REG_ADDR: {
 					auto inst = instruction::make_jump(
-						jump_mode, true,
-						15,
-						line.inst.params.reg1,
-						0,
-						0
+						jump_mode, true, 15, line.inst.params.reg1, 0, 0
 					);
 					section->append(&inst, 4);
 
@@ -323,10 +360,8 @@ static void second_phase(lines lines,
 				case operand::OPERAND_REG_ADDR_WITH_LITERAL_OFFSET: {
 					auto inst = instruction::make_jump(
 						jump_mode, true,
-						15,
-						line.inst.params.reg1,
-						0,
-						line.inst.params.operand.int_literal
+						15, line.inst.params.operand.reg, 0,
+						line.inst.params.operand.offset.int_literal
 					);
 					section->append(&inst, 4);
 
@@ -350,99 +385,48 @@ static void second_phase(lines lines,
 				break;
 			}
 			case INST_IRET: {
-				auto inst_1 = instruction::make_load(
-					instruction::load_mode::MEMDIR,
+				auto inst = instruction::make_load(
+					instruction::load_mode::WRITE_CSR_MEMDIR_POSTINC,
+					0,
 					14,
 					0,
-					15,
-					0
-				);
-				section->append(&inst_1, 4);
-
-				auto inst_2 = instruction::make_arithmetic(
-					instruction::arithmetic_operation::ADD,
-					14,
-					14,
 					4
 				);
-				section->append(&inst_2, 4);
-
-				auto inst_3 = instruction::make_load(
-					instruction::load_mode::WRITE_CSR_MEMDIR,
-					0,
-					0,
-					15,
-					0
-				);
-				section->append(&inst_3, 4);
-
-				auto inst_4 = instruction::make_arithmetic(
-					instruction::arithmetic_operation::ADD,
-					14,
-					14,
-					4
-				);
-				section->append(&inst_4, 4);
-
-				break;
+				section->append(&inst, 4);
 			}
 			case INST_RET: {
-				auto inst_1 = instruction::make_load(
-					instruction::load_mode::MEMDIR,
+				auto inst = instruction::make_load(
+					instruction::load_mode::MEMDIR_POSTINC,
+					15,
 					14,
 					0,
-					15,
-					0
-				);
-				section->append(&inst_1, 4);
-
-				auto inst_2 = instruction::make_arithmetic(
-					instruction::arithmetic_operation::ADD,
-					14,
-					14,
 					4
 				);
-				section->append(&inst_2, 4);
+				section->append(&inst, 4);
 
 				break;
 			}
 			case INST_PUSH: {
-				auto inst_1 = instruction::make_arithmetic(
-					instruction::arithmetic_operation::SUB,
-					14,
-					14,
-					4
-				);
-				section->append(&inst_1, 4);
-
-				auto inst_2 = instruction::make_store(
-					instruction::store_mode::MEMDIR,
+				auto inst = instruction::make_store(
+					instruction::store_mode::MEMDIR_PREINC,
 					14,
 					0,
 					line.inst.params.reg1,
-					0
+					-4
 				);
-				section->append(&inst_2, 4);
+				section->append(&inst, 4);
 
 				break;
 			}
 			case INST_POP: {
-				auto inst_1 = instruction::make_load(
-					instruction::load_mode::MEMDIR,
+				auto inst = instruction::make_load(
+					instruction::load_mode::MEMDIR_POSTINC,
+					line.inst.params.reg1,
 					14,
 					0,
-					line.inst.params.reg1,
-					0
-				);
-				section->append(&inst_1, 4);
-
-				auto inst_2 = instruction::make_arithmetic(
-					instruction::arithmetic_operation::ADD,
-					14,
-					14,
 					4
 				);
-				section->append(&inst_2, 4);
+				section->append(&inst, 4);
 
 				break;
 			}
@@ -603,7 +587,7 @@ static void second_phase(lines lines,
 					);
 					section->append(&inst_1, 4);
 
-					if(line.inst.params.operand.type == operand::OPERAND_SYMBOL_VALUE) {
+					if(line.inst.params.operand.type == operand::OPERAND_SYMBOL_ADDR) {
 						auto symbol_name = line.inst.params.operand.symbol;
 						auto symbol = symbol_table.find(symbol_name);
 						if (!symbol)
@@ -639,8 +623,8 @@ static void second_phase(lines lines,
 				case operand::OPERAND_REG_VALUE: {
 					auto inst = instruction::make_load(
 						instruction::load_mode::REG_MOVE,
-						line.inst.params.reg2,
 						line.inst.params.reg1,
+						line.inst.params.operand.reg,
 						0,
 						0
 					);
@@ -650,8 +634,8 @@ static void second_phase(lines lines,
 				case operand::OPERAND_REG_ADDR: {
 					auto inst = instruction::make_load(
 						instruction::load_mode::MEMDIR,
-						line.inst.params.reg2,
 						line.inst.params.reg1,
+						line.inst.params.operand.reg,
 						0,
 						0
 					);
@@ -661,10 +645,10 @@ static void second_phase(lines lines,
 				case operand::OPERAND_REG_ADDR_WITH_LITERAL_OFFSET: {
 					auto inst = instruction::make_load(
 						instruction::load_mode::MEMDIR,
-						line.inst.params.reg2,
 						line.inst.params.reg1,
+						line.inst.params.operand.reg,
 						0,
-						line.inst.params.operand.int_literal
+						line.inst.params.operand.offset.int_literal
 					);
 					section->append(&inst, 4);
 					break;
@@ -692,7 +676,7 @@ static void second_phase(lines lines,
 					);
 					section->append(&inst, 4);
 
-					if(line.inst.params.operand.type == operand::OPERAND_SYMBOL_VALUE) {
+					if(line.inst.params.operand.type == operand::OPERAND_SYMBOL_ADDR) {
 						auto symbol_name = line.inst.params.operand.symbol;
 						auto symbol = symbol_table.find(symbol_name);
 						if (!symbol)
@@ -719,7 +703,7 @@ static void second_phase(lines lines,
 				case operand::OPERAND_REG_VALUE: {
 					auto inst = instruction::make_load(
 						instruction::load_mode::REG_MOVE,
-						line.inst.params.reg2,
+						line.inst.params.operand.reg,
 						line.inst.params.reg1,
 						0,
 						0
@@ -730,7 +714,7 @@ static void second_phase(lines lines,
 				case operand::OPERAND_REG_ADDR: {
 					auto inst = instruction::make_store(
 						instruction::store_mode::MEMDIR,
-						line.inst.params.reg2,
+						line.inst.params.operand.reg,
 						0,
 						line.inst.params.reg1,
 						0
@@ -740,11 +724,11 @@ static void second_phase(lines lines,
 				}
 				case operand::OPERAND_REG_ADDR_WITH_LITERAL_OFFSET: {
 					auto inst = instruction::make_store(
-						instruction::store_mode::RELATIVE,
-						line.inst.params.reg2,
+						instruction::store_mode::MEMDIR,
+						line.inst.params.operand.reg,
 						0,
 						line.inst.params.reg1,
-						line.inst.params.operand.int_literal
+						line.inst.params.operand.offset.int_literal
 					);
 					section->append(&inst, 4);
 					break;

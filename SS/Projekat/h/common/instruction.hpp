@@ -13,6 +13,12 @@ struct instruction {
 
 	uint32_t displacement : 12 = 0;
 
+	int get_displacement() const {
+		struct {signed int x:12;} s;
+		
+		return s.x = displacement;
+	}
+
 	enum struct jump_mode : uint8_t {
 		UNCONDITIONAL,
 		EQUAL,
@@ -21,7 +27,7 @@ struct instruction {
 	};
 	enum struct arithmetic_operation : uint8_t { ADD, SUB, MUL, DIV };
 	enum struct logical_operation : uint8_t { NOT, AND, OR, XOR };
-	enum struct store_mode : uint8_t { MEMDIR, MEMINDIR, RELATIVE };
+	enum struct store_mode : uint8_t { MEMDIR, MEMDIR_PREINC, MEMINDIR };
 	enum struct load_mode : uint8_t {
 		READ_CSR,
 		REG_MOVE,

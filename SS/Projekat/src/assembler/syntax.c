@@ -136,6 +136,9 @@ static void print_operand(struct operand operand) {
 		case OPERAND_REG_ADDR:
 			printf("[%%r%d]", operand.reg);
 			break;
+		case OPERAND_REG_ADDR_WITH_LITERAL_OFFSET:
+			printf("[%%r%d + %d]", operand.reg, operand.offset.int_literal);
+			break;
 		default:
 			printf("OPERAND UNKNOWN");
 			break;

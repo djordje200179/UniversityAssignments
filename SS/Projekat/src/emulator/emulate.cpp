@@ -7,10 +7,13 @@
 
 void emulate(context& context) {
 	auto running = true;
+	bool interrupt = false;
+
 	while (running) {
 		auto instruction = context.read_instruction();
 
-		//std::cout << instruction << std::endl;
+		//if (interrupt)
+		//	std::cout << instruction << std::endl;
 
 		switch (instruction.code) {
 		case 0b0000: {
@@ -36,7 +39,7 @@ void emulate(context& context) {
 				context.sp -= 4;
 				context.write_to(context.sp, context.pc);
 
-				context.pc = context.gprs[instruction.reg1] + context.gprs[instruction.reg2] + instruction.displacement;
+				context.pc = context.gprs[instruction.reg1] + context.gprs[instruction.reg2] + instruction.get_displacement();
 
 				break;
 			}
@@ -44,7 +47,7 @@ void emulate(context& context) {
 				context.sp -= 4;
 				context.write_to(context.sp, context.pc);
 
-				auto address = context.gprs[instruction.reg1] + context.gprs[instruction.reg2] + instruction.displacement;
+				auto address = context.gprs[instruction.reg1] + context.gprs[instruction.reg2] + instruction.get_displacement();
 				context.pc = context.read_from(address);
 
 				break;
@@ -55,7 +58,7 @@ void emulate(context& context) {
 			break;
 		}
 		case 0b0011: {
-			auto address = context.gprs[instruction.reg1] + instruction.displacement; 
+			auto address = context.gprs[instruction.reg1] + instruction.get_displacement(); 
 			if (instruction.mode & 0b1000)
 				address = context.read_from(address);
 
@@ -179,18 +182,27 @@ void emulate(context& context) {
 		case 0b1000: {
 			switch (instruction.mode) {
 			case 0b0000: {
-				auto address = context.gprs[instruction.reg1] + context.gprs[instruction.reg2] + instruction.displacement;
+				auto address = context.gprs[instruction.reg1] + context.gprs[instruction.reg2] + instruction.get_displacement();
 				context.write_to(address, context.gprs[instruction.reg3]);
 
 				break;
 			}
-			case 0b0001: {
-				auto address_1 = context.gprs[instruction.reg1] + context.gprs[instruction.reg2] + instruction.displacement;
+			case 0b0010: {
+				auto address_1 = context.gprs[instruction.reg1] + context.gprs[instruction.reg2] + instruction.get_displacement();
 				auto address_2 = context.read_from(address_1);
 				context.write_to(address_2, context.gprs[instruction.reg3]);
 
 				break;
 			}
+			case 0b0001: {
+				if (instruction.reg1 != 0)
+					context.gprs[instruction.reg1] += instruction.get_displacement();
+
+				context.write_to(context.gprs[instruction.reg1], context.csrs[instruction.reg3]);
+
+				break;
+			}
+
 			default:
 				throw std::runtime_error("Invalid operation");
 			}
@@ -207,12 +219,12 @@ void emulate(context& context) {
 			}
 			case 0b0001: {
 				if (instruction.reg1 != 0)
-					context.gprs[instruction.reg1] = context.gprs[instruction.reg2] + instruction.displacement;
+					context.gprs[instruction.reg1] = context.gprs[instruction.reg2] + instruction.get_displacement();
 				
 				break;
 			}
 			case 0b0010: {
-				auto address = context.gprs[instruction.reg2] + context.gprs[instruction.reg3] + instruction.displacement;
+				auto address = context.gprs[instruction.reg2] + context.gprs[instruction.reg3] + instruction.get_displacement();
 				if (instruction.reg1 != 0)
 					context.gprs[instruction.reg1] = context.read_from(address);
 
@@ -222,7 +234,7 @@ void emulate(context& context) {
 				if (instruction.reg1 != 0)
 					context.gprs[instruction.reg1] = context.read_from(context.gprs[instruction.reg2]);
 				if (instruction.reg2 != 0)
-					context.gprs[instruction.reg2] += instruction.displacement;
+					context.gprs[instruction.reg2] += instruction.get_displacement();
 
 				break;
 			}
@@ -231,11 +243,11 @@ void emulate(context& context) {
 				break;
 			}
 			case 0b0101: {
-				context.csrs[instruction.reg1] = context.csrs[instruction.reg2] | instruction.displacement;
+				context.csrs[instruction.reg1] = context.csrs[instruction.reg2] | instruction.get_displacement();
 				break;
 			}
 			case 0b0110: {
-				auto address = context.gprs[instruction.reg2] + context.gprs[instruction.reg3] + instruction.displacement;
+				auto address = context.gprs[instruction.reg2] + context.gprs[instruction.reg3] + instruction.get_displacement();
 				context.csrs[instruction.reg1] = context.read_from(address);
 
 				break;
@@ -243,7 +255,7 @@ void emulate(context& context) {
 			case 0b0111: {
 				context.csrs[instruction.reg1] = context.read_from(context.gprs[instruction.reg2]);
 				if (instruction.reg2 != 0)
-					context.gprs[instruction.reg2] += instruction.displacement;
+					context.gprs[instruction.reg2] += instruction.get_displacement();
 
 				break;
 			}
@@ -262,10 +274,12 @@ void emulate(context& context) {
 			if (context.status & 0b011)
 				continue;
 			
-			context.sp -= 4;
-			context.write_to(context.sp, context.status);
+			interrupt = true;
+
 			context.sp -= 4;
 			context.write_to(context.sp, context.pc);
+			context.sp -= 4;
+			context.write_to(context.sp, context.status);
 
 			context.status &= ~0x1;
 			context.cause = 3;

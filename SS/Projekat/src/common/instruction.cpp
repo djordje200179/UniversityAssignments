@@ -125,7 +125,7 @@ std::ostream& operator<<(std::ostream& os, const instruction& instruction) {
 		};
 		os << modes[instruction.mode];
 
-		os << " to gpr[" << instruction.reg1 << "] + gpr[" << instruction.reg2 << "] + " << instruction.displacement;
+		os << " to gpr[" << instruction.reg1 << "] + gpr[" << instruction.reg2 << "] + " << instruction.get_displacement();
 
 		break;
 	}
@@ -137,7 +137,7 @@ std::ostream& operator<<(std::ostream& os, const instruction& instruction) {
 		};
 		os << address_modes[(instruction.mode >> 3) & 0b1];
 
-		os << " to gpr[" << instruction.reg1 << "] + " << instruction.displacement;
+		os << " to gpr[" << instruction.reg1 << "] + " << instruction.get_displacement();
 
 		switch (instruction.mode & 0b111) {
 		case 0b001: {
@@ -214,23 +214,23 @@ std::ostream& operator<<(std::ostream& os, const instruction& instruction) {
 			os << "direct";
 
 			os << " from gpr[" << instruction.reg3 << "] ";
-			os << "to gpr[" << instruction.reg1 << "] + gpr[" << instruction.reg2 + "] + " << instruction.displacement;
-
-			break;
-		}
-		case 0b0001: {
-			os << "indirect";
-
-			os << " from gpr[" << instruction.reg3 << "] ";
-			os << "to gpr[" << instruction.reg1 << "] + gpr[" << instruction.reg2 << "] + " << instruction.displacement;
+			os << "to gpr[" << instruction.reg1 << "] + gpr[" << instruction.reg2 << "] + " << instruction.get_displacement();
 
 			break;
 		}
 		case 0b0010: {
+			os << "indirect";
+
+			os << " from gpr[" << instruction.reg3 << "] ";
+			os << "to gpr[" << instruction.reg1 << "] + gpr[" << instruction.reg2 << "] + " << instruction.get_displacement();
+
+			break;
+		}
+		case 0b0001: {
 			os << "preinc";
 
 			os << " from gpr[" << instruction.reg3 << "] ";
-			os << "to gpr[" << instruction.reg3 << "] after incrementing by " << instruction.displacement;
+			os << "to gpr[" << instruction.reg1 << "] after incrementing by " << instruction.get_displacement();
 
 			break;
 		}
@@ -244,24 +244,24 @@ std::ostream& operator<<(std::ostream& os, const instruction& instruction) {
 		switch (instruction.mode) {
 		case 0b0000: {
 			os << "load_csr";
-			os << " from csr[" << instruction.reg2 << "] ";
+			os << " from csr[" << instruction.reg2 << "]";
 			break;
 		}
 		case 0b0001: {
 			os << "reg_move";
-			os << " from gpr[" << instruction.reg2 << "] + " << instruction.displacement;
+			os << " from gpr[" << instruction.reg2 << "] + " << instruction.get_displacement();
 
 			break;
 		}
 		case 0b0010: {
 			os << "direct";
-			os << " from gpr[" << instruction.reg2 << "] + gpr[" << instruction.reg3 << "] + " << instruction.displacement;
+			os << " from gpr[" << instruction.reg2 << "] + gpr[" << instruction.reg3 << "] + " << instruction.get_displacement();
 
 			break;
 		}
 		case 0b0011: {
 			os << "postinc";
-			os << " from gpr[" << instruction.reg2 << "] before incrementing by " << instruction.displacement;
+			os << " from gpr[" << instruction.reg2 << "] before incrementing by " << instruction.get_displacement();
 
 			break;
 		}
@@ -273,20 +273,20 @@ std::ostream& operator<<(std::ostream& os, const instruction& instruction) {
 		}
 		case 0b0101: {
 			os << "or_csr";
-			os << " from csr[" << instruction.reg2 << "] | " << instruction.displacement;
+			os << " from csr[" << instruction.reg2 << "] | " << instruction.get_displacement();
 
 			break;
 		}
 		case 0b0110: {
 			os << "csr_direct";
-			os << " from gpr[" << instruction.reg2 << "] + gpr[" << instruction.reg3 << "] + " << instruction.displacement;
+			os << " from gpr[" << instruction.reg2 << "] + gpr[" << instruction.reg3 << "] + " << instruction.get_displacement();
 
 			break;
 		}
 		case 0b0111: {
 			os << "csr_postinc";
 			os << " from gpr[" << instruction.reg2 << ']';
-			os << " before incrementing by " << instruction.displacement;
+			os << " before incrementing by " << instruction.get_displacement();
 
 			break;
 		}

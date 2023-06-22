@@ -38,12 +38,13 @@ int main(int argc, char** argv) {
 		auto args = read_args(argc, argv);
 		auto lines = read_input_file(args.input_file_path);
 
-		// lines_print(lines);
+		//std::cout << "Read " << args.input_file_path << std::endl;
+		//lines_print(lines);
 
 		auto object_file = assemble(lines);
 
-		// std::cout << "Assembled " << args.input_file_path << std::endl;
-		// std::cout << object_file << std::endl;
+		//std::cout << "Assembled " << args.input_file_path << std::endl;
+		//std::cout << object_file << std::endl;
 
 		std::ofstream output_file(args.output_file_path, std::ios::binary);
 		object_file.serialize(output_file);

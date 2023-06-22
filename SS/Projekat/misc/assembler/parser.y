@@ -257,11 +257,15 @@ operand:
 	} | '[' REG '+' INT_LITERAL ']' {
 		$$.type = OPERAND_REG_ADDR_WITH_LITERAL_OFFSET;
 		$$.reg = $2;
-		$$.int_literal = $4;
+
+		$$.offset.type = CONST_OPERAND_INT_LITERAL;
+		$$.offset.int_literal = $4;
 	} | '[' REG '+' SYMBOL ']' {
 		$$.type = OPERAND_REG_ADDR_WITH_SYMBOL_OFFSET;
 		$$.reg = $2;
-		$$.symbol = $4;
+		
+		$$.offset.type = CONST_OPERAND_SYMBOL;
+		$$.offset.symbol = $4;
 	};
 
 conditional_jump:

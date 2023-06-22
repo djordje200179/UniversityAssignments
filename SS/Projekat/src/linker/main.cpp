@@ -29,14 +29,18 @@ int main(int argc, char** argv) {
 
 		auto linked_file = link(object_files);
 
-		// std::cout << "Linked" << std::endl;
-		// std::cout << linked_file << std::endl;
+		//std::cout << "Linked" << std::endl;
+		//std::cout << linked_file << std::endl;
 
 		std::ofstream output_file(args.output_file_path, std::ios::binary);
 		if (args.relocatable)
 			linked_file.serialize(output_file);
 		else if(args.hex) {
 			executable_file executable_file(linked_file, args.places);
+
+			//std::cout << "Executable" << std::endl;
+			//std::cout << executable_file << std::endl;
+			
 			executable_file.serialize(output_file);
 		}
 		output_file.close(); 

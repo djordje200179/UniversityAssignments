@@ -24,7 +24,7 @@ instruction context::read_instruction() {
 
 void context::write_to(uint32_t address, uint32_t value) {
 	if (address == 0xFFFFFF00)
-		std::cout << (char)value;
+		std::cout << (char)value << std::flush;
 
 	for (int i = 0; i < 4; i++)
 		memory[address + i] = (value >> (i * 8));

@@ -6,6 +6,7 @@
 
 executable_file::executable_file(const object_file& object_file, const std::vector<place>& places) {
 	setup_section_addresses(object_file, places);
+	setup_symbol_addresses(object_file);
 
 	for (const auto& section : object_file.sections) {
 		auto section_address = section_addresses[section.name].first;
@@ -18,9 +19,9 @@ executable_file::executable_file(const object_file& object_file, const std::vect
 
 		for (const auto& relocation : section.relocation_table) {
 			const auto& symbol = object_file.symbols[relocation.symbol];
-			const auto& symbol_section_name = object_file.symbols[symbol.section].name; 
 
-			auto symbol_address = section_addresses[symbol_section_name].first + symbol.value + relocation.addend;
+			auto symbol_address = symbol_addresses[symbol.name] + relocation.addend;
+
 			for (size_t i = 0; i < 4; i++)
 				at(section_address + relocation.offset + i) = symbol_address >> (8 * i);
 		}
@@ -50,6 +51,14 @@ void executable_file::setup_section_addresses(const object_file& object_file, co
 	}
 }
 
+void executable_file::setup_symbol_addresses(const object_file& object_file) {
+	for (const auto& symbol : object_file.symbols) {
+		const auto& section_name = object_file.symbols[symbol.section].name;
+		auto symbol_address = section_addresses[section_name].first + symbol.value;
+		symbol_addresses[symbol.name] = symbol_address;
+	}
+}
+
 void executable_file::serialize(std::ofstream& file) {
 	for (const auto& [address, byte] : *this) {
 		file.write((const char*)(&address), sizeof(address));
@@ -70,8 +79,18 @@ void executable_file::deserialize(std::ifstream& file) {
 }
 
 std::ostream& operator<<(std::ostream& os, const executable_file& executable_file) {
-	size_t last_address_group = -1;
+	os << "Sections:" << std::endl;
+	for (const auto& [section_name, section_addresses] : executable_file.section_addresses) {
+		os << section_name << ": " << to_hex(section_addresses.first) << " - " << to_hex(section_addresses.second) << std::endl;
+	}
 
+	os << "Symbols:" << std::endl;
+	for (const auto& [symbol_name, symbol_address] : executable_file.symbol_addresses) {
+		os << symbol_name << ": " << to_hex(symbol_address) << std::endl;
+	}
+
+	os << "Bytes:" << std::endl;
+	size_t last_address_group = -1;
 	for (const auto& [address, byte] : executable_file) {
 		if (address / 4 == last_address_group)
 			continue;
