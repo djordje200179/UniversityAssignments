@@ -1,4 +1,7 @@
 obj
 *.d
 tests/*.o
+tests/*.hex
 assembler
+linker
+emulator
