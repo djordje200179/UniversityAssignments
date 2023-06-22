@@ -46,6 +46,7 @@ int main(int argc, char** argv) {
 		output_file.close(); 
 	} catch (const std::exception& e) {
 		std::cerr << e.what() << std::endl;
+		return 1;
 	}
 
 	return 0;

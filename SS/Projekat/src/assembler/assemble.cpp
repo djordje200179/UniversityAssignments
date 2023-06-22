@@ -6,6 +6,7 @@ extern "C" {
 #include <cstring>
 #include <iostream>
 #include "assembler/exceptions.hpp"
+#include "common/utils.hpp"
 #include "common/instruction.hpp"
 #include "common/relocation.hpp"
 #include "common/section.hpp"
@@ -235,8 +236,7 @@ static void second_phase(lines lines,
 				case operand::OPERAND_LITERAL_VALUE:
 				case operand::OPERAND_SYMBOL_VALUE:
 				case operand::OPERAND_REG_VALUE: 
-					throw std::runtime_error("Invalid operand type");
-					// FIXME: Create a new exception type
+					throw invalid_operand_error(line.inst.params.operand);
 				case operand::OPERAND_LITERAL_ADDR:
 				case operand::OPERAND_SYMBOL_ADDR: {
 					auto inst = instruction::make_call(true, 15, 0, 4);
@@ -282,8 +282,7 @@ static void second_phase(lines lines,
 					break;
 				}
 				case operand::OPERAND_REG_ADDR_WITH_SYMBOL_OFFSET:
-					throw std::runtime_error("Invalid operand type");
-					// FIXME: Create a new exception type
+					throw invalid_operand_error(line.inst.params.operand);
 				};
 
 				break;
@@ -312,8 +311,7 @@ static void second_phase(lines lines,
 				case operand::OPERAND_LITERAL_VALUE:
 				case operand::OPERAND_SYMBOL_VALUE:
 				case operand::OPERAND_REG_VALUE: 
-					throw std::runtime_error("Invalid operand type");
-					// FIXME: Create a new exception type
+					throw invalid_operand_error(line.inst.params.operand);
 				case operand::OPERAND_LITERAL_ADDR:
 				case operand::OPERAND_SYMBOL_ADDR: {
 					auto inst = instruction::make_jump(
@@ -368,8 +366,7 @@ static void second_phase(lines lines,
 					break;
 				}
 				case operand::OPERAND_REG_ADDR_WITH_SYMBOL_OFFSET:
-					throw std::runtime_error("Invalid operand type");
-					// FIXME: Create a new exception type
+					throw invalid_operand_error(line.inst.params.operand);
 				};				
 				
 				break;
@@ -654,8 +651,7 @@ static void second_phase(lines lines,
 					break;
 				}
 				case operand::OPERAND_REG_ADDR_WITH_SYMBOL_OFFSET:
-					throw std::runtime_error("Invalid operand type");
-					// FIXME: Create a new exception type
+					throw invalid_operand_error(line.inst.params.operand);
 				}
 
 				break;
@@ -663,8 +659,7 @@ static void second_phase(lines lines,
 				switch (line.inst.params.operand.type) {
 				case operand::OPERAND_LITERAL_VALUE:
 				case operand::OPERAND_SYMBOL_VALUE:
-					throw std::runtime_error("Invalid operand type");
-					// FIXME: Create a new exception type
+					throw invalid_operand_error(line.inst.params.operand);
 				case operand::OPERAND_LITERAL_ADDR:
 				case operand::OPERAND_SYMBOL_ADDR: {
 					auto inst = instruction::make_store(
@@ -734,8 +729,7 @@ static void second_phase(lines lines,
 					break;
 				}
 				case operand::OPERAND_REG_ADDR_WITH_SYMBOL_OFFSET: 
-					throw std::runtime_error("Invalid operand type");
-					// FIXME: Create a new exception type
+					throw invalid_operand_error(line.inst.params.operand);
 				}
 				
 				break;

@@ -23,6 +23,10 @@ termios init_console() {
 	return old_settings;
 }
 
+void restore_console(termios old_settings) {
+	tcsetattr(STDIN_FILENO, TCSANOW, &old_settings);
+}
+
 void emulate(context& context);
 
 int main(int argc, char** argv) {
@@ -49,9 +53,11 @@ int main(int argc, char** argv) {
 		std::cout << context << std::endl;
 	} catch (const std::exception& e) {
 		std::cerr << e.what() << std::endl;
+		
+		restore_console(old_settings);
+		return 1;
 	}
 
-	tcsetattr(STDIN_FILENO, TCSANOW, &old_settings);
-
+	restore_console(old_settings);
 	return 0;
 }

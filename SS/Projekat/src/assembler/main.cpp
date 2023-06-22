@@ -9,6 +9,7 @@ extern "C" {
 #include <string>
 #include <fstream>
 #include "assembler/exceptions.hpp"
+#include "common/utils.hpp"
 #include "common/instruction.hpp"
 #include "common/section.hpp"
 #include "common/object_file.hpp"
@@ -51,6 +52,7 @@ int main(int argc, char** argv) {
 		output_file.close();
 	} catch (const std::exception& e) {
 		std::cerr << e.what() << std::endl;
+		return 1;
 	}
 
 	return 0;

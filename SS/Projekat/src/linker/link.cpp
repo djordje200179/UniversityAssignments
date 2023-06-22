@@ -1,4 +1,5 @@
 #include "common/object_file.hpp"
+#include "common/utils.hpp"
 #include "linker/args.hpp"
 #include <vector>
 #include <algorithm>
@@ -51,8 +52,7 @@ object_file link(std::vector<object_file> object_files) {
 				} else if (symbol.section == SECTION_UNDEF)
 					continue;
 				else
-					// TODO: better error handling
-					throw std::runtime_error("duplicate symbol: " + symbol.name);
+					throw symbol_already_defined_error(symbol.name);
 			}			
 		}
 
