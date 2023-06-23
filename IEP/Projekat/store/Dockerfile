@@ -5,6 +5,7 @@ WORKDIR /code
 
 COPY requirements.txt requirements.txt
 COPY *.py .
+COPY contracts ./contracts
 
 RUN pip install -r requirements.txt
 

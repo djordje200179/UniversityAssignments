@@ -7,7 +7,9 @@ volumes:
 networks:
     auth_net:
     store_net:
-
+    common_net:
+    blockchain_net:
+    
 services:
     auth_db:
         image: mysql
@@ -20,8 +22,8 @@ services:
             - auth_net
         healthcheck:
             test: ["CMD", "mysqladmin", "ping", "-uroot", "-proot"]
-            interval: 10s
-            timeout: 5s
+            interval: 3s
+            timeout: 3s
             retries: 10
     auth_adminer:
         image: adminer
@@ -40,12 +42,26 @@ services:
             DB_USERNAME: root
             DB_PASSWORD: root
             DB_HOST: auth_db
+            DELETED_USERS_DB_HOST: deleted_users_db
             JWT_KEY: iep-projekat
         networks:
             - auth_net
+            - common_net
         depends_on:
             auth_db:
                 condition: service_healthy
+            deleted_users_db:
+                condition: service_healthy
+    
+    deleted_users_db:
+        image: redis
+        networks:
+            - common_net
+        healthcheck:
+            test: [ "CMD", "redis-cli", "ping" ]
+            interval: 3s
+            timeout: 3s
+            retries: 10
     
     store_db:
         image: mysql
@@ -58,8 +74,8 @@ services:
             - store_net
         healthcheck:
             test: [ "CMD", "mysqladmin", "ping", "-uroot", "-proot" ]
-            interval: 10s
-            timeout: 5s
+            interval: 3s
+            timeout: 3s
             retries: 10
     store_adminer:
         image: adminer
@@ -81,11 +97,17 @@ services:
             DB_USERNAME: root
             DB_PASSWORD: root
             DB_HOST: store_db
+            DELETED_USERS_DB_HOST: deleted_users_db
+            BLOCKCHAIN_HOST: blockchain_simulator
             JWT_KEY: iep-projekat
         networks:
             - store_net
+            - common_net
+            - blockchain_net
         depends_on:
             store_db:
+                condition: service_healthy
+            deleted_users_db:
                 condition: service_healthy
     store_customer_app:
         build:
@@ -98,11 +120,17 @@ services:
             DB_USERNAME: root
             DB_PASSWORD: root
             DB_HOST: store_db
+            DELETED_USERS_DB_HOST: deleted_users_db
+            BLOCKCHAIN_HOST: blockchain_simulator
             JWT_KEY: iep-projekat
         networks:
             - store_net
+            - common_net
+            - blockchain_net
         depends_on:
             store_db:
+                condition: service_healthy
+            deleted_users_db:
                 condition: service_healthy
     store_owner_app:
         build:
@@ -115,9 +143,57 @@ services:
             DB_USERNAME: root
             DB_PASSWORD: root
             DB_HOST: store_db
+            DELETED_USERS_DB_HOST: deleted_users_db
+            BLOCKCHAIN_HOST: blockchain_simulator
             JWT_KEY: iep-projekat
         networks:
             - store_net
+            - common_net
+            - blockchain_net
         depends_on:
             store_db:
                 condition: service_healthy
+            deleted_users_db:
+                condition: service_healthy
+                
+#    store_statistics_master:
+#        image: bde2020/spark-master:3.3.0-hadoop3.3
+#        ports:
+#            - "8087:8080"
+#            - "7077:7077"
+#        environment:
+#            - INIT_DAEMON_STEP=setup_spark
+#    spark_statistics_worker_1:
+#        image: bde2020/spark-worker:3.3.0-hadoop3.3
+#        depends_on:
+#            - spark-master
+#        ports:
+#            - "8088:8081"
+#        environment:
+#            SPARK_MASTER: spark://store_statistics_master:7077
+#    spark_statistics_worker_2:
+#        image: bde2020/spark-worker:3.3.0-hadoop3.3
+#        depends_on:
+#            - spark-master
+#        ports:
+#            - "8089:8081"
+#        environment:
+#            SPARK_MASTER: spark://store_statistics_master:7077
+
+    blockchain_simulator:
+        image: trufflesuite/ganache-cli
+        ports:
+            - "8545:8545"
+        networks:
+            - blockchain_net
+    
+    blockchain_viewer:
+        build:
+            context: ./blockchain/etherwallet
+        ports:
+            - "8090:80"
+        networks:
+            - blockchain_net
+        depends_on:
+            - blockchain_simulator
+

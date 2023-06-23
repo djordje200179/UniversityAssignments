@@ -2,6 +2,8 @@ from functools import wraps
 
 from flask import Flask, request
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
+from redis.client import Redis
+
 from models import db, migrate, User
 from config import Config
 
@@ -93,6 +95,9 @@ def delete():
 
 	db.session.delete(user)
 	db.session.commit()
+
+	with Redis(app.config["DELETED_USERS_DB_HOST"]) as deleted_users_db:
+		deleted_users_db.setex(user.email, app.config["JWT_ACCESS_TOKEN_EXPIRES"], "deleted")
 
 	return {}, 200
 
