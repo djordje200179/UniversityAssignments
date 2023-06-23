@@ -38,12 +38,15 @@
 			"args": [
 				"-hex",
 				"-place=my_code@0x40000000",
+				"-place=math@0xF0000000",
 				"-o",
 				"${workspaceFolder}/tests/program.hex",
+				"${workspaceFolder}/tests/handler.o",
+				"${workspaceFolder}/tests/math.o",
 				"${workspaceFolder}/tests/main.o",
 				"${workspaceFolder}/tests/isr_terminal.o",
 				"${workspaceFolder}/tests/isr_timer.o",
-				"${workspaceFolder}/tests/handler.o"
+				"${workspaceFolder}/tests/isr_software.o"
 			],
 			"stopAtEntry": false,
 			"cwd": "${fileDirname}",
@@ -69,7 +72,7 @@
 			"request": "launch",
 			"program": "${workspaceFolder}/emulator",
 			"args": [
-				"${workspaceFolder}/tests/program.hex",
+				"${workspaceFolder}/tests_a/program.hex",
 			],
 			"stopAtEntry": false,
 			"cwd": "${fileDirname}",

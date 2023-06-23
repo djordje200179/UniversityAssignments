@@ -60,6 +60,9 @@ symbol* symbol_table::find(const std::string& name) {
 	return std::addressof(*it);
 }
 
+const symbol* symbol_table::find(const std::string& name) const {
+	return const_cast<symbol_table*>(this)->find(name);
+}
 
 void symbol_table::serialize(std::ofstream& os) const {
 	auto symbols_count = this->size();

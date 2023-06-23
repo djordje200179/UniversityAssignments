@@ -7,13 +7,11 @@
 
 void emulate(context& context) {
 	auto running = true;
-	bool interrupt = false;
 
 	while (running) {
 		auto instruction = context.read_instruction();
 
-		//if (interrupt)
-		//	std::cout << instruction << std::endl;
+		//std::cout << instruction << std::endl;
 
 		switch (instruction.code) {
 		case 0b0000: {
@@ -22,10 +20,10 @@ void emulate(context& context) {
 		}
 		case 0b0001: {
 			context.sp -= 4;
-			context.write_to(context.sp, context.status);
+			context.write_to(context.sp, context.pc);
 
 			context.sp -= 4;
-			context.write_to(context.sp, context.pc);
+			context.write_to(context.sp, context.status);
 
 			context.cause = 4;
 			context.status &= ~0x1;
@@ -198,7 +196,7 @@ void emulate(context& context) {
 				if (instruction.reg1 != 0)
 					context.gprs[instruction.reg1] += instruction.get_displacement();
 
-				context.write_to(context.gprs[instruction.reg1], context.csrs[instruction.reg3]);
+				context.write_to(context.gprs[instruction.reg1], context.gprs[instruction.reg3]);
 
 				break;
 			}
@@ -273,8 +271,6 @@ void emulate(context& context) {
 		if (read(STDIN_FILENO, &ch, 1) >= 0) {
 			if (context.status & 0b011)
 				continue;
-			
-			interrupt = true;
 
 			context.sp -= 4;
 			context.write_to(context.sp, context.pc);

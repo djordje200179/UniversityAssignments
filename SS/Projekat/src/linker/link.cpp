@@ -13,23 +13,41 @@ object_file link(std::vector<object_file> object_files) {
 		std::map<size_t, size_t> section_translation;
 		
 		for (const auto& symbol : object_file.symbols) {
+			if (!symbol.global && symbol.type != symbol::type::SECTION) {
+				struct symbol new_symbol(symbol);
+
+				new_symbol.name = '#' + new_symbol.name;
+
+				auto translated_section = symbols.find(object_file.symbols[symbol.section].name);
+				auto translated_section_index = translated_section - symbols.data();
+
+				if (section_translation.contains(symbol.section))
+					new_symbol.value += section_translation[symbol.section];
+
+				new_symbol.section = translated_section_index;
+
+				symbols.push_back(new_symbol);
+
+				continue;
+			}
+
 			auto duplicate_symbol = symbols.find(symbol.name);
 			if (!duplicate_symbol) {
-				symbols.push_back(symbol);
+				struct symbol new_symbol(symbol);
 
 				if (symbol.type == symbol::type::SECTION)
-					symbols.back().section = symbols.size() - 1;
-				else if(symbol.section == SECTION_UNDEF)
-					symbols.back().section = SECTION_UNDEF;
-				else {
+					new_symbol.section = symbols.size();
+				else if(symbol.section != SECTION_UNDEF) {
 					auto translated_section = symbols.find(object_file.symbols[symbol.section].name);
 					auto translated_section_index = translated_section - symbols.data();
 
 					if (section_translation.contains(symbol.section))
-						symbols.back().value += section_translation[symbol.section];
+						new_symbol.value += section_translation[symbol.section];
 
-					symbols.back().section = translated_section_index;
+					new_symbol.section = translated_section_index;
 				}
+
+				symbols.push_back(new_symbol);
 			} else {
 				if (duplicate_symbol->type == symbol::type::SECTION && symbol.type == symbol::type::SECTION) {
 					const auto& duplicated_symbol_section = sections[duplicate_symbol->name];
@@ -49,14 +67,15 @@ object_file link(std::vector<object_file> object_files) {
 						if (section_translation.contains(symbol.section))
 							duplicate_symbol->value += section_translation[symbol.section];
 					}
-				} else if (symbol.section == SECTION_UNDEF)
-					continue;
-				else
+				} else if (symbol.section != SECTION_UNDEF)
 					throw symbol_already_defined_error(symbol.name);
 			}			
 		}
 
 		for (const auto& section : object_file.sections) {
+			auto section_symbol = object_file.symbols.find(section.name);
+			auto section_symbol_index = section_symbol - object_file.symbols.data();
+
 			auto duplicate_section_it = sections.find(section.name);
 			auto& new_section = 
 				duplicate_section_it == sections.end() ? 
@@ -80,11 +99,13 @@ object_file link(std::vector<object_file> object_files) {
 				auto translated_symbol = symbols.find(original_symbol_name);
 				auto translated_symbol_index = translated_symbol - symbols.data();
 
-				auto new_relocation = relocation;
-				new_relocation.symbol = translated_symbol_index;
+				struct relocation new_relocation = relocation;
 
+				new_relocation.symbol = translated_symbol_index;
 				if (translated_symbol->type == symbol::type::SECTION)
 					new_relocation.addend += old_size;
+				if (section_translation.contains(section_symbol_index))
+					new_relocation.offset += section_translation[section_symbol_index];
 
 				new_section.relocation_table.push_back(new_relocation);
 			}

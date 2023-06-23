@@ -22,6 +22,7 @@ struct symbol {
 
 struct symbol_table : public std::vector<symbol> {
 	symbol* find(const std::string& name);
+	const symbol* find(const std::string& name) const;
 
 	void serialize(std::ofstream& os) const;
 	void deserialize(std::ifstream& is);
