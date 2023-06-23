@@ -50,7 +50,7 @@ def check_permission(user_type):
 					return {"message": "User was deleted."}, 403
 
 			if claims["user_type"] != user_type:
-				return {"message": f"Only {user_type} can access this resource."}, 403
+				return {"message": "Missing Authorization Header"}, 401
 
 			return function(*args, **kwargs)
 		return wrapper
