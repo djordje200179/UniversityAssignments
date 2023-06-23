@@ -102,8 +102,25 @@ def delete():
 	return {}, 200
 
 
+def create_owner():
+	owner = User.query.filter(User.email == "onlymoney@gmail.com").first()
+	if owner:
+		return
+
+	owner = User(
+		email="onlymoney@gmail.com",
+		password="evenmoremoney",
+		forename="Scrooge",
+		surname="McDuck",
+		user_type="owner"
+	)
+	db.session.add(owner)
+	db.session.commit()
+
+
 with app.app_context():
 	db.create_all()
+	create_owner()
 
 if __name__ == "__main__":
 	app.run(debug=True, host="0.0.0.0")
