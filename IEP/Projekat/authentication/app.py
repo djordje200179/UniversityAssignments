@@ -1,3 +1,4 @@
+import re
 from functools import wraps
 
 from flask import Flask, request
@@ -28,9 +29,12 @@ def check_empty_fields(fields):
 	return decorator
 
 
-@check_empty_fields(["email", "password", "forename", "surname"])
+valid_email_regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b'
+
+
+@check_empty_fields(["forename", "surname", "email", "password"])
 def register_user(user_type):
-	if len(request.json["email"]) > 256:
+	if len(request.json["email"]) > 256 or not re.match(valid_email_regex, request.json["email"]):
 		return {"message": "Invalid email."}, 400
 
 	if len(request.json["password"]) > 256 or len(request.json["password"]) < 8:
@@ -67,7 +71,7 @@ def register_courier():
 @app.route("/login", methods=["POST"])
 @check_empty_fields(["email", "password"])
 def login():
-	if len(request.json["email"]) > 256:
+	if len(request.json["email"]) > 256 or not re.match(valid_email_regex, request.json["email"]):
 		return {"message": "Invalid email."}, 400
 
 	user = User.query.filter(User.email == request.json["email"], User.password == request.json["password"]).first()
@@ -76,10 +80,13 @@ def login():
 
 	claims = {
 		"email": user.email,
-		"user_type": user.user_type
+		"user_type": user.user_type,
+		"forename": user.forename,
+		"surname": user.surname,
+		"roles": [user.user_type]
 	}
 
-	access_token = create_access_token(identity=user.id, additional_claims=claims)
+	access_token = create_access_token(identity=user.email, additional_claims=claims)
 
 	return {"accessToken": access_token}, 200
 
@@ -87,9 +94,9 @@ def login():
 @app.route("/delete", methods=["POST"])
 @jwt_required()
 def delete():
-	identity = get_jwt_identity()
+	email = get_jwt_identity()
 
-	user = User.query.filter(User.id == identity).first()
+	user = User.query.filter(User.email == email).first()
 	if not user:
 		return {"message": "Unknown user."}, 400
 
