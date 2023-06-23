@@ -62,7 +62,9 @@ def pick_up_order():
 			"from": owner_account,
 		})
 	except ContractLogicError as err:
-		return {"message": str(err)}, 400
+		reason = err.message[err.message.find("revert ") + 7:]
+
+		return {"message": reason}, 400
 
 	order.status = "PENDING"
 	db.session.commit()

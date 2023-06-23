@@ -42,8 +42,8 @@ contract Purchase {
 		paid = true;
 	}
 
-	function join_courier(address courier_address) external not_before_paying not_after_delivered {
-		courier = payable(courier_address);
+	function join_courier(address payable _courier) external not_before_paying not_after_delivered {
+		courier = _courier;
 	}
 
 	function delivery_finished() external not_before_courier_joined not_after_delivered {

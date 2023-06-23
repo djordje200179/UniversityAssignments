@@ -152,7 +152,7 @@ def delivered():
 		return {"message": "Invalid order id."}, 400
 
 	order = Order.query.get(order_id)
-	if order is None or order.status != "PENDING":
+	if order is None or order.status != "CREATED":
 		return {"message": "Invalid order id."}, 400
 
 	if order.status == "CREATED":
@@ -177,7 +177,9 @@ def delivered():
 			"from": customer_address
 		})
 	except ContractLogicError as err:
-		return {"message": str(err)}, 400
+		reason = err.message[err.message.find("revert ") + 7:]
+
+		return {"message": reason}, 400
 
 	order.status = "DELIVERED"
 	db.session.commit()
@@ -220,7 +222,9 @@ def pay():
 			"value": order.total_price
 		})
 	except ContractLogicError as err:
-		return {"message": str(err)}, 400
+		reason = err.message[err.message.find("revert ") + 7:]
+
+		return {"message": reason}, 400
 
 
 with app.app_context():
