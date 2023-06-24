@@ -48,15 +48,12 @@ def search():
 
 
 @app.route("/order", methods=["POST"])
-@check_empty_fields(["requests", "address"])
 @check_permission("customer")
+@check_empty_fields(["requests"])
 def order():
 	buyer = get_jwt()["email"]
 	wanted_products = request.json["requests"]
 	buyer_address = request.json["address"]
-
-	if not web3.is_address(buyer_address):
-		return {"message": "Invalid address."}, 400
 
 	order_products = []
 	total_price = 0
@@ -82,6 +79,12 @@ def order():
 
 		order_products.append(order_product)
 		total_price += order_product.price * order_product.quantity
+
+	if "address" not in request.json or request.json["address"] == "":
+		return {"message": "Field address is missing."}, 400
+
+	if not web3.is_address(buyer_address):
+		return {"message": "Invalid address."}, 400
 
 	contract_hash = purchase_contract.constructor(buyer_address).transact({
 		"from": owner_account,
@@ -141,8 +144,8 @@ def status():
 
 
 @app.route("/delivered", methods=["POST"])
-@check_empty_fields(["keys", "passphrase"])
 @check_permission("customer")
+@check_empty_fields(["keys", "passphrase"])
 def delivered():
 	if "id" not in request.json:
 		return {"message": "Missing order id."}, 400
@@ -188,7 +191,6 @@ def delivered():
 
 
 @app.route("/pay", methods=["POST"])
-@check_empty_fields(["keys", "passphrase"])
 @check_permission("customer")
 def pay():
 	if "id" not in request.json:
@@ -202,7 +204,10 @@ def pay():
 	if order is None:
 		return {"message": "Invalid order id."}, 400
 
-	if len(request.json["passphrase"]) == 0:
+	if "keys" not in request.json:
+		return {"message": "Missing keys."}, 400
+
+	if "passphrase" not in request.json or len(request.json["passphrase"]) == 0:
 		return {"message": "Missing passphrase."}, 400
 
 	try:
@@ -219,7 +224,7 @@ def pay():
 	try:
 		contract.functions.pay().transact({
 			"from": customer_address,
-			"value": order.total_price
+			"value": int(order.total_price)
 		})
 	except ContractLogicError as err:
 		reason = err.message[err.message.find("revert ") + 7:]

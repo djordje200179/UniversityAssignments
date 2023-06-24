@@ -4,8 +4,8 @@ RUN mkdir /code
 WORKDIR /code
 
 COPY requirements.txt requirements.txt
-COPY *.py .
-
 RUN pip install -r requirements.txt
+
+COPY *.py .
 
 ENTRYPOINT ["python", "app.py"]

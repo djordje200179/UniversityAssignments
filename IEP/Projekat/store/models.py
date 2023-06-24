@@ -24,7 +24,7 @@ class Product(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 
 	name = db.Column(db.String(40), unique=True, nullable=False)
-	price = db.Column(db.Integer, nullable=False)
+	price = db.Column(db.Float, nullable=False)
 
 	categories = db.relationship("Category", secondary=product_category)
 
@@ -33,7 +33,7 @@ class Order(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 
 	buyer = db.Column(db.String(256), nullable=False)
-	total_price = db.Column(db.Integer, nullable=False)
+	total_price = db.Column(db.Float, nullable=False)
 	status = db.Column(db.String(10), nullable=False, default="CREATED")
 	created_at = db.Column(db.DateTime, nullable=False, default=func.now())
 	contract_address = db.Column(db.String(42))
@@ -46,7 +46,7 @@ class OrderProduct(db.Model):
 	product_id = db.Column(db.Integer, db.ForeignKey("product.id"), primary_key=True)
 
 	quantity = db.Column(db.Integer, nullable=False)
-	price = db.Column(db.Integer, nullable=False)
+	price = db.Column(db.Float, nullable=False)
 
 	product = db.relationship("Product")
 	order = db.relationship("Order", lazy=True)

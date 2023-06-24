@@ -19,7 +19,7 @@ web3 = Web3(HTTPProvider(f"http://{os.environ['BLOCKCHAIN_HOST']}:8545"))
 @check_permission("owner")
 def update():
 	if "file" not in request.files:
-		return {"message": "Field file missing."}, 400
+		return {"message": "Field file is missing."}, 400
 
 	file_content = request.files["file"].stream.read().decode()
 
@@ -27,10 +27,10 @@ def update():
 	for line in file_content.split('\n'):
 		line_data = line.split(',')
 		if len(line_data) != 3:
-			return {"message": f"Incorrect number of values on line {len(new_products)}"}, 400
+			return {"message": f"Incorrect number of values on line {len(new_products)}."}, 400
 
-		if not line_data[2].isnumeric() and int(line_data[2]) < 0:
-			return {"message": f"Incorrect price on line {len(new_products)}"}, 400
+		if not line_data[2].isnumeric() and float(line_data[2]) < 0:
+			return {"message": f"Incorrect price on line {len(new_products)}."}, 400
 
 		existing_product = Product.query.filter_by(name=line_data[0]).first()
 		if existing_product is not None:
@@ -47,7 +47,7 @@ def update():
 
 			categories.append(category)
 
-		new_product = Product(name=line_data[1], categories=categories, price=int(line_data[2]))
+		new_product = Product(name=line_data[1], categories=categories, price=float(line_data[2]))
 		new_products.append(new_product)
 
 	db.session.add_all(new_products)

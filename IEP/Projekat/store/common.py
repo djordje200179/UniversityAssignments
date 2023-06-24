@@ -45,12 +45,12 @@ def check_permission(user_type):
 		def wrapper(*args, **kwargs):
 			claims = get_jwt()
 
-			with Redis(current_app.config["DELETED_USERS_DB_HOST"]) as deleted_users_db:
-				if deleted_users_db.get(claims["email"]) is not None:
-					return {"message": "User was deleted."}, 403
+			# with Redis(current_app.config["DELETED_USERS_DB_HOST"]) as deleted_users_db:
+			# 	if deleted_users_db.exists(claims["email"]):
+			# 		return {"message": "User was deleted."}, 403
 
 			if claims["user_type"] != user_type:
-				return {"message": "Missing Authorization Header"}, 401
+				return {"msg": "Missing Authorization Header"}, 401
 
 			return function(*args, **kwargs)
 		return wrapper
