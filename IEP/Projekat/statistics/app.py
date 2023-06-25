@@ -7,7 +7,7 @@ import xmlrpc.server
 class Calculator:
 	def calculate_product_statistics(self):
 		os.environ["SPARK_APPLICATION_PYTHON_LOCATION"] = "/app/product_statistics.py"
-		os.environ["SPARK_SUBMIT_ARGS"] = "--driver-class-path /app/mysql-connector-java-8.0.33.jar --jars /app/mysql-connector-java-8.0.33.jar"
+		os.environ["SPARK_SUBMIT_ARGS"] = "--driver-class-path /app/mysql-connector-j-8.0.33.jar --jars /app/mysql-connector-j-8.0.33.jar"
 
 		subprocess.run(["/template.sh"])
 
@@ -17,23 +17,20 @@ class Calculator:
 				for row in file
 			]
 
-		print(results, flush=True)
+		os.remove("/app/results.json")
 
 		return {"statistics": results}
 
 	def calculate_category_statistics(self):
 		os.environ["SPARK_APPLICATION_PYTHON_LOCATION"] = "/app/category_statistics.py"
-		os.environ["SPARK_SUBMIT_ARGS"] = "--driver-class-path /app/mysql-connector-java-8.0.33.jar --jars /app/mysql-connector-java-8.0.33.jar"
+		os.environ["SPARK_SUBMIT_ARGS"] = "--driver-class-path /app/mysql-connector-j-8.0.33.jar --jars /app/mysql-connector-j-8.0.33.jar"
 
 		subprocess.run(["/template.sh"])
 
 		with open("/app/results.json", "r") as file:
-			results = [
-				json.loads(row)
-				for row in file
-			]
+			results = [row.strip() for row in file]
 
-		print(results, flush=True)
+		os.remove("/app/results.json")
 
 		return {"statistics": results}
 

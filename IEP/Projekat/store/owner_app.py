@@ -72,17 +72,13 @@ def update():
 @app.route("/product_statistics", methods=["GET"])
 @check_permission("owner")
 def product_statistics():
-	data = statistics_server.calculate_product_statistics()
-	print(data, flush=True)
-	return data
+	return statistics_server.calculate_product_statistics()
 
 
 @app.route("/category_statistics", methods=["GET"])
 @check_permission("owner")
 def category_statistics():
-	data = statistics_server.calculate_category_statistics()
-	print(data, flush=True)
-	return data
+	return statistics_server.calculate_category_statistics()
 
 
 with app.app_context():

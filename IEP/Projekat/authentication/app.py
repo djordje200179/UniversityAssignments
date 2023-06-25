@@ -55,6 +55,9 @@ def register_user(user_type):
 	db.session.add(new_user)
 	db.session.commit()
 
+	with Redis(app.config["DELETED_USERS_DB_HOST"]) as deleted_users_db:
+		deleted_users_db.delete(new_user.email)
+
 	return {}, 200
 
 

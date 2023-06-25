@@ -1,9 +1,10 @@
 import os
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import col
+from pyspark.sql.functions import col, sum, when, lit
 
-builder = SparkSession.builder.appName("CategoryStatistics")
-builder = builder.master(f"spark://{os.environ['SPARK_HOST']}:7077")
+builder = SparkSession.builder \
+	.appName("CategoryStatistics") \
+	.master(f"spark://{os.environ['SPARK_HOST']}:7077")
 
 spark = builder.config("spark.driver.extraClassPath", "mysql-connector-java-8.0.33.jar").getOrCreate()
 spark.sparkContext.setLogLevel("ERROR")
@@ -35,7 +36,7 @@ product_category_df = spark.read.format("jdbc") \
 order_df = spark.read.format("jdbc") \
 	.option("driver", "com.mysql.cj.jdbc.Driver") \
 	.option("url", f"jdbc:mysql://{os.environ['DB_HOST']}:3306/store") \
-	.option("dbtable", "order") \
+	.option("dbtable", "`order`") \
 	.option("user", os.environ['DB_USERNAME']) \
 	.option("password", os.environ['DB_PASSWORD']) \
 	.load()
@@ -48,30 +49,18 @@ order_product_df = spark.read.format("jdbc") \
 	.option("password", os.environ['DB_PASSWORD']) \
 	.load()
 
-extended_order_product_df = product_df.alias("product") \
-	.join(order_product_df.alias("order_product"), col("product.id") == col("order_product.product_id"), "inner") \
-	.join(order_df.alias("order"), col("order_product.order_id") == col("order.id"), "inner") \
-	.join(product_category_df.alias("product_category"), col("product.id") == col("product_category.product_id"), "inner") \
-	.join(category_df.alias("category"), col("product_category.category_id") == col("category.id"), "inner")
-
-sold_product_df = extended_order_product_df \
-	.where(col("order.status") == "COMPLETED") \
+category_info = category_df.alias("category") \
+	.join(product_category_df.alias("product_category"), col("category.id") == col("product_category.category_id"), "left") \
+	.join(product_df.alias("product"), col("product_category.product_id") == col("product.id"), "left") \
+	.join(order_product_df.alias("order_product"), col("product.id") == col("order_product.product_id"), "left") \
+	.join(order_df.alias("order1"), col("order_product.order_id") == col("order1.id"), "left") \
 	.groupBy("category.name") \
-	.sum() \
-	.reset_index() \
-	.orderBy(col("sum").desc())\
-	.orderBy(col("category.name").asc())\
-	.select("category.name")
+	.agg(sum(when(col("order1.id") == "COMPLETE", col("order_product.quantity")).otherwise(lit(0))).alias("sold")) \
+	.orderBy(col("sold").desc(), col("category.name"))
 
-category_info = sold_product_df\
-	.toJSON().collect()
-
-print("Before writing to file", flush=True)
-
+category_names = [str(row["name"]) for row in category_info.collect()]
 with open("/app/results.json", "w") as file:
-	for row in category_info:
+	for row in category_names:
 		file.write(row + '\n')
-
-print("After writing to file", flush=True)
 
 spark.stop()

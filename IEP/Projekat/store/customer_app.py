@@ -256,6 +256,9 @@ def pay():
 		bytecode=purchase_contract_info["bytecode"]
 	)
 
+	if web3.eth.get_balance(customer_address) < order.total_price:
+		return {"message": "Insufficient funds."}, 400
+
 	try:
 		transaction = contract.functions.pay().build_transaction({
 			"from": customer_address,
