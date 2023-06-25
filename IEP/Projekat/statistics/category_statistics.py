@@ -55,7 +55,7 @@ category_info = category_df.alias("category") \
 	.join(order_product_df.alias("order_product"), col("product.id") == col("order_product.product_id"), "left") \
 	.join(order_df.alias("order1"), col("order_product.order_id") == col("order1.id"), "left") \
 	.groupBy("category.name") \
-	.agg(sum(when(col("order1.id") == "COMPLETE", col("order_product.quantity")).otherwise(lit(0))).alias("sold")) \
+	.agg(sum(when(col("order1.status") == "COMPLETE", col("order_product.quantity")).otherwise(lit(0))).alias("sold")) \
 	.orderBy(col("sold").desc(), col("category.name"))
 
 category_names = [str(row["name"]) for row in category_info.collect()]
