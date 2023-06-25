@@ -561,7 +561,7 @@ def set_up_invalid_address ( with_authentication, authentication_url, courier_ur
             user_login ( True, authentication_url, headers )
         
         if ( with_blockchain ):
-            passphrase  = "iep_project"
+            passphrase  = "djole2001"
             private_key = "0x" + secrets.token_bytes ( 32 ).hex ( )
             address     = Account.from_key ( private_key ).address
 

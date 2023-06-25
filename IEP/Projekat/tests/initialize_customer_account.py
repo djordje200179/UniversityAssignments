@@ -5,7 +5,7 @@ from web3 import Account
 
 private_key = ""
 with open ( "keys.json", "r" ) as file:
-    private_key = Account.decrypt ( file.read ( ), "iep_project" ).hex ( )
+    private_key = Account.decrypt ( file.read ( ), "djole2001" ).hex ( )
 
 customer_account = Account.from_key ( private_key )
 

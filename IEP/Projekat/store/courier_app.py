@@ -1,10 +1,9 @@
 from flask import Flask, request
 from flask_jwt_extended import JWTManager
 from web3.exceptions import ContractLogicError
-
 from models import db, migrate, Order
 from config import Config
-from common import check_permission, check_empty_fields, web3, purchase_contract_info, owner_account
+from common import check_permission, web3, purchase_contract_info, owner_account
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -17,7 +16,7 @@ jwt = JWTManager(app)
 @app.route("/orders_to_deliver", methods=["GET"])
 @check_permission("courier")
 def orders_to_deliver():
-	orders = Order.query.all()
+	orders = Order.query.filter(Order.status == "CREATED").all()
 
 	return {
 		"orders": [
@@ -32,23 +31,25 @@ def orders_to_deliver():
 
 
 @app.route("/pick_up_order", methods=["POST"])
-@check_empty_fields(["address"])
 @check_permission("courier")
 def pick_up_order():
-	courier_address = request.json["address"]
-
 	if "id" not in request.json:
 		return {"message": "Missing order id."}, 400
 
-	order_id = request.json["id"]
-	if int(order_id) <= 0:
+	try:
+		if int(request.json["id"]) <= 0:
+			return {"message": "Invalid order id."}, 400
+	except ValueError:
 		return {"message": "Invalid order id."}, 400
 
-	order = Order.query.get(order_id)
+	order = Order.query.get(request.json["id"])
 	if order is None or order.status != "CREATED":
 		return {"message": "Invalid order id."}, 400
 
-	if not web3.is_address(courier_address):
+	if "address" not in request.json or request.json["address"] == "":
+		return {"message": "Missing address."}, 400
+
+	if not web3.is_address(request.json["address"]):
 		return {"message": "Invalid address."}, 400
 
 	contract = web3.eth.contract(
@@ -58,7 +59,7 @@ def pick_up_order():
 	)
 
 	try:
-		contract.functions.join_courier(courier_address).transact({
+		contract.functions.join_courier(request.json["address"]).transact({
 			"from": owner_account,
 		})
 	except ContractLogicError as err:

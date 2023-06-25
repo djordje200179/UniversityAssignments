@@ -9,6 +9,7 @@ networks:
     store_net:
     common_net:
     blockchain_net:
+    spark_net:
     
 services:
     auth_db:
@@ -72,6 +73,7 @@ services:
             - store_db_volume:/var/lib/mysql
         networks:
             - store_net
+            - spark_net
         healthcheck:
             test: [ "CMD", "mysqladmin", "ping", "-uroot", "-proot" ]
             interval: 3s
@@ -146,39 +148,54 @@ services:
             DELETED_USERS_DB_HOST: deleted_users_db
             BLOCKCHAIN_HOST: blockchain_simulator
             JWT_KEY: iep-projekat
+            STATISTICS_HOST: store_statistics_app
         networks:
             - store_net
             - common_net
             - blockchain_net
+            - spark_net
         depends_on:
             store_db:
                 condition: service_healthy
             deleted_users_db:
                 condition: service_healthy
                 
-#    store_statistics_master:
-#        image: bde2020/spark-master:3.3.0-hadoop3.3
-#        ports:
-#            - "8087:8080"
-#            - "7077:7077"
-#        environment:
-#            - INIT_DAEMON_STEP=setup_spark
-#    spark_statistics_worker_1:
-#        image: bde2020/spark-worker:3.3.0-hadoop3.3
-#        depends_on:
-#            - spark-master
-#        ports:
-#            - "8088:8081"
-#        environment:
-#            SPARK_MASTER: spark://store_statistics_master:7077
-#    spark_statistics_worker_2:
-#        image: bde2020/spark-worker:3.3.0-hadoop3.3
-#        depends_on:
-#            - spark-master
-#        ports:
-#            - "8089:8081"
-#        environment:
-#            SPARK_MASTER: spark://store_statistics_master:7077
+    store_statistics_app:
+        build:
+            context: ./statistics
+        environment:
+            DB_HOST: store_db
+            DB_USERNAME: root
+            DB_PASSWORD: root
+            SPARK_HOST: spark-master
+        networks:
+            - spark_net
+    
+    spark-master:
+        image: bde2020/spark-master:3.3.0-hadoop3.3
+        container_name: spark-master
+        ports:
+            - "8087:8080"
+        networks:
+            - spark_net
+        environment:
+            INIT_DAEMON_STEP: setup_spark
+    store_statistics_worker_1:
+        image: bde2020/spark-worker:3.3.0-hadoop3.3
+        depends_on:
+            - spark-master
+        networks:
+            - spark_net
+        environment:
+            SPARK_MASTER: spark://spark-master:7077
+    store_statistics_worker_2:
+        image: bde2020/spark-worker:3.3.0-hadoop3.3
+        depends_on:
+            - spark-master
+        networks:
+            - spark_net
+        environment:
+            SPARK_MASTER: spark://spark-master:7077
 
     blockchain_simulator:
         image: trufflesuite/ganache-cli
@@ -186,14 +203,12 @@ services:
             - "8545:8545"
         networks:
             - blockchain_net
-    
     blockchain_viewer:
         build:
             context: ./blockchain/etherwallet
         ports:
-            - "8090:80"
+            - "8088:80"
         networks:
             - blockchain_net
         depends_on:
             - blockchain_simulator
-

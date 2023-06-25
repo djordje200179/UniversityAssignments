@@ -28,6 +28,11 @@ contract Purchase {
 		_;
 	}
 
+	modifier not_before_picked_up() {
+		require(courier != address(0), "Delivery not complete.");
+		_;
+	}
+
 	modifier not_after_delivered() {
         require(!delivered, "Already delivered.");
 		_;
@@ -46,7 +51,7 @@ contract Purchase {
 		courier = _courier;
 	}
 
-	function delivery_finished() external not_before_courier_joined not_after_delivered {
+	function delivery_finished() external only_buyer not_before_courier_joined not_after_delivered {
 		delivered = true;
 
 		uint price = address(this).balance;

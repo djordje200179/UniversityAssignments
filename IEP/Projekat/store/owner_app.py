@@ -5,6 +5,7 @@ from web3 import Web3, HTTPProvider
 from models import db, migrate, Product, Category
 from config import Config
 from common import check_permission
+import xmlrpc.client
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -13,6 +14,7 @@ db.init_app(app)
 migrate.init_app(app, db)
 jwt = JWTManager(app)
 web3 = Web3(HTTPProvider(f"http://{os.environ['BLOCKCHAIN_HOST']}:8545"))
+statistics_server = xmlrpc.client.ServerProxy(f"http://{os.environ['STATISTICS_HOST']}:8000")
 
 
 @app.route("/update", methods=["POST"])
@@ -22,22 +24,33 @@ def update():
 		return {"message": "Field file is missing."}, 400
 
 	file_content = request.files["file"].stream.read().decode()
+	lines = file_content.split('\n')
 
-	new_products = []
-	for line in file_content.split('\n'):
+	for line_index, line in enumerate(lines):
 		line_data = line.split(',')
 		if len(line_data) != 3:
-			return {"message": f"Incorrect number of values on line {len(new_products)}."}, 400
+			return {"message": f"Incorrect number of values on line {line_index}."}, 400
 
-		if not line_data[2].isnumeric() and float(line_data[2]) < 0:
-			return {"message": f"Incorrect price on line {len(new_products)}."}, 400
+	for line_index, line in enumerate(lines):
+		category_names, name, price = line.split(',')
 
-		existing_product = Product.query.filter_by(name=line_data[0]).first()
+		try:
+			if float(price) <= 0:
+				return {"message": f"Incorrect price on line {line_index}."}, 400
+		except ValueError:
+			return {"message": f"Incorrect price on line {line_index}."}, 400
+
+	new_products = []
+	for line in lines:
+		category_names, name, price = line.split(',')
+		price = float(price)
+
+		existing_product = Product.query.filter_by(name=name).first()
 		if existing_product is not None:
-			return {"message": f"Product {line_data[0]} already exists."}, 400
+			return {"message": f"Product {name} already exists."}, 400
 
+		category_names = category_names.split('|')
 		categories = []
-		category_names = line_data[0].split('|')
 		for category_name in category_names:
 			category = Category.query.filter_by(name=category_name).first()
 			if category is None:
@@ -47,7 +60,7 @@ def update():
 
 			categories.append(category)
 
-		new_product = Product(name=line_data[1], categories=categories, price=float(line_data[2]))
+		new_product = Product(name=name, categories=categories, price=price)
 		new_products.append(new_product)
 
 	db.session.add_all(new_products)
@@ -59,13 +72,17 @@ def update():
 @app.route("/product_statistics", methods=["GET"])
 @check_permission("owner")
 def product_statistics():
-	return "<p>Hello, World!</p>"
+	data = statistics_server.calculate_product_statistics()
+	print(data, flush=True)
+	return data
 
 
 @app.route("/category_statistics", methods=["GET"])
 @check_permission("owner")
 def category_statistics():
-	return "<p>Hello, World!</p>"
+	data = statistics_server.calculate_category_statistics()
+	print(data, flush=True)
+	return data
 
 
 with app.app_context():
