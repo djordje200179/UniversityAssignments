@@ -1,9 +1,9 @@
 <template>
 	<Header />
 	
-	<div>
-
-	</div>
+	<main class="px-1">
+		<router-view />
+	</main>
 
 	<Footer />
 </template>
