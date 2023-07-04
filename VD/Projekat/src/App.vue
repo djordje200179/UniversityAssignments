@@ -1,8 +1,8 @@
 <template>
 	<Header />
-	
-	<main class="px-1">
-		<router-view />
+
+	<main class="p-1 flex-grow-1">
+		<router-view :key="$route.fullPath" />
 	</main>
 
 	<Footer />
@@ -16,11 +16,22 @@ export default {
 	name: 'App',
 	components: {
 		Footer,
-		Header,
-	}
+		Header
+	},
+	watch: {
+        $route: {
+            immediate: true,
+            handler(to, from) {
+				const viewName = to.name + "View";
+                document.title = `${this.$t("title")} - ${this.$t(viewName)}`;
+            }
+        },
+    }
 }
 </script>
 
 <style scoped>
-
+main {
+	background-color: #272947;
+}
 </style>

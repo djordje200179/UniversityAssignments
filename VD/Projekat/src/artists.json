@@ -1,0 +1,162 @@
+[
+	{
+		"name": "Vincent Van Gogh",
+		"biography": {
+			"rs": "Био је сликар холандског порекла. Један је од тројице највећих сликара постимпресионизма и један од најцењенијих сликара уопште. Ван Гог је био син протестантског свештеника, а и он сам је неко време био проповедник. Његова дела су запажена по својој грубој лепоти, емотивној искрености и храбрим бојама, те је захваљујући томе постао један од водећих уметника 19. века. Ван Гог је цртао и сликао са воденим бојама док је био у школи — мада је мали број тих слика сачуван, а и ауторство је довођено у питање за неке од њих. Почетком 1883, он је почео да ради на композицијама са више фигура, које је он базирао на својим цртежима. Највећи део његовог рада се бави разрадом и ревидирањем његових фундаменталних постава. Рођен је 1953. године, а умро 1890.",
+			"en": "He was a painter of Dutch origin. He is one of the three greatest painters of post-impressionism and one of the most respected painters in general. Van Gogh was the son of a Protestant priest, and he himself was a preacher for a while. His works are noted for their raw beauty, emotional honesty and bold colors, making him one of the leading artists of the 19th century. Van Gogh drew and painted with water colors while he was at school—although few of these paintings have survived, and the authorship of some of them has been questioned. In early 1883, he began working on multi-figure compositions, which he based on his own drawings. Most of his work deals with the elaboration and revision of his fundamental compositions. He was born in 1953 and died in 1890."
+		},
+		"artworks": [
+			"The Starry Night",
+			"Sunflowers",
+			"Wheatfield with Crows",
+			"The Potato Eaters"
+		],
+		"category": "human",
+		"thumbnail": "https://upload.wikimedia.org/wikipedia/commons/3/38/VanGogh_1887_Selbstbildnis.jpg"
+	},
+	{
+		"name": "Edvard Munch",
+		"biography": {
+			"rs": "Едвард Мунк био је норвешки уметник. Мунк је типичан представник експресионизма у сликарству. Мунк се служи линијама које се издужују и повијају, као и тоновима боја које делују меланхолично. Такву атмосферу створио је на сликама „Крик“, „Тескоба“, „На мосту“. Прославио се у Немачкој у 20. веку, те на тамошње сликаре експресионисте извршио знатан утицај. Приликом сликања слике „Крик“ био је инспирисан црвеним небом од ерупције вулкана Кракатау у Индонезији 1883. на другом крају света. Средином децембра 2006. године стручна комисија је званично објавила да је Мунково најпознатије дело „Крик“, неповратно оштећено док се налазило у поседу крадљиваца који су га предуго изложили штетном дејству влаге.",
+			"en": "Edvard Munch was a Norwegian artist. Munch is a typical representative of expressionism in painting. Munch uses lines that elongate and bend, as well as color tones that seem melancholic. He created such an atmosphere in the paintings \"Scream\", \"Anxiety\", \"On the bridge\". He became famous in Germany in the 20th century, and exerted a considerable influence on the expressionist painters there. When painting the picture \"Scream\" he was inspired by the red sky from the eruption of the Krakatau volcano in Indonesia in 1883 on the other side of the world. In mid-December 2006, an expert commission officially announced that Munch's most famous work, \"The Scream\", was irreversibly damaged while it was in the possession of thieves who exposed it to the harmful effects of moisture for too long."
+		},
+		"artworks": [
+			"Self-Portrait with Palette",
+			"Despair",
+			"The Scream"
+		],
+		"category": "human",
+		"thumbnail": "https://upload.wikimedia.org/wikipedia/commons/6/67/Edvard_Munch_1921.jpg"
+	},
+	{
+		"name": "Salvador Dali",
+		"biography": {
+			"rs": "Био је каталонски и шпански надреалистички уметник, један од најзначајнијих уметника 20. века. Бавио се сликањем, писањем, вајањем, сценографијом и глумом. Он је један од најзначајнијих уметника 20. века, а често га називају и великим мајстором надреализма. Његова уметничка дела показала су да је он један од најкреативнијих сликара свог времена. Далијева честа тематика је свет простора, пијанства, грознице и религије. Овај славни сликар је читавог свог живота веровао у своју посебност. Једни су га сматрали генијем, док су други говорили о њему као поремећеном егоцентрику, чија дела немају никакву вредност. Мада су га шпански ликовни критичари увек сматрали за надобудног и неталентованог шарлатана, популарност и продајна цена његових дела непрестано су расли. Данас, светски колекционари плаћају милионе долара како би у својој колекцији имали бар једну Далијеву слику.",
+			"en": "He was a Catalan and Spanish surrealist artist, one of the most important artists of the 20th century. He was engaged in painting, writing, sculpting, scenography and acting. He is one of the most important artists of the 20th century, and he is often called the great master of surrealism. His works of art showed that he was one of the most creative painters of his time. Dali's frequent themes are the world of space, drunkenness, fever and religion. This famous painter believed in his uniqueness all his life. Some considered him a genius, while others spoke of him as a deranged egocentric, whose works have no value. Although Spanish art critics always regarded him as an aspiring and untalented charlatan, the popularity and sales price of his works continued to grow. Today, collectors around the world pay millions of dollars to have at least one Dali painting in their collection."
+		},
+		"artworks": [
+			"The Persistence of Memory",
+			"The Hallucinogenic Toreador"
+		],
+		"category": "human",
+		"thumbnail": "https://upload.wikimedia.org/wikipedia/commons/f/ff/Dali_Allan_Warren.jpg"
+	},
+	{
+		"name": "Leonardo da Vinci",
+		"biography": {
+			"rs": "Познат као Леонардо да Винчи, био је италијански ренесансни архитекта, проналазач, инжењер, вајар и сликар. За живота слављен због својих сликарских дела, након смрти постаје познат широј публици и по својим свескама, у којима је цртао и писао белешке о разним темама, укључујући анатомију, астрономију, ботанику, картографију, сликарство и палеонтологију. Леонардов геније је оличење ренесансног хуманистичког идеала,[2] а његово укупно дело је допринос каснијим генерацијама уметника који се може мерити само са доприносом његовог млађег савременика, Микеланђела.",
+			"en": "Known as Leonardo da Vinci, he was an Italian Renaissance architect, inventor, engineer, sculptor and painter. Celebrated during his lifetime for his paintings, he became known after his death for his notebooks, in which he drew and wrote notes on a variety of subjects, including anatomy, astronomy, botany, cartography, painting, and paleontology. Leonardo's genius is the embodiment of the Renaissance humanist ideal,[2] and his total work is a contribution to later generations of artists that can only be matched by that of his younger contemporary, Michelangelo."
+		},
+		"artworks": [
+			"The Last Supper",
+			"Mona Lisa",
+			"The Virgin of the Rocks"
+		],
+		"category": "human",
+		"thumbnail": "https://upload.wikimedia.org/wikipedia/commons/b/b5/Leonardo_di_ser_Piero_da_Vinci.jpg"
+	},
+	{
+		"name": "Pigcasso",
+		"biography": {
+			"en": "Pigcasso was rescued just before slaughter in 2016 by Joanne Lefson and taken to Farm Sanctuary SA in Franschhoek, South Africa. When Joanne noticed that Pigcasso ate or destroyed everything except some old paint brushes that were laying in her stall, she decided to nurture the pig’s potential talent. It didn’t take long before Pigcasso began to paint – and over time, the painting process developed into an extraordinary collaboration between human and pig. Lefson selects the colours while Pigcasso takes the brush into her mouth and creates her magic across the canvas. Lefson watches from afar, able to stop Pigcasso if she observes an interesting form developing that is relatable to the human eye. Every original is signed by Pigcasso’s nose-tip, countersigned by Lefson and includes a Certificate of Authenticity. Proceeds from the sale of every artwork benefit the registered nonprofit Farm Sanctuary SA that Lefson established in 2016.",
+			"rs": "Јоанне Лефсон је спасила Пигцассоа непосредно пре клања 2016. године и одвела га на Фарм Санцтуари СА у Франсцххоек, Јужна Африка. Када је Џоана приметила да је Пигкасо појео или уништио све осим неких старих четкица које су лежале у њеној штали, одлучила је да негује потенцијални таленат свиње. Није требало много пре него што је Пигкасо почео да слика - и временом се процес сликања развио у изузетну сарадњу између човека и свиње. Лефсон бира боје док Пигкасо узима четкицу у уста и ствара своју магију преко платна. Лефсон посматра издалека, у стању да заустави Пигкаса ако посматра како се развија занимљив облик који је повезан са људским оком. Сваки оригинал је потписан Пигкасовим врхом носа, потписан од стране Лефсона и укључује сертификат о аутентичности. Приход од продаје сваког уметничког дела користи регистрованој непрофитној организацији Фарм Санцтуари СА коју је Лефсон основао 2016."
+		},
+		"artworks": [
+			"Parrot's plume",
+			"Gentle touch"
+		],
+		"category": "animal",
+		"thumbnail": "https://pigcasso.org/images/Screenshot-2023-06-18-at-16_0007_IMG_2814.jpg"
+	},
+	{
+		"name": "Dogvinci",
+		"biography": {
+			"en": "Dagger was adopted by fine artist, Yvonne Dagger.  While in her studio one day during the summer of 2015, Dagger sat faithfully and watched while Yvonne painted.  Then, suddenly, Dagger approached Yvonne and “nudged” her with his snout.  Jokingly, Yvonne asked Dagger if he wanted to paint. His tail began to wag.  At that instant, Yvonne took a table-top easel and canvas and set them on the floor. She utilized the command words Dagger had learned in Professional Training at Canine Companions and within a month, Dagger had learned how to paint.  All Yvonne had to do was place a brush in Dagger’s mouth and with one simple command, “paint,” Dagger immediately went to work creating amazing artwork–where each and every stoke of paint on the canvas is placed by Dagger himself.",
+			"rs": "Бодеж је усвојила ликовна уметница Ивон Дагер. Док је једног дана у свом студију током лета 2015. Даггер верно седела и посматрала док Ивон слика. Онда је изненада, Бодеж пришао Ивони и „гурнуо“ је њушком. У шали, Ивон је питала Бодежа да ли жели да слика. Његов реп је почео да маше. У том тренутку Ивон је узела стони штафелај и платно и поставила их на под. Користила је командне речи које је Даггер научио на стручној обуци у Цанине Цомпанионс-у и за месец дана Бодеж је научио да слика. Све што је Ивон морала да уради било је да стави четкицу у Бодежова уста и уз једну једноставну команду, „боји“, Бодеж је одмах прионуо на посао стварајући невероватна уметничка дела – где сваки комад боје на платну поставља лично Бодеж."
+		},
+		"artworks": [
+			"Rebirth",
+			"Heart of Gold"
+		],
+		"category": "animal",
+		"thumbnail": "https://www.dogvinci.com/uploads/1/2/1/3/121359914/published/656bb1c9-3d21-484b-a310-a7004a5c4903.jpeg?1629804867"
+	},
+	{
+		"name": "Cholla",
+		"biography": {
+			"en": "Cholla (May 20, 1985 – March 22, 2013 in Nevada, United States) was a mustang-Quarter Horse mix known as the painting horse for his very special ability. Because of his wild temper, the cowboys named him after the cholla cactus. Cholla's paintings were shown in local exhibits in the U.S. In 2008 Cholla received international media exposure when his owner sent one of his earlier artworks (The Big Red Buck, 2004) to a painting competition in Mogliano Veneto, Italy. The jury admitted the artwork, as the competition is open to everyone. The horse was awarded an Honor Mention of the Jury, without receiving any money reward, and the artwork was exhibited together with the 30 finalists'.",
+			"rs": "Чола (20. мај 1985. – 22. март 2013. у Невади, Сједињене Америчке Државе) је био мешавина мустанга и четврт коња позната као сликарски коњ због својих веома посебних способности. Због дивљег темперамента, каубоји су га назвали по чола кактусу. Чолине слике су приказане на локалним изложбама у САД-у. Чола је 2008. био изложен међународним медијима када је његов власник послао једно од својих ранијих уметничких дела (Тхе Биг Ред Буцк, 2004) на конкурс за сликарство у Мољано Венето, Италија. Жири је признао радове, јер је конкурс отворен за све. Коњу је додељено признање жирија, без новчане награде, а уметнички радови су изложени заједно са 30 финалиста."
+		},
+		"artworks": [
+			"Flying Horse",
+			"Mentally Free"
+		],
+		"category": "animal",
+		"thumbnail": "https://www.telegraph.co.uk/multimedia/archive/01208/Cholla-2_1208326c.jpg?imwidth=960"
+	},
+	{
+		"name": "Michelangelo",
+		"biography": {
+			"rs": "Био је италијански ренесансни вајар, сликар, архитекта и песник, један од најзнаменитијих и најутицајнијих умјетника историје европске умјетности. За вријеме живота већ је био сматран највећим умјетником свога времена, а од тада па до данас једним од највећих умјетника свих времена. Велики број његових дјела из сликарства, вајарства и архитектуре су међу најпознатијим у историји умјетности. Фреске таванице Сикстинске капеле у Ватикану данас представљају његова најпознатија дјела, иако је Микеланђело себе сматрао вајарем. Рад на више умјетности није био неуобичајен у његово вријеме.",
+			"en": "He was an Italian Renaissance sculptor, painter, architect and poet, one of the most famous and influential artists in the history of European art. During his lifetime, he was already considered the greatest artist of his time, and from then until today, one of the greatest artists of all time. A large number of his works in painting, sculpture and architecture are among the most famous in the history of art. The ceiling frescoes of the Sistine Chapel in the Vatican today represent his most famous works, although Michelangelo considered himself a sculptor. Working on multiple arts was not uncommon in his time."
+		},
+		"artworks": [
+			"David",
+			"Pieta"
+		],
+		"category": "human",
+		"thumbnail": "https://cdn.britannica.com/46/75046-050-0973B0E8/Michelangelo.jpg"
+	},
+	{
+		"name": "Rachel Harrison",
+		"biography": {
+			"rs": "Рејчел Харисон (рођена 1966) је америчка визуелна уметница позната по својим скулптурама, фотографији и цртежу.Њен рад често комбинује ручно рађене форме са пронађеним предметима или фотографијама, доводећи историју уметности, политику и поп културу у дијалог једни са другима.Учествовала је на бројним изложбама у Европи и САД, укључујући Бијенале у Венецији (2003. и 2009.), Витни бијенале (2002. и 2008.) и Тријенале Тејт (2009.).[7] Њен рад се налази у колекцијама великих музеја као што су Тхе Мусеум оф Модерн Арт, Нев Иорк; Метрополитен музеј уметности, Њујорк; Хиршхорн музеј и башта скулптура, Вашингтон, Д.Ц.; и Тате Модерн, Лондон; између осталих.Живи и ради у Њујорку. У октобру 2019. Харисон је био предмет велике анкетне изложбе у Музеју америчке уметности Витни. Под називом Рацхел Харрисон Лифе Хацк, изложба је окупила преко стотину радова од 1991. до данас и добила бројне позитивне критике.",
+			"en": "Rachel Harrison (born 1966) is an American visual artist known for her sculptures, photography and drawing. Her work often combines handmade forms with found objects or photographs, bringing art history, politics and pop culture into dialogue with each other. She has participated in numerous exhibitions in Europe and the USA, including the Venice Biennale (2003 and 2009), the Whitney Biennial (2002 and 2008) and the Tate Triennial (2009).[7] Her work is in the collections of major museums such as The Museum of Modern Art, New York; The Metropolitan Museum of Art, New York; Hirshhorn Museum and Sculpture Garden, Washington, D.C.; and Tate Modern, London; among others. He lives and works in New York. In October 2019, Harrison was the subject of a major survey exhibition at the Whitney Museum of American Art. Entitled Rachel Harrison Life Hack, the exhibition gathered over a hundred works from 1991 to the present day and received numerous positive reviews."
+		},
+		"artworks": [
+			"Alexander the Great",
+			"Sunday Morning"
+		],
+		"category": "human",
+		"thumbnail": "https://images1.penguinrandomhouse.com/author/2199127"
+	},
+	{
+		"name": "Le Corbusier",
+		"biography": {
+			"rs": "Ле Корбизје (франц. Charles-Édouard Jeanneret, Le Corbusier) или само Корбизје је псеудоним француског архитекте швајцарског порекла, чије је право име било Шарл-Едуар Жанре-Гри (франц. Charles-Édouard Jeanneret-Gris). Рођен је 6. октобра 1887. у месту Шо де Фон (франц. La Chaux-de-Fonds) у Швајцарској и постао француски грађанин 1930. године, а умро је 27. августа 1965. у Француској. Ле Корбизје је био архитекта и урбаниста а такође и сликар, вајар и писац а познат је и као саоснивач пуризма. Током своје педесетогодишње каријере дизајнирао је зграде у Европи, Јапану, Индији, и Северној и Јужној Америци. Дана 17. јула 2016, седамнаест Ле Корбизјеових пројеката у седам земаља је уписано у Унесков списак локација Светксог наслеђа као Архитектонски рад Ле Корбизјеа, изузетан допринос модерном покрету.",
+			"en": "Le Corbusier (French: Charles-Édouard Jeanneret, Le Corbusier) or just Corbusier is the pseudonym of a French architect of Swiss origin, whose real name was Charles-Édouard Jeanneret-Gris (French: Charles-Édouard Jeanneret-Gris). He was born on October 6, 1887 in Chaux-de-Fonds (French: La Chaux-de-Fonds) in Switzerland and became a French citizen in 1930, and died on August 27, 1965 in France. Le Corbusier was an architect and urban planner, as well as a painter, sculptor and writer, and is also known as the co-founder of purism. During his fifty-year career, he designed buildings in Europe, Japan, India, and North and South America. On July 17, 2016, seventeen of Le Corbusier's projects in seven countries were inscribed on UNESCO's list of World Heritage Sites as Architectural Works of Le Corbusier, Outstanding Contribution to the Modern Movement."
+		},
+		"artworks": [
+			"Villa Savoye",
+			"Maison Blanche"
+		],
+		"category": "human",
+		"thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/Le_Corbusier_%281964%29.jpg/800px-Le_Corbusier_%281964%29.jpg"
+	},
+	{
+		"name": "Frank Lloyd Wright",
+		"biography": {
+			"rs": "Френк Лојд Рајт (енгл. Frank Lloyd Wright; Ричленд Сентер, 8. јуна 1867 — Финикс, 9. априла 1959) био је амерички архитекта, дизајнер ентеријера, писац и предавач који је дизајнирао више од 1000 објеката, од којих су 532 реализована. Рајт је веровао у обликовање структура које су у хармонији са људском природом и околином, своју стваралачку филозофију је назвао органска архитектура. Ова филозофија је најбоље представљена Кућом на водопаду Фолингвотер (1935), која је прозвана као најбоље дело америчке архитектуре свих времена.[1] Био је водећа личност Преријске школе (Prairie School ), покрета у архитектури и развоју концепта тзв. Усонијан куће. Његове визије урбаног планирања у Сједињеним државама су оставиле јединствен траг. Поред својих кућа, Рајт је дизајнирао оригиналне и иновативне канцеларије, цркве, школе, небодере, хотеле, музеје и друге структуре. Често је дизајнирао и унутрашње елементе за ове зграде, укључујући и намештај и витраж. Рајт је написао 20 књига и много чланака и био је популарни предавач у Сједињеним Државама и у Европи. Рајт је 1991. године признат од стране Америчког института архитеката као највећи амерички архитект свих времена.",
+			"en": "Frank Lloyd Wright (Frank Lloyd Wright; Richland Center, June 8, 1867 - Phoenix, April 9, 1959) was an American architect, interior designer, writer and lecturer who designed more than 1000 buildings, of which 532 were realized. Wright believed in designing structures that are in harmony with human nature and the environment, he called his creative philosophy organic architecture. This philosophy is best represented by the Fallingwater Falls House (1935), which has been called the greatest work of American architecture of all time.[1] He was a leading figure of the Prairie School, a movement in architecture and the development of the so-called concept. Usonian house. His visions of urban planning in the United States left a unique mark. In addition to his houses, Wright designed original and innovative offices, churches, schools, skyscrapers, hotels, museums and other structures. He often designed the interior elements for these buildings as well, including furniture and stained glass. Wright wrote 20 books and many articles and was a popular lecturer in the United States and Europe. In 1991, Wright was recognized by the American Institute of Architects as the greatest American architect of all time."
+		},
+		"artworks": [
+			"Falling Waters",
+			"Hotel Imperial"
+		],
+		"category": "human",
+		"thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Frank_Lloyd_Wright_portrait.jpg/800px-Frank_Lloyd_Wright_portrait.jpg"
+	},
+	{
+		"name": "Richard George Rogers",
+		"biography": {
+			"rs": "Рогерс је син лијечника, а његова мајка се бавила модерним дизајном. Године 1938. обитељ се преселила из Италије у Енглеску, гдје је Ричард уписао школу. Био је лош ученик, јер је имао дислексију која се тада још није дијагностицирала. Но, завршио је средњу школу 1951. године и у складу са жељама родитеља упиасао је студиј за стоматолога. Када је посјетио Британски сајам, остао је фасциниран модерним привременим зградама. Тијеком двије године војне службе у Трсту упознао се с дјелом Ернеста Натхана Рогерс (ББПР), једног од познатијих талијанских архитеката и братића његова оца. Тада се одлучио за студиј на Школи архитектонског удружења (Арчитецтурал Ассоциатион Счоол) у Лондону (1954. – 1959.). Год. 1961. добио је Фулбригхт стипендију која му је омогућила да настави студиј архитектуре на Свеучилишту Yале, гдје је и магистрирао. На Yалеу је студирао с Норманом Фостером и упознао је студентицу урбанизма, Су Брумwелл, која ће му касније постати супругом. Ту је развио и занимање за рад Франка Ллоyда Wригхта.[2] Након дипломе радио је за твртку Скидморе, Оwингс & Меррилл у Неw Yорку, а затим се 1963. вратио натраг у Енглеску гдје је са супругом, Норманом Фостером и Wендy Чеесеман (каснијом супругом Н. Фостера) основао уред Теам 4. Уред се распао 1967., али су Ричард и Су Рогерс наставили сурађивати, заједно с Јохном Yоунгом и Лаурие Абботт.",
+			"en": "Richard Rogers was born in Florence, Tuscany, in 1933 into an Anglo-Italian family. His father, William Nino Rogers (1906–1993), was Jewish, and was the cousin of Italian Jewish architect Ernesto Nathan Rogers. His Jewish ancestors moved from Sunderland to Venice in about 1800, later settling in Trieste, Milan and Florence. In October 1938, William Nino Rogers came back to England,[2] having fled Fascist Italy and anti-Jewish laws under Mussolini. Upon moving to England, Richard Rogers went to St John's School, Leatherhead. Rogers did not excel academically, which made him believe that he was \"stupid because he could not read or memorise his school work\" and as a consequence, he said, he became \"very depressed\". He couldn't read until he was 11, and it was not until after he had his first child that Rogers realised he was dyslexic.[3] After leaving St Johns School, he undertook a foundation course at Epsom School of Art[5] (now the University for the Creative Arts) before going into National Service between 1951 and 1953."
+		},
+		"artworks": [
+			"The Pompidou Centre",
+			"22 Parkside"
+		],
+		"category": "human",
+		"thumbnail": "https://ichef.bbci.co.uk/news/976/cpsprodpb/107BD/production/_89771576_89771575.jpg"
+	}
+]

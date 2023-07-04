@@ -1,0 +1,573 @@
+[
+	{
+		"title": "The Starry Night",
+		"artist": "Vincent van Gogh",
+		"category": "paintings",
+		"year": 1889,
+		"price": 1000000,
+		"video": "https://www.youtube.com/embed/G7Dt9ziemYA",
+		"thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg/800px-Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg",
+		"gallery": [
+			{
+				"id": 1,
+				"link": "https://cdn.kastatic.org/ka-perseus-images/b6e662b4efcd6c53bf80c73259d46c20c0bd2961.jpg"
+			},
+			{
+				"id": 2,
+				"link": "https://upload.wikimedia.org/wikipedia/commons/2/23/Starry-night-in-moma-gallery.jpg"
+			},
+			{
+				"id": 3,
+				"link": "https://th-thumbnailer.cdn-si-edu.com/1G_5HsjRKwBpgSTymPMALv4-r_Q=/1000x750/filters:no_upscale():focal(2409x1653:2410x1654)/https://tf-cmsv2-smithsonianmag-media.s3.amazonaws.com/filer/f3/fa/f3fa8097-4f45-4555-96de-a6cc736e6587/van_gogh_angle1_starry_night_300dpi.jpg"
+			}
+		],
+		"bids": [
+			{
+				"id": 1,
+				"bidder": "John Doe",
+				"amount": 1000000
+			},
+			{
+				"id": 2,
+				"bidder": "Jane Doe",
+				"amount": 2000000
+			}
+		],
+		"comments": [
+			{
+				"id": 1,
+				"commenter": "John Doe",
+				"comment": "This is a very nice painting"
+			},
+			{
+				"id": 2,
+				"commenter": "Jane Doe",
+				"comment": "I agree with Jone"
+			}
+		]
+	},
+	{
+		"title": "The Scream",
+		"artist": "Edvard Munch",
+		"category": "paintings",
+		"year": 1893,
+		"price": 1200000,
+		"video": "https://www.youtube.com/embed/dMmMJV9wQ08",
+		"thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Edvard_Munch%2C_1893%2C_The_Scream%2C_oil%2C_tempera_and_pastel_on_cardboard%2C_91_x_73_cm%2C_National_Gallery_of_Norway.jpg/1200px-Edvard_Munch%2C_1893%2C_The_Scream%2C_oil%2C_tempera_and_pastel_on_cardboard%2C_91_x_73_cm%2C_National_Gallery_of_Norway.jpg",
+		"gallery": [
+			{
+				"id": 1,
+				"link": "https://upload.wikimedia.org/wikipedia/commons/3/38/The_Scream_and_the_Painter%2C_Edvard_Munch_at_the_National_Gallery_in_Oslo_%2824130397650%29.jpg"
+			},
+			{
+				"id": 2,
+				"link": "https://images-cdn.bridgemanimages.com/api/1.0/image/600wm.XXX.12884730.7055475/3745642.jpg"
+			},
+			{
+				"id": 3,
+				"link": "https://icon.ink/wp-content/uploads/sites/5/2021/02/GettyImages-142750251.jpg?resize=1024%2C683?w=1024"
+			}
+		],
+		"bids": [
+			{
+				"id": 1,
+				"bidder": "John Doe",
+				"amount": 1000000
+			},
+			{
+				"id": 2,
+				"bidder": "Jane Doe",
+				"amount": 2000000
+			}
+		],
+		"comments": [
+			{
+				"id": 1,
+				"commenter": "John Doe",
+				"comment": "This is a very nice painting"
+			},
+			{
+				"id": 2,
+				"commenter": "Jane Doe",
+				"comment": "I agree with Jone"
+			}
+		]
+	},
+	{
+		"title": "The Persistence of Memory",
+		"artist": "Salvador Dali",
+		"category": "paintings",
+		"year": 1931,
+		"price": 1500000,
+		"video": "https://www.youtube.com/embed/YqlTRZi-e10",
+		"thumbnail": "https://uploads6.wikiart.org/images/salvador-dali/the-persistence-of-memory-1931.jpg!Large.jpg",
+		"gallery": [
+			{
+				"id": 1,
+				"link": "https://www.1st-art-gallery.com/cdn-cgi/image/format=webp,quality=85,width=840/media/magefan_blog/apartment-1835482_960_720_3.jpg"
+			},
+			{
+				"id": 2,
+				"link": "https://www.dalipaintings.com/images/persistence-of-memory-photo.jpg"
+			}
+		],
+		"bids": [
+			{
+				"id": 1,
+				"bidder": "John Doe",
+				"amount": 1000000
+			},
+			{
+				"id": 2,
+				"bidder": "Jane Doe",
+				"amount": 2000000
+			}
+		],
+		"comments": [
+			{
+				"id": 1,
+				"commenter": "John Doe",
+				"comment": "This is a very nice painting"
+			},
+			{
+				"id": 2,
+				"commenter": "Jane Doe",
+				"comment": "I agree with Jone"
+			}
+		]
+	},
+	{
+		"title": "The Last Supper",
+		"artist": "Leonardo da Vinci",
+		"category": "paintings",
+		"year": 1495,
+		"price": 2000000,
+		"video": "https://www.youtube.com/embed/VGKaSO46Rek",
+		"thumbnail": "https://upload.wikimedia.org/wikipedia/commons/4/4b/%C3%9Altima_Cena_-_Da_Vinci_5.jpg",
+		"gallery": [
+			{
+				"id": 1,
+				"link": "https://static.standard.co.uk/s3fs-public/thumbnails/image/2020/05/22/16/19.-ra-collection-gallery-2-c.-james-harris-0.jpg?width=1024&auto=webp&quality=50&crop=968%3A645%2Csmart"
+			},
+			{
+				"id": 2,
+				"link": "https://d1inegp6v2yuxm.cloudfront.net/royal-academy/image/upload/c_limit,cs_tinysrgb,dn_72,dpr_1.3,f_auto,fl_progressive.keep_iptc,w_650/lyffar7uxphafsracbfo.jpg"
+			}
+		],
+		"bids": [
+			{
+				"id": 1,
+				"bidder": "John Doe",
+				"amount": 1000000
+			},
+			{
+				"id": 2,
+				"bidder": "Jane Doe",
+				"amount": 2000000
+			}
+		],
+		"comments": [
+			{
+				"id": 1,
+				"commenter": "John Doe",
+				"comment": "This is a very nice painting"
+			},
+			{
+				"id": 2,
+				"commenter": "Jane Doe",
+				"comment": "I agree with Jone"
+			}
+		]
+	},
+	{
+		"title": "David",
+		"artist": "Michelangelo",
+		"category": "sculptures",
+		"year": 1501,
+		"price": 5000000,
+		"video": "https://www.youtube.com/embed/QdlP8ai8trw",
+		"thumbnail": "https://upload.wikimedia.org/wikipedia/commons/8/80/Michelangelo%27s_David_-_right_view_2.jpg",
+		"gallery": [
+			{
+				"id": 1,
+				"link": "https://upload.wikimedia.org/wikipedia/commons/1/15/David_by_Michelangelo_at_Florence_Nevit_Dilmen.png"
+			},
+			{
+				"id": 2,
+				"link": "https://upload.wikimedia.org/wikipedia/commons/b/b5/%27David%27_by_Michelangelo_JBU14.JPG"
+			}
+		],
+		"bids": [
+			{
+				"id": 1,
+				"bidder": "John Doe",
+				"amount": 1000000
+			},
+			{
+				"id": 2,
+				"bidder": "Jane Doe",
+				"amount": 2000000
+			}
+		],
+		"comments": [
+			{
+				"id": 1,
+				"commenter": "John Doe",
+				"comment": "This is a very nice painting"
+			},
+			{
+				"id": 2,
+				"commenter": "Jane Doe",
+				"comment": "I agree with Jone"
+			}
+		]
+	},
+	{
+		"title": "Pieta",
+		"artist": "Michelangelo",
+		"category": "sculptures",
+		"year": 1497,
+		"price": 3000000,
+		"video": "https://www.youtube.com/embed/JbWGusfynCw",
+		"thumbnail": "https://upload.wikimedia.org/wikipedia/commons/1/1f/Michelangelo%27s_Pieta_5450_cropncleaned_edit.jpg",
+		"gallery": [
+			{
+				"id": 1,
+				"link": "https://upload.wikimedia.org/wikipedia/commons/a/a2/Piet%C3%A0_by_Michelangelo%2C_St._Peter%27s_Basilica_%2832746521038%29.jpg"
+			},
+			{
+				"id": 2,
+				"link": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Plaster_cast_of_the_Pieta_of_Michelangelo%2C_Museo_dell%27Opera_del_Duomo%2C_Florence%2C_223886.jpg/1199px-Plaster_cast_of_the_Pieta_of_Michelangelo%2C_Museo_dell%27Opera_del_Duomo%2C_Florence%2C_223886.jpg?20220809134127"
+			}
+		],
+		"bids": [
+			{
+				"id": 1,
+				"bidder": "John Doe",
+				"amount": 1000000
+			},
+			{
+				"id": 2,
+				"bidder": "Jane Doe",
+				"amount": 2000000
+			}
+		],
+		"comments": [
+			{
+				"id": 1,
+				"commenter": "John Doe",
+				"comment": "This is a very nice painting"
+			},
+			{
+				"id": 2,
+				"commenter": "Jane Doe",
+				"comment": "I agree with Jone"
+			}
+		]
+	},
+	{
+		"title": "Alexander the Great",
+		"artist": "Rachel Harisson",
+		"category": "sculptures",
+		"year": 2006,
+		"price": 30000,
+		"video": "https://www.youtube.com/embed/y2GbDBmxuRs",
+		"thumbnail": "https://media.timeout.com/images/105757844/1024/768/image.jpg",
+		"gallery": [
+			{
+				"id": 1,
+				"link": "https://whitneymedia.org/assets/image/822227/large_RH1102_a_crop.jpg"
+			},
+			{
+				"id": 2,
+				"link": "https://www.moma.org/media/W1siZiIsIjE2NTQ1NCJdLFsicCIsImNvbnZlcnQiLCItcXVhbGl0eSA5MCAtcmVzaXplIDIwMDB4MTQ0MFx1MDAzZSJdXQ.jpg?sha=b9b418c56e61ddc3"
+			}
+		],
+		"bids": [
+			{
+				"id": 1,
+				"bidder": "John Doe",
+				"amount": 1000000
+			},
+			{
+				"id": 2,
+				"bidder": "Jane Doe",
+				"amount": 2000000
+			}
+		],
+		"comments": [
+			{
+				"id": 1,
+				"commenter": "John Doe",
+				"comment": "This is a very nice painting"
+			},
+			{
+				"id": 2,
+				"commenter": "Jane Doe",
+				"comment": "I agree with Jone"
+			}
+		]
+	},
+	{
+		"title": "Villa Savoye",
+		"artist": "Le Corbusier",
+		"category": "other",
+		"year": 1931,
+		"price": 30000000,
+		"video": "https://www.youtube.com/embed/f1womjgDI_I",
+		"thumbnail": "https://cdn.kastatic.org/ka-perseus-images/889d4b84b5d369689745b2441c7427e07089bef5.jpg",
+		"gallery": [
+			{
+				"id": 1,
+				"link": "https://1.bp.blogspot.com/-3AMrzO5Srp8/X_uFAOxi3rI/AAAAAAAAD0w/dze3sVv25yI-ckSoGO4C2I9kE3Y7dVZAwCLcBGAsYHQ/s1600/Villa%2BSavoye.png"
+			},
+			{
+				"id": 2,
+				"link": "https://www.friendschoices.com/photo/recommendationcomment/5354/8500.jpg"
+			}
+		],
+		"bids": [
+			{
+				"id": 1,
+				"bidder": "John Doe",
+				"amount": 1000000
+			},
+			{
+				"id": 2,
+				"bidder": "Jane Doe",
+				"amount": 2000000
+			}
+		],
+		"comments": [
+			{
+				"id": 1,
+				"commenter": "John Doe",
+				"comment": "This is very nice"
+			},
+			{
+				"id": 2,
+				"commenter": "Jane Doe",
+				"comment": "I agree with Jone"
+			}
+		]
+	},
+	{
+		"title": "Falling Waters",
+		"artist": "Frank Lloyd Wright",
+		"category": "other",
+		"year": 1936,
+		"price": 40000000,
+		"video": "https://www.youtube.com/embed/2AIPbJRP71E",
+		"thumbnail": "https://www.re-thinkingthefuture.com/wp-content/uploads/2020/05/A871-50-MODERNIST-ARCHITECTS-AND-THEIR-WORKS-FRANK-LLOYD-WRIGHT-IMAGE-1-1024x818.jpg",
+		"gallery": [
+			{
+				"id": 1,
+				"link": "https://www.meganotravels.com/wp-content/uploads/2014/03/IMG_8524.jpg"
+			},
+			{
+				"id": 2,
+				"link": "https://archeyes.com/wp-content/uploads/2021/02/Fallingwater-frank-lloyd-wright-kauffman-house-edgar-ArchEyes-level-1.jpg"
+			}
+		],
+		"bids": [
+			{
+				"id": 1,
+				"bidder": "John Doe",
+				"amount": 1000000
+			},
+			{
+				"id": 2,
+				"bidder": "Jane Doe",
+				"amount": 2000000
+			}
+		],
+		"comments": [
+			{
+				"id": 1,
+				"commenter": "John Doe",
+				"comment": "This is very nice"
+			},
+			{
+				"id": 2,
+				"commenter": "Jane Doe",
+				"comment": "I agree with Jone"
+			}
+		]
+	},
+	{
+		"title": "The Pompidou Centre",
+		"artist": "Richard George Rogers",
+		"category": "other",
+		"year": 1936,
+		"price": 40000000,
+		"video": "https://www.youtube.com/embed/VHCDAW1SQaM",
+		"thumbnail": "https://blog.artsper.com/wp-content/uploads/2014/07/New-Featured-Image-1200-x-675-2.jpg",
+		"gallery": [
+			{
+				"id": 1,
+				"link": "https://snippetsofparis.com/wp-content/uploads/2021/09/IMG_9772-centre-pompidou.jpg"
+			},
+			{
+				"id": 2,
+				"link": "https://rshp.com/assets/crops/4x2.50dad431.99_0322.jpg"
+			},
+			{
+				"id": 3,
+				"link": "https://www.atlasofplaces.com/atlas-of-places-images/ATLAS-OF-PLACES-PIANO-ROGERS-CENTRE-POMPIDOU-GPH-1.jpg"
+			}
+		],
+		"bids": [
+			{
+				"id": 1,
+				"bidder": "John Doe",
+				"amount": 1000000
+			},
+			{
+				"id": 2,
+				"bidder": "Jane Doe",
+				"amount": 2000000
+			}
+		],
+		"comments": [
+			{
+				"id": 1,
+				"commenter": "John Doe",
+				"comment": "This is very nice"
+			},
+			{
+				"id": 2,
+				"commenter": "Jane Doe",
+				"comment": "I agree with Jone"
+			}
+		]
+	},
+	{
+		"title": "Parrot's plume",
+		"artist": "Pigcasso",
+		"category": "paintings",
+		"year": 2023,
+		"price": 270000,
+		"video": "https://www.youtube.com/embed/in4NKrB5D8Q",
+		"thumbnail": "https://pigcasso.myshopify.com/cdn/shop/files/Parrot_sPlume_1024x1024@2x.jpg?v=1687432186",
+		"gallery": [
+			{
+				"id": 1,
+				"link": "https://nypost.com/wp-content/uploads/sites/2/2016/11/pigacasso.jpg?quality=75&strip=all"
+			},
+			{
+				"id": 2,
+				"link": "https://www.deckleedge.co.za/wp-content/uploads/2022/02/Pigcasso-Love-1.jpg"
+			}
+		],
+		"bids": [
+			{
+				"id": 1,
+				"bidder": "John Doe",
+				"amount": 1000000
+			},
+			{
+				"id": 2,
+				"bidder": "Jane Doe",
+				"amount": 2000000
+			}
+		],
+		"comments": [
+			{
+				"id": 1,
+				"commenter": "John Doe",
+				"comment": "This is very nice"
+			},
+			{
+				"id": 2,
+				"commenter": "Jane Doe",
+				"comment": "I agree with Jone"
+			}
+		]
+	},
+	{
+		"title": "Rebirth",
+		"artist": "Dogvinci",
+		"category": "paintings",
+		"year": 2022,
+		"price": 200,
+		"video": "https://www.youtube.com/embed/yiGTnb7yzp0",
+		"thumbnail": "https://www.dogvinci.com/uploads/1/2/1/3/121359914/s604389972181455982_p197_i9_w912.jpeg?width=640",
+		"gallery": [
+			{
+				"id": 1,
+				"link": "https://www.dogvinci.com/uploads/1/2/1/3/121359914/barney-6-19-23-3-img-8382.jpg"
+			},
+			{
+				"id": 2,
+				"link": "https://www.dogvinci.com/uploads/1/2/1/3/121359914/published/barney-7-4-23-july-4th.jpg?1688410789"
+			}
+		],
+		"bids": [
+			{
+				"id": 1,
+				"bidder": "John Doe",
+				"amount": 1000000
+			},
+			{
+				"id": 2,
+				"bidder": "Jane Doe",
+				"amount": 2000000
+			}
+		],
+		"comments": [
+			{
+				"id": 1,
+				"commenter": "John Doe",
+				"comment": "This is very nice"
+			},
+			{
+				"id": 2,
+				"commenter": "Jane Doe",
+				"comment": "I agree with Jone"
+			}
+		]
+	},
+	{
+		"title": "Flying Horse",
+		"artist": "Cholla",
+		"category": "paintings",
+		"year": 2010,
+		"price": 500,
+		"video": "https://www.youtube.com/embed/NB4lVmL5wkU",
+		"thumbnail": "https://www.giudecca795.com/im/art/_im/00219/large.jpg",
+		"gallery": [
+			{
+				"id": 1,
+				"link": "https://cdn.shopify.com/s/files/1/0160/7832/files/photo_copy_2.JPG?2001"
+			},
+			{
+				"id": 2,
+				"link": "https://www.telegraph.co.uk/multimedia/archive/01208/Cholla-2_1208326c.jpg"
+			}
+		],
+		"bids": [
+			{
+				"id": 1,
+				"bidder": "John Doe",
+				"amount": 1000000
+			},
+			{
+				"id": 2,
+				"bidder": "Jane Doe",
+				"amount": 2000000
+			}
+		],
+		"comments": [
+			{
+				"id": 1,
+				"commenter": "John Doe",
+				"comment": "This is very nice"
+			},
+			{
+				"id": 2,
+				"commenter": "Jane Doe",
+				"comment": "I agree with Jone"
+			}
+		]
+	}
+]

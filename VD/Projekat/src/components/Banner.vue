@@ -1,11 +1,12 @@
 <template>
 	<aside class="bg-dark">
-
+		Banner
 	</aside>
 </template>
 
 <script>
 export default {
+	name: "Banner",
 	props: {
 
 	}
@@ -13,7 +14,8 @@ export default {
 </script>
 
 <style scoped>
-	aside {
-		width: 200px;
-	}
+aside {
+	min-height: 100px;
+	height: 100%;
+}
 </style>
