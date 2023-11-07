@@ -1,6 +1,5 @@
 ﻿import math
 import cmath
-from re import L
 import numpy as np
 import matplotlib.pyplot as plt
 
