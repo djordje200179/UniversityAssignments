@@ -52,7 +52,7 @@ struct AnnealingResult {
 	int error;
 };
 
-AnnealingResult annealing_cycle(const Point& initial_point, int* errors_memory) {
+AnnealingResult generation_simulation(const Point& initial_point, int* errors_memory) {
 	AnnealingResult result;
 	result.point = initial_point;
 	result.error = calculate_error(initial_point);
@@ -98,20 +98,20 @@ AnnealingResult annealing_cycle(const Point& initial_point, int* errors_memory) 
 	return result;
 }
 
-struct ReannealingResult {
+struct EvolutionResult {
 	Point point;
 	int error;
 	array<int, REANNEALING_ITERATIONS* ANNEALING_ITERATIONS> errors;
 };
 
-void reannealing_cycle(ReannealingResult& result) {
+void evolution_cycle(EvolutionResult& result) {
 	result.point = array<int, 64>();
 
 	auto pid = this_thread::get_id();
 
 	for (int i = 0; i < REANNEALING_ITERATIONS; i++) {
 		int* errors_memory = result.errors.data() + i * ANNEALING_ITERATIONS;
-		auto annealing_result = annealing_cycle(result.point, result.errors.data() + i * ANNEALING_ITERATIONS);
+		auto annealing_result = generation_simulation(result.point, result.errors.data() + i * ANNEALING_ITERATIONS);
 
 		result.point = annealing_result.point;
 		result.error = annealing_result.error;
@@ -120,9 +120,9 @@ void reannealing_cycle(ReannealingResult& result) {
 
 int main() {
 	array<thread, INDEPENDENT_EXECUTIONS> threads;
-	vector<ReannealingResult> results(INDEPENDENT_EXECUTIONS);
+	vector<EvolutionResult> results(INDEPENDENT_EXECUTIONS);
 	for (int i = 0; i < INDEPENDENT_EXECUTIONS; i++) {
-		threads[i] = thread(reannealing_cycle, ref(results[i]));
+		threads[i] = thread(evolution_cycle, ref(results[i]));
 		cout << "proc #" << threads[i].get_id() << ":\tstarted" << endl;
 	}
 
@@ -133,7 +133,7 @@ int main() {
 		cout << "proc #" << pid << ":\tfinished" << endl;
 	}
 
-	const ReannealingResult* best_result = &results[0];
+	const EvolutionResult* best_result = &results[0];
 	for (const auto& result : results) {
 		if (result.error < best_result->error)
 			best_result = &result;

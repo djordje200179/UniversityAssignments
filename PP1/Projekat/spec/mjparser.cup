@@ -1,0 +1,114 @@
+package rs.ac.bg.etf.pp1;
+
+import java_cup.runtime.*;
+import rs.ac.bg.etf.pp1.ast.*;
+
+
+parser code {:
+	private boolean errorDetected = false;
+	
+	public boolean hasError() {
+		return errorDetected;
+	}
+     
+    public void report_fatal_error(String message, Object info) throws Exception {
+      done_parsing();
+      report_error(message, info);
+    }
+  
+    public void syntax_error(Symbol cur_token) {
+        report_error("Syntax error: ", cur_token);
+    }
+  
+    public void unrecovered_syntax_error(Symbol cur_token) throws Exception {
+        report_fatal_error("Fatal error: ", cur_token);
+    }
+
+    public void report_error(String message, Object info) {
+    	errorDetected = true;
+    	StringBuilder msg = new StringBuilder(message); 
+    	if (info instanceof Symbol)
+            msg.append (" at line ").append(((Symbol)info).left);
+        System.err.println(msg.toString());
+    }
+    
+    public void report_info(String message, Object info) {
+    	StringBuilder msg = new StringBuilder(message); 
+    	if (info instanceof Symbol)
+            msg.append (" at line ").append(((Symbol)info).left);
+        System.out.println(msg.toString());
+    } 
+:}
+
+scan with {:
+	Symbol s = this.getScanner().next_token();
+	if (s != null && s.value != null) 
+		System.out.println(s.toString() + " " + s.value.toString());
+
+	return s;
+:}
+
+
+terminal LBRACE, RBRACE, SEMI, LPAREN, RPAREN, COMMA, DBLCOLON;
+terminal PLUS, EQUAL;
+terminal PROGRAM, NSP;
+terminal PRINT, RETURN, VOID, IF, ELSE, CONST;
+terminal Integer NUM;
+terminal Boolean BOOL;
+terminal Character CHAR;
+terminal String IDENT;
+
+nonterminal Program, ProgName;
+nonterminal NspDecls, Namespace, NspName;
+nonterminal GlobalDecls, GlobalDecl;
+nonterminal Type;
+nonterminal ConstTypedDecl, ConstDecls, ConstDecl, Const;
+nonterminal VarTypedDecls, VarTypedDecl, VarDecls, VarDecl;
+nonterminal MethodDecls, MethodDecl, MethodSign;
+nonterminal FormPars, FormParams, FormParam;
+nonterminal Statement;
+
+precedence left ELSE;
+
+Program 	::= (Program) PROGRAM ProgName NspDecls GlobalDecls LBRACE MethodDecls RBRACE;
+ProgName	::= (ProgName) IDENT:name;
+
+NspDecls	::= NspDecls Namespace
+			  | /* epsilon */;
+			  
+Namespace	::= (Namespace) NSP NspName LBRACE GlobalDecls LBRACE MethodDecls RBRACE RBRACE;
+NspName		::= (NspName) IDENT:name;
+
+GlobalDecls	::= GlobalDecls GlobalDecl
+			  | /* epsilon */;
+GlobalDecl	::= (GlobalConstDecl) ConstTypedDecl
+			  | (GlobalVarDecl) VarTypedDecl;
+				  	  
+ConstTypedDecl	::= (ConstTypedDecl) CONST IDENT:type ConstDecls SEMI;
+ConstDecls		::= ConstDecls COMMA ConstDecl
+				  | ConstDecl;
+ConstDecl		::= (ConstDecl) IDENT:name EQUAL Const;
+Const			::= (IntConst) NUM:value
+	   			  | (CharConst) CHAR:value
+				  | (BoolConst) BOOL:value;
+
+VarTypedDecls	::= VarTypedDecls VarTypedDecl
+			  	  | /* epsilon */;
+VarTypedDecl	::= (VarTypedDecl) IDENT:type VarDecls SEMI;
+VarDecls		::= VarDecls COMMA VarDecl
+				  | VarDecl;
+VarDecl			::= (VarDecl) IDENT:name;
+			 
+MethodDecls	::= MethodDecls MethodDecl
+			  | /* epsilon */;
+MethodDecl	::= (MethodDecl) MethodSign LPAREN FormPars RPAREN VarTypedDecls LBRACE Statement RBRACE;
+MethodSign	::= (ValueMethodSign) IDENT:type IDENT:name
+			  | (VoidMethodSign) VOID IDENT:name;
+
+FormPars	::= FormParams
+			  | /* epsilon */;
+FormParams	::= FormParams COMMA FormParam
+			  | FormParam;
+FormParam	::= (FormParam) IDENT:type IDENT:name;
+
+Statement ::= ;

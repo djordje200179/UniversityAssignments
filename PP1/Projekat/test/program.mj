@@ -1,0 +1,45 @@
+program MJProgram
+	namespace n1 {
+	{
+		int foo ()
+			int c; 
+		{
+		}
+		
+		void bar (int x, int y) 
+			int c; int a, b; 
+		{
+		}
+		
+		void main() {
+		}
+	}
+	}
+	
+	namespace n2 {
+	{
+		int foo ()
+			int c; 
+		{
+		}
+		
+		void bar (int x, int y) 
+			int c; int a, b; 
+		{
+		}
+		
+		int main() {
+		}
+	}
+	}
+	
+	int x; int y;
+{
+	void bar (int x, int y) 
+		int c; int a, b; 
+	{
+	}
+	
+	void main() {
+	}
+}
