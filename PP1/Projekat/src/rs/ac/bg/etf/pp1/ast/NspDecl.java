@@ -1,11 +1,11 @@
 // generated with ast extension for cup
 // version 0.8
-// 25/11/2023 15:6:21
+// 25/11/2023 17:27:15
 
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class Namespace implements SyntaxNode {
+public class NspDecl implements SyntaxNode {
 
     private SyntaxNode parent;
     private int line;
@@ -13,7 +13,7 @@ public class Namespace implements SyntaxNode {
     private GlobalDecls GlobalDecls;
     private MethodDecls MethodDecls;
 
-    public Namespace (NspName NspName, GlobalDecls GlobalDecls, MethodDecls MethodDecls) {
+    public NspDecl (NspName NspName, GlobalDecls GlobalDecls, MethodDecls MethodDecls) {
         this.NspName=NspName;
         if(NspName!=null) NspName.setParent(this);
         this.GlobalDecls=GlobalDecls;
@@ -89,7 +89,7 @@ public class Namespace implements SyntaxNode {
     public String toString(String tab) {
         StringBuffer buffer=new StringBuffer();
         buffer.append(tab);
-        buffer.append("Namespace(\n");
+        buffer.append("NspDecl(\n");
 
         if(NspName!=null)
             buffer.append(NspName.toString("  "+tab));
@@ -110,7 +110,7 @@ public class Namespace implements SyntaxNode {
         buffer.append("\n");
 
         buffer.append(tab);
-        buffer.append(") [Namespace]");
+        buffer.append(") [NspDecl]");
         return buffer.toString();
     }
 }

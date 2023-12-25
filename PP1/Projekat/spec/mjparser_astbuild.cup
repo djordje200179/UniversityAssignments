@@ -42,7 +42,7 @@ parser code {:
 scan with {:
 	Symbol s = this.getScanner().next_token();
 	if (s != null && s.value != null) 
-		System.out.println(s.toString() + " " + s.value.toString());
+		System.out.println(s + " " + s.value.toString());
 
 	return s;
 :}
@@ -50,9 +50,9 @@ scan with {:
 
 terminal LBRACE, RBRACE, SEMI, LPAREN, RPAREN, LBRACKET, RBRACKET;
 terminal COMMA, DBLCOLON;
-terminal PLUS, EQUAL;
-terminal PROGRAM, NSP;
-terminal PRINT, RETURN, VOID, IF, ELSE, CONST;
+terminal PLUS, MINUS, ASTERISK, SLASH, PERCENT, EQUAL;
+terminal PROGRAM, NAMESPACE, PRINT, READ, RETURN, VOID, IF, ELSE, CONST, NEW, BREAK, CONTINUE;
+
 terminal Integer NUM;
 terminal Boolean BOOL;
 terminal Character CHAR;
@@ -60,18 +60,18 @@ terminal String IDENT;
 
 nonterminal Program Program;
 nonterminal NspDecls NspDecls;
-nonterminal Namespace Namespace;
+nonterminal NspDecl NspDecl;
 nonterminal NspName NspName;
 nonterminal GlobalDecls GlobalDecls;
 nonterminal GlobalDecl GlobalDecl;
 nonterminal ConstTypedDecl ConstTypedDecl;
 nonterminal ConstDecls ConstDecls;
 nonterminal ConstDecl ConstDecl;
-nonterminal Const Const;
 nonterminal VarTypedDecls VarTypedDecls;
 nonterminal VarTypedDecl VarTypedDecl;
 nonterminal VarDecls VarDecls;
 nonterminal VarDecl VarDecl;
+nonterminal ElemAccess ElemAccess;
 nonterminal VarQuantity VarQuantity;
 nonterminal MethodDecls MethodDecls;
 nonterminal MethodDecl MethodDecl;
@@ -79,20 +79,25 @@ nonterminal FormPars FormPars;
 nonterminal FormParams FormParams;
 nonterminal FormParam FormParam;
 nonterminal Statement Statement;
+nonterminal StmtList StmtList;
+nonterminal Addop Addop;
+nonterminal Mulop Mulop;
 
 nonterminal rs.etf.pp1.symboltable.concepts.Obj ProgName, MethodSign;
 nonterminal rs.etf.pp1.symboltable.concepts.Struct Type;
+nonterminal rs.etf.pp1.symboltable.concepts.Struct Const, Factor, Term, Expr, VarRef, Designator;
+nonterminal ActPars ActPars;
+nonterminal ActParams ActParams;
 
 precedence left ELSE;
 
 Program 	::= (Program) PROGRAM ProgName:P1 NspDecls:N2 GlobalDecls:G3 LBRACE MethodDecls:M4 RBRACE {: RESULT=new Program(P1, N2, G3, M4); RESULT.setLine(P1left); :};
 ProgName	::= (ProgName) IDENT:name {: RESULT=new ProgName(name); RESULT.setLine(nameleft); :};
 
-NspDecls	::= NspDecls:N1 Namespace:N2 {: RESULT=new NspDeclsDerived1(N1, N2); RESULT.setLine(N1left); :}
+NspDecls    ::= NspDecls:N1 NspDecl:N2 {: RESULT=new NspDeclsDerived1(N1, N2); RESULT.setLine(N1left); :}
 			  | {: RESULT=new NspDeclsDerived2(); :} /* epsilon */;
-
-Namespace	::= (Namespace) NSP NspName:N1 LBRACE GlobalDecls:G2 LBRACE MethodDecls:M3 RBRACE RBRACE {: RESULT=new Namespace(N1, G2, M3); RESULT.setLine(N1left); :};
-NspName		::= (NspName) IDENT:name {: RESULT=new NspName(name); RESULT.setLine(nameleft); :};
+NspDecl     ::= (NspDecl) NAMESPACE NspName:N1 LBRACE GlobalDecls:G2 LBRACE MethodDecls:M3 RBRACE RBRACE {: RESULT=new NspDecl(N1, G2, M3); RESULT.setLine(N1left); :};
+NspName     ::= (NspName) IDENT:name {: RESULT=new NspName(name); RESULT.setLine(nameleft); :};
 
 Type    ::= (Type) IDENT:name {: RESULT=new Type(name); RESULT.setLine(nameleft); :};
 
@@ -120,7 +125,7 @@ VarQuantity     ::= (ArrayVar) LBRACKET RBRACKET {: RESULT=new ArrayVar(); :}
 
 MethodDecls	::= MethodDecls:M1 MethodDecl:M2 {: RESULT=new MethodDeclsDerived1(M1, M2); RESULT.setLine(M1left); :}
 			  | {: RESULT=new MethodDeclsDerived2(); :} /* epsilon */;
-MethodDecl	::= (MethodDecl) MethodSign:M1 LPAREN FormPars:F2 RPAREN VarTypedDecls:V3 LBRACE Statement:S4 RBRACE {: RESULT=new MethodDecl(M1, F2, V3, S4); RESULT.setLine(M1left); :};
+MethodDecl	::= (MethodDecl) MethodSign:M1 LPAREN FormPars:F2 RPAREN VarTypedDecls:V3 LBRACE StmtList:S4 RBRACE {: RESULT=new MethodDecl(M1, F2, V3, S4); RESULT.setLine(M1left); :};
 MethodSign	::= (ValueMethodSign) Type:T1 IDENT:name {: RESULT=new ValueMethodSign(T1, name); RESULT.setLine(T1left); :}
 			  | (VoidMethodSign) VOID IDENT:name {: RESULT=new VoidMethodSign(name); RESULT.setLine(nameleft); :};
 
@@ -130,4 +135,39 @@ FormParams	::= FormParams:F1 COMMA FormParam:F2 {: RESULT=new FormParamsDerived1
 			  | FormParam:F1 {: RESULT=new FormParamsDerived2(F1); RESULT.setLine(F1left); :};
 FormParam	::= (FormParam) Type:T1 IDENT:name VarQuantity:V2 {: RESULT=new FormParam(T1, name, V2); RESULT.setLine(T1left); :};
 
-Statement ::= {: RESULT=new StatementDerived1(); :} ;
+StmtList    ::= StmtList:S1 Statement:S2 {: RESULT=new StmtListDerived1(S1, S2); RESULT.setLine(S1left); :}
+			  | {: RESULT=new StmtListDerived2(); :} /* epsilon */;
+Statement   ::= (ValueReturnStmt) RETURN Expr:E1 SEMI {: RESULT=new ValueReturnStmt(E1); RESULT.setLine(E1left); :}
+			  | (VoidReturnStmt) RETURN SEMI {: RESULT=new VoidReturnStmt(); :}
+			  | (BreakStmt) BREAK SEMI {: RESULT=new BreakStmt(); :}
+			  | (ContinueStmt) CONTINUE SEMI {: RESULT=new ContinueStmt(); :}
+			  | (ReadStmt) READ LPAREN Designator:D1 RPAREN SEMI {: RESULT=new ReadStmt(D1); RESULT.setLine(D1left); :}
+			  | (PrintWidthStmt) PRINT LPAREN Expr:E1 COMMA NUM:width RPAREN SEMI {: RESULT=new PrintWidthStmt(E1, width); RESULT.setLine(E1left); :}
+			  | (PrintStmt) PRINT LPAREN Expr:E1 RPAREN SEMI {: RESULT=new PrintStmt(E1); RESULT.setLine(E1left); :};
+
+Addop ::= PLUS {: RESULT=new AddopDerived1(); :} | MINUS {: RESULT=new AddopDerived2(); :};
+Mulop ::= ASTERISK {: RESULT=new MulopDerived1(); :} | SLASH {: RESULT=new MulopDerived2(); :} | PERCENT {: RESULT=new MulopDerived3(); :};
+
+ActPars     ::= ActParams:A1 {: RESULT=new ActParsDerived1(A1); RESULT.setLine(A1left); :}
+		      | {: RESULT=new ActParsDerived2(); :} /* epsilon */;
+ActParams   ::= ActParams:A1 COMMA Expr:E2 {: RESULT=new ActParamsDerived1(A1, E2); RESULT.setLine(A1left); :}
+			  | Expr:E1 {: RESULT=new ActParamsDerived2(E1); RESULT.setLine(E1left); :};
+
+Factor ::= (ConstFactor) Const:C1 {: RESULT=new ConstFactor(C1); RESULT.setLine(C1left); :}
+		 | (GroupedFactor) LPAREN Expr:E1 RPAREN {: RESULT=new GroupedFactor(E1); RESULT.setLine(E1left); :}
+		 | (NewArrayFactor) NEW Type:T1 LBRACKET Expr:E2 RBRACKET {: RESULT=new NewArrayFactor(T1, E2); RESULT.setLine(T1left); :}
+		 | (FuncCallFactor) Designator:D1 LPAREN ActPars:A2 RPAREN {: RESULT=new FuncCallFactor(D1, A2); RESULT.setLine(D1left); :}
+		 | (DesignatorFactor) Designator:D1 {: RESULT=new DesignatorFactor(D1); RESULT.setLine(D1left); :};
+
+Term ::= (FactorTermList) Term:T1 Mulop:M2 Factor:F3 {: RESULT=new FactorTermList(T1, M2, F3); RESULT.setLine(T1left); :}
+	   | (FactorTerm) Factor:F1 {: RESULT=new FactorTerm(F1); RESULT.setLine(F1left); :};
+
+Expr ::= (ExprTermList) Expr:E1 Addop:A2 Term:T3 {: RESULT=new ExprTermList(E1, A2, T3); RESULT.setLine(E1left); :}
+	   | (ExprTerm) Term:T1 {: RESULT=new ExprTerm(T1); RESULT.setLine(T1left); :}
+	   | (ExprNegTerm) MINUS Term:T1 {: RESULT=new ExprNegTerm(T1); RESULT.setLine(T1left); :};
+
+VarRef      ::= (BlankVarRef) IDENT:varName {: RESULT=new BlankVarRef(varName); RESULT.setLine(varNameleft); :}
+			  | (NspVarRef) IDENT:nspName DBLCOLON IDENT:varName {: RESULT=new NspVarRef(nspName, varName); RESULT.setLine(nspNameleft); :};
+Designator  ::= (Designator) VarRef:V1 ElemAccess:E2 {: RESULT=new Designator(V1, E2); RESULT.setLine(V1left); :};
+ElemAccess  ::= (ArrayElemAccess) LBRACKET Expr:E1 RBRACKET {: RESULT=new ArrayElemAccess(E1); RESULT.setLine(E1left); :}
+			  | (SingularAccess) {: RESULT=new SingularAccess(); :} /* epsilon */;

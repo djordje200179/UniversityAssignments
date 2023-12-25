@@ -1,6 +1,6 @@
 // generated with ast extension for cup
 // version 0.8
-// 25/11/2023 15:6:21
+// 25/11/2023 17:27:15
 
 
 package rs.ac.bg.etf.pp1.ast;
@@ -12,17 +12,17 @@ public class MethodDecl implements SyntaxNode {
     private MethodSign MethodSign;
     private FormPars FormPars;
     private VarTypedDecls VarTypedDecls;
-    private Statement Statement;
+    private StmtList StmtList;
 
-    public MethodDecl (MethodSign MethodSign, FormPars FormPars, VarTypedDecls VarTypedDecls, Statement Statement) {
+    public MethodDecl (MethodSign MethodSign, FormPars FormPars, VarTypedDecls VarTypedDecls, StmtList StmtList) {
         this.MethodSign=MethodSign;
         if(MethodSign!=null) MethodSign.setParent(this);
         this.FormPars=FormPars;
         if(FormPars!=null) FormPars.setParent(this);
         this.VarTypedDecls=VarTypedDecls;
         if(VarTypedDecls!=null) VarTypedDecls.setParent(this);
-        this.Statement=Statement;
-        if(Statement!=null) Statement.setParent(this);
+        this.StmtList=StmtList;
+        if(StmtList!=null) StmtList.setParent(this);
     }
 
     public MethodSign getMethodSign() {
@@ -49,12 +49,12 @@ public class MethodDecl implements SyntaxNode {
         this.VarTypedDecls=VarTypedDecls;
     }
 
-    public Statement getStatement() {
-        return Statement;
+    public StmtList getStmtList() {
+        return StmtList;
     }
 
-    public void setStatement(Statement Statement) {
-        this.Statement=Statement;
+    public void setStmtList(StmtList StmtList) {
+        this.StmtList=StmtList;
     }
 
     public SyntaxNode getParent() {
@@ -81,7 +81,7 @@ public class MethodDecl implements SyntaxNode {
         if(MethodSign!=null) MethodSign.accept(visitor);
         if(FormPars!=null) FormPars.accept(visitor);
         if(VarTypedDecls!=null) VarTypedDecls.accept(visitor);
-        if(Statement!=null) Statement.accept(visitor);
+        if(StmtList!=null) StmtList.accept(visitor);
     }
 
     public void traverseTopDown(Visitor visitor) {
@@ -89,14 +89,14 @@ public class MethodDecl implements SyntaxNode {
         if(MethodSign!=null) MethodSign.traverseTopDown(visitor);
         if(FormPars!=null) FormPars.traverseTopDown(visitor);
         if(VarTypedDecls!=null) VarTypedDecls.traverseTopDown(visitor);
-        if(Statement!=null) Statement.traverseTopDown(visitor);
+        if(StmtList!=null) StmtList.traverseTopDown(visitor);
     }
 
     public void traverseBottomUp(Visitor visitor) {
         if(MethodSign!=null) MethodSign.traverseBottomUp(visitor);
         if(FormPars!=null) FormPars.traverseBottomUp(visitor);
         if(VarTypedDecls!=null) VarTypedDecls.traverseBottomUp(visitor);
-        if(Statement!=null) Statement.traverseBottomUp(visitor);
+        if(StmtList!=null) StmtList.traverseBottomUp(visitor);
         accept(visitor);
     }
 
@@ -123,8 +123,8 @@ public class MethodDecl implements SyntaxNode {
             buffer.append(tab+"  null");
         buffer.append("\n");
 
-        if(Statement!=null)
-            buffer.append(Statement.toString("  "+tab));
+        if(StmtList!=null)
+            buffer.append(StmtList.toString("  "+tab));
         else
             buffer.append(tab+"  null");
         buffer.append("\n");

@@ -42,7 +42,7 @@ parser code {:
 scan with {:
 	Symbol s = this.getScanner().next_token();
 	if (s != null && s.value != null) 
-		System.out.println(s.toString() + " " + s.value.toString());
+		System.out.println(s + " " + s.value.toString());
 
 	return s;
 :}
@@ -50,36 +50,39 @@ scan with {:
 
 terminal LBRACE, RBRACE, SEMI, LPAREN, RPAREN, LBRACKET, RBRACKET;
 terminal COMMA, DBLCOLON;
-terminal PLUS, EQUAL;
-terminal PROGRAM, NSP;
-terminal PRINT, RETURN, VOID, IF, ELSE, CONST;
+terminal PLUS, MINUS, ASTERISK, SLASH, PERCENT, EQUAL;
+terminal PROGRAM, NAMESPACE, PRINT, READ, RETURN, VOID, IF, ELSE, CONST, NEW, BREAK, CONTINUE;
+
 terminal Integer NUM;
 terminal Boolean BOOL;
 terminal Character CHAR;
 terminal String IDENT;
 
 nonterminal Program;
-nonterminal NspDecls, Namespace, NspName;
+nonterminal NspDecls, NspDecl, NspName;
 nonterminal GlobalDecls, GlobalDecl;
-nonterminal ConstTypedDecl, ConstDecls, ConstDecl, Const;
-nonterminal VarTypedDecls, VarTypedDecl, VarDecls, VarDecl, VarQuantity;
+nonterminal ConstTypedDecl, ConstDecls, ConstDecl;
+nonterminal VarTypedDecls, VarTypedDecl, VarDecls, VarDecl;
+nonterminal ElemAccess, VarQuantity;
 nonterminal MethodDecls, MethodDecl;
 nonterminal FormPars, FormParams, FormParam;
-nonterminal Statement;
+nonterminal Statement, StmtList;
+nonterminal Addop, Mulop;
 
 nonterminal rs.etf.pp1.symboltable.concepts.Obj ProgName, MethodSign;
 nonterminal rs.etf.pp1.symboltable.concepts.Struct Type;
+nonterminal rs.etf.pp1.symboltable.concepts.Struct Const, Factor, Term, Expr, VarRef, Designator;
+nonterminal ActPars, ActParams;
 
 precedence left ELSE;
 
 Program 	::= (Program) PROGRAM ProgName NspDecls GlobalDecls LBRACE MethodDecls RBRACE;
 ProgName	::= (ProgName) IDENT:name;
 
-NspDecls	::= NspDecls Namespace
+NspDecls    ::= NspDecls NspDecl
 			  | /* epsilon */;
-
-Namespace	::= (Namespace) NSP NspName LBRACE GlobalDecls LBRACE MethodDecls RBRACE RBRACE;
-NspName		::= (NspName) IDENT:name;
+NspDecl     ::= (NspDecl) NAMESPACE NspName LBRACE GlobalDecls LBRACE MethodDecls RBRACE RBRACE;
+NspName     ::= (NspName) IDENT:name;
 
 Type    ::= (Type) IDENT:name;
 
@@ -107,7 +110,7 @@ VarQuantity     ::= (ArrayVar) LBRACKET RBRACKET
 
 MethodDecls	::= MethodDecls MethodDecl
 			  | /* epsilon */;
-MethodDecl	::= (MethodDecl) MethodSign LPAREN FormPars RPAREN VarTypedDecls LBRACE Statement RBRACE;
+MethodDecl	::= (MethodDecl) MethodSign LPAREN FormPars RPAREN VarTypedDecls LBRACE StmtList RBRACE;
 MethodSign	::= (ValueMethodSign) Type IDENT:name
 			  | (VoidMethodSign) VOID IDENT:name;
 
@@ -117,4 +120,39 @@ FormParams	::= FormParams COMMA FormParam
 			  | FormParam;
 FormParam	::= (FormParam) Type IDENT:name VarQuantity;
 
-Statement ::= ;
+StmtList    ::= StmtList Statement
+			  | /* epsilon */;
+Statement   ::= (ValueReturnStmt) RETURN Expr SEMI
+			  | (VoidReturnStmt) RETURN SEMI
+			  | (BreakStmt) BREAK SEMI
+			  | (ContinueStmt) CONTINUE SEMI
+			  | (ReadStmt) READ LPAREN Designator RPAREN SEMI
+			  | (PrintWidthStmt) PRINT LPAREN Expr COMMA NUM:width RPAREN SEMI
+			  | (PrintStmt) PRINT LPAREN Expr RPAREN SEMI;
+
+Addop ::= PLUS | MINUS;
+Mulop ::= ASTERISK | SLASH | PERCENT;
+
+ActPars     ::= ActParams
+		      | /* epsilon */;
+ActParams   ::= ActParams COMMA Expr
+			  | Expr;
+
+Factor ::= (ConstFactor) Const
+		 | (GroupedFactor) LPAREN Expr RPAREN
+		 | (NewArrayFactor) NEW Type LBRACKET Expr RBRACKET
+		 | (FuncCallFactor) Designator LPAREN ActPars RPAREN
+		 | (DesignatorFactor) Designator;
+
+Term ::= (FactorTermList) Term Mulop Factor
+	   | (FactorTerm) Factor;
+
+Expr ::= (ExprTermList) Expr Addop Term
+	   | (ExprTerm) Term
+	   | (ExprNegTerm) MINUS Term;
+
+VarRef      ::= (BlankVarRef) IDENT:varName
+			  | (NspVarRef) IDENT:nspName DBLCOLON IDENT:varName;
+Designator  ::= (Designator) VarRef ElemAccess;
+ElemAccess  ::= (ArrayElemAccess) LBRACKET Expr RBRACKET
+			  | (SingularAccess) /* epsilon */;

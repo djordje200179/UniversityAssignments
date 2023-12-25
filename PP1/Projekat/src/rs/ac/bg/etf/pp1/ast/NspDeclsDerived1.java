@@ -1,6 +1,6 @@
 // generated with ast extension for cup
 // version 0.8
-// 25/11/2023 15:6:21
+// 25/11/2023 17:27:15
 
 
 package rs.ac.bg.etf.pp1.ast;
@@ -8,13 +8,13 @@ package rs.ac.bg.etf.pp1.ast;
 public class NspDeclsDerived1 extends NspDecls {
 
     private NspDecls NspDecls;
-    private Namespace Namespace;
+    private NspDecl NspDecl;
 
-    public NspDeclsDerived1 (NspDecls NspDecls, Namespace Namespace) {
+    public NspDeclsDerived1 (NspDecls NspDecls, NspDecl NspDecl) {
         this.NspDecls=NspDecls;
         if(NspDecls!=null) NspDecls.setParent(this);
-        this.Namespace=Namespace;
-        if(Namespace!=null) Namespace.setParent(this);
+        this.NspDecl=NspDecl;
+        if(NspDecl!=null) NspDecl.setParent(this);
     }
 
     public NspDecls getNspDecls() {
@@ -25,12 +25,12 @@ public class NspDeclsDerived1 extends NspDecls {
         this.NspDecls=NspDecls;
     }
 
-    public Namespace getNamespace() {
-        return Namespace;
+    public NspDecl getNspDecl() {
+        return NspDecl;
     }
 
-    public void setNamespace(Namespace Namespace) {
-        this.Namespace=Namespace;
+    public void setNspDecl(NspDecl NspDecl) {
+        this.NspDecl=NspDecl;
     }
 
     public void accept(Visitor visitor) {
@@ -39,18 +39,18 @@ public class NspDeclsDerived1 extends NspDecls {
 
     public void childrenAccept(Visitor visitor) {
         if(NspDecls!=null) NspDecls.accept(visitor);
-        if(Namespace!=null) Namespace.accept(visitor);
+        if(NspDecl!=null) NspDecl.accept(visitor);
     }
 
     public void traverseTopDown(Visitor visitor) {
         accept(visitor);
         if(NspDecls!=null) NspDecls.traverseTopDown(visitor);
-        if(Namespace!=null) Namespace.traverseTopDown(visitor);
+        if(NspDecl!=null) NspDecl.traverseTopDown(visitor);
     }
 
     public void traverseBottomUp(Visitor visitor) {
         if(NspDecls!=null) NspDecls.traverseBottomUp(visitor);
-        if(Namespace!=null) Namespace.traverseBottomUp(visitor);
+        if(NspDecl!=null) NspDecl.traverseBottomUp(visitor);
         accept(visitor);
     }
 
@@ -65,8 +65,8 @@ public class NspDeclsDerived1 extends NspDecls {
             buffer.append(tab+"  null");
         buffer.append("\n");
 
-        if(Namespace!=null)
-            buffer.append(Namespace.toString("  "+tab));
+        if(NspDecl!=null)
+            buffer.append(NspDecl.toString("  "+tab));
         else
             buffer.append(tab+"  null");
         buffer.append("\n");

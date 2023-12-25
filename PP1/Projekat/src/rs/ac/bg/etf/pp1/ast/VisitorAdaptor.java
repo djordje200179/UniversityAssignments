@@ -1,26 +1,68 @@
 // generated with ast extension for cup
 // version 0.8
-// 25/11/2023 15:6:21
+// 25/11/2023 17:27:16
 
 
 package rs.ac.bg.etf.pp1.ast;
 
 public abstract class VisitorAdaptor implements Visitor { 
 
-    public void visit(GlobalDecls GlobalDecls) { }
-    public void visit(VarTypedDecls VarTypedDecls) { }
-    public void visit(VarQuantity VarQuantity) { }
-    public void visit(MethodDecls MethodDecls) { }
-    public void visit(Const Const) { }
-    public void visit(FormPars FormPars) { }
-    public void visit(ConstDecls ConstDecls) { }
-    public void visit(Statement Statement) { }
-    public void visit(FormParams FormParams) { }
-    public void visit(VarDecls VarDecls) { }
-    public void visit(MethodSign MethodSign) { }
+    public void visit(Mulop Mulop) { }
+    public void visit(VarRef VarRef) { }
     public void visit(NspDecls NspDecls) { }
+    public void visit(ElemAccess ElemAccess) { }
+    public void visit(VarQuantity VarQuantity) { }
+    public void visit(ActParams ActParams) { }
+    public void visit(Addop Addop) { }
+    public void visit(GlobalDecls GlobalDecls) { }
+    public void visit(Factor Factor) { }
+    public void visit(MethodSign MethodSign) { }
+    public void visit(Term Term) { }
+    public void visit(FormParams FormParams) { }
+    public void visit(StmtList StmtList) { }
+    public void visit(Expr Expr) { }
+    public void visit(ActPars ActPars) { }
+    public void visit(VarDecls VarDecls) { }
+    public void visit(Const Const) { }
+    public void visit(Statement Statement) { }
+    public void visit(ConstDecls ConstDecls) { }
+    public void visit(VarTypedDecls VarTypedDecls) { }
     public void visit(GlobalDecl GlobalDecl) { }
-    public void visit(StatementDerived1 StatementDerived1) { visit(); }
+    public void visit(FormPars FormPars) { }
+    public void visit(MethodDecls MethodDecls) { }
+    public void visit(SingularAccess SingularAccess) { visit(); }
+    public void visit(ArrayElemAccess ArrayElemAccess) { visit(); }
+    public void visit(Designator Designator) { visit(); }
+    public void visit(NspVarRef NspVarRef) { visit(); }
+    public void visit(BlankVarRef BlankVarRef) { visit(); }
+    public void visit(ExprNegTerm ExprNegTerm) { visit(); }
+    public void visit(ExprTerm ExprTerm) { visit(); }
+    public void visit(ExprTermList ExprTermList) { visit(); }
+    public void visit(FactorTerm FactorTerm) { visit(); }
+    public void visit(FactorTermList FactorTermList) { visit(); }
+    public void visit(DesignatorFactor DesignatorFactor) { visit(); }
+    public void visit(FuncCallFactor FuncCallFactor) { visit(); }
+    public void visit(NewArrayFactor NewArrayFactor) { visit(); }
+    public void visit(GroupedFactor GroupedFactor) { visit(); }
+    public void visit(ConstFactor ConstFactor) { visit(); }
+    public void visit(ActParamsDerived2 ActParamsDerived2) { visit(); }
+    public void visit(ActParamsDerived1 ActParamsDerived1) { visit(); }
+    public void visit(ActParsDerived2 ActParsDerived2) { visit(); }
+    public void visit(ActParsDerived1 ActParsDerived1) { visit(); }
+    public void visit(MulopDerived3 MulopDerived3) { visit(); }
+    public void visit(MulopDerived2 MulopDerived2) { visit(); }
+    public void visit(MulopDerived1 MulopDerived1) { visit(); }
+    public void visit(AddopDerived2 AddopDerived2) { visit(); }
+    public void visit(AddopDerived1 AddopDerived1) { visit(); }
+    public void visit(PrintStmt PrintStmt) { visit(); }
+    public void visit(PrintWidthStmt PrintWidthStmt) { visit(); }
+    public void visit(ReadStmt ReadStmt) { visit(); }
+    public void visit(ContinueStmt ContinueStmt) { visit(); }
+    public void visit(BreakStmt BreakStmt) { visit(); }
+    public void visit(VoidReturnStmt VoidReturnStmt) { visit(); }
+    public void visit(ValueReturnStmt ValueReturnStmt) { visit(); }
+    public void visit(StmtListDerived2 StmtListDerived2) { visit(); }
+    public void visit(StmtListDerived1 StmtListDerived1) { visit(); }
     public void visit(FormParam FormParam) { visit(); }
     public void visit(FormParamsDerived2 FormParamsDerived2) { visit(); }
     public void visit(FormParamsDerived1 FormParamsDerived1) { visit(); }
@@ -52,7 +94,7 @@ public abstract class VisitorAdaptor implements Visitor {
     public void visit(GlobalDeclsDerived1 GlobalDeclsDerived1) { visit(); }
     public void visit(Type Type) { visit(); }
     public void visit(NspName NspName) { visit(); }
-    public void visit(Namespace Namespace) { visit(); }
+    public void visit(NspDecl NspDecl) { visit(); }
     public void visit(NspDeclsDerived2 NspDeclsDerived2) { visit(); }
     public void visit(NspDeclsDerived1 NspDeclsDerived1) { visit(); }
     public void visit(ProgName ProgName) { visit(); }

@@ -31,7 +31,7 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 		type.struct = typeObj.getType();
 
 		if (typeObj == Tab.noObj)
-			reportError("Can't resolve type: " + type.getName(), type);
+			reportError("Can't resolve type <" + type.getName() + ">", type);
 	}
 
 	@Override
@@ -52,8 +52,23 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 	}
 
 	@Override
-	public void visit(Namespace nsp) {
+	public void visit(NspDecl nsp) {
 		this.currNsp = "";
+	}
+
+	@Override
+	public void visit(IntConst cnst) {
+		cnst.struct = Tab.intType;
+	}
+
+	@Override
+	public void visit(CharConst cnst) {
+		cnst.struct = Tab.charType;
+	}
+
+	@Override
+	public void visit(BoolConst cnst) {
+		cnst.struct = Types.boolType;
 	}
 	
 	@Override
@@ -90,7 +105,6 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 	
 	@Override
 	public void visit(ConstTypedDecl constTypedDecl) {
-		var typeName = constTypedDecl.getType().getName();
 		Struct type = constTypedDecl.getType().struct;
 		
 		constTypedDecl.traverseBottomUp(new VisitorAdaptor() {
@@ -104,30 +118,19 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 				var obj = Tab.insert(Obj.Con, currNsp + constDecl.getName(), type);
 
 				var cnst = constDecl.getConst();
-				int value = 0;
 
-				if (cnst instanceof IntConst) {
-					if (type != Tab.intType) {
-						reportError("Got: int, expected: " + typeName, cnst);
-						return;
-					}
-					
-					value = ((IntConst)(cnst)).getValue();
-				} else if (cnst instanceof CharConst) {
-					if (type != Tab.charType) {
-						reportError("Got: char, expected: " + typeName, cnst);
-						return;
-					}
-					
-					value = ((CharConst)(cnst)).getValue();
-				} else if (cnst instanceof BoolConst) {
-					if (type != Types.boolType) {
-						reportError("Got: bool, expected: " + typeName, cnst);
-						return;
-					}
-					
-					value = ((BoolConst)(cnst)).getValue() ? 1 : 0;
+				if (cnst.struct != type) {
+					reportError("Incompatible types", constDecl);
+					return;
 				}
+
+				int value = 0;
+				if (type == Tab.intType)
+					value = ((IntConst)(cnst)).getValue();
+				else if (type == Tab.charType)
+					value = ((CharConst)(cnst)).getValue();
+				else if (type == Types.boolType)
+					value = ((BoolConst)(cnst)).getValue() ? 1 : 0;
 				
 				obj.setAdr(value);
 			}
@@ -168,5 +171,111 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 
 		Tab.insert(Obj.Var, formParam.getName(), type);
 		currMethod.setLevel(currMethod.getLevel() + 1);
+	}
+
+	@Override
+	public void visit(ConstFactor factor) {
+		factor.struct = factor.getConst().struct;
+	}
+
+	@Override
+	public void visit(GroupedFactor factor) {
+		factor.struct = factor.getExpr().struct;
+	}
+
+	@Override
+	public void visit(NewArrayFactor factor) {
+		factor.struct = new Struct(Struct.Array, factor.getType().struct);
+	}
+
+	@Override
+	public void visit(FuncCallFactor factor) {
+		factor.struct = factor.getDesignator().struct;
+	}
+
+	@Override
+	public void visit(DesignatorFactor factor) {
+		factor.struct = factor.getDesignator().struct;
+	}
+
+	@Override
+	public void visit(FactorTerm term) {
+		term.struct = term.getFactor().struct;
+	}
+
+	@Override
+	public void visit(FactorTermList termList) {
+		if (termList.getFactor().struct != termList.getTerm().struct || termList.getTerm().struct != Tab.intType) {
+			reportError("Incompatible types in expression", termList);
+			return;
+		}
+
+		termList.struct = Tab.intType;
+	}
+
+	@Override
+	public void visit(ExprTerm term) {
+		term.struct = term.getTerm().struct;
+	}
+
+	@Override
+	public void visit(ExprTermList termList) {
+		if (termList.getTerm().struct != termList.getExpr().struct || termList.getExpr().struct != Tab.intType) {
+			reportError("Incompatible types in expression", termList);
+			return;
+		}
+
+		termList.struct = Tab.intType;
+	}
+
+	@Override
+	public void visit(ExprNegTerm term) {
+		if (term.getTerm().struct != Tab.intType) {
+			reportError("Incompatible types in expression", term);
+			return;
+		}
+
+		term.struct = Tab.intType;
+	}
+
+	@Override
+	public void visit(ValueReturnStmt stmt) {
+		if (currMethod.getType() != stmt.getExpr().struct)
+			reportError("Incompatible return type", stmt);
+	}
+
+	@Override
+	public void visit(VoidReturnStmt stmt) {
+		if (currMethod.getType() != Tab.noType)
+			reportError("Returning value from void method", stmt);
+	}
+
+	@Override
+	public void visit(BlankVarRef varRef) {
+		var localObj = Tab.find(currNsp + varRef.getVarName());
+		if (localObj == Tab.noObj)
+			localObj = Tab.find(varRef.getVarName());
+
+		varRef.struct = localObj.getType();
+	}
+
+
+	@Override
+	public void visit(NspVarRef varRef) {
+		varRef.struct = Tab.find(varRef.getNspName() + "::" + varRef.getVarName()).getType();
+	}
+
+	@Override
+	public void visit(ArrayElemAccess elemAccess) {
+		if (elemAccess.getExpr().struct != Tab.intType)
+			reportError("Array index not of type int", elemAccess);
+	}
+
+	@Override
+	public void visit(Designator designator) {
+		designator.struct = designator.getVarRef().struct;
+
+		if (designator.getElemAccess() instanceof ArrayElemAccess)
+			designator.struct = designator.struct.getElemType();
 	}
 }

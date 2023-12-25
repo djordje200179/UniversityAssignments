@@ -19,10 +19,8 @@ public class Compiler {
 			var parser = new Parser(new Yylex(br));
 
 	        var root = parser.parse();
-			if (!(root.value instanceof Program) || parser.hasError()) {
-				System.err.println("Parsing failed!");
+			if (!(root.value instanceof Program) || parser.hasError())
 				return;
-			}
 
 	        var program = (Program)(root.value);
 	        
@@ -31,10 +29,8 @@ public class Compiler {
 			var semanticAnalyzer = new SemanticAnalyzer();
 			program.traverseBottomUp(semanticAnalyzer);
 
-			if (semanticAnalyzer.hasError()) {
-				System.err.println("Semantic analysis failed!");
+			if (semanticAnalyzer.hasError())
 				return;
-			}
 
 			Tab.dump(new DumpSymbolTableVisitor() {
 				@Override
