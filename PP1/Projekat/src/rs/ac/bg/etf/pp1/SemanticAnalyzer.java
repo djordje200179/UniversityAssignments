@@ -4,6 +4,7 @@ import rs.ac.bg.etf.pp1.ast.*;
 import rs.etf.pp1.symboltable.Tab;
 import rs.etf.pp1.symboltable.concepts.Obj;
 import rs.etf.pp1.symboltable.concepts.Struct;
+import java.util.ArrayList;
 
 public class SemanticAnalyzer extends VisitorAdaptor {
 	private boolean errorDetected = false;
@@ -24,13 +25,14 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 	
 	private String currNsp = "";
 	private Obj currMethod = null;
+	private int loopCnt = 0;
 
 	@Override
 	public void visit(Type type) {
 		var typeObj = Tab.find(type.getName());
 		type.struct = typeObj.getType();
 
-		if (typeObj == Tab.noObj)
+		if (typeObj == Tab.noObj || typeObj.getKind() != Obj.Type)
 			reportError("Can't resolve type <" + type.getName() + ">", type);
 	}
 
@@ -42,6 +44,10 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 	
 	@Override
 	public void visit(Program prog) {
+		var mainMethod = Tab.find("main");
+		if (mainMethod == Tab.noObj || mainMethod.getKind() != Obj.Meth || mainMethod.getType() != Tab.noType)
+			reportError("Suitable main method not found", prog);
+
 		Tab.chainLocalSymbols(prog.getProgName().obj);
     	Tab.closeScope();
 	}
@@ -174,11 +180,41 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 	}
 
 	@Override
+	public void visit(ActParam param) {
+		param.struct = param.getExpr().struct;
+	}
+
+	@Override
 	public void visit(Call call) {
-		if (call.getDesignator().obj.getKind() != Obj.Meth)
+		var funcObj = call.getDesignator().obj;
+		if (funcObj.getKind() != Obj.Meth)
 			reportError("Object is not a method", call);
 
-		call.struct = call.getDesignator().obj.getType();
+		var args = new ArrayList<Struct>();
+		call.getActPars().traverseBottomUp(new VisitorAdaptor() {
+			@Override
+			public void visit(ActParam param) {
+				args.add(param.struct);
+			}
+		});
+
+		if (args.size() != funcObj.getLevel()) {
+			reportError("Wrong number of arguments", call);
+			return;
+		}
+
+		var params = funcObj.getLocalSymbols().stream().limit(funcObj.getLevel()).toList();
+		for (var i = 0; i < params.size(); i++) {
+			var arg = args.get(i);
+			var param = params.get(i);
+
+			if (!arg.assignableTo(param.getType())) {
+				reportError("Incompatible argument type", call);
+				return;
+			}
+		}
+
+		call.struct = funcObj.getType();
 	}
 
 	@Override
@@ -248,12 +284,18 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 
 	@Override
 	public void visit(ValueReturnStmt stmt) {
+		if (currMethod == null)
+			reportError("Return statement outside of method", stmt);
+
 		if (currMethod.getType() != stmt.getExpr().struct)
 			reportError("Incompatible return type", stmt);
 	}
 
 	@Override
 	public void visit(VoidReturnStmt stmt) {
+		if (currMethod == null)
+			reportError("Return statement outside of method", stmt);
+
 		if (currMethod.getType() != Tab.noType)
 			reportError("Returning value from void method", stmt);
 	}
@@ -304,8 +346,8 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 			return;
 		}
 
-		if (obj.getType() != stmt.getExpr().struct)
-			reportError("Incompatible types in assignment", stmt);
+		if (!stmt.getExpr().struct.assignableTo(obj.getType()))
+			reportError("Incompatible types for assignment", stmt);
 	}
 
 	@Override
@@ -340,5 +382,69 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 
 		if (obj.getType() != Tab.intType)
 			reportError("Incompatible type for increment", stmt);
+	}
+
+	@Override
+	public void visit(CondFactExpr expr) {
+		if (expr.getExpr().struct != Types.boolType)
+			reportError("Expression not of type bool", expr);
+	}
+
+	@Override
+	public void visit(Comparison comp) {
+		var exprType = comp.getExpr().struct;
+		if (!exprType.compatibleWith(comp.getExpr1().struct))
+			reportError("Incompatible types in comparison", comp);
+
+		if (exprType.isRefType()) {
+			if (!(comp.getRelop() instanceof EqualityRelop || comp.getRelop() instanceof InequalityRelop))
+				reportError("Can't compare references", comp);
+		}
+	}
+
+	@Override
+	public void visit(ReadStmt stmt) {
+		var obj = stmt.getDesignator().obj;
+
+		switch (obj.getKind()) {
+		case Obj.Var:
+		case Obj.Elem:
+			break;
+		default:
+			reportError("Object is not a variable", stmt);
+			return;
+		}
+
+		if (obj.getType() != Tab.intType && obj.getType() != Tab.charType && obj.getType() != Types.boolType)
+			reportError("Incompatible type for read", stmt);
+	}
+
+	@Override
+	public void visit(PrintStmt stmt) {
+		var expr = stmt.getExpr();
+		if (expr.struct != Tab.intType && expr.struct != Tab.charType && expr.struct != Types.boolType)
+			reportError("Incompatible type for print", stmt);
+	}
+
+	@Override
+	public void visit(ForSign forSign) {
+		loopCnt++;
+	}
+
+	@Override
+	public void visit(ForStmt stmt) {
+		loopCnt--;
+	}
+
+	@Override
+	public void visit(ContinueStmt stmt) {
+		if (loopCnt == 0)
+			reportError("Continue statement outside of loop", stmt);
+	}
+
+	@Override
+	public void visit(BreakStmt stmt) {
+		if (loopCnt == 0)
+			reportError("Break statement outside of loop", stmt);
 	}
 }

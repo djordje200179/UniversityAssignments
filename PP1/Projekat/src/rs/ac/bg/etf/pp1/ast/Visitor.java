@@ -1,6 +1,6 @@
 // generated with ast extension for cup
 // version 0.8
-// 25/11/2023 18:10:25
+// 25/11/2023 23:7:5
 
 
 package rs.ac.bg.etf.pp1.ast;
@@ -9,28 +9,41 @@ public interface Visitor {
 
     public void visit(Mulop Mulop);
     public void visit(VarRef VarRef);
+    public void visit(Relop Relop);
     public void visit(NspDecls NspDecls);
     public void visit(ElemAccess ElemAccess);
     public void visit(VarQuantity VarQuantity);
+    public void visit(DesStmtList DesStmtList);
     public void visit(ActParams ActParams);
     public void visit(Addop Addop);
     public void visit(GlobalDecls GlobalDecls);
+    public void visit(ForCondition ForCondition);
     public void visit(Factor Factor);
+    public void visit(CondTerm CondTerm);
     public void visit(MethodSign MethodSign);
     public void visit(Term Term);
+    public void visit(Condition Condition);
     public void visit(FormParams FormParams);
+    public void visit(ForDesStmtList ForDesStmtList);
     public void visit(StmtList StmtList);
     public void visit(Expr Expr);
     public void visit(ActPars ActPars);
     public void visit(DesignatorStatement DesignatorStatement);
-    public void visit(VarDecls VarDecls);
     public void visit(Const Const);
+    public void visit(VarDecls VarDecls);
     public void visit(Statement Statement);
     public void visit(ConstDecls ConstDecls);
+    public void visit(CondFact CondFact);
     public void visit(VarTypedDecls VarTypedDecls);
     public void visit(GlobalDecl GlobalDecl);
     public void visit(FormPars FormPars);
     public void visit(MethodDecls MethodDecls);
+    public void visit(CondTermCondition CondTermCondition);
+    public void visit(ConditionList ConditionList);
+    public void visit(CondFactTerm CondFactTerm);
+    public void visit(CondTermList CondTermList);
+    public void visit(CondFactExpr CondFactExpr);
+    public void visit(Comparison Comparison);
     public void visit(SingularAccess SingularAccess);
     public void visit(ArrayElemAccess ArrayElemAccess);
     public void visit(Designator Designator);
@@ -46,11 +59,18 @@ public interface Visitor {
     public void visit(NewArrayFactor NewArrayFactor);
     public void visit(GroupedFactor GroupedFactor);
     public void visit(ConstFactor ConstFactor);
+    public void visit(ActParam ActParam);
     public void visit(ActParamsDerived2 ActParamsDerived2);
     public void visit(ActParamsDerived1 ActParamsDerived1);
     public void visit(ActParsDerived2 ActParsDerived2);
     public void visit(ActParsDerived1 ActParsDerived1);
     public void visit(Call Call);
+    public void visit(RelopDerived4 RelopDerived4);
+    public void visit(RelopDerived3 RelopDerived3);
+    public void visit(RelopDerived2 RelopDerived2);
+    public void visit(RelopDerived1 RelopDerived1);
+    public void visit(InequalityRelop InequalityRelop);
+    public void visit(EqualityRelop EqualityRelop);
     public void visit(MulopDerived3 MulopDerived3);
     public void visit(MulopDerived2 MulopDerived2);
     public void visit(MulopDerived1 MulopDerived1);
@@ -60,6 +80,17 @@ public interface Visitor {
     public void visit(DesIncStmt DesIncStmt);
     public void visit(DesAssignStmt DesAssignStmt);
     public void visit(DesCallStmt DesCallStmt);
+    public void visit(DesStmtListDerived2 DesStmtListDerived2);
+    public void visit(DesStmtListDerived1 DesStmtListDerived1);
+    public void visit(ForDesStmtListDerived2 ForDesStmtListDerived2);
+    public void visit(ForDesStmtListDerived1 ForDesStmtListDerived1);
+    public void visit(InfiniteFor InfiniteFor);
+    public void visit(FiniteFor FiniteFor);
+    public void visit(ForSign ForSign);
+    public void visit(StatementDerived1 StatementDerived1);
+    public void visit(ForStmt ForStmt);
+    public void visit(IfStmt IfStmt);
+    public void visit(IfElseStmt IfElseStmt);
     public void visit(DesStmt DesStmt);
     public void visit(PrintStmt PrintStmt);
     public void visit(PrintWidthStmt PrintWidthStmt);

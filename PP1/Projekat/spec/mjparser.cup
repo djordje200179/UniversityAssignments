@@ -51,7 +51,10 @@ scan with {:
 terminal LBRACE, RBRACE, SEMI, LPAREN, RPAREN, LBRACKET, RBRACKET;
 terminal COMMA, DBLCOLON;
 terminal PLUS, MINUS, ASTERISK, SLASH, PERCENT, EQUAL, INC, DEC;
-terminal PROGRAM, NAMESPACE, PRINT, READ, RETURN, VOID, IF, ELSE, CONST, NEW, BREAK, CONTINUE;
+terminal DBL_EQUAL, NOT_EQUAL, GREATER, GREATER_EQUAL, LESS, LESS_EQUAL;
+terminal AND, OR;
+terminal PROGRAM, NAMESPACE, PRINT, READ, VOID, CONST, NEW;
+terminal RETURN, IF, ELSE, FOR, BREAK, CONTINUE;
 
 terminal Integer NUM;
 terminal Boolean BOOL;
@@ -66,13 +69,15 @@ nonterminal VarTypedDecls, VarTypedDecl, VarDecls, VarDecl;
 nonterminal ElemAccess, VarQuantity;
 nonterminal MethodDecls, MethodDecl;
 nonterminal FormPars, FormParams, FormParam;
-nonterminal Statement, StmtList, DesignatorStatement;
-nonterminal Addop, Mulop;
+nonterminal Statement, StmtList, DesignatorStatement, DesStmtList;
+nonterminal Addop, Mulop, Relop;
 nonterminal ActPars, ActParams;
+nonterminal CondFact, CondTerm, Condition;
+nonterminal ForSign, ForCondition, ForDesStmtList;
 
 nonterminal rs.etf.pp1.symboltable.concepts.Obj ProgName, MethodSign, Designator, VarRef;
 nonterminal rs.etf.pp1.symboltable.concepts.Struct Type;
-nonterminal rs.etf.pp1.symboltable.concepts.Struct Const, Factor, Term, Expr, Call;
+nonterminal rs.etf.pp1.symboltable.concepts.Struct Const, Factor, Term, Expr, Call, ActParam;
 
 precedence left ELSE;
 
@@ -129,21 +134,38 @@ Statement   ::= (ValueReturnStmt) RETURN Expr SEMI
 			  | (ReadStmt) READ LPAREN Designator RPAREN SEMI
 			  | (PrintWidthStmt) PRINT LPAREN Expr COMMA NUM:width RPAREN SEMI
 			  | (PrintStmt) PRINT LPAREN Expr RPAREN SEMI
-			  | (DesStmt) DesignatorStatement;
+			  | (DesStmt) DesignatorStatement
+			  | (IfElseStmt) IF LPAREN Condition RPAREN Statement ELSE Statement
+			  | (IfStmt) IF LPAREN Condition RPAREN Statement
+			  | (ForStmt) ForSign Statement
+			  | LBRACE StmtList RBRACE;
+
+ForSign         ::= (ForSign) FOR LPAREN ForDesStmtList SEMI ForCondition SEMI ForDesStmtList RPAREN;
+ForCondition    ::= (FiniteFor) Condition
+				  | (InfiniteFor) /* epsilon */;
+ForDesStmtList  ::= DesStmtList
+				  | /* epsilon */;
+
+DesStmtList ::= DesStmtList COMMA DesignatorStatement
+			  | DesignatorStatement;
 
 DesignatorStatement ::= (DesCallStmt) Call SEMI
 					  | (DesAssignStmt) Designator EQUAL Expr SEMI
 					  | (DesIncStmt) Designator INC SEMI
 					  | (DesDecStmt) Designator DEC SEMI;
 
-Addop ::= PLUS | MINUS;
-Mulop ::= ASTERISK | SLASH | PERCENT;
+Addop   ::= PLUS | MINUS;
+Mulop   ::= ASTERISK | SLASH | PERCENT;
+Relop   ::= (EqualityRelop) DBL_EQUAL
+          | (InequalityRelop) NOT_EQUAL
+          | GREATER | GREATER_EQUAL | LESS | LESS_EQUAL;
 
-Call ::= (Call) Designator LPAREN ActPars RPAREN;
+Call        ::= (Call) Designator LPAREN ActPars RPAREN;
 ActPars     ::= ActParams
 		      | /* epsilon */;
-ActParams   ::= ActParams COMMA Expr
-			  | Expr;
+ActParams   ::= ActParams COMMA ActParam
+		      | ActParam;
+ActParam    ::= (ActParam) Expr;
 
 Factor ::= (ConstFactor) Const
 		 | (GroupedFactor) LPAREN Expr RPAREN
@@ -164,3 +186,12 @@ VarRef      ::= (BlankVarRef) IDENT:varName
 Designator  ::= (Designator) VarRef ElemAccess;
 ElemAccess  ::= (ArrayElemAccess) LBRACKET Expr RBRACKET
 			  | (SingularAccess) /* epsilon */;
+
+CondFact    ::= (Comparison) Expr Relop Expr
+			  | (CondFactExpr) Expr;
+
+CondTerm    ::= (CondTermList) CondTerm AND CondFact
+			  | (CondFactTerm) CondFact;
+
+Condition   ::= (ConditionList) Condition OR CondTerm
+			  | (CondTermCondition) CondTerm;

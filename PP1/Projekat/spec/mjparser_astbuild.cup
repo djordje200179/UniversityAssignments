@@ -51,7 +51,10 @@ scan with {:
 terminal LBRACE, RBRACE, SEMI, LPAREN, RPAREN, LBRACKET, RBRACKET;
 terminal COMMA, DBLCOLON;
 terminal PLUS, MINUS, ASTERISK, SLASH, PERCENT, EQUAL, INC, DEC;
-terminal PROGRAM, NAMESPACE, PRINT, READ, RETURN, VOID, IF, ELSE, CONST, NEW, BREAK, CONTINUE;
+terminal DBL_EQUAL, NOT_EQUAL, GREATER, GREATER_EQUAL, LESS, LESS_EQUAL;
+terminal AND, OR;
+terminal PROGRAM, NAMESPACE, PRINT, READ, VOID, CONST, NEW;
+terminal RETURN, IF, ELSE, FOR, BREAK, CONTINUE;
 
 terminal Integer NUM;
 terminal Boolean BOOL;
@@ -81,14 +84,22 @@ nonterminal FormParam FormParam;
 nonterminal Statement Statement;
 nonterminal StmtList StmtList;
 nonterminal DesignatorStatement DesignatorStatement;
+nonterminal DesStmtList DesStmtList;
 nonterminal Addop Addop;
 nonterminal Mulop Mulop;
+nonterminal Relop Relop;
 nonterminal ActPars ActPars;
 nonterminal ActParams ActParams;
+nonterminal CondFact CondFact;
+nonterminal CondTerm CondTerm;
+nonterminal Condition Condition;
+nonterminal ForSign ForSign;
+nonterminal ForCondition ForCondition;
+nonterminal ForDesStmtList ForDesStmtList;
 
 nonterminal rs.etf.pp1.symboltable.concepts.Obj ProgName, MethodSign, Designator, VarRef;
 nonterminal rs.etf.pp1.symboltable.concepts.Struct Type;
-nonterminal rs.etf.pp1.symboltable.concepts.Struct Const, Factor, Term, Expr, Call;
+nonterminal rs.etf.pp1.symboltable.concepts.Struct Const, Factor, Term, Expr, Call, ActParam;
 
 precedence left ELSE;
 
@@ -145,21 +156,38 @@ Statement   ::= (ValueReturnStmt) RETURN Expr:E1 SEMI {: RESULT=new ValueReturnS
 			  | (ReadStmt) READ LPAREN Designator:D1 RPAREN SEMI {: RESULT=new ReadStmt(D1); RESULT.setLine(D1left); :}
 			  | (PrintWidthStmt) PRINT LPAREN Expr:E1 COMMA NUM:width RPAREN SEMI {: RESULT=new PrintWidthStmt(E1, width); RESULT.setLine(E1left); :}
 			  | (PrintStmt) PRINT LPAREN Expr:E1 RPAREN SEMI {: RESULT=new PrintStmt(E1); RESULT.setLine(E1left); :}
-			  | (DesStmt) DesignatorStatement:D1 {: RESULT=new DesStmt(D1); RESULT.setLine(D1left); :};
+			  | (DesStmt) DesignatorStatement:D1 {: RESULT=new DesStmt(D1); RESULT.setLine(D1left); :}
+			  | (IfElseStmt) IF LPAREN Condition:C1 RPAREN Statement:S2 ELSE Statement:S3 {: RESULT=new IfElseStmt(C1, S2, S3); RESULT.setLine(C1left); :}
+			  | (IfStmt) IF LPAREN Condition:C1 RPAREN Statement:S2 {: RESULT=new IfStmt(C1, S2); RESULT.setLine(C1left); :}
+			  | (ForStmt) ForSign:F1 Statement:S2 {: RESULT=new ForStmt(F1, S2); RESULT.setLine(F1left); :}
+			  | LBRACE StmtList:S1 RBRACE {: RESULT=new StatementDerived1(S1); RESULT.setLine(S1left); :};
+
+ForSign         ::= (ForSign) FOR LPAREN ForDesStmtList:F1 SEMI ForCondition:F2 SEMI ForDesStmtList:F3 RPAREN {: RESULT=new ForSign(F1, F2, F3); RESULT.setLine(F1left); :};
+ForCondition    ::= (FiniteFor) Condition:C1 {: RESULT=new FiniteFor(C1); RESULT.setLine(C1left); :}
+				  | (InfiniteFor) {: RESULT=new InfiniteFor(); :} /* epsilon */;
+ForDesStmtList  ::= DesStmtList:D1 {: RESULT=new ForDesStmtListDerived1(D1); RESULT.setLine(D1left); :}
+				  | {: RESULT=new ForDesStmtListDerived2(); :} /* epsilon */;
+
+DesStmtList ::= DesStmtList:D1 COMMA DesignatorStatement:D2 {: RESULT=new DesStmtListDerived1(D1, D2); RESULT.setLine(D1left); :}
+			  | DesignatorStatement:D1 {: RESULT=new DesStmtListDerived2(D1); RESULT.setLine(D1left); :};
 
 DesignatorStatement ::= (DesCallStmt) Call:C1 SEMI {: RESULT=new DesCallStmt(C1); RESULT.setLine(C1left); :}
 					  | (DesAssignStmt) Designator:D1 EQUAL Expr:E2 SEMI {: RESULT=new DesAssignStmt(D1, E2); RESULT.setLine(D1left); :}
 					  | (DesIncStmt) Designator:D1 INC SEMI {: RESULT=new DesIncStmt(D1); RESULT.setLine(D1left); :}
 					  | (DesDecStmt) Designator:D1 DEC SEMI {: RESULT=new DesDecStmt(D1); RESULT.setLine(D1left); :};
 
-Addop ::= PLUS {: RESULT=new AddopDerived1(); :} | MINUS {: RESULT=new AddopDerived2(); :};
-Mulop ::= ASTERISK {: RESULT=new MulopDerived1(); :} | SLASH {: RESULT=new MulopDerived2(); :} | PERCENT {: RESULT=new MulopDerived3(); :};
+Addop   ::= PLUS {: RESULT=new AddopDerived1(); :} | MINUS {: RESULT=new AddopDerived2(); :};
+Mulop   ::= ASTERISK {: RESULT=new MulopDerived1(); :} | SLASH {: RESULT=new MulopDerived2(); :} | PERCENT {: RESULT=new MulopDerived3(); :};
+Relop   ::= (EqualityRelop) DBL_EQUAL {: RESULT=new EqualityRelop(); :}
+          | (InequalityRelop) NOT_EQUAL {: RESULT=new InequalityRelop(); :}
+          | GREATER {: RESULT=new RelopDerived1(); :} | GREATER_EQUAL {: RESULT=new RelopDerived2(); :} | LESS {: RESULT=new RelopDerived3(); :} | LESS_EQUAL {: RESULT=new RelopDerived4(); :};
 
-Call ::= (Call) Designator:D1 LPAREN ActPars:A2 RPAREN {: RESULT=new Call(D1, A2); RESULT.setLine(D1left); :};
+Call        ::= (Call) Designator:D1 LPAREN ActPars:A2 RPAREN {: RESULT=new Call(D1, A2); RESULT.setLine(D1left); :};
 ActPars     ::= ActParams:A1 {: RESULT=new ActParsDerived1(A1); RESULT.setLine(A1left); :}
 		      | {: RESULT=new ActParsDerived2(); :} /* epsilon */;
-ActParams   ::= ActParams:A1 COMMA Expr:E2 {: RESULT=new ActParamsDerived1(A1, E2); RESULT.setLine(A1left); :}
-			  | Expr:E1 {: RESULT=new ActParamsDerived2(E1); RESULT.setLine(E1left); :};
+ActParams   ::= ActParams:A1 COMMA ActParam:A2 {: RESULT=new ActParamsDerived1(A1, A2); RESULT.setLine(A1left); :}
+		      | ActParam:A1 {: RESULT=new ActParamsDerived2(A1); RESULT.setLine(A1left); :};
+ActParam    ::= (ActParam) Expr:E1 {: RESULT=new ActParam(E1); RESULT.setLine(E1left); :};
 
 Factor ::= (ConstFactor) Const:C1 {: RESULT=new ConstFactor(C1); RESULT.setLine(C1left); :}
 		 | (GroupedFactor) LPAREN Expr:E1 RPAREN {: RESULT=new GroupedFactor(E1); RESULT.setLine(E1left); :}
@@ -180,3 +208,12 @@ VarRef      ::= (BlankVarRef) IDENT:varName {: RESULT=new BlankVarRef(varName); 
 Designator  ::= (Designator) VarRef:V1 ElemAccess:E2 {: RESULT=new Designator(V1, E2); RESULT.setLine(V1left); :};
 ElemAccess  ::= (ArrayElemAccess) LBRACKET Expr:E1 RBRACKET {: RESULT=new ArrayElemAccess(E1); RESULT.setLine(E1left); :}
 			  | (SingularAccess) {: RESULT=new SingularAccess(); :} /* epsilon */;
+
+CondFact    ::= (Comparison) Expr:E1 Relop:R2 Expr:E3 {: RESULT=new Comparison(E1, R2, E3); RESULT.setLine(E1left); :}
+			  | (CondFactExpr) Expr:E1 {: RESULT=new CondFactExpr(E1); RESULT.setLine(E1left); :};
+
+CondTerm    ::= (CondTermList) CondTerm:C1 AND CondFact:C2 {: RESULT=new CondTermList(C1, C2); RESULT.setLine(C1left); :}
+			  | (CondFactTerm) CondFact:C1 {: RESULT=new CondFactTerm(C1); RESULT.setLine(C1left); :};
+
+Condition   ::= (ConditionList) Condition:C1 OR CondTerm:C2 {: RESULT=new ConditionList(C1, C2); RESULT.setLine(C1left); :}
+			  | (CondTermCondition) CondTerm:C1 {: RESULT=new CondTermCondition(C1); RESULT.setLine(C1left); :};

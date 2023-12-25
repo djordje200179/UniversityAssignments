@@ -1,6 +1,6 @@
 // generated with ast extension for cup
 // version 0.8
-// 25/11/2023 18:10:25
+// 25/11/2023 23:7:5
 
 
 package rs.ac.bg.etf.pp1.ast;
@@ -8,13 +8,13 @@ package rs.ac.bg.etf.pp1.ast;
 public class ActParamsDerived1 extends ActParams {
 
     private ActParams ActParams;
-    private Expr Expr;
+    private ActParam ActParam;
 
-    public ActParamsDerived1 (ActParams ActParams, Expr Expr) {
+    public ActParamsDerived1 (ActParams ActParams, ActParam ActParam) {
         this.ActParams=ActParams;
         if(ActParams!=null) ActParams.setParent(this);
-        this.Expr=Expr;
-        if(Expr!=null) Expr.setParent(this);
+        this.ActParam=ActParam;
+        if(ActParam!=null) ActParam.setParent(this);
     }
 
     public ActParams getActParams() {
@@ -25,12 +25,12 @@ public class ActParamsDerived1 extends ActParams {
         this.ActParams=ActParams;
     }
 
-    public Expr getExpr() {
-        return Expr;
+    public ActParam getActParam() {
+        return ActParam;
     }
 
-    public void setExpr(Expr Expr) {
-        this.Expr=Expr;
+    public void setActParam(ActParam ActParam) {
+        this.ActParam=ActParam;
     }
 
     public void accept(Visitor visitor) {
@@ -39,18 +39,18 @@ public class ActParamsDerived1 extends ActParams {
 
     public void childrenAccept(Visitor visitor) {
         if(ActParams!=null) ActParams.accept(visitor);
-        if(Expr!=null) Expr.accept(visitor);
+        if(ActParam!=null) ActParam.accept(visitor);
     }
 
     public void traverseTopDown(Visitor visitor) {
         accept(visitor);
         if(ActParams!=null) ActParams.traverseTopDown(visitor);
-        if(Expr!=null) Expr.traverseTopDown(visitor);
+        if(ActParam!=null) ActParam.traverseTopDown(visitor);
     }
 
     public void traverseBottomUp(Visitor visitor) {
         if(ActParams!=null) ActParams.traverseBottomUp(visitor);
-        if(Expr!=null) Expr.traverseBottomUp(visitor);
+        if(ActParam!=null) ActParam.traverseBottomUp(visitor);
         accept(visitor);
     }
 
@@ -65,8 +65,8 @@ public class ActParamsDerived1 extends ActParams {
             buffer.append(tab+"  null");
         buffer.append("\n");
 
-        if(Expr!=null)
-            buffer.append(Expr.toString("  "+tab));
+        if(ActParam!=null)
+            buffer.append(ActParam.toString("  "+tab));
         else
             buffer.append(tab+"  null");
         buffer.append("\n");

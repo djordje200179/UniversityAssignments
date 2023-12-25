@@ -1,6 +1,6 @@
 // generated with ast extension for cup
 // version 0.8
-// 25/11/2023 18:10:25
+// 25/11/2023 23:7:5
 
 
 package rs.ac.bg.etf.pp1.ast;
@@ -9,28 +9,41 @@ public abstract class VisitorAdaptor implements Visitor {
 
     public void visit(Mulop Mulop) { }
     public void visit(VarRef VarRef) { }
+    public void visit(Relop Relop) { }
     public void visit(NspDecls NspDecls) { }
     public void visit(ElemAccess ElemAccess) { }
     public void visit(VarQuantity VarQuantity) { }
+    public void visit(DesStmtList DesStmtList) { }
     public void visit(ActParams ActParams) { }
     public void visit(Addop Addop) { }
     public void visit(GlobalDecls GlobalDecls) { }
+    public void visit(ForCondition ForCondition) { }
     public void visit(Factor Factor) { }
+    public void visit(CondTerm CondTerm) { }
     public void visit(MethodSign MethodSign) { }
     public void visit(Term Term) { }
+    public void visit(Condition Condition) { }
     public void visit(FormParams FormParams) { }
+    public void visit(ForDesStmtList ForDesStmtList) { }
     public void visit(StmtList StmtList) { }
     public void visit(Expr Expr) { }
     public void visit(ActPars ActPars) { }
     public void visit(DesignatorStatement DesignatorStatement) { }
-    public void visit(VarDecls VarDecls) { }
     public void visit(Const Const) { }
+    public void visit(VarDecls VarDecls) { }
     public void visit(Statement Statement) { }
     public void visit(ConstDecls ConstDecls) { }
+    public void visit(CondFact CondFact) { }
     public void visit(VarTypedDecls VarTypedDecls) { }
     public void visit(GlobalDecl GlobalDecl) { }
     public void visit(FormPars FormPars) { }
     public void visit(MethodDecls MethodDecls) { }
+    public void visit(CondTermCondition CondTermCondition) { visit(); }
+    public void visit(ConditionList ConditionList) { visit(); }
+    public void visit(CondFactTerm CondFactTerm) { visit(); }
+    public void visit(CondTermList CondTermList) { visit(); }
+    public void visit(CondFactExpr CondFactExpr) { visit(); }
+    public void visit(Comparison Comparison) { visit(); }
     public void visit(SingularAccess SingularAccess) { visit(); }
     public void visit(ArrayElemAccess ArrayElemAccess) { visit(); }
     public void visit(Designator Designator) { visit(); }
@@ -46,11 +59,18 @@ public abstract class VisitorAdaptor implements Visitor {
     public void visit(NewArrayFactor NewArrayFactor) { visit(); }
     public void visit(GroupedFactor GroupedFactor) { visit(); }
     public void visit(ConstFactor ConstFactor) { visit(); }
+    public void visit(ActParam ActParam) { visit(); }
     public void visit(ActParamsDerived2 ActParamsDerived2) { visit(); }
     public void visit(ActParamsDerived1 ActParamsDerived1) { visit(); }
     public void visit(ActParsDerived2 ActParsDerived2) { visit(); }
     public void visit(ActParsDerived1 ActParsDerived1) { visit(); }
     public void visit(Call Call) { visit(); }
+    public void visit(RelopDerived4 RelopDerived4) { visit(); }
+    public void visit(RelopDerived3 RelopDerived3) { visit(); }
+    public void visit(RelopDerived2 RelopDerived2) { visit(); }
+    public void visit(RelopDerived1 RelopDerived1) { visit(); }
+    public void visit(InequalityRelop InequalityRelop) { visit(); }
+    public void visit(EqualityRelop EqualityRelop) { visit(); }
     public void visit(MulopDerived3 MulopDerived3) { visit(); }
     public void visit(MulopDerived2 MulopDerived2) { visit(); }
     public void visit(MulopDerived1 MulopDerived1) { visit(); }
@@ -60,6 +80,17 @@ public abstract class VisitorAdaptor implements Visitor {
     public void visit(DesIncStmt DesIncStmt) { visit(); }
     public void visit(DesAssignStmt DesAssignStmt) { visit(); }
     public void visit(DesCallStmt DesCallStmt) { visit(); }
+    public void visit(DesStmtListDerived2 DesStmtListDerived2) { visit(); }
+    public void visit(DesStmtListDerived1 DesStmtListDerived1) { visit(); }
+    public void visit(ForDesStmtListDerived2 ForDesStmtListDerived2) { visit(); }
+    public void visit(ForDesStmtListDerived1 ForDesStmtListDerived1) { visit(); }
+    public void visit(InfiniteFor InfiniteFor) { visit(); }
+    public void visit(FiniteFor FiniteFor) { visit(); }
+    public void visit(ForSign ForSign) { visit(); }
+    public void visit(StatementDerived1 StatementDerived1) { visit(); }
+    public void visit(ForStmt ForStmt) { visit(); }
+    public void visit(IfStmt IfStmt) { visit(); }
+    public void visit(IfElseStmt IfElseStmt) { visit(); }
     public void visit(DesStmt DesStmt) { visit(); }
     public void visit(PrintStmt PrintStmt) { visit(); }
     public void visit(PrintWidthStmt PrintWidthStmt) { visit(); }

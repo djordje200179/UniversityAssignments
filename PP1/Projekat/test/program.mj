@@ -4,17 +4,15 @@ program MJProgram
 		int foo ()
 			int c[];
 		{
-			continue;
+			return 5;
 		}
 		
 		void bar (int x[], int y)
 			int c; int a[], b;
 		{
-			continue;
 		}
 		
 		void main() {
-			continue;
 		}
 	}
 	}
@@ -26,13 +24,15 @@ program MJProgram
 		int foo ()
 			int c; 
 		{
-			continue;
+			for (;;elem--;) {
+				continue;
+			}
 		}
 		
 		void bar (int x, int y) 
 			int c; int a, b[];
 		{
-			continue;
+			return;
 		}
 		
 		int main() {
@@ -54,6 +54,13 @@ program MJProgram
 	void main() {
 		print('x');
 		n2::elem--;
+
+		bar(1, n2::arr);
+
+		n2::arr[2] = 2;
+		n2::arr[3]++;
+		n2::arr = new int[2];
+
 		return;
 	}
 }
