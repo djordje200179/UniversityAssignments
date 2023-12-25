@@ -156,7 +156,7 @@ Statement   ::= (ValueReturnStmt) RETURN Expr:E1 SEMI {: RESULT=new ValueReturnS
 			  | (ReadStmt) READ LPAREN Designator:D1 RPAREN SEMI {: RESULT=new ReadStmt(D1); RESULT.setLine(D1left); :}
 			  | (PrintWidthStmt) PRINT LPAREN Expr:E1 COMMA NUM:width RPAREN SEMI {: RESULT=new PrintWidthStmt(E1, width); RESULT.setLine(E1left); :}
 			  | (PrintStmt) PRINT LPAREN Expr:E1 RPAREN SEMI {: RESULT=new PrintStmt(E1); RESULT.setLine(E1left); :}
-			  | (DesStmt) DesignatorStatement:D1 {: RESULT=new DesStmt(D1); RESULT.setLine(D1left); :}
+			  | (DesStmt) DesignatorStatement:D1 SEMI {: RESULT=new DesStmt(D1); RESULT.setLine(D1left); :}
 			  | (IfElseStmt) IF LPAREN Condition:C1 RPAREN Statement:S2 ELSE Statement:S3 {: RESULT=new IfElseStmt(C1, S2, S3); RESULT.setLine(C1left); :}
 			  | (IfStmt) IF LPAREN Condition:C1 RPAREN Statement:S2 {: RESULT=new IfStmt(C1, S2); RESULT.setLine(C1left); :}
 			  | (ForStmt) ForSign:F1 Statement:S2 {: RESULT=new ForStmt(F1, S2); RESULT.setLine(F1left); :}
@@ -171,10 +171,10 @@ ForDesStmtList  ::= DesStmtList:D1 {: RESULT=new ForDesStmtListDerived1(D1); RES
 DesStmtList ::= DesStmtList:D1 COMMA DesignatorStatement:D2 {: RESULT=new DesStmtListDerived1(D1, D2); RESULT.setLine(D1left); :}
 			  | DesignatorStatement:D1 {: RESULT=new DesStmtListDerived2(D1); RESULT.setLine(D1left); :};
 
-DesignatorStatement ::= (DesCallStmt) Call:C1 SEMI {: RESULT=new DesCallStmt(C1); RESULT.setLine(C1left); :}
-					  | (DesAssignStmt) Designator:D1 EQUAL Expr:E2 SEMI {: RESULT=new DesAssignStmt(D1, E2); RESULT.setLine(D1left); :}
-					  | (DesIncStmt) Designator:D1 INC SEMI {: RESULT=new DesIncStmt(D1); RESULT.setLine(D1left); :}
-					  | (DesDecStmt) Designator:D1 DEC SEMI {: RESULT=new DesDecStmt(D1); RESULT.setLine(D1left); :};
+DesignatorStatement ::= (DesCallStmt) Call:C1 {: RESULT=new DesCallStmt(C1); RESULT.setLine(C1left); :}
+					  | (DesAssignStmt) Designator:D1 EQUAL Expr:E2 {: RESULT=new DesAssignStmt(D1, E2); RESULT.setLine(D1left); :}
+					  | (DesIncStmt) Designator:D1 INC {: RESULT=new DesIncStmt(D1); RESULT.setLine(D1left); :}
+					  | (DesDecStmt) Designator:D1 DEC {: RESULT=new DesDecStmt(D1); RESULT.setLine(D1left); :};
 
 Addop   ::= PLUS {: RESULT=new AddopDerived1(); :} | MINUS {: RESULT=new AddopDerived2(); :};
 Mulop   ::= ASTERISK {: RESULT=new MulopDerived1(); :} | SLASH {: RESULT=new MulopDerived2(); :} | PERCENT {: RESULT=new MulopDerived3(); :};

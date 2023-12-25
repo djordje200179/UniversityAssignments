@@ -134,7 +134,7 @@ Statement   ::= (ValueReturnStmt) RETURN Expr SEMI
 			  | (ReadStmt) READ LPAREN Designator RPAREN SEMI
 			  | (PrintWidthStmt) PRINT LPAREN Expr COMMA NUM:width RPAREN SEMI
 			  | (PrintStmt) PRINT LPAREN Expr RPAREN SEMI
-			  | (DesStmt) DesignatorStatement
+			  | (DesStmt) DesignatorStatement SEMI
 			  | (IfElseStmt) IF LPAREN Condition RPAREN Statement ELSE Statement
 			  | (IfStmt) IF LPAREN Condition RPAREN Statement
 			  | (ForStmt) ForSign Statement
@@ -149,10 +149,10 @@ ForDesStmtList  ::= DesStmtList
 DesStmtList ::= DesStmtList COMMA DesignatorStatement
 			  | DesignatorStatement;
 
-DesignatorStatement ::= (DesCallStmt) Call SEMI
-					  | (DesAssignStmt) Designator EQUAL Expr SEMI
-					  | (DesIncStmt) Designator INC SEMI
-					  | (DesDecStmt) Designator DEC SEMI;
+DesignatorStatement ::= (DesCallStmt) Call
+					  | (DesAssignStmt) Designator EQUAL Expr
+					  | (DesIncStmt) Designator INC
+					  | (DesDecStmt) Designator DEC;
 
 Addop   ::= PLUS | MINUS;
 Mulop   ::= ASTERISK | SLASH | PERCENT;

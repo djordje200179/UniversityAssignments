@@ -24,7 +24,7 @@ program MJProgram
 		int foo ()
 			int c; 
 		{
-			for (;;elem--;) {
+			for (elem = 0; elem < 3; elem--) {
 				continue;
 			}
 		}
