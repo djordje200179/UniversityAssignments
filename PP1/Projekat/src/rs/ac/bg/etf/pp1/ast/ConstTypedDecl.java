@@ -1,6 +1,6 @@
 // generated with ast extension for cup
 // version 0.8
-// 25/11/2023 10:26:33
+// 25/11/2023 11:46:55
 
 
 package rs.ac.bg.etf.pp1.ast;
@@ -9,21 +9,22 @@ public class ConstTypedDecl implements SyntaxNode {
 
     private SyntaxNode parent;
     private int line;
-    private String type;
+    private Type Type;
     private ConstDecls ConstDecls;
 
-    public ConstTypedDecl (String type, ConstDecls ConstDecls) {
-        this.type=type;
+    public ConstTypedDecl (Type Type, ConstDecls ConstDecls) {
+        this.Type=Type;
+        if(Type!=null) Type.setParent(this);
         this.ConstDecls=ConstDecls;
         if(ConstDecls!=null) ConstDecls.setParent(this);
     }
 
-    public String getType() {
-        return type;
+    public Type getType() {
+        return Type;
     }
 
-    public void setType(String type) {
-        this.type=type;
+    public void setType(Type Type) {
+        this.Type=Type;
     }
 
     public ConstDecls getConstDecls() {
@@ -55,15 +56,18 @@ public class ConstTypedDecl implements SyntaxNode {
     }
 
     public void childrenAccept(Visitor visitor) {
+        if(Type!=null) Type.accept(visitor);
         if(ConstDecls!=null) ConstDecls.accept(visitor);
     }
 
     public void traverseTopDown(Visitor visitor) {
         accept(visitor);
+        if(Type!=null) Type.traverseTopDown(visitor);
         if(ConstDecls!=null) ConstDecls.traverseTopDown(visitor);
     }
 
     public void traverseBottomUp(Visitor visitor) {
+        if(Type!=null) Type.traverseBottomUp(visitor);
         if(ConstDecls!=null) ConstDecls.traverseBottomUp(visitor);
         accept(visitor);
     }
@@ -73,7 +77,10 @@ public class ConstTypedDecl implements SyntaxNode {
         buffer.append(tab);
         buffer.append("ConstTypedDecl(\n");
 
-        buffer.append(" "+tab+type);
+        if(Type!=null)
+            buffer.append(Type.toString("  "+tab));
+        else
+            buffer.append(tab+"  null");
         buffer.append("\n");
 
         if(ConstDecls!=null)

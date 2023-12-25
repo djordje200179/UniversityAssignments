@@ -23,17 +23,26 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 	}
 	
 	private String currNsp = "";
-	private Obj currProg = null,  currMethod = null;
-	
+	private Obj currMethod = null;
+
+	@Override
+	public void visit(Type type) {
+		var typeObj = Tab.find(type.getName());
+		type.struct = typeObj.getType();
+
+		if (typeObj == Tab.noObj)
+			reportError("Can't resolve type: " + type.getName(), type);
+	}
+
 	@Override
 	public void visit(ProgName progName) {
-		currProg = Tab.insert(Obj.Prog, progName.getName(), Tab.noType);
+		progName.obj = Tab.insert(Obj.Prog, progName.getName(), Tab.noType);
 		Tab.openScope();
 	}
 	
 	@Override
 	public void visit(Program prog) {
-		Tab.chainLocalSymbols(currProg);
+		Tab.chainLocalSymbols(prog.getProgName().obj);
     	Tab.closeScope();
 	}
 	
@@ -66,13 +75,7 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 			return;
 		}
 		
-		var typeObj = Tab.find(methodSign.getType());
-		if (typeObj == Tab.noObj) {
-			reportError("Can't resolve type: " + methodSign.getType(), methodSign);
-			return;
-		}
-		
-		currMethod = Tab.insert(Obj.Meth, currNsp + methodSign.getName(), typeObj.getType());
+		currMethod = Tab.insert(Obj.Meth, currNsp + methodSign.getName(), methodSign.getType().struct);
 		
 		Tab.openScope();
 	}
@@ -86,14 +89,9 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 	}
 	
 	@Override
-	public void visit(ConstTypedDecl constTypedDecl) {		
-		var typeObj = Tab.find(constTypedDecl.getType());
-		if (typeObj == Tab.noObj) {
-			reportError("Can't resolve type: " + constTypedDecl.getType(), constTypedDecl);
-			return;
-		}
-		
-		Struct type = typeObj.getType();
+	public void visit(ConstTypedDecl constTypedDecl) {
+		var typeName = constTypedDecl.getType().getName();
+		Struct type = constTypedDecl.getType().struct;
 		
 		constTypedDecl.traverseBottomUp(new VisitorAdaptor() {
 			@Override
@@ -110,21 +108,21 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 
 				if (cnst instanceof IntConst) {
 					if (type != Tab.intType) {
-						reportError("Got: int, expected: " + typeObj.getName(), cnst);
+						reportError("Got: int, expected: " + typeName, cnst);
 						return;
 					}
 					
 					value = ((IntConst)(cnst)).getValue();
 				} else if (cnst instanceof CharConst) {
 					if (type != Tab.charType) {
-						reportError("Got: char, expected: " + typeObj.getName(), cnst);
+						reportError("Got: char, expected: " + typeName, cnst);
 						return;
 					}
 					
 					value = ((CharConst)(cnst)).getValue();
 				} else if (cnst instanceof BoolConst) {
 					if (type != Types.boolType) {
-						reportError("Got: bool, expected: " + typeObj.getName(), cnst);
+						reportError("Got: bool, expected: " + typeName, cnst);
 						return;
 					}
 					
@@ -138,12 +136,6 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 	
 	@Override
 	public void visit(VarTypedDecl varTypedDecl) {
-		var typeObj = Tab.find(varTypedDecl.getType());
-		if (typeObj == Tab.noObj) {
-			reportError("Can't resolve type", varTypedDecl);
-			return;
-		}
-		
 		varTypedDecl.traverseBottomUp(new VisitorAdaptor() {
 			@Override
 			public void visit(VarDecl varDecl) {
@@ -154,7 +146,7 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 
 				var fullName = currMethod == null ? currNsp + varDecl.getName() : varDecl.getName();
 				
-				var obj = Tab.insert(Obj.Var, fullName, typeObj.getType());
+				var obj = Tab.insert(Obj.Var, fullName, varTypedDecl.getType().struct);
 				obj.setAdr(Tab.currentScope.getnVars() - 1);
 			}
 		});
@@ -167,13 +159,7 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 			return;
 		}
 
-		var typeObj = Tab.find(formParam.getType());
-		if (typeObj == Tab.noObj) {
-			reportError("Can't resolve type: " + formParam.getType(), formParam);
-			return;
-		}
-
-		Tab.insert(Obj.Var, formParam.getName(), typeObj.getType());
+		Tab.insert(Obj.Var, formParam.getName(), formParam.getType().struct);
 		currMethod.setLevel(currMethod.getLevel() + 1);
 	}
 }

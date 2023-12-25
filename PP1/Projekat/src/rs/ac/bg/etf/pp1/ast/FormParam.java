@@ -1,6 +1,6 @@
 // generated with ast extension for cup
 // version 0.8
-// 25/11/2023 10:26:33
+// 25/11/2023 11:46:56
 
 
 package rs.ac.bg.etf.pp1.ast;
@@ -9,20 +9,21 @@ public class FormParam implements SyntaxNode {
 
     private SyntaxNode parent;
     private int line;
-    private String type;
+    private Type Type;
     private String name;
 
-    public FormParam (String type, String name) {
-        this.type=type;
+    public FormParam (Type Type, String name) {
+        this.Type=Type;
+        if(Type!=null) Type.setParent(this);
         this.name=name;
     }
 
-    public String getType() {
-        return type;
+    public Type getType() {
+        return Type;
     }
 
-    public void setType(String type) {
-        this.type=type;
+    public void setType(Type Type) {
+        this.Type=Type;
     }
 
     public String getName() {
@@ -54,13 +55,16 @@ public class FormParam implements SyntaxNode {
     }
 
     public void childrenAccept(Visitor visitor) {
+        if(Type!=null) Type.accept(visitor);
     }
 
     public void traverseTopDown(Visitor visitor) {
         accept(visitor);
+        if(Type!=null) Type.traverseTopDown(visitor);
     }
 
     public void traverseBottomUp(Visitor visitor) {
+        if(Type!=null) Type.traverseBottomUp(visitor);
         accept(visitor);
     }
 
@@ -69,7 +73,10 @@ public class FormParam implements SyntaxNode {
         buffer.append(tab);
         buffer.append("FormParam(\n");
 
-        buffer.append(" "+tab+type);
+        if(Type!=null)
+            buffer.append(Type.toString("  "+tab));
+        else
+            buffer.append(tab+"  null");
         buffer.append("\n");
 
         buffer.append(" "+tab+name);

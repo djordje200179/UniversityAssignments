@@ -3,7 +3,6 @@ package rs.ac.bg.etf.pp1;
 import java_cup.runtime.*;
 import rs.ac.bg.etf.pp1.ast.*;
 
-
 parser code {:
 	private boolean errorDetected = false;
 	
@@ -58,15 +57,17 @@ terminal Boolean BOOL;
 terminal Character CHAR;
 terminal String IDENT;
 
-nonterminal Program, ProgName;
+nonterminal Program;
 nonterminal NspDecls, Namespace, NspName;
 nonterminal GlobalDecls, GlobalDecl;
-nonterminal Type;
 nonterminal ConstTypedDecl, ConstDecls, ConstDecl, Const;
 nonterminal VarTypedDecls, VarTypedDecl, VarDecls, VarDecl;
-nonterminal MethodDecls, MethodDecl, MethodSign;
+nonterminal MethodDecls, MethodDecl;
 nonterminal FormPars, FormParams, FormParam;
 nonterminal Statement;
+
+nonterminal rs.etf.pp1.symboltable.concepts.Obj ProgName, MethodSign;
+nonterminal rs.etf.pp1.symboltable.concepts.Struct Type;
 
 precedence left ELSE;
 
@@ -75,16 +76,18 @@ ProgName	::= (ProgName) IDENT:name;
 
 NspDecls	::= NspDecls Namespace
 			  | /* epsilon */;
-			  
+
 Namespace	::= (Namespace) NSP NspName LBRACE GlobalDecls LBRACE MethodDecls RBRACE RBRACE;
 NspName		::= (NspName) IDENT:name;
+
+Type    ::= (Type) IDENT:name;
 
 GlobalDecls	::= GlobalDecls GlobalDecl
 			  | /* epsilon */;
 GlobalDecl	::= (GlobalConstDecl) ConstTypedDecl
 			  | (GlobalVarDecl) VarTypedDecl;
-				  	  
-ConstTypedDecl	::= (ConstTypedDecl) CONST IDENT:type ConstDecls SEMI;
+
+ConstTypedDecl	::= (ConstTypedDecl) CONST Type ConstDecls SEMI;
 ConstDecls		::= ConstDecls COMMA ConstDecl
 				  | ConstDecl;
 ConstDecl		::= (ConstDecl) IDENT:name EQUAL Const;
@@ -94,21 +97,21 @@ Const			::= (IntConst) NUM:value
 
 VarTypedDecls	::= VarTypedDecls VarTypedDecl
 			  	  | /* epsilon */;
-VarTypedDecl	::= (VarTypedDecl) IDENT:type VarDecls SEMI;
+VarTypedDecl	::= (VarTypedDecl) Type VarDecls SEMI;
 VarDecls		::= VarDecls COMMA VarDecl
 				  | VarDecl;
 VarDecl			::= (VarDecl) IDENT:name;
-			 
+
 MethodDecls	::= MethodDecls MethodDecl
 			  | /* epsilon */;
 MethodDecl	::= (MethodDecl) MethodSign LPAREN FormPars RPAREN VarTypedDecls LBRACE Statement RBRACE;
-MethodSign	::= (ValueMethodSign) IDENT:type IDENT:name
+MethodSign	::= (ValueMethodSign) Type IDENT:name
 			  | (VoidMethodSign) VOID IDENT:name;
 
 FormPars	::= FormParams
 			  | /* epsilon */;
 FormParams	::= FormParams COMMA FormParam
 			  | FormParam;
-FormParam	::= (FormParam) IDENT:type IDENT:name;
+FormParam	::= (FormParam) Type IDENT:name;
 
 Statement ::= ;

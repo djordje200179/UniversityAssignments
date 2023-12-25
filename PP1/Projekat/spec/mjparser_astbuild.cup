@@ -3,7 +3,6 @@ package rs.ac.bg.etf.pp1;
 import java_cup.runtime.*;
 import rs.ac.bg.etf.pp1.ast.*;
 
-
 parser code {:
 	private boolean errorDetected = false;
 	
@@ -59,13 +58,11 @@ terminal Character CHAR;
 terminal String IDENT;
 
 nonterminal Program Program;
-nonterminal ProgName ProgName;
 nonterminal NspDecls NspDecls;
 nonterminal Namespace Namespace;
 nonterminal NspName NspName;
 nonterminal GlobalDecls GlobalDecls;
 nonterminal GlobalDecl GlobalDecl;
-nonterminal Type Type;
 nonterminal ConstTypedDecl ConstTypedDecl;
 nonterminal ConstDecls ConstDecls;
 nonterminal ConstDecl ConstDecl;
@@ -76,11 +73,13 @@ nonterminal VarDecls VarDecls;
 nonterminal VarDecl VarDecl;
 nonterminal MethodDecls MethodDecls;
 nonterminal MethodDecl MethodDecl;
-nonterminal MethodSign MethodSign;
 nonterminal FormPars FormPars;
 nonterminal FormParams FormParams;
 nonterminal FormParam FormParam;
 nonterminal Statement Statement;
+
+nonterminal rs.etf.pp1.symboltable.concepts.Obj ProgName, MethodSign;
+nonterminal rs.etf.pp1.symboltable.concepts.Struct Type;
 
 precedence left ELSE;
 
@@ -89,16 +88,18 @@ ProgName	::= (ProgName) IDENT:name {: RESULT=new ProgName(name); RESULT.setLine(
 
 NspDecls	::= NspDecls:N1 Namespace:N2 {: RESULT=new NspDeclsDerived1(N1, N2); RESULT.setLine(N1left); :}
 			  | {: RESULT=new NspDeclsDerived2(); :} /* epsilon */;
-			  
+
 Namespace	::= (Namespace) NSP NspName:N1 LBRACE GlobalDecls:G2 LBRACE MethodDecls:M3 RBRACE RBRACE {: RESULT=new Namespace(N1, G2, M3); RESULT.setLine(N1left); :};
 NspName		::= (NspName) IDENT:name {: RESULT=new NspName(name); RESULT.setLine(nameleft); :};
+
+Type    ::= (Type) IDENT:name {: RESULT=new Type(name); RESULT.setLine(nameleft); :};
 
 GlobalDecls	::= GlobalDecls:G1 GlobalDecl:G2 {: RESULT=new GlobalDeclsDerived1(G1, G2); RESULT.setLine(G1left); :}
 			  | {: RESULT=new GlobalDeclsDerived2(); :} /* epsilon */;
 GlobalDecl	::= (GlobalConstDecl) ConstTypedDecl:C1 {: RESULT=new GlobalConstDecl(C1); RESULT.setLine(C1left); :}
 			  | (GlobalVarDecl) VarTypedDecl:V1 {: RESULT=new GlobalVarDecl(V1); RESULT.setLine(V1left); :};
-				  	  
-ConstTypedDecl	::= (ConstTypedDecl) CONST IDENT:type ConstDecls:C1 SEMI {: RESULT=new ConstTypedDecl(type, C1); RESULT.setLine(typeleft); :};
+
+ConstTypedDecl	::= (ConstTypedDecl) CONST Type:T1 ConstDecls:C2 SEMI {: RESULT=new ConstTypedDecl(T1, C2); RESULT.setLine(T1left); :};
 ConstDecls		::= ConstDecls:C1 COMMA ConstDecl:C2 {: RESULT=new ConstDeclsDerived1(C1, C2); RESULT.setLine(C1left); :}
 				  | ConstDecl:C1 {: RESULT=new ConstDeclsDerived2(C1); RESULT.setLine(C1left); :};
 ConstDecl		::= (ConstDecl) IDENT:name EQUAL Const:C1 {: RESULT=new ConstDecl(name, C1); RESULT.setLine(nameleft); :};
@@ -108,21 +109,21 @@ Const			::= (IntConst) NUM:value {: RESULT=new IntConst(value); RESULT.setLine(v
 
 VarTypedDecls	::= VarTypedDecls:V1 VarTypedDecl:V2 {: RESULT=new VarTypedDeclsDerived1(V1, V2); RESULT.setLine(V1left); :}
 			  	  | {: RESULT=new VarTypedDeclsDerived2(); :} /* epsilon */;
-VarTypedDecl	::= (VarTypedDecl) IDENT:type VarDecls:V1 SEMI {: RESULT=new VarTypedDecl(type, V1); RESULT.setLine(typeleft); :};
+VarTypedDecl	::= (VarTypedDecl) Type:T1 VarDecls:V2 SEMI {: RESULT=new VarTypedDecl(T1, V2); RESULT.setLine(T1left); :};
 VarDecls		::= VarDecls:V1 COMMA VarDecl:V2 {: RESULT=new VarDeclsDerived1(V1, V2); RESULT.setLine(V1left); :}
 				  | VarDecl:V1 {: RESULT=new VarDeclsDerived2(V1); RESULT.setLine(V1left); :};
 VarDecl			::= (VarDecl) IDENT:name {: RESULT=new VarDecl(name); RESULT.setLine(nameleft); :};
-			 
+
 MethodDecls	::= MethodDecls:M1 MethodDecl:M2 {: RESULT=new MethodDeclsDerived1(M1, M2); RESULT.setLine(M1left); :}
 			  | {: RESULT=new MethodDeclsDerived2(); :} /* epsilon */;
 MethodDecl	::= (MethodDecl) MethodSign:M1 LPAREN FormPars:F2 RPAREN VarTypedDecls:V3 LBRACE Statement:S4 RBRACE {: RESULT=new MethodDecl(M1, F2, V3, S4); RESULT.setLine(M1left); :};
-MethodSign	::= (ValueMethodSign) IDENT:type IDENT:name {: RESULT=new ValueMethodSign(type, name); RESULT.setLine(typeleft); :}
+MethodSign	::= (ValueMethodSign) Type:T1 IDENT:name {: RESULT=new ValueMethodSign(T1, name); RESULT.setLine(T1left); :}
 			  | (VoidMethodSign) VOID IDENT:name {: RESULT=new VoidMethodSign(name); RESULT.setLine(nameleft); :};
 
 FormPars	::= FormParams:F1 {: RESULT=new FormParsDerived1(F1); RESULT.setLine(F1left); :}
 			  | {: RESULT=new FormParsDerived2(); :} /* epsilon */;
 FormParams	::= FormParams:F1 COMMA FormParam:F2 {: RESULT=new FormParamsDerived1(F1, F2); RESULT.setLine(F1left); :}
 			  | FormParam:F1 {: RESULT=new FormParamsDerived2(F1); RESULT.setLine(F1left); :};
-FormParam	::= (FormParam) IDENT:type IDENT:name {: RESULT=new FormParam(type, name); RESULT.setLine(typeleft); :};
+FormParam	::= (FormParam) Type:T1 IDENT:name {: RESULT=new FormParam(T1, name); RESULT.setLine(T1left); :};
 
 Statement ::= {: RESULT=new StatementDerived1(); :} ;
