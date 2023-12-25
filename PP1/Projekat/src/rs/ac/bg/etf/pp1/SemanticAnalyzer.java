@@ -174,6 +174,14 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 	}
 
 	@Override
+	public void visit(Call call) {
+		if (call.getDesignator().obj.getKind() != Obj.Meth)
+			reportError("Object is not a method", call);
+
+		call.struct = call.getDesignator().obj.getType();
+	}
+
+	@Override
 	public void visit(ConstFactor factor) {
 		factor.struct = factor.getConst().struct;
 	}
@@ -189,13 +197,13 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 	}
 
 	@Override
-	public void visit(FuncCallFactor factor) {
-		factor.struct = factor.getDesignator().struct;
+	public void visit(CallFactor factor) {
+		factor.struct = factor.getCall().struct;
 	}
 
 	@Override
 	public void visit(DesignatorFactor factor) {
-		factor.struct = factor.getDesignator().struct;
+		factor.struct = factor.getDesignator().obj.getType();
 	}
 
 	@Override
@@ -256,13 +264,13 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 		if (localObj == Tab.noObj)
 			localObj = Tab.find(varRef.getVarName());
 
-		varRef.struct = localObj.getType();
+		varRef.obj = localObj;
 	}
 
 
 	@Override
 	public void visit(NspVarRef varRef) {
-		varRef.struct = Tab.find(varRef.getNspName() + "::" + varRef.getVarName()).getType();
+		varRef.obj = Tab.find(varRef.getNspName() + "::" + varRef.getVarName());
 	}
 
 	@Override
@@ -273,9 +281,64 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 
 	@Override
 	public void visit(Designator designator) {
-		designator.struct = designator.getVarRef().struct;
+		designator.obj = designator.getVarRef().obj;
 
-		if (designator.getElemAccess() instanceof ArrayElemAccess)
-			designator.struct = designator.struct.getElemType();
+		if (designator.getElemAccess() instanceof ArrayElemAccess) {
+			if (designator.obj.getType().getKind() == Struct.Array)
+				designator.obj = new Obj(Obj.Elem, "", designator.obj.getType().getElemType());
+			else
+				reportError("Object is not an array", designator);
+		}
+	}
+
+	@Override
+	public void visit(DesAssignStmt stmt) {
+		var obj = stmt.getDesignator().obj;
+
+		switch (obj.getKind()) {
+		case Obj.Var:
+		case Obj.Elem:
+			break;
+		default:
+			reportError("Object is not a variable", stmt);
+			return;
+		}
+
+		if (obj.getType() != stmt.getExpr().struct)
+			reportError("Incompatible types in assignment", stmt);
+	}
+
+	@Override
+	public void visit(DesIncStmt stmt) {
+		var obj = stmt.getDesignator().obj;
+
+		switch (obj.getKind()) {
+		case Obj.Var:
+		case Obj.Elem:
+			break;
+		default:
+			reportError("Object is not a variable", stmt);
+			return;
+		}
+
+		if (obj.getType() != Tab.intType)
+			reportError("Incompatible type for increment", stmt);
+	}
+
+	@Override
+	public void visit(DesDecStmt stmt) {
+		var obj = stmt.getDesignator().obj;
+
+		switch (obj.getKind()) {
+		case Obj.Var:
+		case Obj.Elem:
+			break;
+		default:
+			reportError("Object is not a variable", stmt);
+			return;
+		}
+
+		if (obj.getType() != Tab.intType)
+			reportError("Incompatible type for increment", stmt);
 	}
 }

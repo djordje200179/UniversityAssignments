@@ -5,20 +5,21 @@
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class IntConst extends Const {
+public class CallFactor extends Factor {
 
-    private Integer value;
+    private Call Call;
 
-    public IntConst (Integer value) {
-        this.value=value;
+    public CallFactor (Call Call) {
+        this.Call=Call;
+        if(Call!=null) Call.setParent(this);
     }
 
-    public Integer getValue() {
-        return value;
+    public Call getCall() {
+        return Call;
     }
 
-    public void setValue(Integer value) {
-        this.value=value;
+    public void setCall(Call Call) {
+        this.Call=Call;
     }
 
     public void accept(Visitor visitor) {
@@ -26,26 +27,32 @@ public class IntConst extends Const {
     }
 
     public void childrenAccept(Visitor visitor) {
+        if(Call!=null) Call.accept(visitor);
     }
 
     public void traverseTopDown(Visitor visitor) {
         accept(visitor);
+        if(Call!=null) Call.traverseTopDown(visitor);
     }
 
     public void traverseBottomUp(Visitor visitor) {
+        if(Call!=null) Call.traverseBottomUp(visitor);
         accept(visitor);
     }
 
     public String toString(String tab) {
         StringBuffer buffer=new StringBuffer();
         buffer.append(tab);
-        buffer.append("IntConst(\n");
+        buffer.append("CallFactor(\n");
 
-        buffer.append(" "+tab+value);
+        if(Call!=null)
+            buffer.append(Call.toString("  "+tab));
+        else
+            buffer.append(tab+"  null");
         buffer.append("\n");
 
         buffer.append(tab);
-        buffer.append(") [IntConst]");
+        buffer.append(") [CallFactor]");
         return buffer.toString();
     }
 }

@@ -36,8 +36,7 @@ program MJProgram
 		}
 		
 		int main() {
-			return arr[2] + 8;
-			return arr['x'];
+			return arr2[2] + 8 * foo();
 		}
 	}
 	}
@@ -48,10 +47,13 @@ program MJProgram
 		int c; int a, b; 
 	{
 		print(2 + 8);
+		y[2] = 2;
+		y[3]++;
 	}
 	
 	void main() {
 		print('x');
+		n2::elem--;
 		return;
 	}
 }

@@ -1,16 +1,20 @@
 // generated with ast extension for cup
 // version 0.8
-// 25/11/2023 17:27:15
+// 25/11/2023 18:10:25
 
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class FuncCallFactor extends Factor {
+public class Call implements SyntaxNode {
+
+    private SyntaxNode parent;
+    private int line;
+    public rs.etf.pp1.symboltable.concepts.Struct struct = null;
 
     private Designator Designator;
     private ActPars ActPars;
 
-    public FuncCallFactor (Designator Designator, ActPars ActPars) {
+    public Call (Designator Designator, ActPars ActPars) {
         this.Designator=Designator;
         if(Designator!=null) Designator.setParent(this);
         this.ActPars=ActPars;
@@ -31,6 +35,22 @@ public class FuncCallFactor extends Factor {
 
     public void setActPars(ActPars ActPars) {
         this.ActPars=ActPars;
+    }
+
+    public SyntaxNode getParent() {
+        return parent;
+    }
+
+    public void setParent(SyntaxNode parent) {
+        this.parent=parent;
+    }
+
+    public int getLine() {
+        return line;
+    }
+
+    public void setLine(int line) {
+        this.line=line;
     }
 
     public void accept(Visitor visitor) {
@@ -57,7 +77,7 @@ public class FuncCallFactor extends Factor {
     public String toString(String tab) {
         StringBuffer buffer=new StringBuffer();
         buffer.append(tab);
-        buffer.append("FuncCallFactor(\n");
+        buffer.append("Call(\n");
 
         if(Designator!=null)
             buffer.append(Designator.toString("  "+tab));
@@ -72,7 +92,7 @@ public class FuncCallFactor extends Factor {
         buffer.append("\n");
 
         buffer.append(tab);
-        buffer.append(") [FuncCallFactor]");
+        buffer.append(") [Call]");
         return buffer.toString();
     }
 }

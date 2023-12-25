@@ -5,21 +5,21 @@
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class PrintStmt extends Statement {
+public class DesCallStmt extends DesignatorStatement {
 
-    private Expr Expr;
+    private Call Call;
 
-    public PrintStmt (Expr Expr) {
-        this.Expr=Expr;
-        if(Expr!=null) Expr.setParent(this);
+    public DesCallStmt (Call Call) {
+        this.Call=Call;
+        if(Call!=null) Call.setParent(this);
     }
 
-    public Expr getExpr() {
-        return Expr;
+    public Call getCall() {
+        return Call;
     }
 
-    public void setExpr(Expr Expr) {
-        this.Expr=Expr;
+    public void setCall(Call Call) {
+        this.Call=Call;
     }
 
     public void accept(Visitor visitor) {
@@ -27,32 +27,32 @@ public class PrintStmt extends Statement {
     }
 
     public void childrenAccept(Visitor visitor) {
-        if(Expr!=null) Expr.accept(visitor);
+        if(Call!=null) Call.accept(visitor);
     }
 
     public void traverseTopDown(Visitor visitor) {
         accept(visitor);
-        if(Expr!=null) Expr.traverseTopDown(visitor);
+        if(Call!=null) Call.traverseTopDown(visitor);
     }
 
     public void traverseBottomUp(Visitor visitor) {
-        if(Expr!=null) Expr.traverseBottomUp(visitor);
+        if(Call!=null) Call.traverseBottomUp(visitor);
         accept(visitor);
     }
 
     public String toString(String tab) {
         StringBuffer buffer=new StringBuffer();
         buffer.append(tab);
-        buffer.append("PrintStmt(\n");
+        buffer.append("DesCallStmt(\n");
 
-        if(Expr!=null)
-            buffer.append(Expr.toString("  "+tab));
+        if(Call!=null)
+            buffer.append(Call.toString("  "+tab));
         else
             buffer.append(tab+"  null");
         buffer.append("\n");
 
         buffer.append(tab);
-        buffer.append(") [PrintStmt]");
+        buffer.append(") [DesCallStmt]");
         return buffer.toString();
     }
 }

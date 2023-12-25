@@ -1,6 +1,6 @@
 // generated with ast extension for cup
 // version 0.8
-// 25/11/2023 17:27:16
+// 25/11/2023 18:10:25
 
 
 package rs.ac.bg.etf.pp1.ast;
@@ -22,6 +22,7 @@ public interface Visitor {
     public void visit(StmtList StmtList);
     public void visit(Expr Expr);
     public void visit(ActPars ActPars);
+    public void visit(DesignatorStatement DesignatorStatement);
     public void visit(VarDecls VarDecls);
     public void visit(Const Const);
     public void visit(Statement Statement);
@@ -41,7 +42,7 @@ public interface Visitor {
     public void visit(FactorTerm FactorTerm);
     public void visit(FactorTermList FactorTermList);
     public void visit(DesignatorFactor DesignatorFactor);
-    public void visit(FuncCallFactor FuncCallFactor);
+    public void visit(CallFactor CallFactor);
     public void visit(NewArrayFactor NewArrayFactor);
     public void visit(GroupedFactor GroupedFactor);
     public void visit(ConstFactor ConstFactor);
@@ -49,11 +50,17 @@ public interface Visitor {
     public void visit(ActParamsDerived1 ActParamsDerived1);
     public void visit(ActParsDerived2 ActParsDerived2);
     public void visit(ActParsDerived1 ActParsDerived1);
+    public void visit(Call Call);
     public void visit(MulopDerived3 MulopDerived3);
     public void visit(MulopDerived2 MulopDerived2);
     public void visit(MulopDerived1 MulopDerived1);
     public void visit(AddopDerived2 AddopDerived2);
     public void visit(AddopDerived1 AddopDerived1);
+    public void visit(DesDecStmt DesDecStmt);
+    public void visit(DesIncStmt DesIncStmt);
+    public void visit(DesAssignStmt DesAssignStmt);
+    public void visit(DesCallStmt DesCallStmt);
+    public void visit(DesStmt DesStmt);
     public void visit(PrintStmt PrintStmt);
     public void visit(PrintWidthStmt PrintWidthStmt);
     public void visit(ReadStmt ReadStmt);

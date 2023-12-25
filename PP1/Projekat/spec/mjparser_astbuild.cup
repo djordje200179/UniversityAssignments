@@ -50,7 +50,7 @@ scan with {:
 
 terminal LBRACE, RBRACE, SEMI, LPAREN, RPAREN, LBRACKET, RBRACKET;
 terminal COMMA, DBLCOLON;
-terminal PLUS, MINUS, ASTERISK, SLASH, PERCENT, EQUAL;
+terminal PLUS, MINUS, ASTERISK, SLASH, PERCENT, EQUAL, INC, DEC;
 terminal PROGRAM, NAMESPACE, PRINT, READ, RETURN, VOID, IF, ELSE, CONST, NEW, BREAK, CONTINUE;
 
 terminal Integer NUM;
@@ -80,14 +80,15 @@ nonterminal FormParams FormParams;
 nonterminal FormParam FormParam;
 nonterminal Statement Statement;
 nonterminal StmtList StmtList;
+nonterminal DesignatorStatement DesignatorStatement;
 nonterminal Addop Addop;
 nonterminal Mulop Mulop;
-
-nonterminal rs.etf.pp1.symboltable.concepts.Obj ProgName, MethodSign;
-nonterminal rs.etf.pp1.symboltable.concepts.Struct Type;
-nonterminal rs.etf.pp1.symboltable.concepts.Struct Const, Factor, Term, Expr, VarRef, Designator;
 nonterminal ActPars ActPars;
 nonterminal ActParams ActParams;
+
+nonterminal rs.etf.pp1.symboltable.concepts.Obj ProgName, MethodSign, Designator, VarRef;
+nonterminal rs.etf.pp1.symboltable.concepts.Struct Type;
+nonterminal rs.etf.pp1.symboltable.concepts.Struct Const, Factor, Term, Expr, Call;
 
 precedence left ELSE;
 
@@ -143,11 +144,18 @@ Statement   ::= (ValueReturnStmt) RETURN Expr:E1 SEMI {: RESULT=new ValueReturnS
 			  | (ContinueStmt) CONTINUE SEMI {: RESULT=new ContinueStmt(); :}
 			  | (ReadStmt) READ LPAREN Designator:D1 RPAREN SEMI {: RESULT=new ReadStmt(D1); RESULT.setLine(D1left); :}
 			  | (PrintWidthStmt) PRINT LPAREN Expr:E1 COMMA NUM:width RPAREN SEMI {: RESULT=new PrintWidthStmt(E1, width); RESULT.setLine(E1left); :}
-			  | (PrintStmt) PRINT LPAREN Expr:E1 RPAREN SEMI {: RESULT=new PrintStmt(E1); RESULT.setLine(E1left); :};
+			  | (PrintStmt) PRINT LPAREN Expr:E1 RPAREN SEMI {: RESULT=new PrintStmt(E1); RESULT.setLine(E1left); :}
+			  | (DesStmt) DesignatorStatement:D1 {: RESULT=new DesStmt(D1); RESULT.setLine(D1left); :};
+
+DesignatorStatement ::= (DesCallStmt) Call:C1 SEMI {: RESULT=new DesCallStmt(C1); RESULT.setLine(C1left); :}
+					  | (DesAssignStmt) Designator:D1 EQUAL Expr:E2 SEMI {: RESULT=new DesAssignStmt(D1, E2); RESULT.setLine(D1left); :}
+					  | (DesIncStmt) Designator:D1 INC SEMI {: RESULT=new DesIncStmt(D1); RESULT.setLine(D1left); :}
+					  | (DesDecStmt) Designator:D1 DEC SEMI {: RESULT=new DesDecStmt(D1); RESULT.setLine(D1left); :};
 
 Addop ::= PLUS {: RESULT=new AddopDerived1(); :} | MINUS {: RESULT=new AddopDerived2(); :};
 Mulop ::= ASTERISK {: RESULT=new MulopDerived1(); :} | SLASH {: RESULT=new MulopDerived2(); :} | PERCENT {: RESULT=new MulopDerived3(); :};
 
+Call ::= (Call) Designator:D1 LPAREN ActPars:A2 RPAREN {: RESULT=new Call(D1, A2); RESULT.setLine(D1left); :};
 ActPars     ::= ActParams:A1 {: RESULT=new ActParsDerived1(A1); RESULT.setLine(A1left); :}
 		      | {: RESULT=new ActParsDerived2(); :} /* epsilon */;
 ActParams   ::= ActParams:A1 COMMA Expr:E2 {: RESULT=new ActParamsDerived1(A1, E2); RESULT.setLine(A1left); :}
@@ -156,8 +164,9 @@ ActParams   ::= ActParams:A1 COMMA Expr:E2 {: RESULT=new ActParamsDerived1(A1, E
 Factor ::= (ConstFactor) Const:C1 {: RESULT=new ConstFactor(C1); RESULT.setLine(C1left); :}
 		 | (GroupedFactor) LPAREN Expr:E1 RPAREN {: RESULT=new GroupedFactor(E1); RESULT.setLine(E1left); :}
 		 | (NewArrayFactor) NEW Type:T1 LBRACKET Expr:E2 RBRACKET {: RESULT=new NewArrayFactor(T1, E2); RESULT.setLine(T1left); :}
-		 | (FuncCallFactor) Designator:D1 LPAREN ActPars:A2 RPAREN {: RESULT=new FuncCallFactor(D1, A2); RESULT.setLine(D1left); :}
+		 | (CallFactor) Call:C1 {: RESULT=new CallFactor(C1); RESULT.setLine(C1left); :}
 		 | (DesignatorFactor) Designator:D1 {: RESULT=new DesignatorFactor(D1); RESULT.setLine(D1left); :};
+
 
 Term ::= (FactorTermList) Term:T1 Mulop:M2 Factor:F3 {: RESULT=new FactorTermList(T1, M2, F3); RESULT.setLine(T1left); :}
 	   | (FactorTerm) Factor:F1 {: RESULT=new FactorTerm(F1); RESULT.setLine(F1left); :};

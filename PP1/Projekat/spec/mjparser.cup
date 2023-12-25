@@ -50,7 +50,7 @@ scan with {:
 
 terminal LBRACE, RBRACE, SEMI, LPAREN, RPAREN, LBRACKET, RBRACKET;
 terminal COMMA, DBLCOLON;
-terminal PLUS, MINUS, ASTERISK, SLASH, PERCENT, EQUAL;
+terminal PLUS, MINUS, ASTERISK, SLASH, PERCENT, EQUAL, INC, DEC;
 terminal PROGRAM, NAMESPACE, PRINT, READ, RETURN, VOID, IF, ELSE, CONST, NEW, BREAK, CONTINUE;
 
 terminal Integer NUM;
@@ -66,13 +66,13 @@ nonterminal VarTypedDecls, VarTypedDecl, VarDecls, VarDecl;
 nonterminal ElemAccess, VarQuantity;
 nonterminal MethodDecls, MethodDecl;
 nonterminal FormPars, FormParams, FormParam;
-nonterminal Statement, StmtList;
+nonterminal Statement, StmtList, DesignatorStatement;
 nonterminal Addop, Mulop;
-
-nonterminal rs.etf.pp1.symboltable.concepts.Obj ProgName, MethodSign;
-nonterminal rs.etf.pp1.symboltable.concepts.Struct Type;
-nonterminal rs.etf.pp1.symboltable.concepts.Struct Const, Factor, Term, Expr, VarRef, Designator;
 nonterminal ActPars, ActParams;
+
+nonterminal rs.etf.pp1.symboltable.concepts.Obj ProgName, MethodSign, Designator, VarRef;
+nonterminal rs.etf.pp1.symboltable.concepts.Struct Type;
+nonterminal rs.etf.pp1.symboltable.concepts.Struct Const, Factor, Term, Expr, Call;
 
 precedence left ELSE;
 
@@ -128,11 +128,18 @@ Statement   ::= (ValueReturnStmt) RETURN Expr SEMI
 			  | (ContinueStmt) CONTINUE SEMI
 			  | (ReadStmt) READ LPAREN Designator RPAREN SEMI
 			  | (PrintWidthStmt) PRINT LPAREN Expr COMMA NUM:width RPAREN SEMI
-			  | (PrintStmt) PRINT LPAREN Expr RPAREN SEMI;
+			  | (PrintStmt) PRINT LPAREN Expr RPAREN SEMI
+			  | (DesStmt) DesignatorStatement;
+
+DesignatorStatement ::= (DesCallStmt) Call SEMI
+					  | (DesAssignStmt) Designator EQUAL Expr SEMI
+					  | (DesIncStmt) Designator INC SEMI
+					  | (DesDecStmt) Designator DEC SEMI;
 
 Addop ::= PLUS | MINUS;
 Mulop ::= ASTERISK | SLASH | PERCENT;
 
+Call ::= (Call) Designator LPAREN ActPars RPAREN;
 ActPars     ::= ActParams
 		      | /* epsilon */;
 ActParams   ::= ActParams COMMA Expr
@@ -141,8 +148,9 @@ ActParams   ::= ActParams COMMA Expr
 Factor ::= (ConstFactor) Const
 		 | (GroupedFactor) LPAREN Expr RPAREN
 		 | (NewArrayFactor) NEW Type LBRACKET Expr RBRACKET
-		 | (FuncCallFactor) Designator LPAREN ActPars RPAREN
+		 | (CallFactor) Call
 		 | (DesignatorFactor) Designator;
+
 
 Term ::= (FactorTermList) Term Mulop Factor
 	   | (FactorTerm) Factor;
