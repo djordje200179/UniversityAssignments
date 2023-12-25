@@ -48,7 +48,8 @@ scan with {:
 :}
 
 
-terminal LBRACE, RBRACE, SEMI, LPAREN, RPAREN, COMMA, DBLCOLON;
+terminal LBRACE, RBRACE, SEMI, LPAREN, RPAREN, LBRACKET, RBRACKET;
+terminal COMMA, DBLCOLON;
 terminal PLUS, EQUAL;
 terminal PROGRAM, NSP;
 terminal PRINT, RETURN, VOID, IF, ELSE, CONST;
@@ -71,6 +72,7 @@ nonterminal VarTypedDecls VarTypedDecls;
 nonterminal VarTypedDecl VarTypedDecl;
 nonterminal VarDecls VarDecls;
 nonterminal VarDecl VarDecl;
+nonterminal VarQuantity VarQuantity;
 nonterminal MethodDecls MethodDecls;
 nonterminal MethodDecl MethodDecl;
 nonterminal FormPars FormPars;
@@ -112,7 +114,9 @@ VarTypedDecls	::= VarTypedDecls:V1 VarTypedDecl:V2 {: RESULT=new VarTypedDeclsDe
 VarTypedDecl	::= (VarTypedDecl) Type:T1 VarDecls:V2 SEMI {: RESULT=new VarTypedDecl(T1, V2); RESULT.setLine(T1left); :};
 VarDecls		::= VarDecls:V1 COMMA VarDecl:V2 {: RESULT=new VarDeclsDerived1(V1, V2); RESULT.setLine(V1left); :}
 				  | VarDecl:V1 {: RESULT=new VarDeclsDerived2(V1); RESULT.setLine(V1left); :};
-VarDecl			::= (VarDecl) IDENT:name {: RESULT=new VarDecl(name); RESULT.setLine(nameleft); :};
+VarDecl			::= (VarDecl) IDENT:name VarQuantity:V1 {: RESULT=new VarDecl(name, V1); RESULT.setLine(nameleft); :};
+VarQuantity     ::= (ArrayVar) LBRACKET RBRACKET {: RESULT=new ArrayVar(); :}
+				  | (SingularVar) {: RESULT=new SingularVar(); :} /* epsilon */;
 
 MethodDecls	::= MethodDecls:M1 MethodDecl:M2 {: RESULT=new MethodDeclsDerived1(M1, M2); RESULT.setLine(M1left); :}
 			  | {: RESULT=new MethodDeclsDerived2(); :} /* epsilon */;
@@ -124,6 +128,6 @@ FormPars	::= FormParams:F1 {: RESULT=new FormParsDerived1(F1); RESULT.setLine(F1
 			  | {: RESULT=new FormParsDerived2(); :} /* epsilon */;
 FormParams	::= FormParams:F1 COMMA FormParam:F2 {: RESULT=new FormParamsDerived1(F1, F2); RESULT.setLine(F1left); :}
 			  | FormParam:F1 {: RESULT=new FormParamsDerived2(F1); RESULT.setLine(F1left); :};
-FormParam	::= (FormParam) Type:T1 IDENT:name {: RESULT=new FormParam(T1, name); RESULT.setLine(T1left); :};
+FormParam	::= (FormParam) Type:T1 IDENT:name VarQuantity:V2 {: RESULT=new FormParam(T1, name, V2); RESULT.setLine(T1left); :};
 
 Statement ::= {: RESULT=new StatementDerived1(); :} ;

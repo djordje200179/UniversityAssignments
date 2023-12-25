@@ -48,7 +48,8 @@ scan with {:
 :}
 
 
-terminal LBRACE, RBRACE, SEMI, LPAREN, RPAREN, COMMA, DBLCOLON;
+terminal LBRACE, RBRACE, SEMI, LPAREN, RPAREN, LBRACKET, RBRACKET;
+terminal COMMA, DBLCOLON;
 terminal PLUS, EQUAL;
 terminal PROGRAM, NSP;
 terminal PRINT, RETURN, VOID, IF, ELSE, CONST;
@@ -61,7 +62,7 @@ nonterminal Program;
 nonterminal NspDecls, Namespace, NspName;
 nonterminal GlobalDecls, GlobalDecl;
 nonterminal ConstTypedDecl, ConstDecls, ConstDecl, Const;
-nonterminal VarTypedDecls, VarTypedDecl, VarDecls, VarDecl;
+nonterminal VarTypedDecls, VarTypedDecl, VarDecls, VarDecl, VarQuantity;
 nonterminal MethodDecls, MethodDecl;
 nonterminal FormPars, FormParams, FormParam;
 nonterminal Statement;
@@ -100,7 +101,9 @@ VarTypedDecls	::= VarTypedDecls VarTypedDecl
 VarTypedDecl	::= (VarTypedDecl) Type VarDecls SEMI;
 VarDecls		::= VarDecls COMMA VarDecl
 				  | VarDecl;
-VarDecl			::= (VarDecl) IDENT:name;
+VarDecl			::= (VarDecl) IDENT:name VarQuantity;
+VarQuantity     ::= (ArrayVar) LBRACKET RBRACKET
+				  | (SingularVar) /* epsilon */;
 
 MethodDecls	::= MethodDecls MethodDecl
 			  | /* epsilon */;
@@ -112,6 +115,6 @@ FormPars	::= FormParams
 			  | /* epsilon */;
 FormParams	::= FormParams COMMA FormParam
 			  | FormParam;
-FormParam	::= (FormParam) Type IDENT:name;
+FormParam	::= (FormParam) Type IDENT:name VarQuantity;
 
 Statement ::= ;

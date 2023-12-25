@@ -2,12 +2,12 @@ program MJProgram
 	namespace n1 {
 	{
 		int foo ()
-			int c; 
+			int c[];
 		{
 		}
 		
-		void bar (int x, int y) 
-			int c; int a, b; 
+		void bar (int x[], int y)
+			int c; int a[], b;
 		{
 		}
 		
@@ -24,7 +24,7 @@ program MJProgram
 		}
 		
 		void bar (int x, int y) 
-			int c; int a, b; 
+			int c; int a, b[];
 		{
 		}
 		
@@ -35,7 +35,7 @@ program MJProgram
 	
 	int x; int y;
 {
-	void bar (int x, int y) 
+	void bar (int x, int y[])
 		int c; int a, b; 
 	{
 	}

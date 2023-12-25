@@ -145,8 +145,11 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 				}
 
 				var fullName = currMethod == null ? currNsp + varDecl.getName() : varDecl.getName();
-				
-				var obj = Tab.insert(Obj.Var, fullName, varTypedDecl.getType().struct);
+				var type = varDecl.getVarQuantity() instanceof ArrayVar ?
+						new Struct(Struct.Array, varTypedDecl.getType().struct) :
+						varTypedDecl.getType().struct;
+
+				var obj = Tab.insert(Obj.Var, fullName, type);
 				obj.setAdr(Tab.currentScope.getnVars() - 1);
 			}
 		});
@@ -159,7 +162,11 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 			return;
 		}
 
-		Tab.insert(Obj.Var, formParam.getName(), formParam.getType().struct);
+		var type = formParam.getVarQuantity() instanceof ArrayVar ?
+				new Struct(Struct.Array, formParam.getType().struct) :
+				formParam.getType().struct;
+
+		Tab.insert(Obj.Var, formParam.getName(), type);
 		currMethod.setLevel(currMethod.getLevel() + 1);
 	}
 }

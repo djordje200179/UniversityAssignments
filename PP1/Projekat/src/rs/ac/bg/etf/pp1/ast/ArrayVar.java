@@ -5,20 +5,9 @@
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class IntConst extends Const {
+public class ArrayVar extends VarQuantity {
 
-    private Integer value;
-
-    public IntConst (Integer value) {
-        this.value=value;
-    }
-
-    public Integer getValue() {
-        return value;
-    }
-
-    public void setValue(Integer value) {
-        this.value=value;
+    public ArrayVar () {
     }
 
     public void accept(Visitor visitor) {
@@ -39,13 +28,10 @@ public class IntConst extends Const {
     public String toString(String tab) {
         StringBuffer buffer=new StringBuffer();
         buffer.append(tab);
-        buffer.append("IntConst(\n");
-
-        buffer.append(" "+tab+value);
-        buffer.append("\n");
+        buffer.append("ArrayVar(\n");
 
         buffer.append(tab);
-        buffer.append(") [IntConst]");
+        buffer.append(") [ArrayVar]");
         return buffer.toString();
     }
 }
