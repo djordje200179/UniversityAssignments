@@ -3,6 +3,7 @@ package rs.ac.bg.etf.pp1;
 import rs.ac.bg.etf.pp1.ast.*;
 import rs.etf.pp1.mj.runtime.Code;
 import rs.etf.pp1.symboltable.Tab;
+import rs.etf.pp1.symboltable.concepts.Obj;
 
 public class CodeGenerator extends VisitorAdaptor {
 	@Override
@@ -141,8 +142,31 @@ public class CodeGenerator extends VisitorAdaptor {
 	}
 
 	@Override
+	public void visit(BlankVarRef varRef) {
+		var designator = (Designator) varRef.getParent();
+		if (designator.getElemAccess() instanceof ArrayElemAccess)
+			Code.load(varRef.obj);
+	}
+
+	@Override
+	public void visit(NspVarRef varRef) {
+		var designator = (Designator) varRef.getParent();
+		if (designator.getElemAccess() instanceof ArrayElemAccess)
+			Code.load(varRef.obj);
+	}
+
+	@Override
 	public void visit(Designator designator) {
+		if (designator.getParent() instanceof Call || designator.getParent() instanceof DesAssignStmt)
+			return;
+
 		Code.load(designator.obj);
+	}
+
+	@Override
+	public void visit(DesCallStmt stmt) {
+		if (stmt.getCall().struct != Tab.noType)
+			Code.put(Code.pop);
 	}
 
 	@Override

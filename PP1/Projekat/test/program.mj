@@ -1,27 +1,25 @@
 program MJProgram
 namespace vars {
-	int a;
+	int arr[];
 	{
-
+		void init(int n) {
+			arr = new int[n];
+		}
 	}
 }
-	int b;
 {
 	void main()
-		int c;
+		int n;
 	{
-		print('a');
-		print(':');
-		read(vars::a);
+		n = 10;
+		vars::init(n);
 
-		print('b');
-		print(':');
-		read(b);
+		vars::arr[7] = 4;
+		print(vars::arr[7]);
 
-		c = a + b;
+		vars::arr[5] = 6;
+		print(vars::arr[5]);
 
-		print('c');
-		print(':');
-		print(c);
+		print(vars::arr[7] + vars::arr[5]);
 	}
 }
