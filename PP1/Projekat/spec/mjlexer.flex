@@ -82,7 +82,7 @@ import java_cup.runtime.Symbol;
 
 [0-9]+ 					{ return new_symbol(sym.NUM, Integer.valueOf(yytext())); }
 true|false  			{ return new_symbol(sym.BOOL, Boolean.valueOf(yytext())); }
-'.'		  				{ return new_symbol(sym.CHAR, yytext().charAt(0)); }
+'.'		  				{ return new_symbol(sym.CHAR, yytext().charAt(1)); }
 [a-zA-Z][a-zA-Z0-9_]*	{ return new_symbol (sym.IDENT, yytext()); }
 
 . { System.err.println("Found illegal character <" + yytext() + ">" + " at line " + yyline + ", column " + yycolumn); }

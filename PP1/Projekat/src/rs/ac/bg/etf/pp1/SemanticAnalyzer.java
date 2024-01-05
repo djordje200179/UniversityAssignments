@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public class SemanticAnalyzer extends VisitorAdaptor {
 	private boolean errorDetected = false;
-	
+
 	public boolean hasError() {
 		return errorDetected;
 	}
@@ -84,7 +84,7 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 			return;
 		}
 		
-		currMethod = Tab.insert(Obj.Meth, currNsp + methodSign.getName(), Tab.noType);
+		methodSign.obj = currMethod = Tab.insert(Obj.Meth, currNsp + methodSign.getName(), Tab.noType);
 		
 		Tab.openScope();
 	}
@@ -95,8 +95,8 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 			reportError("Identifier " + methodSign.getName() + " redefined", methodSign);
 			return;
 		}
-		
-		currMethod = Tab.insert(Obj.Meth, currNsp + methodSign.getName(), methodSign.getType().struct);
+
+		methodSign.obj = currMethod = Tab.insert(Obj.Meth, currNsp + methodSign.getName(), methodSign.getType().struct);
 		
 		Tab.openScope();
 	}

@@ -1,8 +1,11 @@
 package rs.ac.bg.etf.pp1;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import rs.ac.bg.etf.pp1.ast.Program;
+import rs.etf.pp1.mj.runtime.Code;
 import rs.etf.pp1.symboltable.Tab;
 import rs.etf.pp1.symboltable.concepts.Obj;
 import rs.etf.pp1.symboltable.concepts.Struct;
@@ -42,16 +45,13 @@ public class Compiler {
 				}
 			});
 	        	
-        	/*File objFile = new File(args[1]);
+        	var objFile = new File(args[1]);
         	if (objFile.exists())
         		objFile.delete();
-        	
-        	Code generation...
-        	CodeGenerator codeGenerator = new CodeGenerator();
-        	prog.traverseBottomUp(codeGenerator);
-        	Code.dataSize = semanticAnalyzer.nVars;
-        	Code.mainPc = codeGenerator.getMainPc();
-        	Code.write(new FileOutputStream(objFile));*/
+
+        	var codeGenerator = new CodeGenerator();
+        	program.traverseBottomUp(codeGenerator);
+        	Code.write(new FileOutputStream(objFile));
 		}
 	}
 }
