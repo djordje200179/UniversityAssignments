@@ -1,13 +1,13 @@
 // generated with ast extension for cup
 // version 0.8
-// 25/11/2023 23:15:59
+// 5/0/2024 12:37:54
 
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class MulopDerived3 extends Mulop {
+public class MinusAddOp extends Addop {
 
-    public MulopDerived3 () {
+    public MinusAddOp () {
     }
 
     public void accept(Visitor visitor) {
@@ -28,10 +28,10 @@ public class MulopDerived3 extends Mulop {
     public String toString(String tab) {
         StringBuffer buffer=new StringBuffer();
         buffer.append(tab);
-        buffer.append("MulopDerived3(\n");
+        buffer.append("MinusAddOp(\n");
 
         buffer.append(tab);
-        buffer.append(") [MulopDerived3]");
+        buffer.append(") [MinusAddOp]");
         return buffer.toString();
     }
 }

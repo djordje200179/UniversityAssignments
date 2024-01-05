@@ -176,8 +176,11 @@ DesignatorStatement ::= (DesCallStmt) Call:C1 {: RESULT=new DesCallStmt(C1); RES
 					  | (DesIncStmt) Designator:D1 INC {: RESULT=new DesIncStmt(D1); RESULT.setLine(D1left); :}
 					  | (DesDecStmt) Designator:D1 DEC {: RESULT=new DesDecStmt(D1); RESULT.setLine(D1left); :};
 
-Addop   ::= PLUS {: RESULT=new AddopDerived1(); :} | MINUS {: RESULT=new AddopDerived2(); :};
-Mulop   ::= ASTERISK {: RESULT=new MulopDerived1(); :} | SLASH {: RESULT=new MulopDerived2(); :} | PERCENT {: RESULT=new MulopDerived3(); :};
+Addop   ::= (PlusAddOp) PLUS {: RESULT=new PlusAddOp(); :}
+          | (MinusAddOp) MINUS {: RESULT=new MinusAddOp(); :};
+Mulop   ::= (AsteriskMulop) ASTERISK {: RESULT=new AsteriskMulop(); :}
+		  |	(SlashMulop) SLASH {: RESULT=new SlashMulop(); :}
+		  |	(PercentMulop) PERCENT {: RESULT=new PercentMulop(); :};
 Relop   ::= (EqualityRelop) DBL_EQUAL {: RESULT=new EqualityRelop(); :}
           | (InequalityRelop) NOT_EQUAL {: RESULT=new InequalityRelop(); :}
           | GREATER {: RESULT=new RelopDerived1(); :} | GREATER_EQUAL {: RESULT=new RelopDerived2(); :} | LESS {: RESULT=new RelopDerived3(); :} | LESS_EQUAL {: RESULT=new RelopDerived4(); :};

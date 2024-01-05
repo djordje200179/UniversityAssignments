@@ -76,4 +76,57 @@ public class CodeGenerator extends VisitorAdaptor {
 		else
 			Code.put(Code.bprint);
 	}
+
+	@Override
+	public void visit(VoidReturnStmt stmt) {
+		Code.put(Code.exit);
+		Code.put(Code.return_);
+	}
+
+	@Override
+	public void visit(ValueReturnStmt stmt) {
+		Code.put(Code.exit);
+		Code.put(Code.return_);
+	}
+
+	@Override
+	public void visit(Call call) {
+		int offset = call.getDesignator().obj.getAdr() - Code.pc;
+		Code.put(Code.call);
+		Code.put2(offset);
+	}
+
+	@Override
+	public void visit(NewArrayFactor factor) {
+		Code.put(Code.newarray);
+		Code.put(factor.getType().struct == Tab.charType ? 0 : 1);
+	}
+
+	@Override
+	public void visit(FactorTermList termList) {
+		if (termList.getMulop() instanceof AsteriskMulop)
+			Code.put(Code.mul);
+		else if (termList.getMulop() instanceof SlashMulop)
+			Code.put(Code.div);
+		else
+			Code.put(Code.rem);
+	}
+
+	@Override
+	public void visit(ExprTermList exprList) {
+		if (exprList.getAddop() instanceof PlusAddOp)
+			Code.put(Code.add);
+		else
+			Code.put(Code.sub);
+	}
+
+	@Override
+	public void visit(ExprNegTerm term) {
+		Code.put(Code.neg);
+	}
+
+	@Override
+	public void visit(Designator designator) {
+		Code.load(designator.obj);
+	}
 }

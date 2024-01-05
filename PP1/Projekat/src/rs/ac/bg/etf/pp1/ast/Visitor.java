@@ -1,6 +1,6 @@
 // generated with ast extension for cup
 // version 0.8
-// 25/11/2023 23:15:59
+// 5/0/2024 12:37:54
 
 
 package rs.ac.bg.etf.pp1.ast;
@@ -71,11 +71,11 @@ public interface Visitor {
     public void visit(RelopDerived1 RelopDerived1);
     public void visit(InequalityRelop InequalityRelop);
     public void visit(EqualityRelop EqualityRelop);
-    public void visit(MulopDerived3 MulopDerived3);
-    public void visit(MulopDerived2 MulopDerived2);
-    public void visit(MulopDerived1 MulopDerived1);
-    public void visit(AddopDerived2 AddopDerived2);
-    public void visit(AddopDerived1 AddopDerived1);
+    public void visit(PercentMulop PercentMulop);
+    public void visit(SlashMulop SlashMulop);
+    public void visit(AsteriskMulop AsteriskMulop);
+    public void visit(MinusAddOp MinusAddOp);
+    public void visit(PlusAddOp PlusAddOp);
     public void visit(DesDecStmt DesDecStmt);
     public void visit(DesIncStmt DesIncStmt);
     public void visit(DesAssignStmt DesAssignStmt);

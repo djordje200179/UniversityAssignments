@@ -154,8 +154,11 @@ DesignatorStatement ::= (DesCallStmt) Call
 					  | (DesIncStmt) Designator INC
 					  | (DesDecStmt) Designator DEC;
 
-Addop   ::= PLUS | MINUS;
-Mulop   ::= ASTERISK | SLASH | PERCENT;
+Addop   ::= (PlusAddOp) PLUS
+          | (MinusAddOp) MINUS;
+Mulop   ::= (AsteriskMulop) ASTERISK
+		  |	(SlashMulop) SLASH
+		  |	(PercentMulop) PERCENT;
 Relop   ::= (EqualityRelop) DBL_EQUAL
           | (InequalityRelop) NOT_EQUAL
           | GREATER | GREATER_EQUAL | LESS | LESS_EQUAL;
