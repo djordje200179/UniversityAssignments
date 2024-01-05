@@ -34,7 +34,7 @@ import java_cup.runtime.Symbol;
 
 "program"   { return new_symbol(sym.PROGRAM, yytext()); }
 "namespace"	{ return new_symbol(sym.NAMESPACE, yytext()); }
-"read" 	{ return new_symbol(sym.READ, yytext()); }
+"read" 	    { return new_symbol(sym.READ, yytext()); }
 "print" 	{ return new_symbol(sym.PRINT, yytext()); }
 "void" 		{ return new_symbol(sym.VOID, yytext()); }
 "const" 	{ return new_symbol(sym.CONST, yytext()); }

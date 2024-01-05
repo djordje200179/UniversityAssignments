@@ -16,10 +16,23 @@ namespace vars {
 
 		vars::arr[7] = 4;
 		print(vars::arr[7]);
+		print(eol);
 
 		vars::arr[5] = 6;
 		print(vars::arr[5]);
+		print(eol);
+
+		vars::arr[5]++;
+		print(vars::arr[5]);
+		print(eol);
 
 		print(vars::arr[7] + vars::arr[5]);
+		print(eol);
+
+		print(n);
+		print(eol);
+		n--;
+		print(n);
+		print(eol);
 	}
 }

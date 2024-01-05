@@ -156,7 +156,15 @@ public class CodeGenerator extends VisitorAdaptor {
 	}
 
 	@Override
+	public void visit(ArrayElemAccess elemAccess) {
+		var designator = (Designator) elemAccess.getParent();
+		if (designator.getParent() instanceof DesIncStmt || designator.getParent() instanceof DesDecStmt)
+			Code.put(Code.dup2);
+	}
+
+	@Override
 	public void visit(Designator designator) {
+		var parent = designator.getParent();
 		if (designator.getParent() instanceof Call || designator.getParent() instanceof DesAssignStmt)
 			return;
 
