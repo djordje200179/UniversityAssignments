@@ -18,7 +18,7 @@ namespace vars {
 		print(':');
 		read(b);
 
-		c = vars::a + b;
+		c = a + b;
 
 		print('c');
 		print(':');

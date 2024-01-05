@@ -264,20 +264,16 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 
 	@Override
 	public void visit(ExprTermList termList) {
-		if (termList.getTerm().struct != termList.getExpr().struct || termList.getExpr().struct != Tab.intType) {
+		if (termList.getTerm().struct != termList.getExpr().struct || termList.getExpr().struct != Tab.intType)
 			reportError("Incompatible types in expression", termList);
-			return;
-		}
 
 		termList.struct = Tab.intType;
 	}
 
 	@Override
 	public void visit(ExprNegTerm term) {
-		if (term.getTerm().struct != Tab.intType) {
+		if (term.getTerm().struct != Tab.intType)
 			reportError("Incompatible types in expression", term);
-			return;
-		}
 
 		term.struct = Tab.intType;
 	}
@@ -307,12 +303,18 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 			localObj = Tab.find(varRef.getVarName());
 
 		varRef.obj = localObj;
+
+		if (localObj == Tab.noObj)
+			reportError("Identifier " + varRef.getVarName() + " not found", varRef);
 	}
 
 
 	@Override
 	public void visit(NspVarRef varRef) {
 		varRef.obj = Tab.find(varRef.getNspName() + "::" + varRef.getVarName());
+
+		if (varRef.obj == Tab.noObj)
+			reportError("Identifier " + varRef.getVarName() + " not found", varRef);
 	}
 
 	@Override
