@@ -78,6 +78,16 @@ public class CodeGenerator extends VisitorAdaptor {
 	}
 
 	@Override
+	public void visit(ReadStmt stmt) {
+		if (stmt.getDesignator().obj.getType() == Tab.intType)
+			Code.put(Code.read);
+		else
+			Code.put(Code.bread);
+
+		Code.store(stmt.getDesignator().obj);
+	}
+
+	@Override
 	public void visit(VoidReturnStmt stmt) {
 		Code.put(Code.exit);
 		Code.put(Code.return_);
@@ -99,7 +109,12 @@ public class CodeGenerator extends VisitorAdaptor {
 	@Override
 	public void visit(NewArrayFactor factor) {
 		Code.put(Code.newarray);
-		Code.put(factor.getType().struct == Tab.charType ? 0 : 1);
+
+		int size = 1;
+		if (factor.getType().struct == Tab.charType || factor.getType().struct == Types.boolType)
+			size = 0;
+
+		Code.put(size);
 	}
 
 	@Override
@@ -128,5 +143,24 @@ public class CodeGenerator extends VisitorAdaptor {
 	@Override
 	public void visit(Designator designator) {
 		Code.load(designator.obj);
+	}
+
+	@Override
+	public void visit(DesAssignStmt stmt) {
+		Code.store(stmt.getDesignator().obj);
+	}
+
+	@Override
+	public void visit(DesIncStmt stmt) {
+		Code.loadConst(1);
+		Code.put(Code.add);
+		Code.store(stmt.getDesignator().obj);
+	}
+
+	@Override
+	public void visit(DesDecStmt stmt) {
+		Code.loadConst(1);
+		Code.put(Code.sub);
+		Code.store(stmt.getDesignator().obj);
 	}
 }

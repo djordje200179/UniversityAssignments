@@ -1,66 +1,27 @@
 program MJProgram
-	namespace n1 {
+namespace vars {
+	int a;
 	{
-		int foo ()
-			int c[];
-		{
-			return 5;
-		}
 
-		void bar (int x[], int y)
-			int c; int a[], b;
-		{
-		}
-
-		void main() {
-		}
 	}
-	}
-
-	namespace n2 {
-	const int x = 2, y = 3;
-	int arr[], elem, arr2[];
-	{
-		int foo ()
-			int c;
-		{
-			for (elem = 0; elem < 3; elem--) {
-				continue;
-			}
-		}
-
-		void bar (int x, int y)
-			int c; int a, b[];
-		{
-			return;
-		}
-
-		int main() {
-			return arr2[2] + 8 * foo();
-		}
-	}
-	}
-
-	int x; int y;
+}
+	int b;
 {
-	void bar (int x, int y[])
-		int c; int a, b; 
+	void main()
+		int c;
 	{
-		print(2 + 8);
-		y[2] = 2;
-		y[3]++;
-	}
-	
-	void main() {
-		print('x');
-		n2::elem--;
+		print('a');
+		print(':');
+		read(vars::a);
 
-		bar(1, n2::arr);
+		print('b');
+		print(':');
+		read(b);
 
-		n2::arr[2] = 2;
-		n2::arr[3]++;
-		n2::arr = new int[2];
+		c = vars::a + b;
 
-		return;
+		print('c');
+		print(':');
+		print(c);
 	}
 }
