@@ -1,0 +1,15 @@
+<form (ngSubmit)="signIn.emit({username, password})">
+	<h2>Пријава</h2>
+
+	<mat-form-field appearance="outline">
+		<mat-label>Корисничко име</mat-label>
+		<input matInput [(ngModel)]="username" name="username" type="text">
+	</mat-form-field>
+
+	<mat-form-field appearance="outline">
+		<mat-label>Лозинка</mat-label>
+		<input matInput [(ngModel)]="password" name="password" type="password">
+	</mat-form-field>
+
+	<button type="submit" mat-flat-button color="primary">Пријави се</button>
+</form>
