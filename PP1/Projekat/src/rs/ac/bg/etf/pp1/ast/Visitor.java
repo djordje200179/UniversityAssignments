@@ -1,6 +1,6 @@
 // generated with ast extension for cup
 // version 0.8
-// 5/0/2024 18:48:54
+// 6/0/2024 19:34:18
 
 
 package rs.ac.bg.etf.pp1.ast;
@@ -38,6 +38,7 @@ public interface Visitor {
     public void visit(GlobalDecl GlobalDecl);
     public void visit(FormPars FormPars);
     public void visit(MethodDecls MethodDecls);
+    public void visit(CondOrJoiner CondOrJoiner);
     public void visit(CondTermCondition CondTermCondition);
     public void visit(ConditionList ConditionList);
     public void visit(CondFactTerm CondFactTerm);
@@ -65,10 +66,10 @@ public interface Visitor {
     public void visit(ActParsDerived2 ActParsDerived2);
     public void visit(ActParsDerived1 ActParsDerived1);
     public void visit(Call Call);
-    public void visit(RelopDerived4 RelopDerived4);
-    public void visit(RelopDerived3 RelopDerived3);
-    public void visit(RelopDerived2 RelopDerived2);
-    public void visit(RelopDerived1 RelopDerived1);
+    public void visit(LessEqualRelop LessEqualRelop);
+    public void visit(LessRelop LessRelop);
+    public void visit(GreaterEqualRelop GreaterEqualRelop);
+    public void visit(GreaterRelop GreaterRelop);
     public void visit(InequalityRelop InequalityRelop);
     public void visit(EqualityRelop EqualityRelop);
     public void visit(PercentMulop PercentMulop);
@@ -87,6 +88,9 @@ public interface Visitor {
     public void visit(InfiniteFor InfiniteFor);
     public void visit(FiniteFor FiniteFor);
     public void visit(ForSign ForSign);
+    public void visit(IfElseStart IfElseStart);
+    public void visit(IfAfterCond IfAfterCond);
+    public void visit(IfBeforeCond IfBeforeCond);
     public void visit(StatementDerived1 StatementDerived1);
     public void visit(ForStmt ForStmt);
     public void visit(IfStmt IfStmt);

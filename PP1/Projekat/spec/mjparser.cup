@@ -70,9 +70,10 @@ nonterminal ElemAccess, VarQuantity;
 nonterminal MethodDecls, MethodDecl;
 nonterminal FormPars, FormParams, FormParam;
 nonterminal Statement, StmtList, DesignatorStatement, DesStmtList;
+nonterminal IfBeforeCond, IfAfterCond, IfElseStart;
 nonterminal Addop, Mulop, Relop;
 nonterminal ActPars, ActParams;
-nonterminal CondFact, CondTerm, Condition;
+nonterminal CondFact, CondTerm, Condition, CondOrJoiner;
 nonterminal ForSign, ForCondition, ForDesStmtList;
 
 nonterminal rs.etf.pp1.symboltable.concepts.Obj ProgName, MethodSign, Designator, VarRef;
@@ -135,10 +136,14 @@ Statement   ::= (ValueReturnStmt) RETURN Expr SEMI
 			  | (PrintWidthStmt) PRINT LPAREN Expr COMMA NUM:width RPAREN SEMI
 			  | (PrintStmt) PRINT LPAREN Expr RPAREN SEMI
 			  | (DesStmt) DesignatorStatement SEMI
-			  | (IfElseStmt) IF LPAREN Condition RPAREN Statement ELSE Statement
-			  | (IfStmt) IF LPAREN Condition RPAREN Statement
+			  | (IfElseStmt) IF LPAREN IfBeforeCond Condition IfAfterCond RPAREN Statement ELSE IfElseStart Statement
+			  | (IfStmt) IF LPAREN IfBeforeCond Condition IfAfterCond RPAREN Statement
 			  | (ForStmt) ForSign Statement
 			  | LBRACE StmtList RBRACE;
+
+IfBeforeCond    ::= (IfBeforeCond) /* epsilon */;
+IfAfterCond     ::= (IfAfterCond) /* epsilon */;
+IfElseStart     ::= (IfElseStart) /* epsilon */;
 
 ForSign         ::= (ForSign) FOR LPAREN ForDesStmtList SEMI ForCondition SEMI ForDesStmtList RPAREN;
 ForCondition    ::= (FiniteFor) Condition
@@ -161,7 +166,10 @@ Mulop   ::= (AsteriskMulop) ASTERISK
 		  |	(PercentMulop) PERCENT;
 Relop   ::= (EqualityRelop) DBL_EQUAL
           | (InequalityRelop) NOT_EQUAL
-          | GREATER | GREATER_EQUAL | LESS | LESS_EQUAL;
+          | (GreaterRelop) GREATER
+          | (GreaterEqualRelop) GREATER_EQUAL
+          | (LessRelop) LESS
+          | (LessEqualRelop) LESS_EQUAL;
 
 Call        ::= (Call) Designator LPAREN ActPars RPAREN;
 ActPars     ::= ActParams
@@ -196,5 +204,7 @@ CondFact    ::= (Comparison) Expr Relop Expr
 CondTerm    ::= (CondTermList) CondTerm AND CondFact
 			  | (CondFactTerm) CondFact;
 
-Condition   ::= (ConditionList) Condition OR CondTerm
+Condition   ::= (ConditionList) Condition CondOrJoiner CondTerm
 			  | (CondTermCondition) CondTerm;
+
+CondOrJoiner ::= (CondOrJoiner) OR;

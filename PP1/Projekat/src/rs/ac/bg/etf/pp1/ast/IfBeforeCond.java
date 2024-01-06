@@ -5,9 +5,27 @@
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class VoidReturnStmt extends Statement {
+public class IfBeforeCond implements SyntaxNode {
 
-    public VoidReturnStmt () {
+    private SyntaxNode parent;
+    private int line;
+    public IfBeforeCond () {
+    }
+
+    public SyntaxNode getParent() {
+        return parent;
+    }
+
+    public void setParent(SyntaxNode parent) {
+        this.parent=parent;
+    }
+
+    public int getLine() {
+        return line;
+    }
+
+    public void setLine(int line) {
+        this.line=line;
     }
 
     public void accept(Visitor visitor) {
@@ -28,10 +46,10 @@ public class VoidReturnStmt extends Statement {
     public String toString(String tab) {
         StringBuffer buffer=new StringBuffer();
         buffer.append(tab);
-        buffer.append("VoidReturnStmt(\n");
+        buffer.append("IfBeforeCond(\n");
 
         buffer.append(tab);
-        buffer.append(") [VoidReturnStmt]");
+        buffer.append(") [IfBeforeCond]");
         return buffer.toString();
     }
 }

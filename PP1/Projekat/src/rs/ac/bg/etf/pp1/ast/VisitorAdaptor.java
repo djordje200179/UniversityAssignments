@@ -1,6 +1,6 @@
 // generated with ast extension for cup
 // version 0.8
-// 5/0/2024 18:48:54
+// 6/0/2024 19:34:18
 
 
 package rs.ac.bg.etf.pp1.ast;
@@ -38,6 +38,7 @@ public abstract class VisitorAdaptor implements Visitor {
     public void visit(GlobalDecl GlobalDecl) { }
     public void visit(FormPars FormPars) { }
     public void visit(MethodDecls MethodDecls) { }
+    public void visit(CondOrJoiner CondOrJoiner) { visit(); }
     public void visit(CondTermCondition CondTermCondition) { visit(); }
     public void visit(ConditionList ConditionList) { visit(); }
     public void visit(CondFactTerm CondFactTerm) { visit(); }
@@ -65,10 +66,10 @@ public abstract class VisitorAdaptor implements Visitor {
     public void visit(ActParsDerived2 ActParsDerived2) { visit(); }
     public void visit(ActParsDerived1 ActParsDerived1) { visit(); }
     public void visit(Call Call) { visit(); }
-    public void visit(RelopDerived4 RelopDerived4) { visit(); }
-    public void visit(RelopDerived3 RelopDerived3) { visit(); }
-    public void visit(RelopDerived2 RelopDerived2) { visit(); }
-    public void visit(RelopDerived1 RelopDerived1) { visit(); }
+    public void visit(LessEqualRelop LessEqualRelop) { visit(); }
+    public void visit(LessRelop LessRelop) { visit(); }
+    public void visit(GreaterEqualRelop GreaterEqualRelop) { visit(); }
+    public void visit(GreaterRelop GreaterRelop) { visit(); }
     public void visit(InequalityRelop InequalityRelop) { visit(); }
     public void visit(EqualityRelop EqualityRelop) { visit(); }
     public void visit(PercentMulop PercentMulop) { visit(); }
@@ -87,6 +88,9 @@ public abstract class VisitorAdaptor implements Visitor {
     public void visit(InfiniteFor InfiniteFor) { visit(); }
     public void visit(FiniteFor FiniteFor) { visit(); }
     public void visit(ForSign ForSign) { visit(); }
+    public void visit(IfElseStart IfElseStart) { visit(); }
+    public void visit(IfAfterCond IfAfterCond) { visit(); }
+    public void visit(IfBeforeCond IfBeforeCond) { visit(); }
     public void visit(StatementDerived1 StatementDerived1) { visit(); }
     public void visit(ForStmt ForStmt) { visit(); }
     public void visit(IfStmt IfStmt) { visit(); }

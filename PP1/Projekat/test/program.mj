@@ -1,38 +1,37 @@
-program MJProgram
-namespace vars {
-	int arr[];
-	{
-		void init(int n) {
-			arr = new int[n];
-		}
-	}
-}
+program prog
 {
-	void main()
-		int n;
-	{
-		n = 10;
-		vars::init(n);
+    void main()
+        int a, b, c, d, e, f;
+    {
+        a = 1;
+        b = 2;
+        c = 3;
+        d = 4;
+        e = 5;
+        f = 6;
+        if (a == b)
+            print('T');
+        else
+            print('F');
 
-		vars::arr[7] = 4;
-		print(vars::arr[7]);
-		print(eol);
+        if(a > b)
+            print('T');
+        else
+            print('F');
 
-		vars::arr[5] = 6;
-		print(vars::arr[5]);
-		print(eol);
+        if(a < b || c > d)
+            print('T');
+        else
+            print('F');
 
-		vars::arr[5]++;
-		print(vars::arr[5]);
-		print(eol);
+        if(a > b || c > d)
+            print('T');
+        else
+            print('F');
 
-		print(vars::arr[7] + vars::arr[5]);
-		print(eol);
-
-		print(n);
-		print(eol);
-		n--;
-		print(n);
-		print(eol);
-	}
+        if(a > b &&  c < d && a >= b || a != b && e != f || a == b && f > d)
+            print('T');
+        else
+            print('F');
+    }
 }

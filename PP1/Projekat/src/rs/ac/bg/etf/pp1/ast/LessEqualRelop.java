@@ -5,9 +5,9 @@
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class VoidReturnStmt extends Statement {
+public class LessEqualRelop extends Relop {
 
-    public VoidReturnStmt () {
+    public LessEqualRelop () {
     }
 
     public void accept(Visitor visitor) {
@@ -28,10 +28,10 @@ public class VoidReturnStmt extends Statement {
     public String toString(String tab) {
         StringBuffer buffer=new StringBuffer();
         buffer.append(tab);
-        buffer.append("VoidReturnStmt(\n");
+        buffer.append("LessEqualRelop(\n");
 
         buffer.append(tab);
-        buffer.append(") [VoidReturnStmt]");
+        buffer.append(") [LessEqualRelop]");
         return buffer.toString();
     }
 }

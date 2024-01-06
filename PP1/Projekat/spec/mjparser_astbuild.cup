@@ -85,6 +85,9 @@ nonterminal Statement Statement;
 nonterminal StmtList StmtList;
 nonterminal DesignatorStatement DesignatorStatement;
 nonterminal DesStmtList DesStmtList;
+nonterminal IfBeforeCond IfBeforeCond;
+nonterminal IfAfterCond IfAfterCond;
+nonterminal IfElseStart IfElseStart;
 nonterminal Addop Addop;
 nonterminal Mulop Mulop;
 nonterminal Relop Relop;
@@ -93,6 +96,7 @@ nonterminal ActParams ActParams;
 nonterminal CondFact CondFact;
 nonterminal CondTerm CondTerm;
 nonterminal Condition Condition;
+nonterminal CondOrJoiner CondOrJoiner;
 nonterminal ForSign ForSign;
 nonterminal ForCondition ForCondition;
 nonterminal ForDesStmtList ForDesStmtList;
@@ -157,10 +161,14 @@ Statement   ::= (ValueReturnStmt) RETURN Expr:E1 SEMI {: RESULT=new ValueReturnS
 			  | (PrintWidthStmt) PRINT LPAREN Expr:E1 COMMA NUM:width RPAREN SEMI {: RESULT=new PrintWidthStmt(E1, width); RESULT.setLine(E1left); :}
 			  | (PrintStmt) PRINT LPAREN Expr:E1 RPAREN SEMI {: RESULT=new PrintStmt(E1); RESULT.setLine(E1left); :}
 			  | (DesStmt) DesignatorStatement:D1 SEMI {: RESULT=new DesStmt(D1); RESULT.setLine(D1left); :}
-			  | (IfElseStmt) IF LPAREN Condition:C1 RPAREN Statement:S2 ELSE Statement:S3 {: RESULT=new IfElseStmt(C1, S2, S3); RESULT.setLine(C1left); :}
-			  | (IfStmt) IF LPAREN Condition:C1 RPAREN Statement:S2 {: RESULT=new IfStmt(C1, S2); RESULT.setLine(C1left); :}
+			  | (IfElseStmt) IF LPAREN IfBeforeCond:I1 Condition:C2 IfAfterCond:I3 RPAREN Statement:S4 ELSE IfElseStart:I5 Statement:S6 {: RESULT=new IfElseStmt(I1, C2, I3, S4, I5, S6); RESULT.setLine(I1left); :}
+			  | (IfStmt) IF LPAREN IfBeforeCond:I1 Condition:C2 IfAfterCond:I3 RPAREN Statement:S4 {: RESULT=new IfStmt(I1, C2, I3, S4); RESULT.setLine(I1left); :}
 			  | (ForStmt) ForSign:F1 Statement:S2 {: RESULT=new ForStmt(F1, S2); RESULT.setLine(F1left); :}
 			  | LBRACE StmtList:S1 RBRACE {: RESULT=new StatementDerived1(S1); RESULT.setLine(S1left); :};
+
+IfBeforeCond    ::= (IfBeforeCond) {: RESULT=new IfBeforeCond(); :} /* epsilon */;
+IfAfterCond     ::= (IfAfterCond) {: RESULT=new IfAfterCond(); :} /* epsilon */;
+IfElseStart     ::= (IfElseStart) {: RESULT=new IfElseStart(); :} /* epsilon */;
 
 ForSign         ::= (ForSign) FOR LPAREN ForDesStmtList:F1 SEMI ForCondition:F2 SEMI ForDesStmtList:F3 RPAREN {: RESULT=new ForSign(F1, F2, F3); RESULT.setLine(F1left); :};
 ForCondition    ::= (FiniteFor) Condition:C1 {: RESULT=new FiniteFor(C1); RESULT.setLine(C1left); :}
@@ -183,7 +191,10 @@ Mulop   ::= (AsteriskMulop) ASTERISK {: RESULT=new AsteriskMulop(); :}
 		  |	(PercentMulop) PERCENT {: RESULT=new PercentMulop(); :};
 Relop   ::= (EqualityRelop) DBL_EQUAL {: RESULT=new EqualityRelop(); :}
           | (InequalityRelop) NOT_EQUAL {: RESULT=new InequalityRelop(); :}
-          | GREATER {: RESULT=new RelopDerived1(); :} | GREATER_EQUAL {: RESULT=new RelopDerived2(); :} | LESS {: RESULT=new RelopDerived3(); :} | LESS_EQUAL {: RESULT=new RelopDerived4(); :};
+          | (GreaterRelop) GREATER {: RESULT=new GreaterRelop(); :}
+          | (GreaterEqualRelop) GREATER_EQUAL {: RESULT=new GreaterEqualRelop(); :}
+          | (LessRelop) LESS {: RESULT=new LessRelop(); :}
+          | (LessEqualRelop) LESS_EQUAL {: RESULT=new LessEqualRelop(); :};
 
 Call        ::= (Call) Designator:D1 LPAREN ActPars:A2 RPAREN {: RESULT=new Call(D1, A2); RESULT.setLine(D1left); :};
 ActPars     ::= ActParams:A1 {: RESULT=new ActParsDerived1(A1); RESULT.setLine(A1left); :}
@@ -218,5 +229,7 @@ CondFact    ::= (Comparison) Expr:E1 Relop:R2 Expr:E3 {: RESULT=new Comparison(E
 CondTerm    ::= (CondTermList) CondTerm:C1 AND CondFact:C2 {: RESULT=new CondTermList(C1, C2); RESULT.setLine(C1left); :}
 			  | (CondFactTerm) CondFact:C1 {: RESULT=new CondFactTerm(C1); RESULT.setLine(C1left); :};
 
-Condition   ::= (ConditionList) Condition:C1 OR CondTerm:C2 {: RESULT=new ConditionList(C1, C2); RESULT.setLine(C1left); :}
+Condition   ::= (ConditionList) Condition:C1 CondOrJoiner:C2 CondTerm:C3 {: RESULT=new ConditionList(C1, C2, C3); RESULT.setLine(C1left); :}
 			  | (CondTermCondition) CondTerm:C1 {: RESULT=new CondTermCondition(C1); RESULT.setLine(C1left); :};
+
+CondOrJoiner ::= (CondOrJoiner) OR {: RESULT=new CondOrJoiner(); :};

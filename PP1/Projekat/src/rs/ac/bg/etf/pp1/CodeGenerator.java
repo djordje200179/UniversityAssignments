@@ -3,7 +3,10 @@ package rs.ac.bg.etf.pp1;
 import rs.ac.bg.etf.pp1.ast.*;
 import rs.etf.pp1.mj.runtime.Code;
 import rs.etf.pp1.symboltable.Tab;
-import rs.etf.pp1.symboltable.concepts.Obj;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Stack;
 
 public class CodeGenerator extends VisitorAdaptor {
 	@Override
@@ -204,5 +207,84 @@ public class CodeGenerator extends VisitorAdaptor {
 		Code.loadConst(1);
 		Code.put(Code.sub);
 		Code.store(stmt.getDesignator().obj);
+	}
+
+	public static class CondScope {
+		public final List<Integer> thenPatchLocations = new ArrayList<>(), elsePatchLocations = new ArrayList<>();
+
+		public void patchThenLocations() {
+			thenPatchLocations.forEach(Code::fixup);
+			thenPatchLocations.clear();
+		}
+
+		public void patchElseLocations() {
+			elsePatchLocations.forEach(Code::fixup);
+			elsePatchLocations.clear();
+		}
+	}
+
+	private final Stack<CondScope> conditionScopes = new Stack<>();
+
+	@Override
+	public void visit(CondFactExpr factExpr) {
+		Code.loadConst(0);
+		Code.putFalseJump(Code.ne, 0);
+		conditionScopes.peek().elsePatchLocations.add(Code.pc - 2);
+	}
+
+	@Override
+	public void visit(Comparison comparison) {
+		if (comparison.getRelop() instanceof EqualityRelop)
+			Code.putFalseJump(Code.eq, 0);
+		else if (comparison.getRelop() instanceof InequalityRelop)
+			Code.putFalseJump(Code.ne, 0);
+		else if (comparison.getRelop() instanceof GreaterRelop)
+			Code.putFalseJump(Code.gt, 0);
+		else if (comparison.getRelop() instanceof GreaterEqualRelop)
+			Code.putFalseJump(Code.ge, 0);
+		else if (comparison.getRelop() instanceof LessRelop)
+			Code.putFalseJump(Code.lt, 0);
+		else
+			Code.putFalseJump(Code.le, 0);
+
+		conditionScopes.peek().elsePatchLocations.add(Code.pc - 2);
+	}
+
+	@Override
+	public void visit(CondOrJoiner joiner) {
+		Code.putJump(0);
+
+		var topScope = conditionScopes.peek();
+		topScope.thenPatchLocations.add(Code.pc - 2);
+		topScope.patchElseLocations();
+	}
+
+	@Override
+	public void visit(IfBeforeCond beforeCond) {
+		conditionScopes.push(new CondScope());
+	}
+
+	@Override
+	public void visit(IfAfterCond afterCond) {
+		conditionScopes.peek().patchThenLocations();
+	}
+
+	@Override
+	public void visit(IfElseStart elseStart) {
+		Code.putJump(0);
+
+		var topScope = conditionScopes.peek();
+		topScope.thenPatchLocations.add(Code.pc - 2);
+		topScope.patchElseLocations();
+	}
+
+	@Override
+	public void visit(IfStmt stmt) {
+		conditionScopes.pop().patchElseLocations();
+	}
+
+	@Override
+	public void visit(IfElseStmt stmt) {
+		conditionScopes.pop().patchThenLocations();
 	}
 }

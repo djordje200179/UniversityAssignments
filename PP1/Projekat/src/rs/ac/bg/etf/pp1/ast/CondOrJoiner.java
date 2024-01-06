@@ -1,13 +1,31 @@
 // generated with ast extension for cup
 // version 0.8
-// 5/0/2024 18:48:53
+// 6/0/2024 19:34:18
 
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class RelopDerived2 extends Relop {
+public class CondOrJoiner implements SyntaxNode {
 
-    public RelopDerived2 () {
+    private SyntaxNode parent;
+    private int line;
+    public CondOrJoiner () {
+    }
+
+    public SyntaxNode getParent() {
+        return parent;
+    }
+
+    public void setParent(SyntaxNode parent) {
+        this.parent=parent;
+    }
+
+    public int getLine() {
+        return line;
+    }
+
+    public void setLine(int line) {
+        this.line=line;
     }
 
     public void accept(Visitor visitor) {
@@ -28,10 +46,10 @@ public class RelopDerived2 extends Relop {
     public String toString(String tab) {
         StringBuffer buffer=new StringBuffer();
         buffer.append(tab);
-        buffer.append("RelopDerived2(\n");
+        buffer.append("CondOrJoiner(\n");
 
         buffer.append(tab);
-        buffer.append(") [RelopDerived2]");
+        buffer.append(") [CondOrJoiner]");
         return buffer.toString();
     }
 }
