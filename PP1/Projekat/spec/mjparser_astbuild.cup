@@ -85,6 +85,8 @@ nonterminal Statement Statement;
 nonterminal StmtList StmtList;
 nonterminal DesignatorStatement DesignatorStatement;
 nonterminal DesStmtList DesStmtList;
+nonterminal DesUnpackList DesUnpackList;
+nonterminal DesOpt DesOpt;
 nonterminal IfBeforeCond IfBeforeCond;
 nonterminal IfAfterCond IfAfterCond;
 nonterminal IfElseStart IfElseStart;
@@ -182,7 +184,14 @@ DesStmtList ::= DesStmtList:D1 COMMA DesignatorStatement:D2 {: RESULT=new DesStm
 DesignatorStatement ::= (DesCallStmt) Call:C1 {: RESULT=new DesCallStmt(C1); RESULT.setLine(C1left); :}
 					  | (DesAssignStmt) Designator:D1 EQUAL Expr:E2 {: RESULT=new DesAssignStmt(D1, E2); RESULT.setLine(D1left); :}
 					  | (DesIncStmt) Designator:D1 INC {: RESULT=new DesIncStmt(D1); RESULT.setLine(D1left); :}
-					  | (DesDecStmt) Designator:D1 DEC {: RESULT=new DesDecStmt(D1); RESULT.setLine(D1left); :};
+					  | (DesDecStmt) Designator:D1 DEC {: RESULT=new DesDecStmt(D1); RESULT.setLine(D1left); :}
+					  | (DesUnpackStmt) LBRACKET DesUnpackList:D1 ASTERISK Designator:D2 RBRACKET EQUAL Designator:D3 {: RESULT=new DesUnpackStmt(D1, D2, D3); RESULT.setLine(D1left); :};
+
+DesUnpackList  ::= DesUnpackList:D1 COMMA DesOpt:D2 {: RESULT=new DesUnpackListDerived1(D1, D2); RESULT.setLine(D1left); :}
+				 | DesOpt:D1 {: RESULT=new DesUnpackListDerived2(D1); RESULT.setLine(D1left); :};
+
+DesOpt  ::= (DesOptDes) Designator:D1 {: RESULT=new DesOptDes(D1); RESULT.setLine(D1left); :}
+		  | (DesOptEmpty) {: RESULT=new DesOptEmpty(); :} /* epsilon */;
 
 Addop   ::= (PlusAddOp) PLUS {: RESULT=new PlusAddOp(); :}
           | (MinusAddOp) MINUS {: RESULT=new MinusAddOp(); :};

@@ -69,7 +69,7 @@ nonterminal VarTypedDecls, VarTypedDecl, VarDecls, VarDecl;
 nonterminal ElemAccess, VarQuantity;
 nonterminal MethodDecls, MethodDecl;
 nonterminal FormPars, FormParams, FormParam;
-nonterminal Statement, StmtList, DesignatorStatement, DesStmtList;
+nonterminal Statement, StmtList, DesignatorStatement, DesStmtList, DesUnpackList, DesOpt;
 nonterminal IfBeforeCond, IfAfterCond, IfElseStart;
 nonterminal Addop, Mulop, Relop;
 nonterminal ActPars, ActParams;
@@ -157,7 +157,14 @@ DesStmtList ::= DesStmtList COMMA DesignatorStatement
 DesignatorStatement ::= (DesCallStmt) Call
 					  | (DesAssignStmt) Designator EQUAL Expr
 					  | (DesIncStmt) Designator INC
-					  | (DesDecStmt) Designator DEC;
+					  | (DesDecStmt) Designator DEC
+					  | (DesUnpackStmt) LBRACKET DesUnpackList ASTERISK Designator RBRACKET EQUAL Designator;
+
+DesUnpackList  ::= DesUnpackList COMMA DesOpt
+				 | DesOpt;
+
+DesOpt  ::= (DesOptDes) Designator
+		  | (DesOptEmpty) /* epsilon */;
 
 Addop   ::= (PlusAddOp) PLUS
           | (MinusAddOp) MINUS;

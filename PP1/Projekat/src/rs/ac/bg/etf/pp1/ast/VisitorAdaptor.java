@@ -1,6 +1,6 @@
 // generated with ast extension for cup
 // version 0.8
-// 6/0/2024 19:34:18
+// 6/0/2024 20:4:36
 
 
 package rs.ac.bg.etf.pp1.ast;
@@ -28,13 +28,15 @@ public abstract class VisitorAdaptor implements Visitor {
     public void visit(StmtList StmtList) { }
     public void visit(Expr Expr) { }
     public void visit(ActPars ActPars) { }
+    public void visit(DesOpt DesOpt) { }
     public void visit(DesignatorStatement DesignatorStatement) { }
     public void visit(Const Const) { }
     public void visit(VarDecls VarDecls) { }
     public void visit(Statement Statement) { }
-    public void visit(ConstDecls ConstDecls) { }
     public void visit(CondFact CondFact) { }
+    public void visit(ConstDecls ConstDecls) { }
     public void visit(VarTypedDecls VarTypedDecls) { }
+    public void visit(DesUnpackList DesUnpackList) { }
     public void visit(GlobalDecl GlobalDecl) { }
     public void visit(FormPars FormPars) { }
     public void visit(MethodDecls MethodDecls) { }
@@ -77,6 +79,11 @@ public abstract class VisitorAdaptor implements Visitor {
     public void visit(AsteriskMulop AsteriskMulop) { visit(); }
     public void visit(MinusAddOp MinusAddOp) { visit(); }
     public void visit(PlusAddOp PlusAddOp) { visit(); }
+    public void visit(DesOptEmpty DesOptEmpty) { visit(); }
+    public void visit(DesOptDes DesOptDes) { visit(); }
+    public void visit(DesUnpackListDerived2 DesUnpackListDerived2) { visit(); }
+    public void visit(DesUnpackListDerived1 DesUnpackListDerived1) { visit(); }
+    public void visit(DesUnpackStmt DesUnpackStmt) { visit(); }
     public void visit(DesDecStmt DesDecStmt) { visit(); }
     public void visit(DesIncStmt DesIncStmt) { visit(); }
     public void visit(DesAssignStmt DesAssignStmt) { visit(); }

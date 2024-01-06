@@ -387,6 +387,44 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 	}
 
 	@Override
+	public void visit(DesUnpackStmt stmt) {
+		if (stmt.getDesignator().obj.getType().getKind() != Struct.Array) {
+			reportError("Last element is not an array", stmt);
+			return;
+		}
+
+		if (stmt.getDesignator1().obj.getType().getKind() != Struct.Array) {
+			reportError("Unpacked element is not an array", stmt);
+			return;
+		}
+
+		var elemType = stmt.getDesignator1().obj.getType().getElemType();
+
+		if (!elemType.assignableTo(stmt.getDesignator().obj.getType().getElemType())) {
+			reportError("Incompatible types for unpacking", stmt);
+			return;
+		}
+
+		stmt.getDesUnpackList().traverseBottomUp(new VisitorAdaptor() {
+			@Override
+			public void visit(DesOptDes receiverDes) {
+				var receiverObj = receiverDes.getDesignator().obj;
+				switch (receiverObj.getKind()) {
+				case Obj.Var:
+				case Obj.Elem:
+					break;
+				default:
+					reportError("Object is not a variable", receiverDes);
+					return;
+				}
+
+				if (!elemType.assignableTo(receiverObj.getType()))
+					reportError("Incompatible types for unpacking", receiverDes);
+			}
+		});
+	}
+
+	@Override
 	public void visit(CondFactExpr expr) {
 		if (expr.getExpr().struct != Types.boolType)
 			reportError("Expression not of type bool", expr);
