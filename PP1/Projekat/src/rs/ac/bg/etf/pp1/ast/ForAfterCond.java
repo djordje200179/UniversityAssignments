@@ -5,9 +5,27 @@
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class GreaterEqualRelop extends Relop {
+public class ForAfterCond implements SyntaxNode {
 
-    public GreaterEqualRelop () {
+    private SyntaxNode parent;
+    private int line;
+    public ForAfterCond () {
+    }
+
+    public SyntaxNode getParent() {
+        return parent;
+    }
+
+    public void setParent(SyntaxNode parent) {
+        this.parent=parent;
+    }
+
+    public int getLine() {
+        return line;
+    }
+
+    public void setLine(int line) {
+        this.line=line;
     }
 
     public void accept(Visitor visitor) {
@@ -28,10 +46,10 @@ public class GreaterEqualRelop extends Relop {
     public String toString(String tab) {
         StringBuffer buffer=new StringBuffer();
         buffer.append(tab);
-        buffer.append("GreaterEqualRelop(\n");
+        buffer.append("ForAfterCond(\n");
 
         buffer.append(tab);
-        buffer.append(") [GreaterEqualRelop]");
+        buffer.append(") [ForAfterCond]");
         return buffer.toString();
     }
 }

@@ -1,11 +1,11 @@
 // generated with ast extension for cup
 // version 0.8
-// 6/0/2024 20:25:7
+// 6/0/2024 23:1:18
 
 
 package rs.ac.bg.etf.pp1.ast;
 
-public abstract class ForCondition implements SyntaxNode {
+public abstract class ForCond implements SyntaxNode {
 
     private SyntaxNode parent;
 

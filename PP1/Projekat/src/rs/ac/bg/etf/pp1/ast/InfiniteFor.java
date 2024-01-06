@@ -1,11 +1,11 @@
 // generated with ast extension for cup
 // version 0.8
-// 6/0/2024 20:25:7
+// 6/0/2024 23:1:17
 
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class InfiniteFor extends ForCondition {
+public class InfiniteFor extends ForCond {
 
     public InfiniteFor () {
     }

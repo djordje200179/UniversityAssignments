@@ -100,8 +100,10 @@ nonterminal CondTerm CondTerm;
 nonterminal Condition Condition;
 nonterminal CondOrJoiner CondOrJoiner;
 nonterminal ForSign ForSign;
-nonterminal ForCondition ForCondition;
+nonterminal ForCond ForCond;
 nonterminal ForDesStmtList ForDesStmtList;
+nonterminal ForBeforeCond ForBeforeCond;
+nonterminal ForAfterCond ForAfterCond;
 
 nonterminal rs.etf.pp1.symboltable.concepts.Obj ProgName, MethodSign, Designator, VarRef;
 nonterminal rs.etf.pp1.symboltable.concepts.Struct Type;
@@ -172,8 +174,10 @@ IfBeforeCond    ::= (IfBeforeCond) {: RESULT=new IfBeforeCond(); :} /* epsilon *
 IfAfterCond     ::= (IfAfterCond) {: RESULT=new IfAfterCond(); :} /* epsilon */;
 IfElseStart     ::= (IfElseStart) {: RESULT=new IfElseStart(); :} /* epsilon */;
 
-ForSign         ::= (ForSign) FOR LPAREN ForDesStmtList:F1 SEMI ForCondition:F2 SEMI ForDesStmtList:F3 RPAREN {: RESULT=new ForSign(F1, F2, F3); RESULT.setLine(F1left); :};
-ForCondition    ::= (FiniteFor) Condition:C1 {: RESULT=new FiniteFor(C1); RESULT.setLine(C1left); :}
+ForSign         ::= (ForSign) FOR LPAREN ForDesStmtList:F1 SEMI ForBeforeCond:F2 ForCond:F3 ForAfterCond:F4 SEMI ForDesStmtList:F5 RPAREN {: RESULT=new ForSign(F1, F2, F3, F4, F5); RESULT.setLine(F1left); :};
+ForBeforeCond   ::= (ForBeforeCond) {: RESULT=new ForBeforeCond(); :} /* epsilon */;
+ForAfterCond    ::= (ForAfterCond) {: RESULT=new ForAfterCond(); :} /* epsilon */;
+ForCond         ::= (FiniteFor) Condition:C1 {: RESULT=new FiniteFor(C1); RESULT.setLine(C1left); :}
 				  | (InfiniteFor) {: RESULT=new InfiniteFor(); :} /* epsilon */;
 ForDesStmtList  ::= DesStmtList:D1 {: RESULT=new ForDesStmtListDerived1(D1); RESULT.setLine(D1left); :}
 				  | {: RESULT=new ForDesStmtListDerived2(); :} /* epsilon */;

@@ -223,7 +223,18 @@ public class CodeGenerator extends VisitorAdaptor {
 		}
 	}
 
+	public static class ForScope {
+		public int condTestLocation, updateLocation;
+		public final List<Integer> breakPatchLocations = new ArrayList<>();
+
+		public void patchBreakLocations() {
+			breakPatchLocations.forEach(Code::fixup);
+			breakPatchLocations.clear();
+		}
+	}
+
 	private final Stack<CondScope> conditionScopes = new Stack<>();
+	private final Stack<ForScope> forScopes = new Stack<>();
 
 	@Override
 	public void visit(CondFactExpr factExpr) {
@@ -286,5 +297,40 @@ public class CodeGenerator extends VisitorAdaptor {
 	@Override
 	public void visit(IfElseStmt stmt) {
 		conditionScopes.pop().patchThenLocations();
+	}
+
+	@Override
+	public void visit(ForBeforeCond beforeCond) {
+		forScopes.push(new ForScope());
+		conditionScopes.push(new CondScope());
+
+		forScopes.peek().condTestLocation = Code.pc;
+	}
+
+	@Override
+	public void visit(ForAfterCond afterCond) {
+		Code.putJump(0);
+
+		conditionScopes.peek().thenPatchLocations.add(Code.pc - 2);
+		forScopes.peek().updateLocation = Code.pc;
+	}
+
+	@Override
+	public void visit(ForSign sign) {
+		Code.putJump(forScopes.peek().condTestLocation);
+		conditionScopes.peek().patchThenLocations();
+	}
+
+	@Override
+	public void visit(ForStmt stmt) {
+		Code.putJump(forScopes.peek().updateLocation);
+
+		conditionScopes.peek().patchElseLocations();
+		forScopes.pop();
+	}
+
+	@Override
+	public void visit(ContinueStmt stmt) {
+		Code.putJump(forScopes.peek().updateLocation);
 	}
 }

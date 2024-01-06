@@ -1,6 +1,6 @@
 // generated with ast extension for cup
 // version 0.8
-// 6/0/2024 20:25:7
+// 6/0/2024 23:1:17
 
 
 package rs.ac.bg.etf.pp1.ast;
@@ -10,14 +10,20 @@ public class ForSign implements SyntaxNode {
     private SyntaxNode parent;
     private int line;
     private ForDesStmtList ForDesStmtList;
-    private ForCondition ForCondition;
+    private ForBeforeCond ForBeforeCond;
+    private ForCond ForCond;
+    private ForAfterCond ForAfterCond;
     private ForDesStmtList ForDesStmtList1;
 
-    public ForSign (ForDesStmtList ForDesStmtList, ForCondition ForCondition, ForDesStmtList ForDesStmtList1) {
+    public ForSign (ForDesStmtList ForDesStmtList, ForBeforeCond ForBeforeCond, ForCond ForCond, ForAfterCond ForAfterCond, ForDesStmtList ForDesStmtList1) {
         this.ForDesStmtList=ForDesStmtList;
         if(ForDesStmtList!=null) ForDesStmtList.setParent(this);
-        this.ForCondition=ForCondition;
-        if(ForCondition!=null) ForCondition.setParent(this);
+        this.ForBeforeCond=ForBeforeCond;
+        if(ForBeforeCond!=null) ForBeforeCond.setParent(this);
+        this.ForCond=ForCond;
+        if(ForCond!=null) ForCond.setParent(this);
+        this.ForAfterCond=ForAfterCond;
+        if(ForAfterCond!=null) ForAfterCond.setParent(this);
         this.ForDesStmtList1=ForDesStmtList1;
         if(ForDesStmtList1!=null) ForDesStmtList1.setParent(this);
     }
@@ -30,12 +36,28 @@ public class ForSign implements SyntaxNode {
         this.ForDesStmtList=ForDesStmtList;
     }
 
-    public ForCondition getForCondition() {
-        return ForCondition;
+    public ForBeforeCond getForBeforeCond() {
+        return ForBeforeCond;
     }
 
-    public void setForCondition(ForCondition ForCondition) {
-        this.ForCondition=ForCondition;
+    public void setForBeforeCond(ForBeforeCond ForBeforeCond) {
+        this.ForBeforeCond=ForBeforeCond;
+    }
+
+    public ForCond getForCond() {
+        return ForCond;
+    }
+
+    public void setForCond(ForCond ForCond) {
+        this.ForCond=ForCond;
+    }
+
+    public ForAfterCond getForAfterCond() {
+        return ForAfterCond;
+    }
+
+    public void setForAfterCond(ForAfterCond ForAfterCond) {
+        this.ForAfterCond=ForAfterCond;
     }
 
     public ForDesStmtList getForDesStmtList1() {
@@ -68,20 +90,26 @@ public class ForSign implements SyntaxNode {
 
     public void childrenAccept(Visitor visitor) {
         if(ForDesStmtList!=null) ForDesStmtList.accept(visitor);
-        if(ForCondition!=null) ForCondition.accept(visitor);
+        if(ForBeforeCond!=null) ForBeforeCond.accept(visitor);
+        if(ForCond!=null) ForCond.accept(visitor);
+        if(ForAfterCond!=null) ForAfterCond.accept(visitor);
         if(ForDesStmtList1!=null) ForDesStmtList1.accept(visitor);
     }
 
     public void traverseTopDown(Visitor visitor) {
         accept(visitor);
         if(ForDesStmtList!=null) ForDesStmtList.traverseTopDown(visitor);
-        if(ForCondition!=null) ForCondition.traverseTopDown(visitor);
+        if(ForBeforeCond!=null) ForBeforeCond.traverseTopDown(visitor);
+        if(ForCond!=null) ForCond.traverseTopDown(visitor);
+        if(ForAfterCond!=null) ForAfterCond.traverseTopDown(visitor);
         if(ForDesStmtList1!=null) ForDesStmtList1.traverseTopDown(visitor);
     }
 
     public void traverseBottomUp(Visitor visitor) {
         if(ForDesStmtList!=null) ForDesStmtList.traverseBottomUp(visitor);
-        if(ForCondition!=null) ForCondition.traverseBottomUp(visitor);
+        if(ForBeforeCond!=null) ForBeforeCond.traverseBottomUp(visitor);
+        if(ForCond!=null) ForCond.traverseBottomUp(visitor);
+        if(ForAfterCond!=null) ForAfterCond.traverseBottomUp(visitor);
         if(ForDesStmtList1!=null) ForDesStmtList1.traverseBottomUp(visitor);
         accept(visitor);
     }
@@ -97,8 +125,20 @@ public class ForSign implements SyntaxNode {
             buffer.append(tab+"  null");
         buffer.append("\n");
 
-        if(ForCondition!=null)
-            buffer.append(ForCondition.toString("  "+tab));
+        if(ForBeforeCond!=null)
+            buffer.append(ForBeforeCond.toString("  "+tab));
+        else
+            buffer.append(tab+"  null");
+        buffer.append("\n");
+
+        if(ForCond!=null)
+            buffer.append(ForCond.toString("  "+tab));
+        else
+            buffer.append(tab+"  null");
+        buffer.append("\n");
+
+        if(ForAfterCond!=null)
+            buffer.append(ForAfterCond.toString("  "+tab));
         else
             buffer.append(tab+"  null");
         buffer.append("\n");

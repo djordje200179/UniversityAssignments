@@ -74,7 +74,7 @@ nonterminal IfBeforeCond, IfAfterCond, IfElseStart;
 nonterminal Addop, Mulop, Relop;
 nonterminal ActPars, ActParams;
 nonterminal CondFact, CondTerm, Condition, CondOrJoiner;
-nonterminal ForSign, ForCondition, ForDesStmtList;
+nonterminal ForSign, ForCond, ForDesStmtList, ForBeforeCond, ForAfterCond;
 
 nonterminal rs.etf.pp1.symboltable.concepts.Obj ProgName, MethodSign, Designator, VarRef;
 nonterminal rs.etf.pp1.symboltable.concepts.Struct Type;
@@ -145,8 +145,10 @@ IfBeforeCond    ::= (IfBeforeCond) /* epsilon */;
 IfAfterCond     ::= (IfAfterCond) /* epsilon */;
 IfElseStart     ::= (IfElseStart) /* epsilon */;
 
-ForSign         ::= (ForSign) FOR LPAREN ForDesStmtList SEMI ForCondition SEMI ForDesStmtList RPAREN;
-ForCondition    ::= (FiniteFor) Condition
+ForSign         ::= (ForSign) FOR LPAREN ForDesStmtList SEMI ForBeforeCond ForCond ForAfterCond SEMI ForDesStmtList RPAREN;
+ForBeforeCond   ::= (ForBeforeCond) /* epsilon */;
+ForAfterCond    ::= (ForAfterCond) /* epsilon */;
+ForCond         ::= (FiniteFor) Condition
 				  | (InfiniteFor) /* epsilon */;
 ForDesStmtList  ::= DesStmtList
 				  | /* epsilon */;
