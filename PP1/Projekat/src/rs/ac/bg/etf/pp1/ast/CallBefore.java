@@ -1,28 +1,17 @@
 // generated with ast extension for cup
 // version 0.8
-// 6/0/2024 20:25:6
+// 6/0/2024 20:25:7
 
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class ProgName implements SyntaxNode {
+public class CallBefore implements SyntaxNode {
 
     private SyntaxNode parent;
     private int line;
-    public rs.etf.pp1.symboltable.concepts.Obj obj = null;
+    public rs.etf.pp1.symboltable.concepts.Struct struct = null;
 
-    private String name;
-
-    public ProgName (String name) {
-        this.name=name;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name=name;
+    public CallBefore () {
     }
 
     public SyntaxNode getParent() {
@@ -59,13 +48,10 @@ public class ProgName implements SyntaxNode {
     public String toString(String tab) {
         StringBuffer buffer=new StringBuffer();
         buffer.append(tab);
-        buffer.append("ProgName(\n");
-
-        buffer.append(" "+tab+name);
-        buffer.append("\n");
+        buffer.append("CallBefore(\n");
 
         buffer.append(tab);
-        buffer.append(") [ProgName]");
+        buffer.append(") [CallBefore]");
         return buffer.toString();
     }
 }

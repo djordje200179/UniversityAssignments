@@ -78,7 +78,7 @@ nonterminal ForSign, ForCondition, ForDesStmtList;
 
 nonterminal rs.etf.pp1.symboltable.concepts.Obj ProgName, MethodSign, Designator, VarRef;
 nonterminal rs.etf.pp1.symboltable.concepts.Struct Type;
-nonterminal rs.etf.pp1.symboltable.concepts.Struct Const, Factor, Term, Expr, Call, ActParam;
+nonterminal rs.etf.pp1.symboltable.concepts.Struct Const, Factor, Term, Expr, Call, CallBefore, ActParam;
 
 precedence left ELSE;
 
@@ -178,7 +178,9 @@ Relop   ::= (EqualityRelop) DBL_EQUAL
           | (LessRelop) LESS
           | (LessEqualRelop) LESS_EQUAL;
 
-Call        ::= (Call) Designator LPAREN ActPars RPAREN;
+Call        ::= (Call) Designator CallBefore LPAREN ActPars RPAREN;
+CallBefore  ::= (CallBefore) /* epsilon */;
+
 ActPars     ::= ActParams
 		      | /* epsilon */;
 ActParams   ::= ActParams COMMA ActParam

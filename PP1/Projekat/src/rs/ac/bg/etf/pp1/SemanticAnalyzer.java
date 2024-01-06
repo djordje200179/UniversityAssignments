@@ -192,8 +192,23 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 
 		var args = new ArrayList<Struct>();
 		call.getActPars().traverseBottomUp(new VisitorAdaptor() {
+			private int inCalls;
+
+			@Override
+			public void visit(CallBefore callBefore) {
+				inCalls++;
+			}
+
+			@Override
+			public void visit(Call call) {
+				inCalls--;
+			}
+
 			@Override
 			public void visit(ActParam param) {
+				if (inCalls != 0)
+					return;
+
 				args.add(param.struct);
 			}
 		});

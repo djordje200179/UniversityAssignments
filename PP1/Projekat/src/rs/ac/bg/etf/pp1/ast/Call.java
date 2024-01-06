@@ -1,6 +1,6 @@
 // generated with ast extension for cup
 // version 0.8
-// 6/0/2024 20:4:36
+// 6/0/2024 20:25:7
 
 
 package rs.ac.bg.etf.pp1.ast;
@@ -12,11 +12,14 @@ public class Call implements SyntaxNode {
     public rs.etf.pp1.symboltable.concepts.Struct struct = null;
 
     private Designator Designator;
+    private CallBefore CallBefore;
     private ActPars ActPars;
 
-    public Call (Designator Designator, ActPars ActPars) {
+    public Call (Designator Designator, CallBefore CallBefore, ActPars ActPars) {
         this.Designator=Designator;
         if(Designator!=null) Designator.setParent(this);
+        this.CallBefore=CallBefore;
+        if(CallBefore!=null) CallBefore.setParent(this);
         this.ActPars=ActPars;
         if(ActPars!=null) ActPars.setParent(this);
     }
@@ -27,6 +30,14 @@ public class Call implements SyntaxNode {
 
     public void setDesignator(Designator Designator) {
         this.Designator=Designator;
+    }
+
+    public CallBefore getCallBefore() {
+        return CallBefore;
+    }
+
+    public void setCallBefore(CallBefore CallBefore) {
+        this.CallBefore=CallBefore;
     }
 
     public ActPars getActPars() {
@@ -59,17 +70,20 @@ public class Call implements SyntaxNode {
 
     public void childrenAccept(Visitor visitor) {
         if(Designator!=null) Designator.accept(visitor);
+        if(CallBefore!=null) CallBefore.accept(visitor);
         if(ActPars!=null) ActPars.accept(visitor);
     }
 
     public void traverseTopDown(Visitor visitor) {
         accept(visitor);
         if(Designator!=null) Designator.traverseTopDown(visitor);
+        if(CallBefore!=null) CallBefore.traverseTopDown(visitor);
         if(ActPars!=null) ActPars.traverseTopDown(visitor);
     }
 
     public void traverseBottomUp(Visitor visitor) {
         if(Designator!=null) Designator.traverseBottomUp(visitor);
+        if(CallBefore!=null) CallBefore.traverseBottomUp(visitor);
         if(ActPars!=null) ActPars.traverseBottomUp(visitor);
         accept(visitor);
     }
@@ -81,6 +95,12 @@ public class Call implements SyntaxNode {
 
         if(Designator!=null)
             buffer.append(Designator.toString("  "+tab));
+        else
+            buffer.append(tab+"  null");
+        buffer.append("\n");
+
+        if(CallBefore!=null)
+            buffer.append(CallBefore.toString("  "+tab));
         else
             buffer.append(tab+"  null");
         buffer.append("\n");

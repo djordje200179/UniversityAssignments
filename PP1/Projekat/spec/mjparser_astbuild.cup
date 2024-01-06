@@ -105,7 +105,7 @@ nonterminal ForDesStmtList ForDesStmtList;
 
 nonterminal rs.etf.pp1.symboltable.concepts.Obj ProgName, MethodSign, Designator, VarRef;
 nonterminal rs.etf.pp1.symboltable.concepts.Struct Type;
-nonterminal rs.etf.pp1.symboltable.concepts.Struct Const, Factor, Term, Expr, Call, ActParam;
+nonterminal rs.etf.pp1.symboltable.concepts.Struct Const, Factor, Term, Expr, Call, CallBefore, ActParam;
 
 precedence left ELSE;
 
@@ -205,7 +205,9 @@ Relop   ::= (EqualityRelop) DBL_EQUAL {: RESULT=new EqualityRelop(); :}
           | (LessRelop) LESS {: RESULT=new LessRelop(); :}
           | (LessEqualRelop) LESS_EQUAL {: RESULT=new LessEqualRelop(); :};
 
-Call        ::= (Call) Designator:D1 LPAREN ActPars:A2 RPAREN {: RESULT=new Call(D1, A2); RESULT.setLine(D1left); :};
+Call        ::= (Call) Designator:D1 CallBefore:C2 LPAREN ActPars:A3 RPAREN {: RESULT=new Call(D1, C2, A3); RESULT.setLine(D1left); :};
+CallBefore  ::= (CallBefore) {: RESULT=new CallBefore(); :} /* epsilon */;
+
 ActPars     ::= ActParams:A1 {: RESULT=new ActParsDerived1(A1); RESULT.setLine(A1left); :}
 		      | {: RESULT=new ActParsDerived2(); :} /* epsilon */;
 ActParams   ::= ActParams:A1 COMMA ActParam:A2 {: RESULT=new ActParamsDerived1(A1, A2); RESULT.setLine(A1left); :}
