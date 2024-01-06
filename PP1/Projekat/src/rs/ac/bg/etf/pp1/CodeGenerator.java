@@ -102,6 +102,16 @@ public class CodeGenerator extends VisitorAdaptor {
 
 	@Override
 	public void visit(Call call) {
+		var funcName = call.getDesignator().obj.getName();
+		switch (funcName) {
+		case "len":
+			Code.put(Code.arraylength);
+			return;
+		case "chr":
+		case "ord":
+			return;
+		}
+
 		int offset = call.getDesignator().obj.getAdr() - Code.pc;
 		Code.put(Code.call);
 		Code.put2(offset);
@@ -165,7 +175,7 @@ public class CodeGenerator extends VisitorAdaptor {
 	@Override
 	public void visit(Designator designator) {
 		var parent = designator.getParent();
-		if (designator.getParent() instanceof Call || designator.getParent() instanceof DesAssignStmt)
+		if (parent instanceof Call || parent instanceof DesAssignStmt || parent instanceof ReadStmt)
 			return;
 
 		Code.load(designator.obj);
