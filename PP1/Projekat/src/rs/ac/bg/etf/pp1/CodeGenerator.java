@@ -210,37 +210,23 @@ public class CodeGenerator extends VisitorAdaptor {
 	}
 
 	public static class CondScope {
-		public final List<Integer> thenPatchLocations = new ArrayList<>(), elsePatchLocations = new ArrayList<>();
-
-		public void patchThenLocations() {
-			thenPatchLocations.forEach(Code::fixup);
-			thenPatchLocations.clear();
-		}
-
-		public void patchElseLocations() {
-			elsePatchLocations.forEach(Code::fixup);
-			elsePatchLocations.clear();
-		}
+		public final List<Integer> thenPatchLocations = new ArrayList<>(),
+								   elsePatchLocations = new ArrayList<>();
 	}
 
 	public static class ForScope {
 		public int condTestLocation, updateLocation;
 		public final List<Integer> breakPatchLocations = new ArrayList<>();
-
-		public void patchBreakLocations() {
-			breakPatchLocations.forEach(Code::fixup);
-			breakPatchLocations.clear();
-		}
 	}
 
-	private final Stack<CondScope> conditionScopes = new Stack<>();
+	private final Stack<CondScope> condScopes = new Stack<>();
 	private final Stack<ForScope> forScopes = new Stack<>();
 
 	@Override
 	public void visit(CondFactExpr factExpr) {
 		Code.loadConst(0);
 		Code.putFalseJump(Code.ne, 0);
-		conditionScopes.peek().elsePatchLocations.add(Code.pc - 2);
+		condScopes.peek().elsePatchLocations.add(Code.pc - 2);
 	}
 
 	@Override
@@ -258,51 +244,51 @@ public class CodeGenerator extends VisitorAdaptor {
 		else
 			Code.putFalseJump(Code.le, 0);
 
-		conditionScopes.peek().elsePatchLocations.add(Code.pc - 2);
+		condScopes.peek().elsePatchLocations.add(Code.pc - 2);
 	}
 
 	@Override
 	public void visit(CondOrJoiner joiner) {
 		Code.putJump(0);
 
-		var topScope = conditionScopes.peek();
+		var topScope = condScopes.peek();
 		topScope.thenPatchLocations.add(Code.pc - 2);
-		topScope.patchElseLocations();
+		topScope.elsePatchLocations.forEach(Code::fixup);
 	}
 
 	@Override
 	public void visit(IfBeforeCond beforeCond) {
-		conditionScopes.push(new CondScope());
+		condScopes.push(new CondScope());
 	}
 
 	@Override
 	public void visit(IfAfterCond afterCond) {
-		conditionScopes.peek().patchThenLocations();
+		condScopes.peek().thenPatchLocations.forEach(Code::fixup);
 	}
 
 	@Override
 	public void visit(IfElseStart elseStart) {
 		Code.putJump(0);
 
-		var topScope = conditionScopes.peek();
+		var topScope = condScopes.peek();
 		topScope.thenPatchLocations.add(Code.pc - 2);
-		topScope.patchElseLocations();
+		topScope.elsePatchLocations.forEach(Code::fixup);
 	}
 
 	@Override
 	public void visit(IfStmt stmt) {
-		conditionScopes.pop().patchElseLocations();
+		condScopes.pop().elsePatchLocations.forEach(Code::fixup);
 	}
 
 	@Override
 	public void visit(IfElseStmt stmt) {
-		conditionScopes.pop().patchThenLocations();
+		condScopes.pop().thenPatchLocations.forEach(Code::fixup);
 	}
 
 	@Override
 	public void visit(ForBeforeCond beforeCond) {
 		forScopes.push(new ForScope());
-		conditionScopes.push(new CondScope());
+		condScopes.push(new CondScope());
 
 		forScopes.peek().condTestLocation = Code.pc;
 	}
@@ -311,26 +297,35 @@ public class CodeGenerator extends VisitorAdaptor {
 	public void visit(ForAfterCond afterCond) {
 		Code.putJump(0);
 
-		conditionScopes.peek().thenPatchLocations.add(Code.pc - 2);
+		condScopes.peek().thenPatchLocations.add(Code.pc - 2);
 		forScopes.peek().updateLocation = Code.pc;
 	}
 
 	@Override
 	public void visit(ForSign sign) {
 		Code.putJump(forScopes.peek().condTestLocation);
-		conditionScopes.peek().patchThenLocations();
+		condScopes.peek().thenPatchLocations.forEach(Code::fixup);
 	}
 
 	@Override
 	public void visit(ForStmt stmt) {
-		Code.putJump(forScopes.peek().updateLocation);
+		var forScope = forScopes.pop();
+		var condScope = condScopes.pop();
 
-		conditionScopes.peek().patchElseLocations();
-		forScopes.pop();
+		Code.putJump(forScope.updateLocation);
+
+		condScope.elsePatchLocations.forEach(Code::fixup);
+		forScope.breakPatchLocations.forEach(Code::fixup);
 	}
 
 	@Override
 	public void visit(ContinueStmt stmt) {
 		Code.putJump(forScopes.peek().updateLocation);
+	}
+
+	@Override
+	public void visit(BreakStmt stmt) {
+		Code.putJump(0);
+		forScopes.peek().breakPatchLocations.add(Code.pc - 2);
 	}
 }
