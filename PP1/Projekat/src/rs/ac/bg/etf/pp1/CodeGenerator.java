@@ -65,7 +65,7 @@ public class CodeGenerator extends VisitorAdaptor {
 	public void visit(PrintStmt stmt) {
 		Code.loadConst(0);
 
-		if (stmt.getExpr().struct == Tab.intType)
+		if (stmt.getExpr().struct != Tab.charType)
 			Code.put(Code.print);
 		else
 			Code.put(Code.bprint);
@@ -75,7 +75,7 @@ public class CodeGenerator extends VisitorAdaptor {
 	public void visit(PrintWidthStmt stmt) {
 		Code.loadConst(stmt.getWidth());
 
-		if (stmt.getExpr().struct == Tab.intType)
+		if (stmt.getExpr().struct != Tab.charType)
 			Code.put(Code.print);
 		else
 			Code.put(Code.bprint);
@@ -125,7 +125,7 @@ public class CodeGenerator extends VisitorAdaptor {
 		Code.put(Code.newarray);
 
 		int size = 1;
-		if (factor.getType().struct == Tab.charType || factor.getType().struct == Types.boolType)
+		if (factor.getType().struct == Tab.charType)
 			size = 0;
 
 		Code.put(size);
@@ -178,7 +178,13 @@ public class CodeGenerator extends VisitorAdaptor {
 	@Override
 	public void visit(Designator designator) {
 		var parent = designator.getParent();
-		if (parent instanceof Call || parent instanceof DesAssignStmt || parent instanceof ReadStmt)
+		if (
+			parent instanceof Call ||
+			parent instanceof DesAssignStmt ||
+			parent instanceof ReadStmt ||
+			parent instanceof DesUnpackStmt ||
+			parent instanceof DesOptDes
+		)
 			return;
 
 		Code.load(designator.obj);
