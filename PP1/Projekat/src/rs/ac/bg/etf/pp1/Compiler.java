@@ -35,15 +35,9 @@ public class Compiler {
 			if (semanticAnalyzer.hasError())
 				return;
 
-			Tab.dump(new DumpSymbolTableVisitor() {
-				@Override
-				public void visitStructNode(Struct structToVisit) {
-					if (structToVisit.getKind() == Struct.Bool)
-						output.append("bool");
-					else
-						super.visitStructNode(structToVisit);
-				}
-			});
+			semanticAnalyzer.dumpStats();
+
+			Tab.dump(ObjPrinter.getInstance());
 	        	
         	var objFile = new File(args[1]);
         	if (objFile.exists())

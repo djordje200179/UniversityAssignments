@@ -9,6 +9,40 @@ import java.util.ArrayList;
 public class SemanticAnalyzer extends VisitorAdaptor {
 	private boolean errorDetected = false;
 
+	private int constCount = 0,
+				globalVarCount = 0,
+				localVarCount = 0,
+				callsCount = 0,
+				arrAccessCount = 0,
+				argUsageCount = 0;
+
+	public void dumpStats() {
+		var sb = new StringBuilder();
+
+		sb.append("=====================================\n");
+		sb.append("Number of constants: ");
+		sb.append(constCount);
+		sb.append('\n');
+		sb.append("Number of global variables: ");
+		sb.append(globalVarCount);
+		sb.append('\n');
+		sb.append("Number of local variables: ");
+		sb.append(localVarCount);
+		sb.append('\n');
+		sb.append("Number of function calls: ");
+		sb.append(callsCount);
+		sb.append('\n');
+		sb.append("Number of array accesses: ");
+		sb.append(arrAccessCount);
+		sb.append('\n');
+		sb.append("Number of usages of arguments: ");
+		sb.append(argUsageCount);
+		sb.append('\n');
+		sb.append("=====================================\n");
+
+		System.out.println(sb);
+	}
+
 	public boolean hasError() {
 		return errorDetected;
 	}
@@ -19,10 +53,6 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 		System.err.println(info != null ? message + " at line " + info.getLine() : message);
 	}
 
-	public void reportInfo(String message, SyntaxNode info) {
-		System.out.println(info != null ? message + " at line " + info.getLine() : message);
-	}
-	
 	private String currNsp = "";
 	private Obj currMethod = null;
 	private int loopCnt = 0;
@@ -122,6 +152,7 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 				}
 
 				var obj = Tab.insert(Obj.Con, currNsp + constDecl.getName(), type);
+				constCount++;
 
 				var cnst = constDecl.getConst();
 
@@ -152,6 +183,11 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 					reportError("Identifier " + varDecl.getName() + " redefined", varDecl);
 					return;
 				}
+
+				if (currMethod != null)
+					localVarCount++;
+				else
+					globalVarCount++;
 
 				var fullName = currMethod == null ? currNsp + varDecl.getName() : varDecl.getName();
 				var type = varDecl.getVarQuantity() instanceof ArrayVar ?
@@ -189,6 +225,8 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 		var funcObj = call.getDesignator().obj;
 		if (funcObj.getKind() != Obj.Meth)
 			reportError("Object is not a method", call);
+
+		callsCount++;
 
 		var args = new ArrayList<Struct>();
 		call.getActPars().traverseBottomUp(new VisitorAdaptor() {
@@ -321,6 +359,19 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 
 		if (localObj == Tab.noObj)
 			reportError("Identifier " + varRef.getVarName() + " not found", varRef);
+
+		if (localObj.getLevel() > 0 && localObj.getAdr() < currMethod.getLevel())
+			argUsageCount++;
+
+		var sb = new StringBuilder();
+		sb.append("Found identifier ");
+		sb.append(varRef.getVarName());
+		sb.append(" at line ");
+		sb.append(varRef.getLine());
+		sb.append(": ");
+		varRef.obj.accept(ObjPrinter.getInstance());
+		sb.append(ObjPrinter.getInstance().getOutput());
+		System.out.println(sb);
 	}
 
 
@@ -330,12 +381,24 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 
 		if (varRef.obj == Tab.noObj)
 			reportError("Identifier " + varRef.getVarName() + " not found", varRef);
+
+		var sb = new StringBuilder();
+		sb.append("Found identifier ");
+		sb.append(varRef.getVarName());
+		sb.append(" at line ");
+		sb.append(varRef.getLine());
+		sb.append(": ");
+		varRef.obj.accept(ObjPrinter.getInstance());
+		sb.append(ObjPrinter.getInstance().getOutput());
+		System.out.println(sb);
 	}
 
 	@Override
 	public void visit(ArrayElemAccess elemAccess) {
 		if (elemAccess.getExpr().struct != Tab.intType)
 			reportError("Array index not of type int", elemAccess);
+
+		arrAccessCount++;
 	}
 
 	@Override
