@@ -5,6 +5,8 @@ import rs.etf.pp1.symboltable.Tab;
 import rs.etf.pp1.symboltable.concepts.Obj;
 import rs.etf.pp1.symboltable.concepts.Struct;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SemanticAnalyzer extends VisitorAdaptor {
 	private boolean errorDetected = false;
@@ -15,6 +17,12 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 				callsCount = 0,
 				arrAccessCount = 0,
 				argUsageCount = 0;
+
+	private final Map<String, Obj> helperVars = new HashMap<>();
+
+	public Map<String, Obj> getHelperVars() {
+		return helperVars;
+	}
 
 	public void dumpStats() {
 		var sb = new StringBuilder();
@@ -70,6 +78,9 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 	public void visit(ProgName progName) {
 		progName.obj = Tab.insert(Obj.Prog, progName.getName(), Tab.noType);
 		Tab.openScope();
+
+		helperVars.put("index", Tab.insert(Obj.Var, "$index", Tab.intType));
+		helperVars.put("length", Tab.insert(Obj.Var, "$length", Tab.intType));
 	}
 	
 	@Override
@@ -462,6 +473,16 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 
 		if (obj.getType() != Tab.intType)
 			reportError("Incompatible type for increment", stmt);
+	}
+
+	@Override
+	public void visit(DesOptDes optDes) {
+		optDes.obj = optDes.getDesignator().obj;
+	}
+
+	@Override
+	public void visit(DesOptEmpty empty) {
+		empty.obj = Tab.noObj;
 	}
 
 	@Override

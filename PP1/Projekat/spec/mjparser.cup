@@ -69,7 +69,7 @@ nonterminal VarTypedDecls, VarTypedDecl, VarDecls, VarDecl;
 nonterminal ElemAccess, VarQuantity;
 nonterminal MethodDecls, MethodDecl;
 nonterminal FormPars, FormParams, FormParam;
-nonterminal Statement, StmtList, DesignatorStatement, DesStmtList, DesUnpackList, DesOpt;
+nonterminal Statement, StmtList, DesignatorStatement, DesStmtList, DesUnpackList;
 nonterminal IfBeforeCond, IfAfterCond, IfElseStart;
 nonterminal Addop, Mulop, Relop;
 nonterminal ActPars, ActParams;
@@ -79,6 +79,7 @@ nonterminal ForSign, ForCond, ForDesStmtList, ForBeforeCond, ForAfterCond;
 nonterminal rs.etf.pp1.symboltable.concepts.Obj ProgName, MethodSign, Designator, VarRef;
 nonterminal rs.etf.pp1.symboltable.concepts.Struct Type;
 nonterminal rs.etf.pp1.symboltable.concepts.Struct Const, Factor, Term, Expr, Call, CallBefore, ActParam;
+nonterminal rs.etf.pp1.symboltable.concepts.Obj DesOpt;
 
 precedence left ELSE;
 
@@ -165,11 +166,11 @@ DesignatorStatement ::= (DesCallStmt) Call
 					  | (DesDecStmt) Designator DEC
 					  | (DesUnpackStmt) LBRACKET DesUnpackList ASTERISK Designator RBRACKET EQUAL Designator;
 
-DesUnpackList  ::= DesUnpackList COMMA DesOpt
-				 | DesOpt;
+DesUnpackList  ::= DesUnpackList DesOpt
+				 | /* epsilon */;
 
-DesOpt  ::= (DesOptDes) Designator
-		  | (DesOptEmpty) /* epsilon */;
+DesOpt  ::= (DesOptDes) Designator COMMA
+		  | (DesOptEmpty) COMMA;
 
 Addop   ::= (PlusAddOp) PLUS
           | (MinusAddOp) MINUS;

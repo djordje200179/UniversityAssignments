@@ -43,7 +43,7 @@ public class Compiler {
         	if (objFile.exists())
         		objFile.delete();
 
-        	var codeGenerator = new CodeGenerator();
+        	var codeGenerator = new CodeGenerator(semanticAnalyzer.getHelperVars());
         	program.traverseBottomUp(codeGenerator);
         	Code.write(new FileOutputStream(objFile));
 		}

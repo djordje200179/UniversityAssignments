@@ -86,7 +86,6 @@ nonterminal StmtList StmtList;
 nonterminal DesignatorStatement DesignatorStatement;
 nonterminal DesStmtList DesStmtList;
 nonterminal DesUnpackList DesUnpackList;
-nonterminal DesOpt DesOpt;
 nonterminal IfBeforeCond IfBeforeCond;
 nonterminal IfAfterCond IfAfterCond;
 nonterminal IfElseStart IfElseStart;
@@ -109,6 +108,7 @@ nonterminal ForAfterCond ForAfterCond;
 nonterminal rs.etf.pp1.symboltable.concepts.Obj ProgName, MethodSign, Designator, VarRef;
 nonterminal rs.etf.pp1.symboltable.concepts.Struct Type;
 nonterminal rs.etf.pp1.symboltable.concepts.Struct Const, Factor, Term, Expr, Call, CallBefore, ActParam;
+nonterminal rs.etf.pp1.symboltable.concepts.Obj DesOpt;
 
 precedence left ELSE;
 
@@ -195,11 +195,11 @@ DesignatorStatement ::= (DesCallStmt) Call:C1 {: RESULT=new DesCallStmt(C1); RES
 					  | (DesDecStmt) Designator:D1 DEC {: RESULT=new DesDecStmt(D1); RESULT.setLine(D1left); :}
 					  | (DesUnpackStmt) LBRACKET DesUnpackList:D1 ASTERISK Designator:D2 RBRACKET EQUAL Designator:D3 {: RESULT=new DesUnpackStmt(D1, D2, D3); RESULT.setLine(D1left); :};
 
-DesUnpackList  ::= DesUnpackList:D1 COMMA DesOpt:D2 {: RESULT=new DesUnpackListDerived1(D1, D2); RESULT.setLine(D1left); :}
-				 | DesOpt:D1 {: RESULT=new DesUnpackListDerived2(D1); RESULT.setLine(D1left); :};
+DesUnpackList  ::= DesUnpackList:D1 DesOpt:D2 {: RESULT=new DesUnpackListDerived1(D1, D2); RESULT.setLine(D1left); :}
+				 | {: RESULT=new DesUnpackListDerived2(); :} /* epsilon */;
 
-DesOpt  ::= (DesOptDes) Designator:D1 {: RESULT=new DesOptDes(D1); RESULT.setLine(D1left); :}
-		  | (DesOptEmpty) {: RESULT=new DesOptEmpty(); :} /* epsilon */;
+DesOpt  ::= (DesOptDes) Designator:D1 COMMA {: RESULT=new DesOptDes(D1); RESULT.setLine(D1left); :}
+		  | (DesOptEmpty) COMMA {: RESULT=new DesOptEmpty(); :};
 
 Addop   ::= (PlusAddOp) PLUS {: RESULT=new PlusAddOp(); :}
           | (MinusAddOp) MINUS {: RESULT=new MinusAddOp(); :};

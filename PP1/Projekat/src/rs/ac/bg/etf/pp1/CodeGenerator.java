@@ -3,12 +3,20 @@ package rs.ac.bg.etf.pp1;
 import rs.ac.bg.etf.pp1.ast.*;
 import rs.etf.pp1.mj.runtime.Code;
 import rs.etf.pp1.symboltable.Tab;
+import rs.etf.pp1.symboltable.concepts.Obj;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Stack;
 
 public class CodeGenerator extends VisitorAdaptor {
+	private Map<String, Obj> helperVars;
+
+	public CodeGenerator(Map<String, Obj> helperVars) {
+		this.helperVars = helperVars;
+	}
+
 	@Override
 	public void visit(Program prog) {
 		Code.dataSize = prog.getProgName().obj.getLocalSymbols().size();
@@ -182,7 +190,6 @@ public class CodeGenerator extends VisitorAdaptor {
 			parent instanceof Call ||
 			parent instanceof DesAssignStmt ||
 			parent instanceof ReadStmt ||
-			parent instanceof DesUnpackStmt ||
 			parent instanceof DesOptDes
 		)
 			return;
@@ -333,5 +340,108 @@ public class CodeGenerator extends VisitorAdaptor {
 	public void visit(BreakStmt stmt) {
 		Code.putJump(0);
 		forScopes.peek().breakPatchLocations.add(Code.pc - 2);
+	}
+
+	@Override
+	public void visit(DesUnpackStmt stmt) {
+		var targets = new ArrayList<Obj>();
+		stmt.getDesUnpackList().traverseBottomUp(new VisitorAdaptor() {
+			@Override
+			public void visit(DesOptDes optDes) {
+				targets.add(optDes.getDesignator().obj);
+			}
+
+			@Override
+			public void visit(DesOptEmpty optEmpty) {
+				targets.add(Tab.noObj);
+			}
+		});
+
+		/*
+		overfill source
+		source overfill source
+		source overfill sourcelen
+		source overfill N T
+		 */
+
+		Code.put(Code.dup_x1);
+		Code.put(Code.dup);
+		Code.put(Code.arraylength);
+		Code.loadConst(targets.size());
+		Code.putFalseJump(Code.lt, Code.pc + (1 + 2) + (1 + 1));
+		Code.put(Code.trap);
+		Code.put(2);
+
+		var indexVar = helperVars.get("index");
+		var lengthVar = helperVars.get("length");
+
+		var elemType = stmt.getDesignator().obj.getType().getElemType();
+
+		Code.loadConst(0);
+		Code.store(indexVar);
+
+		Code.put(Code.dup);
+		Code.put(Code.arraylength);
+		Code.loadConst(targets.size());
+		Code.put(Code.sub);
+		Code.store(lengthVar);
+
+		// index = 0, length = N - T
+
+		// arr5[0] = arr6[T];
+		// arr5[1] = arr6[T+ 1];
+		// ...
+		// arr5[N - T - 1] = arr6[N - 1];
+
+		/*
+			while (index < length) {
+				arr5[index] = arr6[index + T];
+				index = index + 1;
+			}
+		 */
+
+		int copyStartAddr = Code.pc;
+
+		Code.load(indexVar);
+		Code.load(lengthVar);
+		Code.putFalseJump(Code.lt, 0);
+		int jumpAddr = Code.pc - 2;
+
+		Code.put(Code.dup2);  // arr5 arr6
+		Code.load(indexVar);  // arr5 arr6 index
+		Code.put(Code.dup_x1); // arr5 index arr6 index
+		Code.loadConst(targets.size()); // arr5 index arr6 index T
+		Code.put(Code.add); // arr5 index arr6 index + T
+		if (elemType == Tab.charType) {
+			Code.put(Code.baload);
+			Code.put(Code.bastore);
+		} else {
+			Code.put(Code.aload);
+			Code.put(Code.astore);
+		}
+
+		Code.load(indexVar);
+		Code.loadConst(1);
+		Code.put(Code.add);
+		Code.store(indexVar);
+
+		Code.putJump(copyStartAddr);
+
+		Code.fixup(jumpAddr);
+
+		Code.put(Code.pop);
+		Code.put(Code.pop);
+
+		for (var i = targets.size() - 1; i >= 0; i--) {
+			var target = targets.get(i);
+			if (target == Tab.noObj)
+				continue;
+
+			Code.put(target.getKind() == Obj.Elem ? Code.dup_x2 : Code.dup);
+			Code.loadConst(i);
+			Code.put(elemType == Tab.charType ? Code.baload : Code.aload);
+			Code.store(target);
+		}
+		Code.put(Code.pop);
 	}
 }
