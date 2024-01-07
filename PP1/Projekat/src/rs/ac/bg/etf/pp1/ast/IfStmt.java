@@ -1,6 +1,6 @@
 // generated with ast extension for cup
 // version 0.8
-// 6/0/2024 23:1:17
+// 7/0/2024 17:35:6
 
 
 package rs.ac.bg.etf.pp1.ast;
@@ -8,15 +8,15 @@ package rs.ac.bg.etf.pp1.ast;
 public class IfStmt extends Statement {
 
     private IfBeforeCond IfBeforeCond;
-    private Condition Condition;
+    private ConditionTry ConditionTry;
     private IfAfterCond IfAfterCond;
     private Statement Statement;
 
-    public IfStmt (IfBeforeCond IfBeforeCond, Condition Condition, IfAfterCond IfAfterCond, Statement Statement) {
+    public IfStmt (IfBeforeCond IfBeforeCond, ConditionTry ConditionTry, IfAfterCond IfAfterCond, Statement Statement) {
         this.IfBeforeCond=IfBeforeCond;
         if(IfBeforeCond!=null) IfBeforeCond.setParent(this);
-        this.Condition=Condition;
-        if(Condition!=null) Condition.setParent(this);
+        this.ConditionTry=ConditionTry;
+        if(ConditionTry!=null) ConditionTry.setParent(this);
         this.IfAfterCond=IfAfterCond;
         if(IfAfterCond!=null) IfAfterCond.setParent(this);
         this.Statement=Statement;
@@ -31,12 +31,12 @@ public class IfStmt extends Statement {
         this.IfBeforeCond=IfBeforeCond;
     }
 
-    public Condition getCondition() {
-        return Condition;
+    public ConditionTry getConditionTry() {
+        return ConditionTry;
     }
 
-    public void setCondition(Condition Condition) {
-        this.Condition=Condition;
+    public void setConditionTry(ConditionTry ConditionTry) {
+        this.ConditionTry=ConditionTry;
     }
 
     public IfAfterCond getIfAfterCond() {
@@ -61,7 +61,7 @@ public class IfStmt extends Statement {
 
     public void childrenAccept(Visitor visitor) {
         if(IfBeforeCond!=null) IfBeforeCond.accept(visitor);
-        if(Condition!=null) Condition.accept(visitor);
+        if(ConditionTry!=null) ConditionTry.accept(visitor);
         if(IfAfterCond!=null) IfAfterCond.accept(visitor);
         if(Statement!=null) Statement.accept(visitor);
     }
@@ -69,14 +69,14 @@ public class IfStmt extends Statement {
     public void traverseTopDown(Visitor visitor) {
         accept(visitor);
         if(IfBeforeCond!=null) IfBeforeCond.traverseTopDown(visitor);
-        if(Condition!=null) Condition.traverseTopDown(visitor);
+        if(ConditionTry!=null) ConditionTry.traverseTopDown(visitor);
         if(IfAfterCond!=null) IfAfterCond.traverseTopDown(visitor);
         if(Statement!=null) Statement.traverseTopDown(visitor);
     }
 
     public void traverseBottomUp(Visitor visitor) {
         if(IfBeforeCond!=null) IfBeforeCond.traverseBottomUp(visitor);
-        if(Condition!=null) Condition.traverseBottomUp(visitor);
+        if(ConditionTry!=null) ConditionTry.traverseBottomUp(visitor);
         if(IfAfterCond!=null) IfAfterCond.traverseBottomUp(visitor);
         if(Statement!=null) Statement.traverseBottomUp(visitor);
         accept(visitor);
@@ -93,8 +93,8 @@ public class IfStmt extends Statement {
             buffer.append(tab+"  null");
         buffer.append("\n");
 
-        if(Condition!=null)
-            buffer.append(Condition.toString("  "+tab));
+        if(ConditionTry!=null)
+            buffer.append(ConditionTry.toString("  "+tab));
         else
             buffer.append(tab+"  null");
         buffer.append("\n");

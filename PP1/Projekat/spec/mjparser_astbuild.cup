@@ -98,6 +98,7 @@ nonterminal ActParams ActParams;
 nonterminal CondFact CondFact;
 nonterminal CondTerm CondTerm;
 nonterminal Condition Condition;
+nonterminal ConditionTry ConditionTry;
 nonterminal CondOrJoiner CondOrJoiner;
 nonterminal ForSign ForSign;
 nonterminal ForCond ForCond;
@@ -139,7 +140,8 @@ VarTypedDecls	::= VarTypedDecls:V1 VarTypedDecl:V2 {: RESULT=new VarTypedDeclsDe
 VarTypedDecl	::= (VarTypedDecl) Type:T1 VarDecls:V2 SEMI {: RESULT=new VarTypedDecl(T1, V2); RESULT.setLine(T1left); :};
 VarDecls		::= VarDecls:V1 COMMA VarDecl:V2 {: RESULT=new VarDeclsDerived1(V1, V2); RESULT.setLine(V1left); :}
 				  | VarDecl:V1 {: RESULT=new VarDeclsDerived2(V1); RESULT.setLine(V1left); :};
-VarDecl			::= (VarDecl) IDENT:name VarQuantity:V1 {: RESULT=new VarDecl(name, V1); RESULT.setLine(nameleft); :};
+VarDecl			::= (VarDeclOk) IDENT:name VarQuantity:V1 {: RESULT=new VarDeclOk(name, V1); RESULT.setLine(nameleft); :}
+				  | error {: parser.report_error("Variable declaration is not valid", null); :} {: RESULT=new VarDeclDerived1(); :};
 VarQuantity     ::= (ArrayVar) LBRACKET RBRACKET {: RESULT=new ArrayVar(); :}
 				  | (SingularVar) {: RESULT=new SingularVar(); :} /* epsilon */;
 
@@ -153,7 +155,8 @@ FormPars	::= FormParams:F1 {: RESULT=new FormParsDerived1(F1); RESULT.setLine(F1
 			  | {: RESULT=new FormParsDerived2(); :} /* epsilon */;
 FormParams	::= FormParams:F1 COMMA FormParam:F2 {: RESULT=new FormParamsDerived1(F1, F2); RESULT.setLine(F1left); :}
 			  | FormParam:F1 {: RESULT=new FormParamsDerived2(F1); RESULT.setLine(F1left); :};
-FormParam	::= (FormParam) Type:T1 IDENT:name VarQuantity:V2 {: RESULT=new FormParam(T1, name, V2); RESULT.setLine(T1left); :};
+FormParam	::= (FormParamOk) Type:T1 IDENT:name VarQuantity:V2 {: RESULT=new FormParamOk(T1, name, V2); RESULT.setLine(T1left); :}
+			  | error {: parser.report_error("Formal parameter is not valid", null); :} {: RESULT=new FormParamDerived1(); :};
 
 StmtList    ::= StmtList:S1 Statement:S2 {: RESULT=new StmtListDerived1(S1, S2); RESULT.setLine(S1left); :}
 			  | {: RESULT=new StmtListDerived2(); :} /* epsilon */;
@@ -165,8 +168,8 @@ Statement   ::= (ValueReturnStmt) RETURN Expr:E1 SEMI {: RESULT=new ValueReturnS
 			  | (PrintWidthStmt) PRINT LPAREN Expr:E1 COMMA NUM:width RPAREN SEMI {: RESULT=new PrintWidthStmt(E1, width); RESULT.setLine(E1left); :}
 			  | (PrintStmt) PRINT LPAREN Expr:E1 RPAREN SEMI {: RESULT=new PrintStmt(E1); RESULT.setLine(E1left); :}
 			  | (DesStmt) DesignatorStatement:D1 SEMI {: RESULT=new DesStmt(D1); RESULT.setLine(D1left); :}
-			  | (IfElseStmt) IF LPAREN IfBeforeCond:I1 Condition:C2 IfAfterCond:I3 RPAREN Statement:S4 ELSE IfElseStart:I5 Statement:S6 {: RESULT=new IfElseStmt(I1, C2, I3, S4, I5, S6); RESULT.setLine(I1left); :}
-			  | (IfStmt) IF LPAREN IfBeforeCond:I1 Condition:C2 IfAfterCond:I3 RPAREN Statement:S4 {: RESULT=new IfStmt(I1, C2, I3, S4); RESULT.setLine(I1left); :}
+			  | (IfElseStmt) IF LPAREN IfBeforeCond:I1 ConditionTry:C2 IfAfterCond:I3 RPAREN Statement:S4 ELSE IfElseStart:I5 Statement:S6 {: RESULT=new IfElseStmt(I1, C2, I3, S4, I5, S6); RESULT.setLine(I1left); :}
+			  | (IfStmt) IF LPAREN IfBeforeCond:I1 ConditionTry:C2 IfAfterCond:I3 RPAREN Statement:S4 {: RESULT=new IfStmt(I1, C2, I3, S4); RESULT.setLine(I1left); :}
 			  | (ForStmt) ForSign:F1 Statement:S2 {: RESULT=new ForStmt(F1, S2); RESULT.setLine(F1left); :}
 			  | LBRACE StmtList:S1 RBRACE {: RESULT=new StatementDerived1(S1); RESULT.setLine(S1left); :};
 
@@ -187,6 +190,7 @@ DesStmtList ::= DesStmtList:D1 COMMA DesignatorStatement:D2 {: RESULT=new DesStm
 
 DesignatorStatement ::= (DesCallStmt) Call:C1 {: RESULT=new DesCallStmt(C1); RESULT.setLine(C1left); :}
 					  | (DesAssignStmt) Designator:D1 EQUAL Expr:E2 {: RESULT=new DesAssignStmt(D1, E2); RESULT.setLine(D1left); :}
+					  | Designator:D1 EQUAL error {: parser.report_error("Assignment expression is not valid", null); :} {: RESULT=new DesignatorStatementDerived1(D1); RESULT.setLine(D1left); :}
 					  | (DesIncStmt) Designator:D1 INC {: RESULT=new DesIncStmt(D1); RESULT.setLine(D1left); :}
 					  | (DesDecStmt) Designator:D1 DEC {: RESULT=new DesDecStmt(D1); RESULT.setLine(D1left); :}
 					  | (DesUnpackStmt) LBRACKET DesUnpackList:D1 ASTERISK Designator:D2 RBRACKET EQUAL Designator:D3 {: RESULT=new DesUnpackStmt(D1, D2, D3); RESULT.setLine(D1left); :};
@@ -243,6 +247,9 @@ CondFact    ::= (Comparison) Expr:E1 Relop:R2 Expr:E3 {: RESULT=new Comparison(E
 
 CondTerm    ::= (CondTermList) CondTerm:C1 AND CondFact:C2 {: RESULT=new CondTermList(C1, C2); RESULT.setLine(C1left); :}
 			  | (CondFactTerm) CondFact:C1 {: RESULT=new CondFactTerm(C1); RESULT.setLine(C1left); :};
+
+ConditionTry    ::= (ConditionOk) Condition:C1 {: RESULT=new ConditionOk(C1); RESULT.setLine(C1left); :}
+				  | error {: parser.report_error("Condition in IF statement is not valid", null); :} {: RESULT=new ConditionTryDerived1(); :};
 
 Condition   ::= (ConditionList) Condition:C1 CondOrJoiner:C2 CondTerm:C3 {: RESULT=new ConditionList(C1, C2, C3); RESULT.setLine(C1left); :}
 			  | (CondTermCondition) CondTerm:C1 {: RESULT=new CondTermCondition(C1); RESULT.setLine(C1left); :};

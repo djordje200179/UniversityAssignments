@@ -45,7 +45,7 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 	@Override
 	public void visit(Program prog) {
 		var mainMethod = Tab.find("main");
-		if (mainMethod == Tab.noObj || mainMethod.getKind() != Obj.Meth || mainMethod.getType() != Tab.noType)
+		if (mainMethod == Tab.noObj || mainMethod.getKind() != Obj.Meth || mainMethod.getType() != Tab.noType || mainMethod.getLevel() != 0)
 			reportError("Suitable main method not found", prog);
 
 		Tab.chainLocalSymbols(prog.getProgName().obj);
@@ -147,7 +147,7 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 	public void visit(VarTypedDecl varTypedDecl) {
 		varTypedDecl.traverseBottomUp(new VisitorAdaptor() {
 			@Override
-			public void visit(VarDecl varDecl) {
+			public void visit(VarDeclOk varDecl) {
 				if (Tab.currentScope.findSymbol(varDecl.getName()) != null) {
 					reportError("Identifier " + varDecl.getName() + " redefined", varDecl);
 					return;
@@ -165,7 +165,7 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 	}
 
 	@Override
-	public void visit(FormParam formParam) {
+	public void visit(FormParamOk formParam) {
 		if (Tab.currentScope.findSymbol(formParam.getName()) != null) {
 			reportError("Parameter " + formParam.getName() + " redefined", formParam);
 			return;

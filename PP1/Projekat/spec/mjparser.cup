@@ -73,7 +73,7 @@ nonterminal Statement, StmtList, DesignatorStatement, DesStmtList, DesUnpackList
 nonterminal IfBeforeCond, IfAfterCond, IfElseStart;
 nonterminal Addop, Mulop, Relop;
 nonterminal ActPars, ActParams;
-nonterminal CondFact, CondTerm, Condition, CondOrJoiner;
+nonterminal CondFact, CondTerm, Condition, ConditionTry, CondOrJoiner;
 nonterminal ForSign, ForCond, ForDesStmtList, ForBeforeCond, ForAfterCond;
 
 nonterminal rs.etf.pp1.symboltable.concepts.Obj ProgName, MethodSign, Designator, VarRef;
@@ -110,7 +110,8 @@ VarTypedDecls	::= VarTypedDecls VarTypedDecl
 VarTypedDecl	::= (VarTypedDecl) Type VarDecls SEMI;
 VarDecls		::= VarDecls COMMA VarDecl
 				  | VarDecl;
-VarDecl			::= (VarDecl) IDENT:name VarQuantity;
+VarDecl			::= (VarDeclOk) IDENT:name VarQuantity
+				  | error {: parser.report_error("Variable declaration is not valid", null); :};
 VarQuantity     ::= (ArrayVar) LBRACKET RBRACKET
 				  | (SingularVar) /* epsilon */;
 
@@ -124,7 +125,8 @@ FormPars	::= FormParams
 			  | /* epsilon */;
 FormParams	::= FormParams COMMA FormParam
 			  | FormParam;
-FormParam	::= (FormParam) Type IDENT:name VarQuantity;
+FormParam	::= (FormParamOk) Type IDENT:name VarQuantity
+			  | error {: parser.report_error("Formal parameter is not valid", null); :};
 
 StmtList    ::= StmtList Statement
 			  | /* epsilon */;
@@ -136,8 +138,8 @@ Statement   ::= (ValueReturnStmt) RETURN Expr SEMI
 			  | (PrintWidthStmt) PRINT LPAREN Expr COMMA NUM:width RPAREN SEMI
 			  | (PrintStmt) PRINT LPAREN Expr RPAREN SEMI
 			  | (DesStmt) DesignatorStatement SEMI
-			  | (IfElseStmt) IF LPAREN IfBeforeCond Condition IfAfterCond RPAREN Statement ELSE IfElseStart Statement
-			  | (IfStmt) IF LPAREN IfBeforeCond Condition IfAfterCond RPAREN Statement
+			  | (IfElseStmt) IF LPAREN IfBeforeCond ConditionTry IfAfterCond RPAREN Statement ELSE IfElseStart Statement
+			  | (IfStmt) IF LPAREN IfBeforeCond ConditionTry IfAfterCond RPAREN Statement
 			  | (ForStmt) ForSign Statement
 			  | LBRACE StmtList RBRACE;
 
@@ -158,6 +160,7 @@ DesStmtList ::= DesStmtList COMMA DesignatorStatement
 
 DesignatorStatement ::= (DesCallStmt) Call
 					  | (DesAssignStmt) Designator EQUAL Expr
+					  | Designator EQUAL error {: parser.report_error("Assignment expression is not valid", null); :}
 					  | (DesIncStmt) Designator INC
 					  | (DesDecStmt) Designator DEC
 					  | (DesUnpackStmt) LBRACKET DesUnpackList ASTERISK Designator RBRACKET EQUAL Designator;
@@ -214,6 +217,9 @@ CondFact    ::= (Comparison) Expr Relop Expr
 
 CondTerm    ::= (CondTermList) CondTerm AND CondFact
 			  | (CondFactTerm) CondFact;
+
+ConditionTry    ::= (ConditionOk) Condition
+				  | error {: parser.report_error("Condition in IF statement is not valid", null); :};
 
 Condition   ::= (ConditionList) Condition CondOrJoiner CondTerm
 			  | (CondTermCondition) CondTerm;

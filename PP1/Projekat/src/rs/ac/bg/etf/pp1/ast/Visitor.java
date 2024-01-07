@@ -1,6 +1,6 @@
 // generated with ast extension for cup
 // version 0.8
-// 6/0/2024 23:1:18
+// 7/0/2024 17:35:6
 
 
 package rs.ac.bg.etf.pp1.ast;
@@ -16,6 +16,7 @@ public interface Visitor {
     public void visit(DesStmtList DesStmtList);
     public void visit(ActParams ActParams);
     public void visit(Addop Addop);
+    public void visit(ConditionTry ConditionTry);
     public void visit(GlobalDecls GlobalDecls);
     public void visit(Factor Factor);
     public void visit(CondTerm CondTerm);
@@ -32,6 +33,7 @@ public interface Visitor {
     public void visit(Const Const);
     public void visit(VarDecls VarDecls);
     public void visit(Statement Statement);
+    public void visit(VarDecl VarDecl);
     public void visit(CondFact CondFact);
     public void visit(ConstDecls ConstDecls);
     public void visit(VarTypedDecls VarTypedDecls);
@@ -39,10 +41,13 @@ public interface Visitor {
     public void visit(ForCond ForCond);
     public void visit(GlobalDecl GlobalDecl);
     public void visit(FormPars FormPars);
+    public void visit(FormParam FormParam);
     public void visit(MethodDecls MethodDecls);
     public void visit(CondOrJoiner CondOrJoiner);
     public void visit(CondTermCondition CondTermCondition);
     public void visit(ConditionList ConditionList);
+    public void visit(ConditionTryDerived1 ConditionTryDerived1);
+    public void visit(ConditionOk ConditionOk);
     public void visit(CondFactTerm CondFactTerm);
     public void visit(CondTermList CondTermList);
     public void visit(CondFactExpr CondFactExpr);
@@ -87,6 +92,7 @@ public interface Visitor {
     public void visit(DesUnpackStmt DesUnpackStmt);
     public void visit(DesDecStmt DesDecStmt);
     public void visit(DesIncStmt DesIncStmt);
+    public void visit(DesignatorStatementDerived1 DesignatorStatementDerived1);
     public void visit(DesAssignStmt DesAssignStmt);
     public void visit(DesCallStmt DesCallStmt);
     public void visit(DesStmtListDerived2 DesStmtListDerived2);
@@ -115,7 +121,8 @@ public interface Visitor {
     public void visit(ValueReturnStmt ValueReturnStmt);
     public void visit(StmtListDerived2 StmtListDerived2);
     public void visit(StmtListDerived1 StmtListDerived1);
-    public void visit(FormParam FormParam);
+    public void visit(FormParamDerived1 FormParamDerived1);
+    public void visit(FormParamOk FormParamOk);
     public void visit(FormParamsDerived2 FormParamsDerived2);
     public void visit(FormParamsDerived1 FormParamsDerived1);
     public void visit(FormParsDerived2 FormParsDerived2);
@@ -127,7 +134,8 @@ public interface Visitor {
     public void visit(MethodDeclsDerived1 MethodDeclsDerived1);
     public void visit(SingularVar SingularVar);
     public void visit(ArrayVar ArrayVar);
-    public void visit(VarDecl VarDecl);
+    public void visit(VarDeclDerived1 VarDeclDerived1);
+    public void visit(VarDeclOk VarDeclOk);
     public void visit(VarDeclsDerived2 VarDeclsDerived2);
     public void visit(VarDeclsDerived1 VarDeclsDerived1);
     public void visit(VarTypedDecl VarTypedDecl);
