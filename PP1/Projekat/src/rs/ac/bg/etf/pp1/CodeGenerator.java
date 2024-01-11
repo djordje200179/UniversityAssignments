@@ -368,7 +368,7 @@ public class CodeGenerator extends VisitorAdaptor {
 		Code.put(Code.dup);
 		Code.put(Code.arraylength);
 		Code.loadConst(targets.size());
-		Code.putFalseJump(Code.lt, Code.pc + (1 + 2) + (1 + 1));
+		Code.putFalseJump(Code.le, Code.pc + (1 + 2) + (1 + 1));
 		Code.put(Code.trap);
 		Code.put(2);
 
