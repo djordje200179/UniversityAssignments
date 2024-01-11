@@ -1,0 +1,6 @@
+program semanticError
+{
+	void main() {
+		print(main);
+	}
+}

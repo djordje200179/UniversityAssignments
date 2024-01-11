@@ -1,0 +1,12 @@
+program semanticError
+namespace A {
+	int x;
+	{
+
+	}
+}
+{
+	void main() {
+		print(x);
+	}
+}

@@ -1,0 +1,6 @@
+program syntaxError
+{
+	void main(int a) {
+		print('x');
+	}
+}

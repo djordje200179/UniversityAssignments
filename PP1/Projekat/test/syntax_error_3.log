@@ -1,0 +1,22 @@
+#27 program
+#43 syntaxError
+#2 {
+#31 void
+#43 main
+#5 (
+#43 int
+#40 4
+Syntax error:  at line 3
+#9 ,
+#43 int
+#43 b
+#6 )
+Formal parameter is not valid
+#2 {
+#29 print
+#5 (
+#42 x
+#6 )
+#4 ;
+#3 }
+#3 }
