@@ -56,16 +56,25 @@ public class CodeGenerator extends VisitorAdaptor {
 
 	@Override
 	public void visit(IntConst cnst) {
+		if (cnst.getParent() instanceof ConstDecl)
+			return;
+
 		Code.loadConst(cnst.getValue());
 	}
 
 	@Override
 	public void visit(CharConst cnst) {
+		if (cnst.getParent() instanceof ConstDecl)
+			return;
+
 		Code.loadConst(cnst.getValue());
 	}
 
 	@Override
 	public void visit(BoolConst cnst) {
+		if (cnst.getParent() instanceof ConstDecl)
+			return;
+
 		Code.loadConst(cnst.getValue() ? 1 : 0);
 	}
 

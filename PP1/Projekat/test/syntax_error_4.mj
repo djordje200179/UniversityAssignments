@@ -1,6 +1,11 @@
 program syntaxError
 {
-	void main(int a) {
-		print('x');
+	void main() {
+		namespace {
+			int a;
+			{
+
+			}
+		}
 	}
 }
