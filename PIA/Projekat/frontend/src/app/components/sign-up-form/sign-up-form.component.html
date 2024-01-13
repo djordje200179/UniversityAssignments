@@ -1,41 +1,47 @@
-<form>
+<form (ngSubmit)="onSignUp()">
 	<h2>Пријава</h2>
 
 	<div class="grid">
 		<div class="column">
 			<mat-form-field appearance="outline">
 				<mat-label>Корисничко име</mat-label>
-				<input matInput [(ngModel)]="credentials.username" name="username" type="text">
+				<input matInput [(ngModel)]="credentials.username" name="username"
+				       type="text" required>
 			</mat-form-field>
 
 			<mat-form-field appearance="outline">
 				<mat-label>Лозинка</mat-label>
-				<input matInput [(ngModel)]="credentials.password" name="password" type="password">
+				<input matInput [(ngModel)]="credentials.password" name="password"
+				       type="password" required>
 			</mat-form-field>
 
 			<mat-form-field appearance="outline">
 				<mat-label>Безбједносно питање</mat-label>
-				<input matInput [(ngModel)]="userInfo.securityQuestion" name="security-question" type="text">
+				<input matInput [(ngModel)]="userInfo.securityQuestion" name="security-question"
+				       type="text" required>
 			</mat-form-field>
 
 			<mat-form-field appearance="outline">
 				<mat-label>Безбједносни одговор</mat-label>
-				<input matInput [(ngModel)]="userInfo.securityAnswer" name="security-answer" type="text">
+				<input matInput [(ngModel)]="userInfo.securityAnswer" name="security-answer"
+				       type="text" required>
 			</mat-form-field>
 
 			<mat-form-field appearance="outline">
 				<mat-label>Име</mat-label>
-				<input matInput [(ngModel)]="userInfo.firstName" name="first-name" type="text">
+				<input matInput [(ngModel)]="userInfo.firstName" name="first-name"
+				       type="text" required>
 			</mat-form-field>
 
 			<mat-form-field appearance="outline">
 				<mat-label>Презиме</mat-label>
-				<input matInput [(ngModel)]="userInfo.lastName" name="last-name" type="text">
+				<input matInput [(ngModel)]="userInfo.lastName" name="last-name"
+				       type="text" required>
 			</mat-form-field>
 
 			<mat-form-field appearance="outline">
 				<mat-label>Пол</mat-label>
-				<mat-select [(ngModel)]="userInfo.gender" name="gender">
+				<mat-select [(ngModel)]="userInfo.gender" name="gender" required>
 					<mat-option value="female">Женски</mat-option>
 					<mat-option value="male">Мушки</mat-option>
 				</mat-select>
@@ -43,6 +49,35 @@
 		</div>
 
 		<div class="column">
+			<mat-form-field appearance="outline">
+				<mat-label>Адреса</mat-label>
+				<input matInput [(ngModel)]="userInfo.address" name="address"
+				       type="text" required>
+			</mat-form-field>
+
+			<mat-form-field appearance="outline">
+				<mat-label>Број телефона</mat-label>
+				<input matInput [(ngModel)]="userInfo.phoneNumber" name="phone-number"
+				       type="text" required>
+			</mat-form-field>
+
+			<mat-form-field appearance="outline">
+				<mat-label>И-мејл адреса</mat-label>
+				<input matInput [(ngModel)]="userInfo.email" name="email"
+				       type="email" required>
+			</mat-form-field>
+
+			<mat-form-field appearance="outline">
+				<mat-label>Фотографија</mat-label>
+				<input matInput name="profile-image" type="text" readonly
+				       (click)="profileImageUpload.click()"
+				       value="{{userInfo.profileImage?.name ?? 'Није одабрано'}}">
+
+				<input hidden (change)="onProfileImageSelected($event)"
+				       #profileImageUpload name="profile-image"
+				       type="file" accept="image/png, image/jpeg, image/jpg">
+			</mat-form-field>
+
 			<mat-button-toggle-group name="role" [(ngModel)]="userInfo.role">
 				<mat-button-toggle value="student">Ученик</mat-button-toggle>
 				<mat-button-toggle value="teacher">Професор</mat-button-toggle>
@@ -52,7 +87,7 @@
 				<div *ngSwitchCase="'student'">
 					<mat-form-field appearance="outline">
 						<mat-label>Школа</mat-label>
-						<mat-select [(ngModel)]="studentInfo.schoolType" name="school-type">
+						<mat-select [(ngModel)]="studentInfo.schoolType" name="school-type" required>
 							<mat-option value="elementary">Основна</mat-option>
 							<mat-option value="gymnasium">Гимназија</mat-option>
 							<mat-option value="specialized">Стручна</mat-option>
@@ -62,7 +97,7 @@
 
 					<mat-form-field appearance="outline">
 						<mat-label>Разред</mat-label>
-						<mat-select [(ngModel)]="studentInfo.schoolYear" name="school-year">
+						<mat-select [(ngModel)]="studentInfo.schoolYear" name="school-year" required>
 							<mat-option *ngFor="let year of schoolYears" [value]="year">{{year}}</mat-option>
 						</mat-select>
 					</mat-form-field>
@@ -76,26 +111,28 @@
 
 						<input hidden (change)="onBiographySelected($event)"
 						       #biographyUpload name="biography"
-						       type="file" accept="application/pdf">
+						       type="file" accept="application/pdf" required>
 					</mat-form-field>
 
 					<mat-form-field appearance="outline">
 						<mat-label>Предмети</mat-label>
-						<mat-select [(ngModel)]="teacherInfo.subjects" multiple>
+						<mat-select [(ngModel)]="teacherInfo.subjects" multiple required name="subjects">
 							<mat-option *ngFor="let subject of possibleSubjects" [value]="subject">{{subject}}</mat-option>
 						</mat-select>
 					</mat-form-field>
 
 					<mat-form-field appearance="outline">
 						<mat-label>Узраст дијеце</mat-label>
-						<mat-select multiple>
+						<mat-select multiple required>
 							<mat-option *ngFor="let ageGroup of possibleGroups" [value]="ageGroup">{{ageGroup}}</mat-option>
 						</mat-select>
 					</mat-form-field>
 
 					<mat-form-field appearance="outline">
 						<mat-label>Како сте чули за наш сајт?</mat-label>
-						<textarea matInput></textarea>
+						<textarea matInput name="how-did-you-hear" required>
+
+						</textarea>
 					</mat-form-field>
 				</div>
 			</div>

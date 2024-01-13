@@ -1,7 +1,7 @@
 import {Component} from "@angular/core";
 import {SignInFormComponent} from "../../components/sign-in-form/sign-in-form.component";
 import {SignUpFormComponent} from "../../components/sign-up-form/sign-up-form.component";
-import {Credentials, UsersService} from "../../services/users.service";
+import {Credentials, StudentInfo, TeacherInfo, UsersService} from "../../services/users.service";
 
 @Component({
 	selector: "app-welcome",
@@ -25,6 +25,20 @@ export class WelcomeComponent {
 				return;
 			}
 
+			// navigate
+			console.log(res);
+		});
+	}
+
+	public onSignUpStudent(studentInfo: StudentInfo) {
+		this.usersService.signUpStudent(studentInfo).subscribe(res => {
+			// navigate
+			console.log(res);
+		});
+	}
+
+	public onSignUpTeacher(teacherInfo: TeacherInfo) {
+		this.usersService.signUpTeacher(teacherInfo).subscribe(res => {
 			// navigate
 			console.log(res);
 		});

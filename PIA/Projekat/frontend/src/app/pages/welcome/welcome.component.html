@@ -3,6 +3,6 @@
 		<app-sign-in-form (signIn)="onSignIn($event)"/>
 	</div>
 	<div class="column">
-		<app-sign-up-form/>
+		<app-sign-up-form (signUpStudent)="onSignUpStudent($event)" (signUpTeacher)="onSignUpTeacher($event)"/>
 	</div>
 </div>

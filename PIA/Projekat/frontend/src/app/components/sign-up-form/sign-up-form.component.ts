@@ -89,7 +89,10 @@ export class SignUpFormComponent {
 	];
 
 	@Output()
-	public readonly signUp = new EventEmitter<StudentInfo | TeacherInfo>();
+	public readonly signUpStudent = new EventEmitter<StudentInfo>();
+
+	@Output()
+	public readonly signUpTeacher = new EventEmitter<TeacherInfo>();
 
 	public onBiographySelected(event: Event) {
 		const target = event.target as HTMLInputElement;
@@ -98,5 +101,21 @@ export class SignUpFormComponent {
 			return;
 
 		this.teacherInfo.biography = files[0];
+	}
+
+	public onProfileImageSelected(event: Event) {
+		const target = event.target as HTMLInputElement;
+		const files = target?.files;
+		if (!files || files.length === 0)
+			return;
+
+		this.userInfo.profileImage = files[0];
+	}
+
+	public onSignUp() {
+		if (this.userInfo.role === Role.Student)
+			this.signUpStudent.emit(this.studentInfo);
+		else
+			this.signUpTeacher.emit(this.teacherInfo);
 	}
 }

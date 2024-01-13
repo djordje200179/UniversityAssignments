@@ -11,7 +11,6 @@ import lombok.Setter;
 @Entity
 @Table(name = "students", schema = "pia")
 public class StudentEntity {
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Id
 	@Column(name = "username")
 	private String username;
@@ -21,4 +20,13 @@ public class StudentEntity {
 	@Basic
 	@Column(name = "school_year")
 	private int schoolYear;
+
+	public StudentEntity() {
+	}
+
+	public StudentEntity(String username, Object schoolType, int schoolYear) {
+		this.username = username;
+		this.schoolType = schoolType;
+		this.schoolYear = schoolYear;
+	}
 }

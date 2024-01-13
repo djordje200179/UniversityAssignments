@@ -11,8 +11,14 @@ import lombok.Setter;
 @EqualsAndHashCode
 @Table(name = "teachers", schema = "pia")
 public class TeacherEntity {
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Id
 	@Column(name = "username")
 	private String username;
+
+	public TeacherEntity() {
+	}
+
+	public TeacherEntity(String username) {
+		this.username = username;
+	}
 }

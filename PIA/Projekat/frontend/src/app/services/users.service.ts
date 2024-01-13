@@ -24,11 +24,14 @@ export interface UserInfo {
 	gender: Gender;
 
 	securityQuestion: string;
-	securityAnswer: string;
+	securityAnswer?: string;
 
 	address: string;
 	phoneNumber: string;
 	email: string;
+
+	profileImage?: File;
+	profileImageURL?: string;
 }
 
 export enum SchoolType {
@@ -50,7 +53,7 @@ export interface TeacherInfo {
 	credentials: Credentials;
 	info: UserInfo;
 
-	biography: File;
+	biography?: File;
 	subjects: string[];
 }
 
@@ -58,19 +61,22 @@ export interface TeacherInfo {
 	providedIn: "root"
 })
 export class UsersService {
+	private static readonly SERVER_URL = "http://localhost:8080/users";
+
 	public constructor(private readonly httpClient: HttpClient) {
 
 	}
 
 	public signIn(credentials: Credentials) {
-		return this.httpClient.post<UserInfo | null>("http://localhost:3000/users/sign-in", credentials);
+		return this.httpClient.post<UserInfo | null>(`${(UsersService.SERVER_URL)}/sign-in`, credentials);
 	}
 
 	public signUpStudent(studentInfo: StudentInfo) {
-		return this.httpClient.post<UserInfo>("http://localhost:3000/users/sign-up/student", studentInfo);
+		return this.httpClient.post<StudentInfo>(`${(UsersService.SERVER_URL)}/sign-up/student`, studentInfo);
 	}
 
 	public signUpTeacher(teacherInfo: TeacherInfo) {
-		return this.httpClient.post<UserInfo>("http://localhost:3000/users/sign-up/teacher", teacherInfo);
+		console.log(teacherInfo);
+		return this.httpClient.post<TeacherInfo>(`${(UsersService.SERVER_URL)}/sign-up/teacher`, teacherInfo);
 	}
 }
