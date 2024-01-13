@@ -1,0 +1,25 @@
+form {
+	padding: 10px;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	width: fit-content;
+	margin: auto;
+}
+
+.grid {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+}
+
+.column {
+	padding: 10px;
+}
+
+mat-form-field {
+	width: 250px;
+	display: block;
+}
+
+mat-button-toggle-group {
+	margin: 5px auto;
+}

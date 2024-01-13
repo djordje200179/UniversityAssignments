@@ -7,25 +7,51 @@ export interface Credentials {
 }
 
 export enum Role {
-	Student,
-	Teacher
+	Student = "student",
+	Teacher = "teacher",
+}
+
+export enum Gender {
+	Female = "female",
+	Male = "male"
 }
 
 export interface UserInfo {
-	role? : Role;
+	role : Role;
 
 	firstName: string;
 	lastName: string;
+	gender: Gender;
+
+	securityQuestion: string;
+	securityAnswer: string;
+
+	address: string;
+	phoneNumber: string;
+	email: string;
+}
+
+export enum SchoolType {
+	Elementary = "elementary",
+	Gymnasium = "gymnasium",
+	Specialized = "specialized",
+	Art = "art"
 }
 
 export interface StudentInfo {
 	credentials: Credentials;
 	info: UserInfo;
+
+	schoolType: SchoolType;
+	schoolYear: number;
 }
 
 export interface TeacherInfo {
 	credentials: Credentials;
 	info: UserInfo;
+
+	biography: File;
+	subjects: string[];
 }
 
 @Injectable({

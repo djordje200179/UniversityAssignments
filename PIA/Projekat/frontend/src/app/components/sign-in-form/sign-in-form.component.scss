@@ -1,10 +1,12 @@
 form {
-	width: 200px;
 	padding: 10px;
 	border: 1px solid #ccc;
 	border-radius: 5px;
+	width: fit-content;
+	margin: auto;
 }
 
-form > * {
-	width: 100%;
+mat-form-field {
+	display: block;
+	width: 250px;
 }

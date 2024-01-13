@@ -18,8 +18,10 @@ import {Credentials} from "../../services/users.service";
 	standalone: true
 })
 export class SignInFormComponent {
-	public username: string = "";
-	public password: string = "";
+	public credentials: Credentials = {
+		username: "",
+		password: ""
+	};
 
 	@Output()
 	public readonly signIn = new EventEmitter<Credentials>();

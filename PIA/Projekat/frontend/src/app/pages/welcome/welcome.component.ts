@@ -1,5 +1,6 @@
 import {Component} from "@angular/core";
 import {SignInFormComponent} from "../../components/sign-in-form/sign-in-form.component";
+import {SignUpFormComponent} from "../../components/sign-up-form/sign-up-form.component";
 import {Credentials, UsersService} from "../../services/users.service";
 
 @Component({
@@ -9,9 +10,10 @@ import {Credentials, UsersService} from "../../services/users.service";
 	standalone: true,
 	imports: [
 		SignInFormComponent,
-	],
+		SignUpFormComponent
+	]
 })
-export default class WelcomeComponent {
+export class WelcomeComponent {
 	public constructor(private readonly usersService: UsersService) {
 
 	}
