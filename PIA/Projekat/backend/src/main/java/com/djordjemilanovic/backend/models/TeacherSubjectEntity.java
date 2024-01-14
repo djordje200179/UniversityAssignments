@@ -12,9 +12,11 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Table(name = "teacher_subjects", schema = "pia")
 public class TeacherSubjectEntity {
+	@Getter
+	@Setter
+	@EqualsAndHashCode
 	@NoArgsConstructor
 	@AllArgsConstructor
-	@EqualsAndHashCode
 	@Embeddable
 	public static class TeacherSubjectID implements Serializable {
 		private String subject;

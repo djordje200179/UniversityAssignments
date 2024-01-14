@@ -29,8 +29,6 @@ public class UsersService {
 		if (optionalUser.isEmpty())
 			return Optional.empty();
 
-		var user = optionalUser.get();
-
 		return usersInfoRepository.findById(username);
 	}
 
@@ -111,5 +109,9 @@ public class UsersService {
 		}
 
 		return teacher;
+	}
+
+	public Collection<TeacherSubjectEntity> getTeacherEnrollments() {
+		return teacherSubjectRepository.findAll();
 	}
 }

@@ -5,8 +5,8 @@ import {AppRoutingModule} from "./app-routing.module";
 import {AppComponent} from "./app.component";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {HeaderComponent} from "./components/header/header.component";
-import {WelcomeComponent} from "./pages/welcome/welcome.component";
 import {HttpClientModule} from "@angular/common/http";
+import {AccountComponent} from "./pages/account/account.component";
 
 @NgModule({
 	declarations: [
@@ -19,11 +19,9 @@ import {HttpClientModule} from "@angular/common/http";
 		HttpClientModule,
 
 		HeaderComponent,
-		WelcomeComponent
+		AccountComponent,
 	],
 	providers: [],
-	exports: [
-	],
 	bootstrap: [AppComponent]
 })
 export class AppModule {

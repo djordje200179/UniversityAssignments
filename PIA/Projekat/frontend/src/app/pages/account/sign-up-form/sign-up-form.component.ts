@@ -3,7 +3,7 @@ import {MatInputModule} from "@angular/material/input";
 import {MatIconModule} from "@angular/material/icon";
 import {MatButtonModule} from "@angular/material/button";
 import {FormControl, FormsModule} from "@angular/forms";
-import {Credentials, Role, SchoolType, StudentInfo, TeacherInfo, UserInfo} from "../../services/users.service";
+import {Credentials, Role, SchoolType, StudentInfo, TeacherInfo, UserInfo} from "../../../services/users.service";
 import {MatSelectModule} from "@angular/material/select";
 import {MatButtonToggleModule} from "@angular/material/button-toggle";
 import {NgForOf, NgSwitch, NgSwitchCase} from "@angular/common";

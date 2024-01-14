@@ -1,0 +1,16 @@
+<mat-card>
+	<mat-card-header>
+		<mat-card-title>Статистика</mat-card-title>
+	</mat-card-header>
+	<mat-card-content>
+		<mat-divider />
+		<mat-card-subtitle>Број корисника</mat-card-subtitle>
+		<p>Ученика: {{stats?.numberOfStudents}}</p>
+		<p>Професора: {{stats?.numberOfTeachers}}</p>
+
+		<mat-divider />
+		<mat-card-subtitle>Одржаних часова</mat-card-subtitle>
+		<p>Претходне недеље: {{stats?.numberOfClassesLastWeek}}</p>
+		<p>Претходног мјесеца: {{stats?.numberOfClassesLastMonth}}</p>
+	</mat-card-content>
+</mat-card>

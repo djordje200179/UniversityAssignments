@@ -1,8 +1,9 @@
 .grid {
-	display: grid;
-	grid-template-columns: 1fr 1fr;
+	display: flex;
+	margin: 20px;
+	gap: 20px;
 }
 
-.column {
-	padding: 10px;
+app-enrollments {
+	flex: 1;
 }
