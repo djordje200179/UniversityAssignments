@@ -1,34 +1,22 @@
 package com.djordjemilanovic.backend.services;
 
-import com.djordjemilanovic.backend.models.StudentEntity;
-import com.djordjemilanovic.backend.models.TeacherEntity;
-import com.djordjemilanovic.backend.models.UserEntity;
-import com.djordjemilanovic.backend.models.UserInfoEntity;
-import com.djordjemilanovic.backend.repositories.StudentsRepository;
-import com.djordjemilanovic.backend.repositories.TeachersRepository;
-import com.djordjemilanovic.backend.repositories.UsersInfoRepository;
-import com.djordjemilanovic.backend.repositories.UsersRepository;
+import com.djordjemilanovic.backend.models.*;
+import com.djordjemilanovic.backend.repositories.*;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
+@AllArgsConstructor
 @Service
 public class UsersService {
 	private final UsersRepository usersRepository;
 	private final UsersInfoRepository usersInfoRepository;
 	private final StudentsRepository studentsRepository;
 	private final TeachersRepository teachersRepository;
-
-	public UsersService(
-			UsersRepository usersRepository, UsersInfoRepository usersInfoRepository,
-			StudentsRepository studentsRepository, TeachersRepository teachersRepository) {
-		this.usersRepository = usersRepository;
-		this.usersInfoRepository = usersInfoRepository;
-		this.studentsRepository = studentsRepository;
-		this.teachersRepository = teachersRepository;
-	}
+	private final TeacherSubjectsRepository teacherSubjectRepository;
 
 	public List<UserEntity> getAll() {
 		return usersRepository.findAll();
@@ -46,17 +34,23 @@ public class UsersService {
 		return usersInfoRepository.findById(username);
 	}
 
-	private Optional<UserInfoEntity> createUser(
+	public static class UserAlreadyExistsException extends Exception {
+		public UserAlreadyExistsException() {
+			super("User already exists");
+		}
+	}
+
+	private UserInfoEntity createUser(
 		String username, String password,
 		String securityQuestion, String securityAnswer,
 		String firstName, String lastName, UserInfoEntity.Gender gender,
 		String address, String phoneNumber, String emailAddress
-	) {
+	) throws UserAlreadyExistsException {
 		if (usersRepository.findById(username).isPresent())
-			return Optional.empty();
+			throw new UserAlreadyExistsException();
 
 		if (usersInfoRepository.findByEmailAddress(emailAddress).isPresent())
-			return Optional.empty();
+			throw new UserAlreadyExistsException();
 
 		var passwordHash = password;
 
@@ -71,52 +65,51 @@ public class UsersService {
 		usersRepository.save(user);
 		usersInfoRepository.save(userInfo);
 
-		return Optional.of(userInfo);
+		return userInfo;
 	}
 
-	public Optional<UserInfoEntity> createStudent(
+	public StudentEntity createStudent(
 			String username, String password,
 			String securityQuestion, String securityAnswer,
 			String firstName, String lastName, UserInfoEntity.Gender gender,
 			String address, String phoneNumber, String emailAddress,
-			String schoolType, int schoolYear
-	) {
-		var userInfo = createUser(
-				username, password,
-				securityQuestion, securityAnswer,
-				firstName, lastName, gender,
-				address, phoneNumber, emailAddress
+			StudentEntity.SchoolType schoolType, int schoolYear
+	) throws UserAlreadyExistsException {
+		createUser(
+			username, password,
+			securityQuestion, securityAnswer,
+			firstName, lastName, gender,
+			address, phoneNumber, emailAddress
 		);
 
-		if (userInfo.isEmpty())
-			return Optional.empty();
+		var student = new StudentEntity(username, schoolType, schoolYear);
+		studentsRepository.save(student);
 
-		var studentInfo = new StudentEntity(username, schoolType, schoolYear);
-		studentsRepository.save(studentInfo);
-
-		return userInfo;
+		return student;
 	}
 
-	public Optional<UserInfoEntity> createTeacher(
+	public TeacherEntity createTeacher(
 			String username, String password,
 			String securityQuestion, String securityAnswer,
 			String firstName, String lastName, UserInfoEntity.Gender gender,
 			String address, String phoneNumber, String emailAddress,
 			Collection<String> subjects
-	) {
-		var userInfo = createUser(
-				username, password,
-				securityQuestion, securityAnswer,
-				firstName, lastName, gender,
-				address, phoneNumber, emailAddress
+	) throws UserAlreadyExistsException {
+		createUser(
+			username, password,
+			securityQuestion, securityAnswer,
+			firstName, lastName, gender,
+			address, phoneNumber, emailAddress
 		);
 
-		if (userInfo.isEmpty())
-			return Optional.empty();
+		var teacher = new TeacherEntity(username);
+		teachersRepository.saveAndFlush(teacher);
 
-		var teacherInfo = new TeacherEntity(username);
-		teachersRepository.save(teacherInfo);
+		for (var subject : subjects) {
+			var teacherSubject = new TeacherSubjectEntity(teacher, subject);
+			teacherSubjectRepository.save(teacherSubject);
+		}
 
-		return userInfo;
+		return teacher;
 	}
 }

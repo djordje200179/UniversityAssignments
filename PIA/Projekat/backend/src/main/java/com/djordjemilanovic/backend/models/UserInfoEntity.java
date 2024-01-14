@@ -1,31 +1,21 @@
 package com.djordjemilanovic.backend.models;
 
 import jakarta.persistence.*;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import org.hibernate.annotations.ColumnTransformer;
+
+import java.io.Serializable;
 
 @Setter
 @Getter
 @Entity
 @EqualsAndHashCode
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "users_info", schema = "pia")
 public class UserInfoEntity {
 	public enum Gender {
-		FEMALE, MALE;
-
-
-		public static class Converter implements AttributeConverter<Gender, String> {
-			@Override
-			public String convertToDatabaseColumn(Gender gender) {
-				return gender.name().toLowerCase();
-			}
-
-			@Override
-			public Gender convertToEntityAttribute(String s) {
-				return Gender.valueOf(s.toUpperCase());
-			}
-		}
+		FEMALE, MALE
 	}
 
 	@Id
@@ -45,8 +35,8 @@ public class UserInfoEntity {
 	private String lastName;
 	@Basic
 	@Column(name = "gender")
+	@ColumnTransformer(read = "UPPER(gender)", write = "LOWER(?)")
 	@Enumerated(EnumType.STRING)
-	@Convert(converter = Gender.Converter.class)
 	private Gender gender;
 	@Basic
 	@Column(name = "address")
@@ -57,25 +47,4 @@ public class UserInfoEntity {
 	@Basic
 	@Column(name = "email_address")
 	private String emailAddress;
-
-	public UserInfoEntity() {
-	}
-
-	public UserInfoEntity(
-			String username,
-			String securityQuestion,
-			String securityAnswer,
-			String firstName, String lastName, Gender gender,
-			String address, String phoneNumber, String emailAddress
-	) {
-		this.username = username;
-		this.securityQuestion = securityQuestion;
-		this.securityAnswer = securityAnswer;
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.gender = gender;
-		this.address = address;
-		this.phoneNumber = phoneNumber;
-		this.emailAddress = emailAddress;
-	}
 }

@@ -1,14 +1,14 @@
 package com.djordjemilanovic.backend.models;
 
 import jakarta.persistence.*;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Setter
 @Getter
 @Entity
 @EqualsAndHashCode
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "users", schema = "pia")
 public class UserEntity {
 	@Id
@@ -17,12 +17,4 @@ public class UserEntity {
 	@Basic
 	@Column(name = "password_hash")
 	private String passwordHash;
-
-	public UserEntity() {
-	}
-
-	public UserEntity(String username, String passwordHash) {
-		this.username = username;
-		this.passwordHash = passwordHash;
-	}
 }

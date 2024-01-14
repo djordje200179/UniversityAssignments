@@ -76,7 +76,6 @@ export class UsersService {
 	}
 
 	public signUpTeacher(teacherInfo: TeacherInfo) {
-		console.log(teacherInfo);
 		return this.httpClient.post<TeacherInfo>(`${(UsersService.SERVER_URL)}/sign-up/teacher`, teacherInfo);
 	}
 }

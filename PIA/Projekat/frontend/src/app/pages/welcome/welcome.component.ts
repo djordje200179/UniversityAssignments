@@ -19,28 +19,40 @@ export class WelcomeComponent {
 	}
 
 	public onSignIn(cred: Credentials) {
-		this.usersService.signIn(cred).subscribe(res => {
-			if (!res) {
-				alert("Invalid credentials");
-				return;
+		this.usersService.signIn(cred).subscribe(
+			res => {
+				localStorage.setItem("user-info", JSON.stringify(res));
+				console.log(res);
+			},
+			err => {
+				alert(err);
 			}
-
-			// navigate
-			console.log(res);
-		});
+		);
 	}
 
 	public onSignUpStudent(studentInfo: StudentInfo) {
-		this.usersService.signUpStudent(studentInfo).subscribe(res => {
-			// navigate
-			console.log(res);
-		});
+		this.usersService.signUpStudent(studentInfo).subscribe(
+			res => {
+				localStorage.setItem("user-info", JSON.stringify(res));
+				// navigate
+				console.log(res);
+			},
+			err => {
+				alert(err);
+			}
+		);
 	}
 
 	public onSignUpTeacher(teacherInfo: TeacherInfo) {
-		this.usersService.signUpTeacher(teacherInfo).subscribe(res => {
-			// navigate
-			console.log(res);
-		});
+		this.usersService.signUpTeacher(teacherInfo).subscribe(
+			res => {
+				localStorage.setItem("user-info", JSON.stringify(res));
+				// navigate
+				console.log(res);
+			},
+			err => {
+				alert(err);
+			}
+		);
 	}
 }
