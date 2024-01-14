@@ -276,6 +276,7 @@ public class CodeGenerator extends VisitorAdaptor {
 		var topScope = condScopes.peek();
 		topScope.thenPatchLocations.add(Code.pc - 2);
 		topScope.elsePatchLocations.forEach(Code::fixup);
+		topScope.elsePatchLocations.clear();
 	}
 
 	@Override
@@ -286,6 +287,7 @@ public class CodeGenerator extends VisitorAdaptor {
 	@Override
 	public void visit(IfAfterCond afterCond) {
 		condScopes.peek().thenPatchLocations.forEach(Code::fixup);
+		condScopes.peek().thenPatchLocations.clear();
 	}
 
 	@Override
@@ -327,6 +329,7 @@ public class CodeGenerator extends VisitorAdaptor {
 	public void visit(ForSign sign) {
 		Code.putJump(forScopes.peek().condTestLocation);
 		condScopes.peek().thenPatchLocations.forEach(Code::fixup);
+		condScopes.peek().thenPatchLocations.clear();
 	}
 
 	@Override
