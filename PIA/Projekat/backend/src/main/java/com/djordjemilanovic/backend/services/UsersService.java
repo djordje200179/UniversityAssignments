@@ -29,7 +29,21 @@ public class UsersService {
 		if (optionalUser.isEmpty())
 			return Optional.empty();
 
-		return usersInfoRepository.findById(username);
+		var userInfo = usersInfoRepository.findById(username).get();
+		if (userInfo.getStudent() != null)
+			userInfo.setRole(UserInfoEntity.Role.STUDENT);
+		else if (userInfo.getTeacher() != null)
+			userInfo.setRole(UserInfoEntity.Role.TEACHER);
+
+		return Optional.of(userInfo);
+	}
+
+	public StudentEntity getStudent(String username) {
+		return studentsRepository.findById(username).orElse(null);
+	}
+
+	public TeacherEntity getTeacher(String username) {
+		return teachersRepository.findById(username).orElse(null);
 	}
 
 	public static class UserAlreadyExistsException extends Exception {
@@ -42,7 +56,8 @@ public class UsersService {
 		String username, String password,
 		String securityQuestion, String securityAnswer,
 		String firstName, String lastName, UserInfoEntity.Gender gender,
-		String address, String phoneNumber, String emailAddress
+		String address, String phoneNumber, String emailAddress,
+		UserInfoEntity.Role role
 	) throws UserAlreadyExistsException {
 		if (usersRepository.findById(username).isPresent())
 			throw new UserAlreadyExistsException();
@@ -57,11 +72,12 @@ public class UsersService {
 				username,
 				securityQuestion, securityAnswer,
 				firstName, lastName, gender,
-				address, phoneNumber, emailAddress
+				address, phoneNumber, emailAddress,
+				role
 		);
 
 		usersRepository.save(user);
-		usersInfoRepository.save(userInfo);
+		usersInfoRepository.saveAndFlush(userInfo);
 
 		return userInfo;
 	}
@@ -73,15 +89,17 @@ public class UsersService {
 			String address, String phoneNumber, String emailAddress,
 			StudentEntity.SchoolType schoolType, int schoolYear
 	) throws UserAlreadyExistsException {
-		createUser(
+		var userInfo = createUser(
 			username, password,
 			securityQuestion, securityAnswer,
 			firstName, lastName, gender,
-			address, phoneNumber, emailAddress
+			address, phoneNumber, emailAddress,
+			UserInfoEntity.Role.STUDENT
 		);
 
 		var student = new StudentEntity(username, schoolType, schoolYear);
 		studentsRepository.save(student);
+		student.setInfo(userInfo);
 
 		return student;
 	}
@@ -91,17 +109,23 @@ public class UsersService {
 			String securityQuestion, String securityAnswer,
 			String firstName, String lastName, UserInfoEntity.Gender gender,
 			String address, String phoneNumber, String emailAddress,
-			Collection<String> subjects
+			Collection<String> subjects,
+			boolean teachesLowerElementary, boolean teachesUpperElementary, boolean teachesHigh
 	) throws UserAlreadyExistsException {
-		createUser(
+		var userInfo = createUser(
 			username, password,
 			securityQuestion, securityAnswer,
 			firstName, lastName, gender,
-			address, phoneNumber, emailAddress
+			address, phoneNumber, emailAddress,
+			UserInfoEntity.Role.TEACHER
 		);
 
-		var teacher = new TeacherEntity(username);
+		var teacher = new TeacherEntity(
+			username,
+			teachesLowerElementary, teachesUpperElementary, teachesHigh
+		);
 		teachersRepository.saveAndFlush(teacher);
+		teacher.setInfo(userInfo);
 
 		for (var subject : subjects) {
 			var teacherSubject = new TeacherSubjectEntity(teacher, subject);
@@ -109,9 +133,5 @@ public class UsersService {
 		}
 
 		return teacher;
-	}
-
-	public Collection<TeacherSubjectEntity> getTeacherEnrollments() {
-		return teacherSubjectRepository.findAll();
 	}
 }

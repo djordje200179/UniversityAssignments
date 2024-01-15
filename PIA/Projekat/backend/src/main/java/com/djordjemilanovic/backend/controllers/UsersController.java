@@ -2,17 +2,14 @@ package com.djordjemilanovic.backend.controllers;
 
 import com.djordjemilanovic.backend.models.StudentEntity;
 import com.djordjemilanovic.backend.models.TeacherEntity;
-import com.djordjemilanovic.backend.models.UserEntity;
 import com.djordjemilanovic.backend.models.UserInfoEntity;
 import com.djordjemilanovic.backend.services.UsersService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
-import java.util.Optional;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -21,7 +18,8 @@ import java.util.Optional;
 public class UsersController {
 	private final UsersService usersService;
 
-	public record SignInRequest(String username, String password) {}
+	public record SignInRequest(String username, String password) {
+	}
 
 	@PostMapping("/sign-in")
 	public ResponseEntity<UserInfoEntity> signIn(@RequestBody SignInRequest request) {
@@ -34,20 +32,22 @@ public class UsersController {
 	}
 
 	public record SignUpRequestUserInfo(
-		String firstName, String lastName,
-		String gender,
-		String securityQuestion, String securityAnswer,
-		String address,
-		String phoneNumber,
-		String email
-	) {}
+			String firstName, String lastName,
+			String gender,
+			String securityQuestion, String securityAnswer,
+			String address,
+			String phoneNumber,
+			String emailAddress
+	) {
+	}
 
 	public record SignUpStudentRequest(
-		SignInRequest credentials,
-		SignUpRequestUserInfo info,
-		String schoolType,
-		int schoolYear
-	) {}
+			SignInRequest credentials,
+			SignUpRequestUserInfo info,
+			String schoolType,
+			int schoolYear
+	) {
+	}
 
 	@PostMapping("/sign-up/student")
 	public ResponseEntity<UserInfoEntity> signUpStudent(@RequestBody SignUpStudentRequest request) {
@@ -59,11 +59,11 @@ public class UsersController {
 					request.credentials.username, request.credentials.password,
 					request.info.securityQuestion, request.info.securityAnswer,
 					request.info.firstName, request.info.lastName, gender,
-					request.info.address, request.info.phoneNumber, request.info.email,
+					request.info.address, request.info.phoneNumber, request.info.emailAddress,
 					schoolType, request.schoolYear
 			);
 
-			return ResponseEntity.ok(student.getUserInfo());
+			return ResponseEntity.ok(student.getInfo());
 		} catch (UsersService.UserAlreadyExistsException e) {
 			return ResponseEntity.status(HttpStatus.CONFLICT).build();
 		} catch (Exception e) {
@@ -72,10 +72,15 @@ public class UsersController {
 	}
 
 	public record SignUpTeacherRequest(
-		SignInRequest credentials,
-		SignUpRequestUserInfo info,
-		Collection<String> subjects
-	) {}
+			SignInRequest credentials,
+			SignUpRequestUserInfo info,
+			Collection<String> subjects,
+
+			boolean teachesLowerElementary,
+			boolean teachesUpperElementary,
+			boolean teachesHigh
+	) {
+	}
 
 	@PostMapping("/sign-up/teacher")
 	public ResponseEntity<UserInfoEntity> signUpTeacher(@RequestBody SignUpTeacherRequest request) {
@@ -86,13 +91,34 @@ public class UsersController {
 					request.credentials.username, request.credentials.password,
 					request.info.securityQuestion, request.info.securityAnswer,
 					request.info.firstName, request.info.lastName, gender,
-					request.info.address, request.info.phoneNumber, request.info.email,
-					request.subjects
+					request.info.address, request.info.phoneNumber, request.info.emailAddress,
+					request.subjects,
+					request.teachesLowerElementary, request.teachesUpperElementary, request.teachesHigh
 			);
 
-			return ResponseEntity.ok(teacher.getUserInfo());
+			return ResponseEntity.ok(teacher.getInfo());
 		} catch (UsersService.UserAlreadyExistsException e) {
 			return ResponseEntity.status(HttpStatus.CONFLICT).build();
+		} catch (Exception e) {
+			return ResponseEntity.internalServerError().build();
+		}
+	}
+
+	@GetMapping("/student/{username}")
+	public ResponseEntity<StudentEntity> getStudent(@PathVariable String username) {
+		try {
+			var student = usersService.getStudent(username);
+			return ResponseEntity.ok(student);
+		} catch (Exception e) {
+			return ResponseEntity.internalServerError().build();
+		}
+	}
+
+	@GetMapping("/teacher/{username}")
+	public ResponseEntity<TeacherEntity> getTeacher(@PathVariable String username) {
+		try {
+			var teacher = usersService.getTeacher(username);
+			return ResponseEntity.ok(teacher);
 		} catch (Exception e) {
 			return ResponseEntity.internalServerError().build();
 		}

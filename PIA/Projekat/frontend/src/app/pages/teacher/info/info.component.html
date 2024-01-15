@@ -1,0 +1,13 @@
+<mat-card *ngIf="teacherInfo">
+	<mat-card-header>
+		<mat-card-title>
+			{{teacherInfo.info.firstName}} {{teacherInfo.info.lastName}}
+		</mat-card-title>
+	</mat-card-header>
+	<mat-card-content>
+		<mat-divider />
+		<mat-card-subtitle>Контакт</mat-card-subtitle>
+		<p>Телефон: {{teacherInfo.info.phoneNumber}}</p>
+		<p>Email: {{teacherInfo.info.emailAddress}}</p>
+	</mat-card-content>
+</mat-card>

@@ -1,5 +1,6 @@
 package com.djordjemilanovic.backend.models;
 
+import com.fasterxml.jackson.annotation.JsonValue;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnTransformer;
@@ -12,7 +13,12 @@ import org.hibernate.annotations.ColumnTransformer;
 @Table(name = "students", schema = "pia")
 public class StudentEntity {
 	public enum SchoolType {
-		ELEMENTARY, GYMNASIUM, SPECIALIZED, ART
+		ELEMENTARY, GYMNASIUM, SPECIALIZED, ART;
+
+		@JsonValue
+		public String toLowerCase() {
+			return toString().toLowerCase();
+		}
 	}
 
 	@Id
@@ -29,7 +35,7 @@ public class StudentEntity {
 
 	@OneToOne
 	@JoinColumn(name = "username", referencedColumnName = "username")
-	private UserInfoEntity userInfo;
+	private UserInfoEntity info;
 
 	public StudentEntity(String username, SchoolType schoolType, int schoolYear) {
 		this.username = username;

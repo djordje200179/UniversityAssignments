@@ -1,8 +1,10 @@
-import {Component, OnInit} from "@angular/core";
+import {Component} from "@angular/core";
 import {MatToolbarModule} from "@angular/material/toolbar";
 import {MatIconModule} from "@angular/material/icon";
 import {MatButtonModule} from "@angular/material/button";
 import {RouterLink} from "@angular/router";
+import {UserInfo, UsersService} from "../../services/users.service";
+import {NgIf} from "@angular/common";
 
 @Component({
 	selector: "app-header",
@@ -13,13 +15,19 @@ import {RouterLink} from "@angular/router";
 		MatToolbarModule,
 		MatIconModule,
 		MatButtonModule,
-		RouterLink
+		RouterLink,
+		NgIf
 	]
 })
-export class HeaderComponent implements OnInit {
-	public username? : string;
+export class HeaderComponent {
+	public currentUser: UserInfo | null;
 
-	public ngOnInit() {
-		console.log(localStorage.getItem("username"));
+	public constructor(private readonly usersService: UsersService) {
+		this.currentUser = this.usersService.getCurrentUser();
+	}
+
+	public signOut() {
+		this.usersService.signOut();
+		window.location.reload();
 	}
 }

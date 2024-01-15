@@ -1,8 +1,9 @@
-<div class="grid">
-	<div class="column">
-		<app-sign-in-form (signIn)="onSignIn($event)"/>
-	</div>
-	<div class="column">
-		<app-sign-up-form (signUpStudent)="onSignUpStudent($event)" (signUpTeacher)="onSignUpTeacher($event)"/>
-	</div>
-</div>
+<main *ngIf="loggedUser; then accountInfo else login"></main>
+
+<ng-template #login>
+	<app-login />
+</ng-template>
+
+<ng-template #accountInfo>
+	<app-edit-form />
+</ng-template>

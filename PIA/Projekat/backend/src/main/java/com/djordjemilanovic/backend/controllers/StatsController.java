@@ -1,7 +1,7 @@
 package com.djordjemilanovic.backend.controllers;
 
 import com.djordjemilanovic.backend.services.StatsService;
-import com.djordjemilanovic.backend.services.UsersService;
+import com.djordjemilanovic.backend.services.TeachersService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,7 +19,7 @@ import java.util.Map;
 @AllArgsConstructor
 public class StatsController {
 	private final StatsService statsService;
-	private final UsersService usersService;
+	private final TeachersService teachersService;
 
 	@GetMapping("/counters")
 	public StatsService.Counters getCounters() {
@@ -30,11 +30,11 @@ public class StatsController {
 	public Map<String, Collection<String>> getEnrollments() {
 		var enrollments = new HashMap<String, Collection<String>>();
 
-		for (var enrollment : usersService.getTeacherEnrollments()) {
+		for (var enrollment : teachersService.getEnrollments()) {
 			var teacher = enrollment.getId().getTeacher();
 			var subject = enrollment.getId().getSubject();
 
-			var teacherFullName = teacher.getUserInfo().getFirstName() + " " + teacher.getUserInfo().getLastName();
+			var teacherFullName = teacher.getInfo().getFirstName() + " " + teacher.getInfo().getLastName();
 
 			if (!enrollments.containsKey(teacherFullName))
 				enrollments.put(teacherFullName, new ArrayList<>());

@@ -29,7 +29,7 @@ export class EnrollmentsComponent implements OnInit {
 	}
 
 	@ViewChild(MatSort)
-	sort?: MatSort;
+	public sort?: MatSort;
 
 	public ngOnInit() {
 		this.statsService.getEnrollments().subscribe(
@@ -51,7 +51,7 @@ export class EnrollmentsComponent implements OnInit {
 
 				this.tableData = source;
 			},
-			alert
+			console.error
 		);
 	}
 }

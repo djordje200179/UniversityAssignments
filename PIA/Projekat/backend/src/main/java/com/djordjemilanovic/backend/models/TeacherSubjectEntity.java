@@ -1,5 +1,6 @@
 package com.djordjemilanovic.backend.models;
 
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -27,6 +28,7 @@ public class TeacherSubjectEntity {
 	}
 
 	@Id
+	@JsonUnwrapped
 	private TeacherSubjectID id;
 
 	public TeacherSubjectEntity(TeacherEntity teacher, String subject) {

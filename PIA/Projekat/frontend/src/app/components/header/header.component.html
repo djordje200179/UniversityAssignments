@@ -4,10 +4,18 @@
 	</button>
 	<span>Мој најдражи наставник</span>
 
+	<button mat-button routerLink="/teachers" class="nav-link" *ngIf="currentUser?.role === 'student'">
+		Наставници
+	</button>
+
 	<span class="spacer"></span>
 
-	<button mat-icon-button routerLink="/account">
+	<button mat-button routerLink="/account">
+		{{currentUser?.username}}
 		<mat-icon>person</mat-icon>
+	</button>
 
+	<button mat-icon-button (click)="signOut()" *ngIf="currentUser">
+		<mat-icon>exit_to_app</mat-icon>
 	</button>
 </mat-toolbar>

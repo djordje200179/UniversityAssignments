@@ -63,7 +63,7 @@
 
 			<mat-form-field appearance="outline">
 				<mat-label>И-мејл адреса</mat-label>
-				<input matInput [(ngModel)]="userInfo.email" name="email"
+				<input matInput [(ngModel)]="userInfo.emailAddress" name="email"
 				       type="email" required>
 			</mat-form-field>
 
@@ -80,7 +80,7 @@
 
 			<mat-button-toggle-group name="role" [(ngModel)]="userInfo.role">
 				<mat-button-toggle value="student">Ученик</mat-button-toggle>
-				<mat-button-toggle value="teacher">Професор</mat-button-toggle>
+				<mat-button-toggle value="teacher">Наставник</mat-button-toggle>
 			</mat-button-toggle-group>
 
 			<div [ngSwitch]="userInfo.role">
@@ -123,8 +123,10 @@
 
 					<mat-form-field appearance="outline">
 						<mat-label>Узраст дијеце</mat-label>
-						<mat-select multiple required>
-							<mat-option *ngFor="let ageGroup of possibleGroups" [value]="ageGroup">{{ageGroup}}</mat-option>
+						<mat-select [(ngModel)]="ageGroups" multiple required name="age-groups">
+							<mat-option value="lowerElementary">Нижи основци</mat-option>
+							<mat-option value="upperElementary">Виши основци</mat-option>
+							<mat-option value="high">Средњошколци</mat-option>
 						</mat-select>
 					</mat-form-field>
 

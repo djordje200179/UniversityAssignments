@@ -17,18 +17,19 @@ export enum Gender {
 }
 
 export interface UserInfo {
-	role : Role;
+	username?: string;
+	role?: Role;
 
 	firstName: string;
 	lastName: string;
 	gender: Gender;
 
-	securityQuestion: string;
+	securityQuestion?: string;
 	securityAnswer?: string;
 
 	address: string;
 	phoneNumber: string;
-	email: string;
+	emailAddress: string;
 
 	profileImage?: File;
 	profileImageURL?: string;
@@ -50,11 +51,15 @@ export interface StudentInfo {
 }
 
 export interface TeacherInfo {
-	credentials: Credentials;
+	credentials?: Credentials;
 	info: UserInfo;
 
 	biography?: File;
 	subjects: string[];
+
+	teachesLowerElementary: boolean;
+	teachesUpperElementary: boolean;
+	teachesHigh: boolean;
 }
 
 @Injectable({
@@ -77,5 +82,41 @@ export class UsersService {
 
 	public signUpTeacher(teacherInfo: TeacherInfo) {
 		return this.httpClient.post<TeacherInfo>(`${(UsersService.SERVER_URL)}/sign-up/teacher`, teacherInfo);
+	}
+
+	public getCurrentUser() {
+		const json = localStorage.getItem("user-info");
+		if (json === null)
+			return null;
+
+		return JSON.parse(json) as UserInfo;
+	}
+
+	public getCurrentUserStudentInfo() {
+		const json = localStorage.getItem("student-info");
+		if (json === null)
+			return null;
+
+		return JSON.parse(json) as StudentInfo;
+	}
+
+	public getCurrentUserTeacherInfo() {
+		const json = localStorage.getItem("teacher-info");
+		if (json === null)
+			return null;
+
+		return JSON.parse(json) as TeacherInfo;
+	}
+
+	public signOut() {
+		localStorage.removeItem("user-info");
+	}
+
+	public getStudentInfo(username: string) {
+		return this.httpClient.get<StudentInfo>(`${(UsersService.SERVER_URL)}/student/${username}`);
+	}
+
+	public getTeacherInfo(username: string) {
+		return this.httpClient.get<TeacherInfo>(`${(UsersService.SERVER_URL)}/teacher/${username}`);
 	}
 }

@@ -2,8 +2,8 @@ import {Component, EventEmitter, Output} from "@angular/core";
 import {MatInputModule} from "@angular/material/input";
 import {MatIconModule} from "@angular/material/icon";
 import {MatButtonModule} from "@angular/material/button";
-import {FormControl, FormsModule} from "@angular/forms";
-import {Credentials, Role, SchoolType, StudentInfo, TeacherInfo, UserInfo} from "../../../services/users.service";
+import {FormsModule} from "@angular/forms";
+import {Credentials, Role, SchoolType, StudentInfo, TeacherInfo, UserInfo} from "../../../../services/users.service";
 import {MatSelectModule} from "@angular/material/select";
 import {MatButtonToggleModule} from "@angular/material/button-toggle";
 import {NgForOf, NgSwitch, NgSwitchCase} from "@angular/common";
@@ -43,7 +43,7 @@ export class SignUpFormComponent {
 		securityQuestion: "",
 
 		address: "",
-		email: "",
+		emailAddress: "",
 		phoneNumber: "",
 		gender: null!
 	};
@@ -74,18 +74,20 @@ export class SignUpFormComponent {
 		info: this.userInfo,
 
 		biography: null!,
-		subjects: [] as string[]
+		subjects: [] as string[],
+
+		teachesLowerElementary: false,
+		teachesUpperElementary: false,
+		teachesHigh: false
 	}
+
+	public ageGroups: string[] = [];
 
 	public readonly possibleSubjects = [
 		"Математика", "Физика", "Хемија", "Информатика", "Програмирање",
 		"Српски језик и књижевност", "Енглески језик", "Немачки језик", "Италијански језик",
 		"Француски језик", "Шпански језик", "Латински језик", "Биологија", "Историја",
 		"Географија", "Свет око нас"
-	];
-
-	public readonly possibleGroups = [
-		"Нижи основци", "Виши основци", "Средњошколци"
 	];
 
 	@Output()
@@ -113,6 +115,10 @@ export class SignUpFormComponent {
 	}
 
 	public onSignUp() {
+		this.teacherInfo.teachesLowerElementary = this.ageGroups.includes("lowerElementary");
+		this.teacherInfo.teachesUpperElementary = this.ageGroups.includes("upperElementary");
+		this.teacherInfo.teachesHigh = this.ageGroups.includes("high");
+
 		if (this.userInfo.role === Role.Student)
 			this.signUpStudent.emit(this.studentInfo);
 		else

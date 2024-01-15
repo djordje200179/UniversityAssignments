@@ -22,10 +22,8 @@ export class StatsComponent implements OnInit {
 
 	public ngOnInit() {
 		this.statsService.getCounters().subscribe(
-			stats => {
-				this.stats = stats;
-			},
-			alert
+			stats => this.stats = stats,
+			console.error
 		);
 	}
 }
