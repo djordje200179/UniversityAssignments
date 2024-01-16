@@ -3,11 +3,17 @@ package com.djordjemilanovic.backend.controllers;
 import com.djordjemilanovic.backend.models.StudentEntity;
 import com.djordjemilanovic.backend.models.TeacherEntity;
 import com.djordjemilanovic.backend.models.UserInfoEntity;
+import com.djordjemilanovic.backend.services.FileStorageService;
 import com.djordjemilanovic.backend.services.UsersService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
+import lombok.SneakyThrows;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Collection;
 
@@ -17,6 +23,8 @@ import java.util.Collection;
 @AllArgsConstructor
 public class UsersController {
 	private final UsersService usersService;
+	private final ObjectMapper mapper;
+	private final FileStorageService fileStorageService;
 
 	public record SignInRequest(String username, String password) {
 	}
@@ -27,6 +35,7 @@ public class UsersController {
 			var user = usersService.find(request.username, request.password);
 			return user.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
 		} catch (Exception e) {
+			e.printStackTrace();
 			return ResponseEntity.internalServerError().build();
 		}
 	}
@@ -49,8 +58,13 @@ public class UsersController {
 	) {
 	}
 
-	@PostMapping("/sign-up/student")
-	public ResponseEntity<UserInfoEntity> signUpStudent(@RequestBody SignUpStudentRequest request) {
+	@SneakyThrows
+	@PostMapping(value = "/sign-up/student", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<UserInfoEntity> signUpStudent(
+			@RequestPart(value = "profile-image", required = false) MultipartFile profileImage,
+			@RequestPart("data") String jsonData) {
+		var request = mapper.readValue(jsonData, SignUpStudentRequest.class);
+
 		var gender = UserInfoEntity.Gender.valueOf(request.info.gender.toUpperCase());
 		var schoolType = StudentEntity.SchoolType.valueOf(request.schoolType.toUpperCase());
 
@@ -63,10 +77,16 @@ public class UsersController {
 					schoolType, request.schoolYear
 			);
 
+			if (profileImage != null)
+				fileStorageService.saveProfileImage(profileImage, request.credentials.username);
+			else
+				fileStorageService.saveGenericProfileImage(request.credentials.username);
+
 			return ResponseEntity.ok(student.getInfo());
 		} catch (UsersService.UserAlreadyExistsException e) {
 			return ResponseEntity.status(HttpStatus.CONFLICT).build();
 		} catch (Exception e) {
+			e.printStackTrace();
 			return ResponseEntity.internalServerError().build();
 		}
 	}
@@ -82,8 +102,14 @@ public class UsersController {
 	) {
 	}
 
-	@PostMapping("/sign-up/teacher")
-	public ResponseEntity<UserInfoEntity> signUpTeacher(@RequestBody SignUpTeacherRequest request) {
+	@SneakyThrows
+	@PostMapping(value = "/sign-up/teacher", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<UserInfoEntity> signUpTeacher(
+			@RequestPart("biography") MultipartFile biography,
+			@RequestPart(value = "profile-image", required = false) MultipartFile profileImage,
+			@RequestPart("data") String jsonData) {
+		var request = mapper.readValue(jsonData, SignUpTeacherRequest.class);
+
 		var gender = UserInfoEntity.Gender.valueOf(request.info.gender.toUpperCase());
 
 		try {
@@ -96,10 +122,17 @@ public class UsersController {
 					request.teachesLowerElementary, request.teachesUpperElementary, request.teachesHigh
 			);
 
+			fileStorageService.saveBiography(biography, request.credentials.username);
+			if (profileImage != null)
+				fileStorageService.saveProfileImage(profileImage, request.credentials.username);
+			else
+				fileStorageService.saveGenericProfileImage(request.credentials.username);
+
 			return ResponseEntity.ok(teacher.getInfo());
 		} catch (UsersService.UserAlreadyExistsException e) {
 			return ResponseEntity.status(HttpStatus.CONFLICT).build();
 		} catch (Exception e) {
+			e.printStackTrace();
 			return ResponseEntity.internalServerError().build();
 		}
 	}
@@ -110,6 +143,7 @@ public class UsersController {
 			var student = usersService.getStudent(username);
 			return ResponseEntity.ok(student);
 		} catch (Exception e) {
+			e.printStackTrace();
 			return ResponseEntity.internalServerError().build();
 		}
 	}
@@ -120,7 +154,15 @@ public class UsersController {
 			var teacher = usersService.getTeacher(username);
 			return ResponseEntity.ok(teacher);
 		} catch (Exception e) {
+			e.printStackTrace();
 			return ResponseEntity.internalServerError().build();
 		}
+	}
+
+	@SneakyThrows
+	@GetMapping(value="/profile-image/{username}", produces = MediaType.IMAGE_PNG_VALUE)
+	public @ResponseBody byte[] getProfileImage(@PathVariable String username) {
+		var resource = fileStorageService.loadProfileImage(username);
+		return resource.getInputStream().readAllBytes();
 	}
 }

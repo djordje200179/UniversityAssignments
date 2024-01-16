@@ -3,8 +3,12 @@
 		<mat-card-title>
 			{{teacherInfo.info.firstName}} {{teacherInfo.info.lastName}}
 		</mat-card-title>
+
 	</mat-card-header>
 	<mat-card-content>
+		<mat-divider />
+		<img mat-card-image [src]="teacherProfileImageURL" alt="Teacher profile image">
+
 		<mat-divider />
 		<mat-card-subtitle>Контакт</mat-card-subtitle>
 		<p>Телефон: {{teacherInfo.info.phoneNumber}}</p>

@@ -11,6 +11,8 @@ import {MatButtonModule} from "@angular/material/button";
 import {MatIconModule} from "@angular/material/icon";
 import {MatCardModule} from "@angular/material/card";
 import {MatDividerModule} from "@angular/material/divider";
+import {InfoComponent} from "./info/info.component";
+import {ProfileImageComponent} from "./profile-image/profile-image.component";
 
 @Component({
 	selector: "app-edit-form",
@@ -27,19 +29,13 @@ import {MatDividerModule} from "@angular/material/divider";
 		MatButtonModule,
 		MatIconModule,
 		MatCardModule,
-		MatDividerModule
+		MatDividerModule,
+		InfoComponent,
+		ProfileImageComponent
 	],
 	templateUrl: "./edit-account.component.html",
 	styleUrls: ["./edit-account.component.scss"]
 })
 export class EditAccountComponent {
-	public userInfo: UserInfo;
-	public studentInfo: StudentInfo;
-	public teacherInfo: TeacherInfo;
 
-	public constructor(private readonly usersService: UsersService) {
-		this.userInfo = usersService.getCurrentUser()!;
-		this.studentInfo = usersService.getCurrentUserStudentInfo() ?? {} as StudentInfo;
-		this.teacherInfo = usersService.getCurrentUserTeacherInfo() ?? {} as TeacherInfo;
-	}
 }

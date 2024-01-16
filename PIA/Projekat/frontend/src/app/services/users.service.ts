@@ -32,7 +32,6 @@ export interface UserInfo {
 	emailAddress: string;
 
 	profileImage?: File;
-	profileImageURL?: string;
 }
 
 export enum SchoolType {
@@ -77,11 +76,25 @@ export class UsersService {
 	}
 
 	public signUpStudent(studentInfo: StudentInfo) {
-		return this.httpClient.post<StudentInfo>(`${(UsersService.SERVER_URL)}/sign-up/student`, studentInfo);
+		const formData = new FormData();
+		if (studentInfo.info.profileImage)
+			formData.append("profile-image", studentInfo.info.profileImage as Blob);
+
+		formData.append("data", JSON.stringify(studentInfo));
+
+		return this.httpClient.post<StudentInfo>(`${(UsersService.SERVER_URL)}/sign-up/student`, formData);
 	}
 
 	public signUpTeacher(teacherInfo: TeacherInfo) {
-		return this.httpClient.post<TeacherInfo>(`${(UsersService.SERVER_URL)}/sign-up/teacher`, teacherInfo);
+		const formData = new FormData();
+		if (teacherInfo.info.profileImage)
+			formData.append("profile-image", teacherInfo.info.profileImage as Blob);
+
+		formData.append("biography", teacherInfo.biography as Blob);
+
+		formData.append("data", JSON.stringify(teacherInfo));
+
+		return this.httpClient.post<TeacherInfo>(`${(UsersService.SERVER_URL)}/sign-up/teacher`, formData);
 	}
 
 	public getCurrentUser() {
@@ -118,5 +131,9 @@ export class UsersService {
 
 	public getTeacherInfo(username: string) {
 		return this.httpClient.get<TeacherInfo>(`${(UsersService.SERVER_URL)}/teacher/${username}`);
+	}
+
+	public getProfileImageURL(username: string) {
+		return `${(UsersService.SERVER_URL)}/profile-image/${username}`;
 	}
 }
