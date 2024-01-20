@@ -1,14 +1,19 @@
 package com.djordjemilanovic.backend.services;
 
+import com.djordjemilanovic.backend.repositories.StudentsRepository;
+import com.djordjemilanovic.backend.repositories.TeachersRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
 public class StatsService {
+	private final StudentsRepository studentsRepository;
+	private final TeachersRepository teachersRepository;
+
 	public record Counters(
-		int numberOfStudents,
-		int numberOfTeachers,
+		long numberOfStudents,
+		long numberOfTeachers,
 
 		int numberOfClassesLastWeek,
 		int numberOfClassesLastMonth
@@ -16,7 +21,7 @@ public class StatsService {
 
 	public Counters getCounters() {
 		return new Counters(
-			50, 100,
+			studentsRepository.count(), teachersRepository.countByActivatedIsTrue(),
 			10, 20
 		);
 	}

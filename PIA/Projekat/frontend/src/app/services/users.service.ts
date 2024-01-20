@@ -59,6 +59,8 @@ export interface TeacherInfo {
 	teachesLowerElementary: boolean;
 	teachesUpperElementary: boolean;
 	teachesHigh: boolean;
+
+	activated?: boolean;
 }
 
 @Injectable({

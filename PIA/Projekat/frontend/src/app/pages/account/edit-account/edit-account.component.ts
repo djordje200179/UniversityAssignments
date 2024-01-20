@@ -1,4 +1,4 @@
-import {Component} from "@angular/core";
+import {Component, Input} from "@angular/core";
 import {CommonModule} from "@angular/common";
 import {MatButtonToggleModule} from "@angular/material/button-toggle";
 import {MatFormFieldModule} from "@angular/material/form-field";
@@ -37,5 +37,9 @@ import {ProfileImageComponent} from "./profile-image/profile-image.component";
 	styleUrls: ["./edit-account.component.scss"]
 })
 export class EditAccountComponent {
+	@Input()
+	studentInfo?: StudentInfo;
 
+	@Input()
+	teacherInfo?: TeacherInfo;
 }

@@ -8,7 +8,9 @@ import java.util.Collection;
 
 @Repository
 public interface TeachersRepository extends JpaRepository<TeacherEntity, String> {
-	Collection<TeacherEntity> findAllByTeachesLowerElementaryIsTrue();
-	Collection<TeacherEntity> findAllByTeachesUpperElementaryIsTrue();
-	Collection<TeacherEntity> findAllByTeachesHighIsTrue();
+	Collection<TeacherEntity> findAllByTeachesLowerElementaryIsTrueAndActivatedIsTrue();
+	Collection<TeacherEntity> findAllByTeachesUpperElementaryIsTrueAndActivatedIsTrue();
+	Collection<TeacherEntity> findAllByTeachesHighIsTrueAndActivatedIsTrue();
+
+	long countByActivatedIsTrue();
 }

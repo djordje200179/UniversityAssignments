@@ -16,9 +16,4 @@ public class DebugController {
 	public String ping() {
 		return "pong";
 	}
-
-	@GetMapping("/db-info")
-	public String dbInfo() {
-		return "Size:" + usersService.getAll().size();
-	}
 }

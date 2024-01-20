@@ -1,4 +1,4 @@
-import {Component} from "@angular/core";
+import {Component, Input} from "@angular/core";
 import {CommonModule} from "@angular/common";
 import {FormsModule} from "@angular/forms";
 import {MatButtonModule} from "@angular/material/button";
@@ -17,12 +17,14 @@ import {StudentInfo, TeacherInfo, UserInfo, UsersService} from "../../../../serv
 })
 export class InfoComponent {
 	public userInfo: UserInfo;
-	public studentInfo: StudentInfo;
-	public teacherInfo: TeacherInfo;
+
+	@Input()
+	public studentInfo?: StudentInfo;
+
+	@Input()
+	public teacherInfo?: TeacherInfo;
 
 	public constructor(private readonly usersService: UsersService) {
 		this.userInfo = usersService.getCurrentUser()!;
-		this.studentInfo = usersService.getCurrentUserStudentInfo() ?? {} as StudentInfo;
-		this.teacherInfo = usersService.getCurrentUserTeacherInfo() ?? {} as TeacherInfo;
 	}
 }

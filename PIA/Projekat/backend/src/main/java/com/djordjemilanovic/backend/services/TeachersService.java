@@ -16,17 +16,17 @@ public class TeachersService {
 	private final TeachersRepository teachersRepository;
 
 	public Collection<TeacherSubjectEntity> getEnrollments() {
-		return teacherSubjectRepository.findAll();
+		return teacherSubjectRepository.findAllByIdTeacherActivatedIsTrue();
 	}
 
 	public Collection<TeacherSubjectEntity> getEnrollments(int schoolYear) {
 		Collection<TeacherEntity> teachers;
 		if (schoolYear < 5)
-			teachers = teachersRepository.findAllByTeachesLowerElementaryIsTrue();
+			teachers = teachersRepository.findAllByTeachesLowerElementaryIsTrueAndActivatedIsTrue();
 		else if (schoolYear < 9)
-			teachers = teachersRepository.findAllByTeachesUpperElementaryIsTrue();
+			teachers = teachersRepository.findAllByTeachesUpperElementaryIsTrueAndActivatedIsTrue();
 		else if (schoolYear < 13)
-			teachers = teachersRepository.findAllByTeachesHighIsTrue();
+			teachers = teachersRepository.findAllByTeachesHighIsTrueAndActivatedIsTrue();
 		else
 			throw new IllegalArgumentException("Invalid school year");
 

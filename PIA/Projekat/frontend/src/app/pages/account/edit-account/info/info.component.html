@@ -37,22 +37,30 @@
 			</div>
 
 			<div class="column">
-				<mat-form-field appearance="outline">
-					<mat-label>Школа</mat-label>
-					<input matInput [(ngModel)]="studentInfo.schoolType" name="school-type"
-					       type="email" disabled>
-				</mat-form-field>
-
-				<div class="year-container">
-					<mat-form-field appearance="outline" class="year-input">
-						<mat-label>Разред</mat-label>
-						<input matInput [(ngModel)]="studentInfo.schoolYear" name="school-year"
-						       type="text" disabled>
+				<div *ngIf="studentInfo">
+					<mat-form-field appearance="outline">
+						<mat-label>Школа</mat-label>
+						<input matInput [(ngModel)]="studentInfo.schoolType" name="school-type"
+						       type="email" disabled>
 					</mat-form-field>
 
-					<button mat-mini-fab class="year-incrementer">
-						<mat-icon>exposure_plus_1</mat-icon>
-					</button>
+					<div class="year-container">
+						<mat-form-field appearance="outline" class="year-input">
+							<mat-label>Разред</mat-label>
+							<input matInput [(ngModel)]="studentInfo.schoolYear" name="school-year"
+							       type="text" disabled>
+						</mat-form-field>
+
+						<button mat-mini-fab class="year-incrementer">
+							<mat-icon>exposure_plus_1</mat-icon>
+						</button>
+					</div>
+				</div>
+				<div *ngIf="teacherInfo">
+					<h2 *ngIf="!teacherInfo.activated" class="not-activated">
+						Ваш профил није активиран! Нисте у могућности да држите часове док се профил не одобри
+						од стране администратора.
+					</h2>
 				</div>
 			</div>
 		</div>

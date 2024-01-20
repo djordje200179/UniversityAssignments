@@ -9,4 +9,6 @@ import java.util.Collection;
 public interface TeacherSubjectsRepository extends JpaRepository<TeacherSubjectEntity, TeacherSubjectEntity.TeacherSubjectID> {
 	Collection<TeacherSubjectEntity> findAllByIdTeacherIn(Collection<TeacherEntity> teachers);
 	Collection<TeacherSubjectEntity> findAllByIdTeacherUsername(String username);
+
+	Collection<TeacherSubjectEntity> findAllByIdTeacherActivatedIsTrue();
 }

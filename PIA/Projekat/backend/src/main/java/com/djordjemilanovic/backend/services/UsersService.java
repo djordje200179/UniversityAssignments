@@ -18,10 +18,6 @@ public class UsersService {
 	private final TeachersRepository teachersRepository;
 	private final TeacherSubjectsRepository teacherSubjectRepository;
 
-	public List<UserEntity> getAll() {
-		return usersRepository.findAll();
-	}
-
 	public Optional<UserInfoEntity> find(String username, String password) {
 		var passwordHash = password;
 

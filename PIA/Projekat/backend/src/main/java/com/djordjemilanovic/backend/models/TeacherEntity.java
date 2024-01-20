@@ -30,6 +30,10 @@ public class TeacherEntity {
 	@Column(name = "teaches-high")
 	private boolean teachesHigh;
 
+	@Basic
+	@Column(name = "activated")
+	private boolean activated;
+
 	@OneToMany
 	@JoinColumn(name = "username", referencedColumnName = "username")
 	@JsonIgnore
@@ -47,5 +51,6 @@ public class TeacherEntity {
 		this.teachesLowerElementary = teachesLowerElementary;
 		this.teachesUpperElementary = teachesUpperElementary;
 		this.teachesHigh = teachesHigh;
+		this.activated = false;
 	}
 }
