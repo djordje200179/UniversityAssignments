@@ -53,4 +53,9 @@ public class TeacherEntity {
 		this.teachesHigh = teachesHigh;
 		this.activated = false;
 	}
+
+	@OneToMany
+	@JoinColumn(name = "teacher", referencedColumnName = "username")
+	@JsonIgnore
+	private Set<ClassEntity> classes;
 }

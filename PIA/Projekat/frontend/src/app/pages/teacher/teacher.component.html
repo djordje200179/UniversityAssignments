@@ -1,9 +1,10 @@
 <main class="grid">
 	<aside>
 		<app-info [teacherInfo]="teacherInfo" />
-		<app-subjects [teacherUsername]="teacherUsername" />
+		<app-subjects [subjects]="teacherSubjects" />
 	</aside>
-	<div>
+	<section>
+		<app-schedule-form [teacherInfo]="teacherInfo" [teacherSubjects]="teacherSubjects" />
 		<app-ratings />
-	</div>
+	</section>
 </main>

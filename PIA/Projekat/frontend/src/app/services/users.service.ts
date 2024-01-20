@@ -115,14 +115,6 @@ export class UsersService {
 		return JSON.parse(json) as StudentInfo;
 	}
 
-	public getCurrentUserTeacherInfo() {
-		const json = localStorage.getItem("teacher-info");
-		if (json === null)
-			return null;
-
-		return JSON.parse(json) as TeacherInfo;
-	}
-
 	public signOut() {
 		localStorage.removeItem("user-info");
 	}

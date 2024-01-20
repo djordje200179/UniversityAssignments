@@ -1,0 +1,16 @@
+form {
+	display: flex;
+	gap: 20px;
+}
+
+.topic {
+	flex: 1;
+}
+
+.date-picker {
+
+}
+
+.date-picker > mat-form-field {
+	display: block;
+}

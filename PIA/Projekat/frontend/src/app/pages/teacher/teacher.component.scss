@@ -4,10 +4,14 @@
 	gap: 20px;
 }
 
-aside {
+aside, section {
 	display: flex;
 	flex-direction: column;
 	gap: 20px;
+}
+
+section {
+	flex: 1;
 }
 
 app-subjects {

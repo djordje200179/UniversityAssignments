@@ -1,7 +1,15 @@
+main {
+	padding-top: 50px;
+}
+
 .container {
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	gap: 50px;
-	padding-top: 100px;
+}
+
+.not-activated {
+	color: red;
+	text-align: center;
 }

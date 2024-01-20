@@ -1,4 +1,12 @@
-<div class="container">
-	<app-profile-image />
-	<app-info [studentInfo]="studentInfo" [teacherInfo]="teacherInfo" />
-</div>
+<main>
+	<h2 *ngIf="teacherInfo && teacherInfo.activated" class="not-activated">
+		Ваш профил није активиран!
+		<br>
+		Нисте у могућности да држите часове док се профил не одобри од стране администратора.
+	</h2>
+
+	<div class="container">
+		<app-profile-image />
+		<app-info [studentInfo]="studentInfo" [teacherInfo]="teacherInfo" />
+	</div>
+</main>
