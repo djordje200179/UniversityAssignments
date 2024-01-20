@@ -7,9 +7,9 @@ import {MatNativeDateModule} from "@angular/material/core";
 import {MatSelectModule} from "@angular/material/select";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {TeacherInfo, UsersService} from "src/app/services/users.service";
-import {ScheduleRequest, TeachersService} from "../../../services/teachers.service";
 import {FormsModule} from "@angular/forms";
 import {MatButtonModule} from "@angular/material/button";
+import {ClassesService, ScheduleRequest} from "../../../services/classes.service";
 
 @Component({
 	selector: "app-schedule-form",
@@ -38,7 +38,7 @@ export class ScheduleFormComponent implements OnChanges {
 
 	public chosenTime : { hour: number, minute: number } = {hour: 8, minute: 0};
 
-	public constructor(private readonly usersService: UsersService, private readonly teachersService: TeachersService) {
+	public constructor(private readonly usersService: UsersService, private readonly classesService: ClassesService) {
 		this.scheduleRequest.student = this.usersService.getCurrentUser()!.username!;
 
 		this.availableTimes = [];
@@ -70,7 +70,7 @@ export class ScheduleFormComponent implements OnChanges {
 
 	public submit() {
 		this.scheduleRequest.time.setHours(this.chosenTime.hour, this.chosenTime.minute, 0, 0);
-		this.teachersService.scheduleClass(this.scheduleRequest).subscribe(
+		this.classesService.scheduleClass(this.scheduleRequest).subscribe(
 			result => {
 				alert("Час је успјешно заказан!")
 			},

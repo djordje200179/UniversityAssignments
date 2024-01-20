@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.sql.Timestamp;
-import java.util.Date;
 
 @Setter
 @Getter
@@ -42,6 +41,26 @@ public class ClassEntity {
 	@Column(name = "is_double")
 	private boolean isDouble;
 
+	@Basic
+	@Column(name = "confirmed")
+	private boolean confirmed;
+
+	@Basic
+	@Column(name = "cancelled")
+	private boolean cancelled;
+
+	@Column(name = "teacher_comment")
+	private String teacherComment;
+
+	@Column(name = "student_comment")
+	private String studentComment;
+
+	@Column(name = "student_rating")
+	private Integer studentRating;
+
+	@Column(name = "teacher_rating")
+	private Integer teacherRating;
+
 	@ManyToOne
 	@JoinColumn(name = "teacher", referencedColumnName = "username", insertable = false, updatable = false)
 	private TeacherEntity teacher;
@@ -57,5 +76,12 @@ public class ClassEntity {
 		this.topic = topic;
 		this.time = time;
 		this.isDouble = isDouble;
+
+		this.confirmed = false;
+		this.cancelled = false;
+		this.teacherComment = null;
+		this.studentComment = null;
+		this.studentRating = null;
+		this.teacherRating = null;
 	}
 }

@@ -1,0 +1,46 @@
+<h1>Одржани часови</h1>
+
+<table mat-table [dataSource]="tableData ?? []">
+	<ng-container matColumnDef="teacherName">
+		<th mat-header-cell *matHeaderCellDef>Наставник</th>
+		<td mat-cell *matCellDef="let element">{{element.teacherName}}</td>
+	</ng-container>
+
+	<ng-container matColumnDef="subject">
+		<th mat-header-cell *matHeaderCellDef>Предмет</th>
+		<td mat-cell *matCellDef="let element">{{element.subject}}</td>
+	</ng-container>
+
+	<ng-container matColumnDef="topic">
+		<th mat-header-cell *matHeaderCellDef>Тема</th>
+		<td mat-cell *matCellDef="let element">{{element.topic}}</td>
+	</ng-container>
+
+	<ng-container matColumnDef="time">
+		<th mat-header-cell *matHeaderCellDef>Вријеме</th>
+		<td mat-cell *matCellDef="let element">
+			{{element.time | date:"dd. MM. YYYY. 'у' HH:mm"}}
+		</td>
+	</ng-container>
+
+	<ng-container matColumnDef="teacherComment">
+		<th mat-header-cell *matHeaderCellDef>Коментар наставника</th>
+		<td mat-cell *matCellDef="let element">{{element.teacherComment}}</td>
+	</ng-container>
+
+	<ng-container matColumnDef="studentComment">
+		<th mat-header-cell *matHeaderCellDef>Коментар ученика</th>
+		<td mat-cell *matCellDef="let element">
+			<button mat-button *ngIf="!element.studentComment">
+				Остави коментар
+			</button>
+
+			<span *ngIf="element.studentComment">
+				{{element.studentComment}}
+			</span>
+		</td>
+	</ng-container>
+
+	<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+	<tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>

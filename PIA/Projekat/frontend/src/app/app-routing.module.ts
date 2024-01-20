@@ -4,6 +4,7 @@ import {WelcomeComponent} from "./pages/welcome/welcome.component";
 import {AccountComponent} from "./pages/account/account.component";
 import {TeachersComponent} from "./pages/teachers/teachers.component";
 import {TeacherComponent} from "./pages/teacher/teacher.component";
+import {ClassesComponent} from "./pages/classes/classes.component";
 
 const routes: Routes = [
 	{
@@ -21,6 +22,10 @@ const routes: Routes = [
 	{
 		path: "teacher/:username",
 		component: TeacherComponent
+	},
+	{
+		path: "classes",
+		component: ClassesComponent
 	}
 ];
 

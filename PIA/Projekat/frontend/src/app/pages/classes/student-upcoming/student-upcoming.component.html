@@ -1,0 +1,38 @@
+<h1>Наредни часови</h1>
+
+<table mat-table [dataSource]="tableData ?? []">
+	<ng-container matColumnDef="teacherName">
+		<th mat-header-cell *matHeaderCellDef>Наставник</th>
+		<td mat-cell *matCellDef="let element">{{element.teacherName}}</td>
+	</ng-container>
+
+	<ng-container matColumnDef="subject">
+		<th mat-header-cell *matHeaderCellDef>Предмет</th>
+		<td mat-cell *matCellDef="let element">{{element.subject}}</td>
+	</ng-container>
+
+	<ng-container matColumnDef="topic">
+		<th mat-header-cell *matHeaderCellDef>Тема</th>
+		<td mat-cell *matCellDef="let element">{{element.topic}}</td>
+	</ng-container>
+
+	<ng-container matColumnDef="time">
+		<th mat-header-cell *matHeaderCellDef>Вријеме</th>
+		<td mat-cell *matCellDef="let element">
+			{{element.time | date:"dd. MM. YYYY. 'у' HH:mm"}}
+		</td>
+	</ng-container>
+
+	<ng-container matColumnDef="status">
+		<th mat-header-cell *matHeaderCellDef>Статус</th>
+		<td mat-cell *matCellDef="let element" [ngSwitch]="element.state">
+			<span *ngSwitchCase="'cancelled'">Отказано</span>
+			<span *ngSwitchCase="'confirmed'">Потврђено</span>
+			<span *ngSwitchCase="'pending'">На чекању</span>
+			<button mat-button *ngSwitchCase="'ready'">Прикључи се</button>
+		</td>
+	</ng-container>
+
+	<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+	<tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>

@@ -1,0 +1,15 @@
+<div *ngIf="currentUser.role == 'student'; then student else teacher"></div>
+
+<ng-template #student>
+	<main>
+		<app-student-archive/>
+		<br>
+		<app-student-upcoming/>
+	</main>
+</ng-template>
+
+<ng-template #teacher>
+	<main>
+		<div>Teacher</div>
+	</main>
+</ng-template>

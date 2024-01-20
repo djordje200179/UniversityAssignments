@@ -7,15 +7,6 @@ export interface Enrollment {
 	teacher: TeacherInfo;
 }
 
-export interface ScheduleRequest {
-	student: string;
-	teacher: string;
-	subject: string;
-	topic: string;
-	isDouble: boolean;
-	time: Date;
-}
-
 @Injectable({
 	providedIn: "root"
 })
@@ -37,7 +28,5 @@ export class TeachersService {
 		return this.httpClient.get<Enrollment[]>(`${TeachersService.SERVER_URL}/${teacherUsername}`);
 	}
 
-	public scheduleClass(request: ScheduleRequest) {
-		return this.httpClient.post<any>(`${TeachersService.SERVER_URL}/schedule`, request);
-	}
+
 }

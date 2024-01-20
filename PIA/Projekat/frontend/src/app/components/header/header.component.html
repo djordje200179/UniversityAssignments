@@ -8,6 +8,11 @@
 		Наставници
 	</button>
 
+	<button mat-button routerLink="/classes" class="nav-link"
+	        *ngIf="currentUser?.role === 'teacher' || currentUser?.role === 'student'">
+		Часови
+	</button>
+
 	<span class="spacer"></span>
 
 	<button mat-button routerLink="/account">

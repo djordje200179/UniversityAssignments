@@ -26,27 +26,4 @@ public class TeachersController {
 	public Collection<TeacherSubjectEntity> getEnrollments(@PathVariable("username") String username) {
 		return teachersService.getEnrollments(username);
 	}
-
-	public record ScheduleRequest(
-			String student, String teacher,
-			String subject, String topic,
-			boolean isDouble, Date time
-	) {}
-
-	@PostMapping("/schedule")
-	public ResponseEntity<String> scheduleClass(@RequestBody ScheduleRequest request) {
-		try {
-			teachersService.scheduleClass(
-					request.student, request.teacher,
-					request.subject, request.topic,
-					request.isDouble, request.time
-			);
-
-			return ResponseEntity.ok().build();
-		} catch (TeachersService.TeacherOccupiedException e) {
-			return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
-		} catch (IllegalArgumentException e) {
-			return ResponseEntity.badRequest().body(e.getMessage());
-		}
-	}
 }
