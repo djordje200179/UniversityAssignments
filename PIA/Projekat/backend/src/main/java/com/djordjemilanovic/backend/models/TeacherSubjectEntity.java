@@ -9,7 +9,7 @@ import java.io.Serializable;
 @Setter
 @Getter
 @Entity
-@EqualsAndHashCode
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @NoArgsConstructor
 @Table(name = "teacher_subjects", schema = "pia")
 public class TeacherSubjectEntity {
@@ -29,6 +29,7 @@ public class TeacherSubjectEntity {
 
 	@Id
 	@JsonUnwrapped
+	@EqualsAndHashCode.Include
 	private TeacherSubjectID id;
 
 	public TeacherSubjectEntity(TeacherEntity teacher, String subject) {

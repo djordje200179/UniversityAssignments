@@ -7,7 +7,7 @@ import org.hibernate.annotations.ColumnTransformer;
 
 @Setter
 @Getter
-@EqualsAndHashCode
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 @NoArgsConstructor
 @Table(name = "students", schema = "pia")
@@ -23,6 +23,7 @@ public class StudentEntity {
 
 	@Id
 	@Column(name = "username")
+	@EqualsAndHashCode.Include
 	private String username;
 	@Basic
 	@Column(name = "school_type")

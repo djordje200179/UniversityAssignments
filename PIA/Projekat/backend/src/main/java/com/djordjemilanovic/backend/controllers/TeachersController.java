@@ -1,5 +1,6 @@
 package com.djordjemilanovic.backend.controllers;
 
+import com.djordjemilanovic.backend.models.StudentEntity;
 import com.djordjemilanovic.backend.models.TeacherSubjectEntity;
 import com.djordjemilanovic.backend.services.TeachersService;
 import lombok.AllArgsConstructor;
@@ -16,6 +17,11 @@ import java.util.Date;
 @AllArgsConstructor
 public class TeachersController {
 	private final TeachersService teachersService;
+
+	@GetMapping("/students/{username}")
+	public Collection<StudentEntity> getStudents(@PathVariable("username") String username) {
+		return teachersService.getStudents(username);
+	}
 
 	@GetMapping
 	public Collection<TeacherSubjectEntity> getEnrollments(@RequestParam("schoolYear") int schoolYear) {

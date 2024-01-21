@@ -1,7 +1,7 @@
 package com.djordjemilanovic.backend.services;
 
 import com.djordjemilanovic.backend.models.ClassEntity;
-import com.djordjemilanovic.backend.repositories.ClassRepository;
+import com.djordjemilanovic.backend.repositories.ClassesRepository;
 import com.djordjemilanovic.backend.repositories.UsersInfoRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,7 +13,7 @@ import java.util.Date;
 @Service
 @AllArgsConstructor
 public class ClassesService {
-	private final ClassRepository classRepository;
+	private final ClassesRepository classesRepository;
 	private final UsersInfoRepository usersInfoRepository;
 
 	public void scheduleClass(
@@ -35,7 +35,7 @@ public class ClassesService {
 
 		var endTime = new Timestamp(startTime.getTime() + duration);
 
-		if (classRepository.findAllByTeacherUsername(teacher).stream().anyMatch(c -> {
+		if (classesRepository.findAllByTeacherUsername(teacher).stream().anyMatch(c -> {
 					var cStartTime = c.getTime();
 
 					if (cStartTime.equals(startTime))
@@ -59,38 +59,38 @@ public class ClassesService {
 				teacher, student, subject, topic, new Timestamp(time.getTime()), isDouble
 		);
 
-		classRepository.save(newClass);
+		classesRepository.save(newClass);
 	}
 
 	public Collection<ClassEntity> getArchive(String username) {
-		return classRepository.findAllByStudentUsernameAndTimeBefore(username, new Timestamp(new Date().getTime()));
+		return classesRepository.findAllByStudentUsernameAndTimeBefore(username, new Timestamp(new Date().getTime()));
 	}
 
 	public Collection<ClassEntity> getUpcoming(String username) {
 		if(usersInfoRepository.findById(username).get().getStudent() != null)
-			return classRepository.findAllByStudentUsernameAndTimeAfter(username, new Timestamp(new Date().getTime()));
+			return classesRepository.findAllByStudentUsernameAndTimeAfter(username, new Timestamp(new Date().getTime()));
 		else
-			return classRepository.findAllByTeacherUsernameAndTimeAfterAndConfirmedIsTrueAndCancelledIsFalse(username, new Timestamp(new Date().getTime()));
+			return classesRepository.findAllByTeacherUsernameAndTimeAfterAndConfirmedIsTrueAndCancelledIsFalse(username, new Timestamp(new Date().getTime()));
 	}
 
 	public void cancelClass(int id, String reason) {
-		var classEntity = classRepository.findById(id).get();
+		var classEntity = classesRepository.findById(id).get();
 
 		classEntity.setCancelled(true);
 		classEntity.setTeacherComment(reason);
 
-		classRepository.save(classEntity);
+		classesRepository.save(classEntity);
 	}
 
 	public void acceptClass(int id) {
-		var classEntity = classRepository.findById(id).get();
+		var classEntity = classesRepository.findById(id).get();
 
 		classEntity.setConfirmed(true);
 
-		classRepository.save(classEntity);
+		classesRepository.save(classEntity);
 	}
 
 	public Collection<ClassEntity> getRequested(String username) {
-		return classRepository.findAllByTeacherUsernameAndTimeAfterAndConfirmedIsFalseAndCancelledIsFalse(username, new Timestamp(new Date().getTime()));
+		return classesRepository.findAllByTeacherUsernameAndTimeAfterAndConfirmedIsFalseAndCancelledIsFalse(username, new Timestamp(new Date().getTime()));
 	}
 }

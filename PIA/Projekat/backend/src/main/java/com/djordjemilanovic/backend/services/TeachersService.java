@@ -1,24 +1,24 @@
 package com.djordjemilanovic.backend.services;
 
 import com.djordjemilanovic.backend.models.ClassEntity;
+import com.djordjemilanovic.backend.models.StudentEntity;
 import com.djordjemilanovic.backend.models.TeacherEntity;
 import com.djordjemilanovic.backend.models.TeacherSubjectEntity;
-import com.djordjemilanovic.backend.repositories.ClassRepository;
+import com.djordjemilanovic.backend.repositories.ClassesRepository;
 import com.djordjemilanovic.backend.repositories.TeacherSubjectsRepository;
 import com.djordjemilanovic.backend.repositories.TeachersRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.Collection;
-import java.util.Date;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
 public class TeachersService {
 	private final TeacherSubjectsRepository teacherSubjectRepository;
 	private final TeachersRepository teachersRepository;
+	private final ClassesRepository classesRepository;
 
 	public Collection<TeacherSubjectEntity> getEnrollments() {
 		return teacherSubjectRepository.findAllByIdTeacherActivatedIsTrue();
@@ -48,6 +48,8 @@ public class TeachersService {
 		}
 	}
 
-
-
+	public Collection<StudentEntity> getStudents(String username) {
+		var allClasses = classesRepository.findAllByTeacherUsername(username);
+		return allClasses.stream().map(ClassEntity::getStudent).collect(Collectors.toSet());
+	}
 }

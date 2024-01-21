@@ -9,13 +9,14 @@ import java.util.Set;
 @Setter
 @Getter
 @Entity
-@EqualsAndHashCode
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "teachers", schema = "pia")
 public class TeacherEntity {
 	@Id
 	@Column(name = "username")
+	@EqualsAndHashCode.Include
 	private String username;
 
 	@Basic

@@ -1,6 +1,6 @@
 import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
-import {TeacherInfo} from "./users.service";
+import {StudentInfo, TeacherInfo} from "./users.service";
 
 export interface Enrollment {
 	subject: string;
@@ -28,5 +28,7 @@ export class TeachersService {
 		return this.httpClient.get<Enrollment[]>(`${TeachersService.SERVER_URL}/${teacherUsername}`);
 	}
 
-
+	public getTeacherStudents(teacherUsername: string) {
+		return this.httpClient.get<StudentInfo[]>(`${TeachersService.SERVER_URL}/students/${teacherUsername}`);
+	}
 }

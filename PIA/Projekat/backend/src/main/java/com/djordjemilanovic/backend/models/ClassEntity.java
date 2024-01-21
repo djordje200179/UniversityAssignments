@@ -7,7 +7,7 @@ import java.sql.Timestamp;
 
 @Setter
 @Getter
-@EqualsAndHashCode
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 @NoArgsConstructor
 @Table(name = "classes", schema = "pia")
@@ -15,6 +15,7 @@ public class ClassEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
+	@EqualsAndHashCode.Include
 	private int id;
 
 	@Basic

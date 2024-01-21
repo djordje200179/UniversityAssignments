@@ -5,6 +5,8 @@ import {AccountComponent} from "./pages/account/account.component";
 import {TeachersComponent} from "./pages/teachers/teachers.component";
 import {TeacherComponent} from "./pages/teacher/teacher.component";
 import {ClassesComponent} from "./pages/classes/classes.component";
+import {StudentsComponent} from "./pages/students/students.component";
+import {StudentComponent} from "./pages/student/student.component";
 
 const routes: Routes = [
 	{
@@ -26,6 +28,14 @@ const routes: Routes = [
 	{
 		path: "classes",
 		component: ClassesComponent
+	},
+	{
+		path: "students",
+		component: StudentsComponent
+	},
+	{
+		path: "student/:username",
+		component: StudentComponent
 	}
 ];
 

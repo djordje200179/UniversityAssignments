@@ -11,7 +11,7 @@ import org.hibernate.annotations.NotFoundAction;
 @Setter
 @Getter
 @Entity
-@EqualsAndHashCode
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @NoArgsConstructor
 @Table(name = "users_info", schema = "pia")
 public class UserInfoEntity {
@@ -26,6 +26,7 @@ public class UserInfoEntity {
 
 	@Id
 	@Column(name = "username")
+	@EqualsAndHashCode.Include
 	private String username;
 	@Basic
 	@JsonIgnore
