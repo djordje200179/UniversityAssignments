@@ -1,4 +1,4 @@
-import {Component} from "@angular/core";
+import {Component, OnInit} from "@angular/core";
 import {CommonModule} from "@angular/common";
 import {UsersService} from "../../../services/users.service";
 import {ClassesService} from "../../../services/classes.service";
@@ -30,7 +30,7 @@ interface Row {
 	templateUrl: "./student-upcoming.component.html",
 	styleUrls: ["./student-upcoming.component.scss"]
 })
-export class StudentUpcomingComponent {
+export class StudentUpcomingComponent implements OnInit {
 	public tableData?: Row[];
 
 	public displayedColumns: string[] = ["topic", "subject", "teacherName", "time", "status"];
@@ -45,7 +45,7 @@ export class StudentUpcomingComponent {
 
 		this.classesService.getUpcoming(studentUsername).subscribe(
 			classes => {
-				const lowestActivationTime = new Date(new Date().getTime() - 15 * 60 * 1000);
+				const firstJoinTime = new Date(new Date().getTime() + 15 * 60 * 1000);
 
 				const tableData: Row[] = [];
 				for (const c of classes) {
@@ -59,7 +59,7 @@ export class StudentUpcomingComponent {
 						state = State.Cancelled;
 					else if (!c.confirmed)
 						state = State.Pending;
-					else if (c.time < lowestActivationTime)
+					else if (c.time < firstJoinTime)
 						state = State.Ready;
 					else
 						state = State.Confirmed;

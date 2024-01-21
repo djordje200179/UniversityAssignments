@@ -1,0 +1,55 @@
+<h1>Планирани часови</h1>
+
+<div class="row-count-chooser">
+	<mat-button-toggle-group (change)="rowsCountChanged($event)" value="top_5">
+		<mat-button-toggle value="top_5">Првих 5</mat-button-toggle>
+		<mat-button-toggle value="top_10">Првих 10</mat-button-toggle>
+		<mat-button-toggle value="all">Сви</mat-button-toggle>
+	</mat-button-toggle-group>
+</div>
+
+<table mat-table [dataSource]="tableData ?? []">
+	<ng-container matColumnDef="studentName">
+		<th mat-header-cell *matHeaderCellDef>Студент</th>
+		<td mat-cell *matCellDef="let element">{{element.studentName}}</td>
+	</ng-container>
+
+	<ng-container matColumnDef="subject">
+		<th mat-header-cell *matHeaderCellDef>Предмет</th>
+		<td mat-cell *matCellDef="let element">{{element.subject}}</td>
+	</ng-container>
+
+	<ng-container matColumnDef="topic">
+		<th mat-header-cell *matHeaderCellDef>Тема</th>
+		<td mat-cell *matCellDef="let element">{{element.topic}}</td>
+	</ng-container>
+
+	<ng-container matColumnDef="time">
+		<th mat-header-cell *matHeaderCellDef>Вријеме</th>
+		<td mat-cell *matCellDef="let element">
+			{{element.time | date:"dd. MM. YYYY. 'у' HH:mm"}}
+		</td>
+	</ng-container>
+
+	<ng-container matColumnDef="state">
+		<th mat-header-cell *matHeaderCellDef>Статус</th>
+		<td mat-cell *matCellDef="let element" [ngSwitch]="element.state">
+			<button mat-button color="warn" (click)="cancelClass(element.id)"
+			        *ngSwitchCase="'cancelable'">
+				Откажи час
+			</button>
+
+			<button mat-button
+			        *ngSwitchCase="'joinable'">
+				Придружи се
+			</button>
+
+			<span *ngSwitchCase="'not-cancelable'">
+				Ускоро почиње
+			</span>
+		</td>
+	</ng-container>
+
+	<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+	<tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>

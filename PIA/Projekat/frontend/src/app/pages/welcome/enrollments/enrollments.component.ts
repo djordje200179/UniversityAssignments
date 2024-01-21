@@ -2,6 +2,7 @@ import {AfterViewInit, Component, OnInit, ViewChild} from "@angular/core";
 import {StatsService} from "../../../services/stats.service";
 import {MatTableDataSource, MatTableModule} from "@angular/material/table";
 import {MatSort, MatSortModule} from "@angular/material/sort";
+import {MatInputModule} from "@angular/material/input";
 
 interface Row {
 	firstName: string;
@@ -15,7 +16,8 @@ interface Row {
 	styleUrls: ["./enrollments.component.scss"],
 	imports: [
 		MatTableModule,
-		MatSortModule
+		MatSortModule,
+		MatInputModule
 	],
 	standalone: true
 })

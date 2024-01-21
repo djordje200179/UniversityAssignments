@@ -28,6 +28,7 @@ export class HeaderComponent {
 
 	public signOut() {
 		this.usersService.signOut();
-		window.location.reload();
+		// go to index page
+		window.location.href = "/";
 	}
 }

@@ -12,4 +12,7 @@ public interface ClassRepository extends JpaRepository<ClassEntity, Integer> {
 	Collection<ClassEntity> findAllByStudentUsernameAndTimeAfter(String username, Timestamp time);
 	Collection<ClassEntity> findAllByStudentUsernameAndTimeBefore(String username, Timestamp time);
 
+	Collection<ClassEntity> findAllByTeacherUsernameAndTimeAfterAndConfirmedIsTrueAndCancelledIsFalse(String username, Timestamp time);
+
+	Collection<ClassEntity> findAllByTeacherUsernameAndTimeAfterAndConfirmedIsFalseAndCancelledIsFalse(String username, Timestamp time);
 }

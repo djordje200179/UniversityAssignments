@@ -3,6 +3,7 @@ package com.djordjemilanovic.backend.controllers;
 import com.djordjemilanovic.backend.models.ClassEntity;
 import com.djordjemilanovic.backend.services.ClassesService;
 import com.djordjemilanovic.backend.services.TeachersService;
+import com.djordjemilanovic.backend.services.UsersService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -49,5 +50,20 @@ public class ClassesController {
 	@GetMapping("/upcoming/{username}")
 	public Collection<ClassEntity> getUpcoming(@PathVariable String username) {
 		return classesService.getUpcoming(username);
+	}
+
+	@PostMapping("/cancel/{id}")
+	public void cancelClass(@PathVariable int id, @RequestBody String reason) {
+		classesService.cancelClass(id, reason);
+	}
+
+	@PostMapping("/accept/{id}")
+	public void acceptClass(@PathVariable int id) {
+		classesService.acceptClass(id);
+	}
+
+	@GetMapping("/requested/{username}")
+	public Collection<ClassEntity> getRequested(@PathVariable String username) {
+		return classesService.getRequested(username);
 	}
 }

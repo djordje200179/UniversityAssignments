@@ -78,10 +78,12 @@
 				       type="file" accept="image/png, image/jpeg, image/jpg">
 			</mat-form-field>
 
-			<mat-button-toggle-group name="role" [(ngModel)]="userInfo.role">
-				<mat-button-toggle value="student">Ученик</mat-button-toggle>
-				<mat-button-toggle value="teacher">Наставник</mat-button-toggle>
-			</mat-button-toggle-group>
+			<div class="role-chooser">
+				<mat-button-toggle-group name="role" [(ngModel)]="userInfo.role">
+					<mat-button-toggle value="student">Ученик</mat-button-toggle>
+					<mat-button-toggle value="teacher">Наставник</mat-button-toggle>
+				</mat-button-toggle-group>
+			</div>
 
 			<div [ngSwitch]="userInfo.role">
 				<div *ngSwitchCase="'student'">

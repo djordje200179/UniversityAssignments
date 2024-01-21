@@ -50,4 +50,16 @@ export class ClassesService {
 	public getUpcoming(username: string) {
 		return this.httpClient.get<ClassInfo[]>(`${ClassesService.SERVER_URL}/upcoming/${username}`);
 	}
+
+	public cancelClass(id: number, reason: string) {
+		return this.httpClient.post<any>(`${ClassesService.SERVER_URL}/cancel/${id}`, reason);
+	}
+
+	public acceptClass(id: number) {
+		return this.httpClient.post<any>(`${ClassesService.SERVER_URL}/accept/${id}`, {});
+	}
+
+	public getRequested(username: string) {
+		return this.httpClient.get<ClassInfo[]>(`${ClassesService.SERVER_URL}/requested/${username}`);
+	}
 }
