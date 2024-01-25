@@ -99,4 +99,9 @@ public class UserInfoEntity {
 		this.emailAddress = emailAddress;
 		this.role = role;
 	}
+
+	public UserInfoEntity(String username, Role role) {
+		this.username = username;
+		this.role = role;
+	}
 }

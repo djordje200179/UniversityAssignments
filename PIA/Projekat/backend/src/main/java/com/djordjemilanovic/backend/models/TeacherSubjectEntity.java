@@ -20,7 +20,9 @@ public class TeacherSubjectEntity {
 	@AllArgsConstructor
 	@Embeddable
 	public static class TeacherSubjectID implements Serializable {
-		private String subject;
+		@ManyToOne
+		@JoinColumn(name = "subject", referencedColumnName = "subject", nullable = false)
+		private SubjectEntity subject;
 
 		@ManyToOne
 		@JoinColumn(name = "username", referencedColumnName = "username", nullable = false)
@@ -32,7 +34,7 @@ public class TeacherSubjectEntity {
 	@EqualsAndHashCode.Include
 	private TeacherSubjectID id;
 
-	public TeacherSubjectEntity(TeacherEntity teacher, String subject) {
+	public TeacherSubjectEntity(TeacherEntity teacher, SubjectEntity subject) {
 		this.id = new TeacherSubjectID(subject, teacher);
 	}
 }

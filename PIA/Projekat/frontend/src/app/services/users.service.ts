@@ -9,6 +9,7 @@ export interface Credentials {
 export enum Role {
 	Student = "student",
 	Teacher = "teacher",
+	Admin = "admin"
 }
 
 export enum Gender {
@@ -61,6 +62,7 @@ export interface TeacherInfo {
 	teachesHigh: boolean;
 
 	activated?: boolean;
+	blocked?: boolean;
 }
 
 @Injectable({
@@ -75,6 +77,14 @@ export class UsersService {
 
 	public signIn(credentials: Credentials) {
 		return this.httpClient.post<UserInfo | null>(`${(UsersService.SERVER_URL)}/sign-in`, credentials);
+	}
+
+	public signInAdmin() {
+		return this.httpClient.post<UserInfo | null>(
+			"http://localhost:8080/users/sign-in-admin",
+			undefined,
+			{withCredentials: true}
+		);
 	}
 
 	public signUpStudent(studentInfo: StudentInfo) {
@@ -129,5 +139,17 @@ export class UsersService {
 
 	public getProfileImageURL(username: string) {
 		return `${(UsersService.SERVER_URL)}/profile-image/${username}`;
+	}
+
+	public getAllTeachers() {
+		return this.httpClient.get<TeacherInfo[]>(`${(UsersService.SERVER_URL)}/teachers`);
+	}
+
+	public getAllStudents() {
+		return this.httpClient.get<StudentInfo[]>(`${(UsersService.SERVER_URL)}/students`);
+	}
+
+	public getAllTeacherRequests() {
+		return this.httpClient.get<TeacherInfo[]>(`${(UsersService.SERVER_URL)}/teachers/requests`);
 	}
 }

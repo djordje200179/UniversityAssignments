@@ -1,5 +1,6 @@
 package com.djordjemilanovic.backend.controllers;
 
+import com.djordjemilanovic.backend.models.UserInfoEntity;
 import com.djordjemilanovic.backend.services.StatsService;
 import com.djordjemilanovic.backend.services.TeachersService;
 import lombok.AllArgsConstructor;
@@ -22,8 +23,8 @@ public class StatsController {
 	private final TeachersService teachersService;
 
 	@GetMapping("/counters")
-	public StatsService.Counters getCounters() {
-		return statsService.getCounters();
+	public StatsService.WelcomePageCounters getWelcomePageCounters() {
+		return statsService.getWelcomePageCounters();
 	}
 
 	@GetMapping("/enrollments")
@@ -39,9 +40,24 @@ public class StatsController {
 			if (!enrollments.containsKey(teacherFullName))
 				enrollments.put(teacherFullName, new ArrayList<>());
 
-			enrollments.get(teacherFullName).add(subject);
+			enrollments.get(teacherFullName).add(subject.getName());
 		}
 
 		return enrollments;
+	}
+
+	@GetMapping("/subject-age")
+	public Map<String, Map<String, Long>> getSubjectAgeCounters() {
+		return statsService.getSubjectAgeCounters();
+	}
+
+	@GetMapping("/teacher-gender")
+	public Map<UserInfoEntity.Gender, Long> getTeacherCountByGender() {
+		return statsService.getTeacherCountByGender();
+	}
+
+	@GetMapping("/student-gender")
+	public Map<UserInfoEntity.Gender, Long> getStudentCountByGender() {
+		return statsService.getStudentCountByGender();
 	}
 }

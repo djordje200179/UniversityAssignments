@@ -1,0 +1,31 @@
+<h2>Сви наставници</h2>
+
+<section>
+	<mat-card *ngFor="let teacher of teachers">
+		<mat-card-header>
+			<mat-card-title>{{teacher.info.firstName}} {{teacher.info.lastName}}</mat-card-title>
+
+			<mat-card-subtitle>
+				<h4 *ngIf="teacher.blocked">БЛОКИРАН(а)</h4>
+				<h4 *ngIf="!teacher.activated && !teacher.blocked">НА ЧЕКАЊУ</h4>
+				<h4 *ngIf="teacher.activated">АКТИВ(ан/на)</h4>
+			</mat-card-subtitle>
+		</mat-card-header>
+		<img mat-card-image [src]="usersService.getProfileImageURL(teacher.info.username!)">
+		<mat-card-content>
+			<mat-divider />
+			<a mat-button [href]="teachersService.getBiographyURL(teacher.info.username!)">Погледај биографију</a>
+
+			<mat-divider />
+			<h4>Предмети:</h4>
+			<p *ngFor="let subject of teacher.subjects">{{subject}}</p>
+		</mat-card-content>
+		<mat-card-actions>
+			<button mat-button color="warn"
+			        (click)="blockTeacher(teacher)"
+					*ngIf="teacher.activated">
+				Блокирај
+			</button>
+		</mat-card-actions>
+	</mat-card>
+</section>

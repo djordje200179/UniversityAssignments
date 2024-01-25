@@ -49,7 +49,7 @@ export class TeachersComponent implements OnInit {
 					username: enrollment.teacher.info.username!,
 					firstName: enrollment.teacher.info.firstName,
 					lastName: enrollment.teacher.info.lastName,
-					subject: enrollment.subject,
+					subject: enrollment.subject.name,
 					rating: 3
 				}));
 

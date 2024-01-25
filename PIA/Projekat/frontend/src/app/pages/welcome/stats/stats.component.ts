@@ -1,5 +1,5 @@
 import {Component, OnInit} from "@angular/core";
-import {Counters, StatsService} from "../../../services/stats.service";
+import {WelcomePageCounters, StatsService} from "../../../services/stats.service";
 import {MatCardModule} from "@angular/material/card";
 import {MatDividerModule} from "@angular/material/divider";
 
@@ -14,14 +14,14 @@ import {MatDividerModule} from "@angular/material/divider";
 	standalone: true
 })
 export class StatsComponent implements OnInit {
-	public stats?: Counters;
+	public stats?: WelcomePageCounters;
 
 	public constructor(private readonly statsService: StatsService) {
 
 	}
 
 	public ngOnInit() {
-		this.statsService.getCounters().subscribe(
+		this.statsService.getWelcomePageCounters().subscribe(
 			stats => this.stats = stats,
 			console.error
 		);

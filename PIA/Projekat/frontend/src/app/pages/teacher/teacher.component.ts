@@ -36,7 +36,7 @@ export class TeacherComponent implements OnInit {
 		);
 
 		this.teachersService.getTeacherEnrollments(this.teacherUsername).subscribe(
-			subjects => this.teacherSubjects = subjects.map(enrollment => enrollment.subject),
+			subjects => this.teacherSubjects = subjects.map(enrollment => enrollment.subject.name),
 			console.error
 		);
 	}

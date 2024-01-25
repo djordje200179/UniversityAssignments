@@ -3,7 +3,7 @@ import {HttpClient} from "@angular/common/http";
 import {StudentInfo, TeacherInfo} from "./users.service";
 
 export interface Enrollment {
-	subject: string;
+	subject: { name: string };
 	teacher: TeacherInfo;
 }
 
@@ -30,5 +30,21 @@ export class TeachersService {
 
 	public getTeacherStudents(teacherUsername: string) {
 		return this.httpClient.get<StudentInfo[]>(`${TeachersService.SERVER_URL}/students/${teacherUsername}`);
+	}
+
+	public getAllSubjects() {
+		return this.httpClient.get<{ name: string }[]>(`${TeachersService.SERVER_URL}/subjects`);
+	}
+
+	public blockTeacher(username: string) {
+		return this.httpClient.put(`${TeachersService.SERVER_URL}/block/${username}`, null);
+	}
+
+	public acceptTeacher(username: string) {
+		return this.httpClient.put(`${TeachersService.SERVER_URL}/accept/${username}`, null);
+	}
+
+	public getBiographyURL(username: string) {
+		return `${(TeachersService.SERVER_URL)}/biography/${username}`;
 	}
 }

@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Output} from "@angular/core";
+import {Component, EventEmitter, OnInit, Output} from "@angular/core";
 import {MatInputModule} from "@angular/material/input";
 import {MatIconModule} from "@angular/material/icon";
 import {MatButtonModule} from "@angular/material/button";
@@ -8,6 +8,7 @@ import {MatSelectModule} from "@angular/material/select";
 import {MatButtonToggleModule} from "@angular/material/button-toggle";
 import {NgForOf, NgSwitch, NgSwitchCase} from "@angular/common";
 import {MatCheckboxModule} from "@angular/material/checkbox";
+import {TeachersService} from "../../../../services/teachers.service";
 
 @Component({
 	selector: "app-sign-up-form",
@@ -27,7 +28,7 @@ import {MatCheckboxModule} from "@angular/material/checkbox";
 		MatCheckboxModule
 	]
 })
-export class SignUpFormComponent {
+export class SignUpFormComponent implements OnInit {
 	public credentials: Credentials = {
 		username: "",
 		password: ""
@@ -83,12 +84,20 @@ export class SignUpFormComponent {
 
 	public ageGroups: string[] = [];
 
-	public readonly possibleSubjects = [
-		"Математика", "Физика", "Хемија", "Информатика", "Програмирање",
-		"Српски језик и књижевност", "Енглески језик", "Немачки језик", "Италијански језик",
-		"Француски језик", "Шпански језик", "Латински језик", "Биологија", "Историја",
-		"Географија", "Свет око нас"
-	];
+	public possibleSubjects? : string[];
+
+	public constructor(private readonly teachersService: TeachersService) {
+
+	}
+
+	public ngOnInit() {
+		this.teachersService.getAllSubjects().subscribe(
+			subjects => {
+				this.possibleSubjects = subjects.map(s => s.name);
+			},
+			console.error
+		);
+	}
 
 	@Output()
 	public readonly signUpStudent = new EventEmitter<StudentInfo>();

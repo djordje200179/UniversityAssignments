@@ -1,10 +1,8 @@
 package com.djordjemilanovic.backend.services;
 
-import com.djordjemilanovic.backend.models.ClassEntity;
-import com.djordjemilanovic.backend.models.StudentEntity;
-import com.djordjemilanovic.backend.models.TeacherEntity;
-import com.djordjemilanovic.backend.models.TeacherSubjectEntity;
+import com.djordjemilanovic.backend.models.*;
 import com.djordjemilanovic.backend.repositories.ClassesRepository;
+import com.djordjemilanovic.backend.repositories.SubjectsRepository;
 import com.djordjemilanovic.backend.repositories.TeacherSubjectsRepository;
 import com.djordjemilanovic.backend.repositories.TeachersRepository;
 import lombok.AllArgsConstructor;
@@ -19,6 +17,11 @@ public class TeachersService {
 	private final TeacherSubjectsRepository teacherSubjectRepository;
 	private final TeachersRepository teachersRepository;
 	private final ClassesRepository classesRepository;
+	private final SubjectsRepository subjectsRepository;
+
+	public Collection<SubjectEntity> getAllSubjects() {
+		return subjectsRepository.findAll();
+	}
 
 	public Collection<TeacherSubjectEntity> getEnrollments() {
 		return teacherSubjectRepository.findAllByIdTeacherActivatedIsTrue();
@@ -51,5 +54,18 @@ public class TeachersService {
 	public Collection<StudentEntity> getStudents(String username) {
 		var allClasses = classesRepository.findAllByTeacherUsername(username);
 		return allClasses.stream().map(ClassEntity::getStudent).collect(Collectors.toSet());
+	}
+
+	public void blockTeacher(String username) {
+		var teacher = teachersRepository.findById(username).orElseThrow();
+		teacher.setActivated(false);
+		teacher.setBlocked(true);
+		teachersRepository.save(teacher);
+	}
+
+	public void acceptTeacher(String username) {
+		var teacher = teachersRepository.findById(username).orElseThrow();
+		teacher.setActivated(true);
+		teachersRepository.save(teacher);
 	}
 }

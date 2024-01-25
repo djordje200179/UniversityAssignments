@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -16,9 +17,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Collection;
+import java.util.Map;
 
 @RestController
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+@CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "*")
 @RequestMapping("/users")
 @AllArgsConstructor
 public class UsersController {
@@ -27,6 +29,33 @@ public class UsersController {
 	private final FileStorageService fileStorageService;
 
 	public record SignInRequest(String username, String password) {
+	}
+
+	@PostMapping("/sign-in-admin")
+	public ResponseEntity<UserInfoEntity> adminSignIn(
+			@RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String auth
+	) {
+		var headers = new HttpHeaders();
+		headers.add("Access-Control-Allow-Credentials", "true");
+		headers.add("WWW-Authenticate", "Basic realm=\"Admin\"");
+
+		if (auth == null) {
+			return ResponseEntity
+					.status(HttpStatus.UNAUTHORIZED)
+					.headers(headers)
+					.build();
+		}
+
+		var credentials = auth.split(" ")[1];
+		var decoded = new String(java.util.Base64.getDecoder().decode(credentials));
+		var username = decoded.split(":")[0];
+		var password = decoded.split(":")[1];
+
+		var user = usersService.find(username, password);
+		if (user.isPresent() && user.get().getRole() == UserInfoEntity.Role.ADMIN)
+			return ResponseEntity.status(HttpStatus.OK).headers(headers).body(user.get());
+		else
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).headers(headers).build();
 	}
 
 	@PostMapping("/sign-in")
@@ -164,5 +193,20 @@ public class UsersController {
 	public @ResponseBody byte[] getProfileImage(@PathVariable String username) {
 		var resource = fileStorageService.loadProfileImage(username);
 		return resource.getInputStream().readAllBytes();
+	}
+
+	@GetMapping("/teachers")
+	public Collection<TeacherEntity> getTeachers() {
+		return usersService.getTeachers();
+	}
+
+	@GetMapping("/students")
+	public Collection<StudentEntity> getStudents() {
+		return usersService.getStudents();
+	}
+
+	@GetMapping("/teachers/requests")
+	public Collection<TeacherEntity> getTeacherRequests() {
+		return usersService.getTeacherRequests();
 	}
 }

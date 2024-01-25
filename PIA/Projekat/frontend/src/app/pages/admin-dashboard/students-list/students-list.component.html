@@ -1,0 +1,13 @@
+<h2>Сви студенти</h2>
+
+<section>
+	<mat-card *ngFor="let student of students">
+		<mat-card-header>
+			<mat-card-title>{{student.info.firstName}} {{student.info.lastName}}</mat-card-title>
+		</mat-card-header>
+		<img mat-card-image [src]="usersService.getProfileImageURL(student.info.username!)">
+		<mat-card-content>
+			<mat-divider />
+		</mat-card-content>
+	</mat-card>
+</section>

@@ -11,7 +11,6 @@ import java.util.Set;
 @Entity
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @NoArgsConstructor
-@AllArgsConstructor
 @Table(name = "teachers", schema = "pia")
 public class TeacherEntity {
 	@Id
@@ -35,6 +34,11 @@ public class TeacherEntity {
 	@Column(name = "activated")
 	private boolean activated;
 
+	@Basic
+	@Column(name = "blocked")
+	private boolean blocked;
+
+
 	@OneToMany
 	@JoinColumn(name = "username", referencedColumnName = "username")
 	@JsonIgnore
@@ -53,6 +57,7 @@ public class TeacherEntity {
 		this.teachesUpperElementary = teachesUpperElementary;
 		this.teachesHigh = teachesHigh;
 		this.activated = false;
+		this.blocked = false;
 	}
 
 	@OneToMany

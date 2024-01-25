@@ -1,15 +1,19 @@
 package com.djordjemilanovic.backend.controllers;
 
 import com.djordjemilanovic.backend.models.StudentEntity;
+import com.djordjemilanovic.backend.models.SubjectEntity;
+import com.djordjemilanovic.backend.models.TeacherEntity;
 import com.djordjemilanovic.backend.models.TeacherSubjectEntity;
+import com.djordjemilanovic.backend.services.FileStorageService;
 import com.djordjemilanovic.backend.services.TeachersService;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
+import lombok.SneakyThrows;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.Collection;
-import java.util.Date;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -17,6 +21,7 @@ import java.util.Date;
 @AllArgsConstructor
 public class TeachersController {
 	private final TeachersService teachersService;
+	private final FileStorageService fileStorageService;
 
 	@GetMapping("/students/{username}")
 	public Collection<StudentEntity> getStudents(@PathVariable("username") String username) {
@@ -31,5 +36,29 @@ public class TeachersController {
 	@GetMapping("/{username}")
 	public Collection<TeacherSubjectEntity> getEnrollments(@PathVariable("username") String username) {
 		return teachersService.getEnrollments(username);
+	}
+
+	@GetMapping("/subjects")
+	public Collection<SubjectEntity> getAllSubjects() {
+		return teachersService.getAllSubjects();
+	}
+
+	@PutMapping("/block/{username}")
+	public TeacherEntity blockTeacher(@PathVariable("username") String username) {
+		teachersService.blockTeacher(username);
+		return null;
+	}
+
+	@PutMapping("/accept/{username}")
+	public TeacherEntity acceptTeacher(@PathVariable("username") String username) {
+		teachersService.acceptTeacher(username);
+		return null;
+	}
+
+	@SneakyThrows
+	@GetMapping(value="/biography/{username}", produces = MediaType.APPLICATION_PDF_VALUE)
+	public @ResponseBody byte[] getBiography(@PathVariable String username) {
+		var resource = fileStorageService.loadBiography(username);
+		return resource.getInputStream().readAllBytes();
 	}
 }

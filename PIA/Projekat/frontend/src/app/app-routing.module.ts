@@ -7,6 +7,7 @@ import {TeacherComponent} from "./pages/teacher/teacher.component";
 import {ClassesComponent} from "./pages/classes/classes.component";
 import {StudentsComponent} from "./pages/students/students.component";
 import {StudentComponent} from "./pages/student/student.component";
+import {AdminDashboardComponent} from "./pages/admin-dashboard/admin-dashboard.component";
 
 const routes: Routes = [
 	{
@@ -36,6 +37,10 @@ const routes: Routes = [
 	{
 		path: "student/:username",
 		component: StudentComponent
+	},
+	{
+		path: "admin",
+		component: AdminDashboardComponent
 	}
 ];
 

@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
 
 @AllArgsConstructor
@@ -17,6 +16,7 @@ public class UsersService {
 	private final StudentsRepository studentsRepository;
 	private final TeachersRepository teachersRepository;
 	private final TeacherSubjectsRepository teacherSubjectRepository;
+	private final SubjectsRepository subjectsRepository;
 
 	public Optional<UserInfoEntity> find(String username, String password) {
 		var passwordHash = password;
@@ -25,7 +25,11 @@ public class UsersService {
 		if (optionalUser.isEmpty())
 			return Optional.empty();
 
-		var userInfo = usersInfoRepository.findById(username).get();
+		var userInfoOpt = usersInfoRepository.findById(username);
+		if (userInfoOpt.isEmpty())
+			return Optional.of(new UserInfoEntity(username, UserInfoEntity.Role.ADMIN));
+
+		var userInfo = userInfoOpt.get();
 		if (userInfo.getStudent() != null)
 			userInfo.setRole(UserInfoEntity.Role.STUDENT);
 		else if (userInfo.getTeacher() != null)
@@ -123,11 +127,32 @@ public class UsersService {
 		teachersRepository.saveAndFlush(teacher);
 		teacher.setInfo(userInfo);
 
-		for (var subject : subjects) {
+		for (var subjectName : subjects) {
+			var optSubjectEntity = subjectsRepository.findById(subjectName);
+			SubjectEntity subject;
+			if (optSubjectEntity.isEmpty()) {
+				subject = new SubjectEntity(subjectName);
+				subjectsRepository.save(subject);
+			} else {
+				subject = optSubjectEntity.get();
+			}
+
 			var teacherSubject = new TeacherSubjectEntity(teacher, subject);
 			teacherSubjectRepository.save(teacherSubject);
 		}
 
 		return teacher;
+	}
+
+	public Collection<TeacherEntity> getTeachers() {
+		return teachersRepository.findAll();
+	}
+
+	public Collection<StudentEntity> getStudents() {
+		return studentsRepository.findAll();
+	}
+
+	public Collection<TeacherEntity> getTeacherRequests() {
+		return teachersRepository.findAllByActivatedIsFalseAndBlockedIsFalse();
 	}
 }
