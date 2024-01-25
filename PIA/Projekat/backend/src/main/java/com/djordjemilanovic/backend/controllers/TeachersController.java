@@ -61,4 +61,14 @@ public class TeachersController {
 		var resource = fileStorageService.loadBiography(username);
 		return resource.getInputStream().readAllBytes();
 	}
+
+	@PostMapping("/subjects")
+	public SubjectEntity addSubject(@RequestBody String name) {
+		return teachersService.addSubject(name);
+	}
+
+	@GetMapping("/ratings/{username}")
+	public Collection<TeachersService.Rating> getRatings(@PathVariable("username") String username) {
+		return teachersService.getRatings(username);
+	}
 }

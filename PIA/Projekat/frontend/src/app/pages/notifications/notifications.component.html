@@ -1,0 +1,12 @@
+<main>
+	<mat-card *ngFor="let notification of notifications">
+		<mat-card-header>
+			<mat-card-subtitle>
+				{{notification.createdAt | date:"dd. MM. YYYY. 'у' HH:mm"}}
+			</mat-card-subtitle>
+		</mat-card-header>
+		<mat-card-content>
+			<h3 [ngClass]="{'not-seen': !notification.seen}">{{notification.message}}</h3>
+		</mat-card-content>
+	</mat-card>
+</main>

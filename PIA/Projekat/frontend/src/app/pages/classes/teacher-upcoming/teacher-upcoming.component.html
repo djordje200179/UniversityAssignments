@@ -39,10 +39,11 @@
 				Откажи час
 			</button>
 
-			<button mat-button
-			        *ngSwitchCase="'joinable'">
-				Придружи се
-			</button>
+			<a mat-button *ngSwitchCase="'joinable'"
+				[href]="'https://fairmeeting.net/pia_md200250_'+element.id"
+				target="_blank">
+				Прикључи се
+			</a>
 
 			<span *ngSwitchCase="'not-cancelable'">
 				Ускоро почиње

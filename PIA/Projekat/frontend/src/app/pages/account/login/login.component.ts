@@ -2,6 +2,7 @@ import {Component} from "@angular/core";
 import {Credentials, StudentInfo, TeacherInfo, UsersService} from "../../../services/users.service";
 import {SignInFormComponent} from "./sign-in-form/sign-in-form.component";
 import {SignUpFormComponent} from "./sign-up-form/sign-up-form.component";
+import {HttpErrorResponse} from "@angular/common/http";
 
 @Component({
 	selector: "app-login",
@@ -34,7 +35,21 @@ export class LoginComponent {
 				localStorage.setItem("user-info", JSON.stringify(res));
 				window.location.reload();
 			},
-			console.error
+			err => {
+				if (!(err.error instanceof HttpErrorResponse)) {
+					alert("Непозната грешка!");
+					console.error(err);
+					return;
+				}
+
+				if (err.error.status === 409) {
+					alert("Корисник са тим подацима већ постоји!");
+					return;
+				}
+
+				alert("Непозната грешка!");
+				console.error(err);
+			}
 		);
 	}
 
@@ -44,7 +59,21 @@ export class LoginComponent {
 				localStorage.setItem("user-info", JSON.stringify(res));
 				window.location.reload();
 			},
-			console.error
+			err => {
+				if (!(err.error instanceof HttpErrorResponse)) {
+					alert("Непозната грешка!");
+					console.error(err);
+					return;
+				}
+
+				if (err.error.status === 409) {
+					alert("Корисник са тим подацима већ постоји!");
+					return;
+				}
+
+				alert("Непозната грешка!");
+				console.error(err);
+			}
 		);
 	}
 }

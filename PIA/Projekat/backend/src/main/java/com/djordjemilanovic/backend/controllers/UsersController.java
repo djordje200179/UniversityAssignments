@@ -1,5 +1,6 @@
 package com.djordjemilanovic.backend.controllers;
 
+import com.djordjemilanovic.backend.models.NotificationEntity;
 import com.djordjemilanovic.backend.models.StudentEntity;
 import com.djordjemilanovic.backend.models.TeacherEntity;
 import com.djordjemilanovic.backend.models.UserInfoEntity;
@@ -208,5 +209,10 @@ public class UsersController {
 	@GetMapping("/teachers/requests")
 	public Collection<TeacherEntity> getTeacherRequests() {
 		return usersService.getTeacherRequests();
+	}
+
+	@GetMapping("/notifications/{username}")
+	public Collection<NotificationEntity> getNotifications(@PathVariable String username) {
+		return usersService.getNotifications(username);
 	}
 }

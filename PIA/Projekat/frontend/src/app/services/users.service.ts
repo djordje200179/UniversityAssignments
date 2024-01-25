@@ -65,6 +65,14 @@ export interface TeacherInfo {
 	blocked?: boolean;
 }
 
+
+export interface Notification {
+	receiverUsername: string;
+	message: string;
+	createdAt: Date;
+	seen: boolean;
+}
+
 @Injectable({
 	providedIn: "root"
 })
@@ -151,5 +159,9 @@ export class UsersService {
 
 	public getAllTeacherRequests() {
 		return this.httpClient.get<TeacherInfo[]>(`${(UsersService.SERVER_URL)}/teachers/requests`);
+	}
+
+	public getNotifications(username: string) {
+		return this.httpClient.get<Notification[]>(`${(UsersService.SERVER_URL)}/notifications/${username}`);
 	}
 }

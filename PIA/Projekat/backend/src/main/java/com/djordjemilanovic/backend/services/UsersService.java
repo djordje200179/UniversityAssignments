@@ -5,6 +5,7 @@ import com.djordjemilanovic.backend.repositories.*;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -17,6 +18,7 @@ public class UsersService {
 	private final TeachersRepository teachersRepository;
 	private final TeacherSubjectsRepository teacherSubjectRepository;
 	private final SubjectsRepository subjectsRepository;
+	private final NotificationsRepository notificationsRepository;
 
 	public Optional<UserInfoEntity> find(String username, String password) {
 		var passwordHash = password;
@@ -154,5 +156,23 @@ public class UsersService {
 
 	public Collection<TeacherEntity> getTeacherRequests() {
 		return teachersRepository.findAllByActivatedIsFalseAndBlockedIsFalse();
+	}
+
+	public Collection<NotificationEntity> getNotifications(String username) {
+		var notifications = notificationsRepository.findAllByReceiverUsername(username);
+
+		var copiedNotifications = new ArrayList<NotificationEntity>();
+		for (var notification : notifications) {
+			var notificationCopy = new NotificationEntity(notification.getReceiver(), notification.getMessage());
+			notificationCopy.setSeen(notification.isSeen());
+			copiedNotifications.add(notificationCopy);
+		}
+
+		for (var notification : notifications) {
+			notification.setSeen(true);
+			notificationsRepository.save(notification);
+		}
+
+		return copiedNotifications;
 	}
 }

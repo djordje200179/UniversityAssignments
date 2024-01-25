@@ -34,14 +34,15 @@ export class TeacherRequestedComponent implements OnInit {
 		const teacherUsername = this.usersService.getCurrentUser()!.username!;
 
 		this.classesService.getRequested(teacherUsername).subscribe(
-			classes => {
+			classes=> {
+				for (const c of classes)
+					c.time = new Date(c.time);
+
 				classes.sort((a, b) => b.time.getTime() - a.time.getTime());
 
 				const tableData: Row[] = [];
 				for (const c of classes) {
-					c.time = new Date(c.time);
-
-					const studentInfo = c.teacher.info;
+					const studentInfo = c.student.info;
 					const studentName = `${studentInfo.firstName} ${studentInfo.lastName}`;
 
 					tableData.push({

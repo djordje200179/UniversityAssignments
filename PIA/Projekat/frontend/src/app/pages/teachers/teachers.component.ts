@@ -57,6 +57,17 @@ export class TeachersComponent implements OnInit {
 				source.sort = this.sort!;
 
 				this.tableData = source;
+
+				for (const row of this.tableData?.data) {
+					this.teachersService.getTeacherRatings(row.username).subscribe(
+						ratings => {
+							const sum = ratings.reduce((a, b) => a + b.rating, 0);
+							const average = ratings.length != 0 ? sum / ratings.length : 0;
+							row.rating = Math.floor(average);
+						},
+						console.error
+					);
+				}
 			},
 			console.error
 		);

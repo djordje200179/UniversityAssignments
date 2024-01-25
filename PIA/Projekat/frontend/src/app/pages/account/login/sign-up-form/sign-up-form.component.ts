@@ -124,6 +124,74 @@ export class SignUpFormComponent implements OnInit {
 	}
 
 	public onSignUp() {
+		if (this.credentials.username === "")
+			return alert("Нисте унијели корисничко име.");
+
+		if (this.credentials.password === "")
+			return alert("Нисте унијели лозинку.");
+
+		if (this.credentials.password.length < 6 || this.credentials.password.length > 10)
+			return alert("Лозинка мора имати између 6 и 10 карактера.");
+
+		if (!/\d/.test(this.credentials.password))
+			return alert("Лозинка мора садржати бар један број.");
+
+		if (!/[A-Z]/.test(this.credentials.password))
+			return alert("Лозинка мора садржати бар једно велико слово.");
+
+		if (!/(.*[a-z]){3,}/.test(this.credentials.password))
+			return alert("Лозинка мора садржати бар три мала слова.");
+
+		if (!/[!@#$%^&*]/.test(this.credentials.password))
+			return alert("Лозинка мора садржати бар један специјални карактер.");
+
+		if (!/^[a-zA-Z]/.test(this.credentials.password))
+			return alert("Лозинка мора почети словом.");
+
+		if (this.userInfo.securityQuestion === "")
+			return alert("Нисте унијели сигурносно питање.");
+
+		if (this.userInfo.securityAnswer === "")
+			return alert("Нисте унијели сигурносни одговор.");
+
+		if (this.userInfo.firstName === "")
+			return alert("Нисте унијели име.");
+
+		if (this.userInfo.lastName === "")
+			return alert("Нисте унијели презиме.");
+
+		if (this.userInfo.gender === null)
+			return alert("Нисте одабрали пол.");
+
+		if (this.userInfo.address === "")
+			return alert("Нисте унијели адресу.");
+
+		if (this.userInfo.emailAddress === "")
+			return alert("Нисте унијели и-мејл адресу.");
+
+		if (this.userInfo.phoneNumber === "")
+			return alert("Нисте унијели број телефона.");
+
+		if (this.userInfo.role === Role.Student) {
+			if (this.studentInfo.schoolType === null)
+				return alert("Нисте одабрали тип школе.");
+
+			if (this.studentInfo.schoolYear === null)
+				return alert("Нисте одабрали разред.");
+		} else {
+			if (this.teacherInfo.biography === null)
+				return alert("Нисте одабрали биографију.");
+
+			if (this.teacherInfo.subjects.length === 0)
+				return alert("Нисте одабрали предмете.");
+
+			if (this.ageGroups.length === 0)
+				return alert("Нисте одабрали узрастне групе.");
+		}
+
+
+
+
 		this.teacherInfo.teachesLowerElementary = this.ageGroups.includes("lowerElementary");
 		this.teacherInfo.teachesUpperElementary = this.ageGroups.includes("upperElementary");
 		this.teacherInfo.teachesHigh = this.ageGroups.includes("high");

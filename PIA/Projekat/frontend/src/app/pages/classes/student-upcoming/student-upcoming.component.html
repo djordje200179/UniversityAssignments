@@ -29,7 +29,12 @@
 			<span *ngSwitchCase="'cancelled'">Отказано</span>
 			<span *ngSwitchCase="'confirmed'">Потврђено</span>
 			<span *ngSwitchCase="'pending'">На чекању</span>
-			<button mat-button *ngSwitchCase="'ready'">Прикључи се</button>
+
+			<a mat-button *ngSwitchCase="'ready'"
+			   [href]="'https://fairmeeting.net/pia_md200250_'+element.id"
+			   target="_blank">
+				Прикључи се
+			</a>
 		</td>
 	</ng-container>
 

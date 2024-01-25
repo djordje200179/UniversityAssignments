@@ -2,12 +2,14 @@ package com.djordjemilanovic.backend.services;
 
 import com.djordjemilanovic.backend.models.TeacherEntity;
 import com.djordjemilanovic.backend.models.UserInfoEntity;
+import com.djordjemilanovic.backend.repositories.ClassesRepository;
 import com.djordjemilanovic.backend.repositories.StudentsRepository;
 import com.djordjemilanovic.backend.repositories.SubjectsRepository;
 import com.djordjemilanovic.backend.repositories.TeachersRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -17,19 +19,24 @@ public class StatsService {
 	private final StudentsRepository studentsRepository;
 	private final TeachersRepository teachersRepository;
 	private final SubjectsRepository subjectsRepository;
+	private final ClassesRepository classesRepository;
 
 	public record WelcomePageCounters(
 		long numberOfStudents,
 		long numberOfTeachers,
 
-		int numberOfClassesLastWeek,
-		int numberOfClassesLastMonth
+		long numberOfClassesLastWeek,
+		long numberOfClassesLastMonth
 	) {}
 
 	public WelcomePageCounters getWelcomePageCounters() {
+		var weekAgo = new Date(System.currentTimeMillis() - 7L * 24 * 60 * 60 * 1000);
+		var monthAgo = new Date(System.currentTimeMillis() - 30L * 24 * 60 * 60 * 1000);
+
 		return new WelcomePageCounters(
 			studentsRepository.count(), teachersRepository.countByActivatedIsTrue(),
-			10, 20
+			classesRepository.countAllByTimeBeforeAndConfirmedIsTrueAndCancelledIsFalse(new Timestamp(weekAgo.getTime())),
+			classesRepository.countAllByTimeBeforeAndConfirmedIsTrueAndCancelledIsFalse(new Timestamp(monthAgo.getTime()))
 		);
 	}
 

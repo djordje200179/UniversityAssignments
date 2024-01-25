@@ -7,6 +7,11 @@ export interface Enrollment {
 	teacher: TeacherInfo;
 }
 
+export interface Rating {
+	comment: string;
+	rating: number;
+}
+
 @Injectable({
 	providedIn: "root"
 })
@@ -36,6 +41,10 @@ export class TeachersService {
 		return this.httpClient.get<{ name: string }[]>(`${TeachersService.SERVER_URL}/subjects`);
 	}
 
+	public addSubject(subjectName: string) {
+		return this.httpClient.post(`${TeachersService.SERVER_URL}/subjects`, subjectName);
+	}
+
 	public blockTeacher(username: string) {
 		return this.httpClient.put(`${TeachersService.SERVER_URL}/block/${username}`, null);
 	}
@@ -46,5 +55,9 @@ export class TeachersService {
 
 	public getBiographyURL(username: string) {
 		return `${(TeachersService.SERVER_URL)}/biography/${username}`;
+	}
+
+	public getTeacherRatings(username: string) {
+		return this.httpClient.get<Rating[]>(`${TeachersService.SERVER_URL}/ratings/${username}`);
 	}
 }

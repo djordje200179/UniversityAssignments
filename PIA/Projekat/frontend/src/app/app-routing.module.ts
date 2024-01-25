@@ -8,6 +8,8 @@ import {ClassesComponent} from "./pages/classes/classes.component";
 import {StudentsComponent} from "./pages/students/students.component";
 import {StudentComponent} from "./pages/student/student.component";
 import {AdminDashboardComponent} from "./pages/admin-dashboard/admin-dashboard.component";
+import {NotificationsComponent} from "./pages/notifications/notifications.component";
+import {PasswordChangeComponent} from "./pages/password-change/password-change.component";
 
 const routes: Routes = [
 	{
@@ -41,6 +43,14 @@ const routes: Routes = [
 	{
 		path: "admin",
 		component: AdminDashboardComponent
+	},
+	{
+		path: "notifications",
+		component: NotificationsComponent
+	},
+	{
+		path: "password-change",
+		component: PasswordChangeComponent
 	}
 ];
 

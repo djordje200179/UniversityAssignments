@@ -17,11 +17,21 @@
 		Ученици
 	</button>
 
+	<button mat-button routerLink="/notifications" class="nav-link"
+	        *ngIf="currentUser?.role === 'teacher' || currentUser?.role === 'student'">
+		Обавјештења
+	</button>
+
 	<span class="spacer"></span>
 
 	<button mat-button routerLink="/account">
 		{{currentUser?.username}}
 		<mat-icon>person</mat-icon>
+	</button>
+
+	<button mat-button routerLink="/password-change" class="nav-link"
+	        *ngIf="!currentUser">
+		Промјена лозинке
 	</button>
 
 	<button mat-icon-button (click)="signOut()" *ngIf="currentUser">

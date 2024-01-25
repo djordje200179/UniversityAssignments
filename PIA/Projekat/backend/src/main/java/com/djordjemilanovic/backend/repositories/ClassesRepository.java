@@ -15,4 +15,6 @@ public interface ClassesRepository extends JpaRepository<ClassEntity, Integer> {
 	Collection<ClassEntity> findAllByTeacherUsernameAndTimeAfterAndConfirmedIsTrueAndCancelledIsFalse(String username, Timestamp time);
 
 	Collection<ClassEntity> findAllByTeacherUsernameAndTimeAfterAndConfirmedIsFalseAndCancelledIsFalse(String username, Timestamp time);
+
+	long countAllByTimeBeforeAndConfirmedIsTrueAndCancelledIsFalse(Timestamp time);
 }

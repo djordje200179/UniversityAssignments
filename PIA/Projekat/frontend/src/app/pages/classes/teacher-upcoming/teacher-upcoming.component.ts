@@ -46,7 +46,7 @@ export class TeacherUpcomingComponent implements OnInit {
 
 		const tableData: Row[] = [];
 		for (const c of classes) {
-			const studentInfo = c.teacher.info;
+			const studentInfo = c.student.info;
 			const studentName = `${studentInfo.firstName} ${studentInfo.lastName}`;
 
 			let state: State;

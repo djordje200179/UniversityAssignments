@@ -8,7 +8,9 @@ import com.djordjemilanovic.backend.repositories.TeachersRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,6 +23,11 @@ public class TeachersService {
 
 	public Collection<SubjectEntity> getAllSubjects() {
 		return subjectsRepository.findAll();
+	}
+
+	public SubjectEntity addSubject(String name) {
+		var subject = new SubjectEntity(name);
+		return subjectsRepository.save(subject);
 	}
 
 	public Collection<TeacherSubjectEntity> getEnrollments() {
@@ -67,5 +74,22 @@ public class TeachersService {
 		var teacher = teachersRepository.findById(username).orElseThrow();
 		teacher.setActivated(true);
 		teachersRepository.save(teacher);
+	}
+
+	public static record Rating(String comment, Integer rating) {
+	}
+
+	public Collection<Rating> getRatings(String username) {
+		var classes = classesRepository.findAllByTeacherUsername(username);
+
+		var ratings = new ArrayList<Rating>();
+		for (var c : classes) {
+			if (c.getStudentRating() == null)
+				continue;
+
+			ratings.add(new Rating(c.getStudentComment(), c.getStudentRating()));
+		}
+
+		return ratings;
 	}
 }

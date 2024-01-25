@@ -10,6 +10,7 @@ import {TeacherInfo, UsersService} from "src/app/services/users.service";
 import {FormsModule} from "@angular/forms";
 import {MatButtonModule} from "@angular/material/button";
 import {ClassesService, ScheduleRequest} from "../../../services/classes.service";
+import {HttpErrorResponse} from "@angular/common/http";
 
 @Component({
 	selector: "app-schedule-form",
@@ -74,7 +75,26 @@ export class ScheduleFormComponent implements OnChanges {
 			result => {
 				alert("Час је успјешно заказан!")
 			},
-			console.error
+			err => {
+				if (!(err instanceof HttpErrorResponse)) {
+					alert("Непозната грешка!");
+					console.log(err);
+					return;
+				}
+
+				if (err.status == 409) {
+					alert("Изабрани наставник већ има час у изабраном термину!");
+					return;
+				}
+
+				if (err.status == 400) {
+					alert(err.message);
+					return;
+				}
+
+				alert("Непозната грешка!");
+				console.log(err);
+			}
 		);
 	}
 }

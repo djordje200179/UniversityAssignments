@@ -1,7 +1,9 @@
 package com.djordjemilanovic.backend.services;
 
 import com.djordjemilanovic.backend.models.ClassEntity;
+import com.djordjemilanovic.backend.models.NotificationEntity;
 import com.djordjemilanovic.backend.repositories.ClassesRepository;
+import com.djordjemilanovic.backend.repositories.NotificationsRepository;
 import com.djordjemilanovic.backend.repositories.UsersInfoRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,7 @@ import java.util.Date;
 public class ClassesService {
 	private final ClassesRepository classesRepository;
 	private final UsersInfoRepository usersInfoRepository;
+	private final NotificationsRepository notificationsRepository;
 
 	public void scheduleClass(
 			String student, String teacher,
@@ -80,6 +83,14 @@ public class ClassesService {
 		classEntity.setTeacherComment(reason);
 
 		classesRepository.save(classEntity);
+
+		var sb = new StringBuilder();
+		sb.append("Наставник ");
+		sb.append(classEntity.getTeacher().getInfo().getUsername());
+		sb.append(" је отказао час због следећег разлога: ");
+		sb.append(reason);
+
+		notificationsRepository.save(new NotificationEntity(classEntity.getStudent().getInfo(), sb.toString()));
 	}
 
 	public void acceptClass(int id) {
@@ -88,6 +99,13 @@ public class ClassesService {
 		classEntity.setConfirmed(true);
 
 		classesRepository.save(classEntity);
+
+		var sb = new StringBuilder();
+		sb.append("Наставник ");
+		sb.append(classEntity.getTeacher().getInfo().getUsername());
+		sb.append(" је прихватио час.");
+
+		notificationsRepository.save(new NotificationEntity(classEntity.getStudent().getInfo(), sb.toString()));
 	}
 
 	public Collection<ClassEntity> getRequested(String username) {
