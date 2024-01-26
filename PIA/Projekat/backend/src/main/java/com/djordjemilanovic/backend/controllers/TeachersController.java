@@ -9,9 +9,7 @@ import com.djordjemilanovic.backend.services.TeachersService;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.core.io.InputStreamResource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import java.util.Collection;
 
@@ -63,8 +61,13 @@ public class TeachersController {
 	}
 
 	@PostMapping("/subjects")
-	public SubjectEntity addSubject(@RequestBody String name) {
-		return teachersService.addSubject(name);
+	public ResponseEntity<SubjectEntity> addSubject(@RequestBody String name) {
+		try {
+			var subject = teachersService.addSubject(name);
+			return ResponseEntity.ok(subject);
+		} catch (TeachersService.SubjectAlreadyExistsException e) {
+			return ResponseEntity.status(HttpStatus.CONFLICT).build();
+		}
 	}
 
 	@GetMapping("/ratings/{username}")

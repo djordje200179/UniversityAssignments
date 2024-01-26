@@ -60,4 +60,14 @@ public class StatsController {
 	public Map<UserInfoEntity.Gender, Long> getStudentCountByGender() {
 		return statsService.getStudentCountByGender();
 	}
+
+	@GetMapping("/classes-per-days")
+	public Collection<Long> getClassesPerDays() {
+		return statsService.getClassesPerDays();
+	}
+
+	@GetMapping("/top-teachers")
+	public Collection<StatsService.TopTeacherInfo> getTopTeachers() {
+		return statsService.getTopTeachers();
+	}
 }

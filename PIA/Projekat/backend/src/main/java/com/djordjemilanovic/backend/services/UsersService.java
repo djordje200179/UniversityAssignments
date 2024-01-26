@@ -50,7 +50,7 @@ public class UsersService {
 
 	public static class UserAlreadyExistsException extends Exception {
 		public UserAlreadyExistsException() {
-			super("User already exists");
+			super("Корисник већ постоји");
 		}
 	}
 
@@ -174,5 +174,30 @@ public class UsersService {
 		}
 
 		return copiedNotifications;
+	}
+
+	public StudentEntity incrementSchoolYear(String username) {
+		var student = studentsRepository.findById(username).orElse(null);
+
+		switch (student.getSchoolType()) {
+		case ELEMENTARY:
+			if (student.getSchoolYear() == 8) {
+				student.setSchoolYear(1);
+				student.setSchoolType(StudentEntity.SchoolType.GYMNASIUM);
+			} else
+				student.setSchoolYear(student.getSchoolYear() + 1);
+
+			studentsRepository.save(student);
+			break;
+		default:
+			if (student.getSchoolYear() == 4)
+				break;
+
+			student.setSchoolYear(student.getSchoolYear() + 1);
+			studentsRepository.save(student);
+			break;
+		}
+
+		return student;
 	}
 }

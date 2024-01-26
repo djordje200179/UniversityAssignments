@@ -7,6 +7,8 @@ import {SchoolType, StudentInfo, UsersService} from "../../services/users.servic
 import {MatIconModule} from "@angular/material/icon";
 import {MatButtonModule} from "@angular/material/button";
 import {Router} from "@angular/router";
+import {MatInputModule} from "@angular/material/input";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 
 interface Row {
 	username: string;
@@ -20,12 +22,16 @@ interface Row {
 @Component({
 	selector: "app-teachers",
 	standalone: true,
-	imports: [CommonModule, MatSortModule, MatTableModule, MatIconModule, MatButtonModule],
+	imports: [CommonModule, MatSortModule, MatTableModule, MatIconModule, MatButtonModule, MatInputModule, ReactiveFormsModule, FormsModule],
 	templateUrl: "./teachers.component.html",
 	styleUrls: ["./teachers.component.scss"]
 })
 export class TeachersComponent implements OnInit {
-	public tableData?: MatTableDataSource<Row>;
+	public allData? : Row[];
+
+	public searchedSubject = "";
+	public searchedFirstName = "";
+	public searchedLastName = "";
 
 	public displayedColumns: string[] = ["firstName", "lastName", "subject", "rating"];
 
@@ -40,6 +46,19 @@ export class TeachersComponent implements OnInit {
 	@ViewChild(MatSort)
 	public sort?: MatSort;
 
+	public getTableData() : MatTableDataSource<Row> {
+		const filteredData = this.allData?.filter(row => {
+			return row.subject.toLowerCase().includes(this.searchedSubject.toLowerCase()) &&
+				row.firstName.toLowerCase().includes(this.searchedFirstName.toLowerCase()) &&
+				row.lastName.toLowerCase().includes(this.searchedLastName.toLowerCase());
+		});
+
+		const source = new MatTableDataSource(filteredData);
+		source.sort = this.sort!;
+
+		return source;
+	}
+
 	public ngOnInit() {
 		this.teachersService.getAllEnrollments(
 			this.studentInfo.schoolType == SchoolType.Elementary, this.studentInfo.schoolYear
@@ -50,15 +69,10 @@ export class TeachersComponent implements OnInit {
 					firstName: enrollment.teacher.info.firstName,
 					lastName: enrollment.teacher.info.lastName,
 					subject: enrollment.subject.name,
-					rating: 3
+					rating: 0,
 				}));
 
-				const source = new MatTableDataSource(tableData);
-				source.sort = this.sort!;
-
-				this.tableData = source;
-
-				for (const row of this.tableData?.data) {
+				for (const row of tableData) {
 					this.teachersService.getTeacherRatings(row.username).subscribe(
 						ratings => {
 							const sum = ratings.reduce((a, b) => a + b.rating, 0);
@@ -68,6 +82,8 @@ export class TeachersComponent implements OnInit {
 						console.error
 					);
 				}
+
+				this.allData = tableData;
 			},
 			console.error
 		);

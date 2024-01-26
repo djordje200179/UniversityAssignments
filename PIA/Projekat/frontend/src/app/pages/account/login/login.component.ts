@@ -3,6 +3,7 @@ import {Credentials, StudentInfo, TeacherInfo, UsersService} from "../../../serv
 import {SignInFormComponent} from "./sign-in-form/sign-in-form.component";
 import {SignUpFormComponent} from "./sign-up-form/sign-up-form.component";
 import {HttpErrorResponse} from "@angular/common/http";
+import {ForgotPasswordFormComponent} from "./forgot-password-form/forgot-password-form.component";
 
 @Component({
 	selector: "app-login",
@@ -10,7 +11,8 @@ import {HttpErrorResponse} from "@angular/common/http";
 	styleUrls: ["./login.component.scss"],
 	imports: [
 		SignInFormComponent,
-		SignUpFormComponent
+		SignUpFormComponent,
+		ForgotPasswordFormComponent
 	],
 	standalone: true
 })

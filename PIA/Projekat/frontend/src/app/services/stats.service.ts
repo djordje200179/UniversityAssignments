@@ -1,5 +1,6 @@
 import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
+import {TeacherInfo} from "./users.service";
 
 export interface WelcomePageCounters {
 	numberOfStudents: number;
@@ -13,6 +14,11 @@ export type Enrollments = { [key: string]: string[] };
 
 export type SubjectAgeCounters = { [key: string]: { [key: string]: number } };
 export type GenderCounters = { [key: string]: number };
+
+export interface TopTeacher {
+	teacher: TeacherInfo;
+	classesPerMonth: number[];
+}
 
 @Injectable({
 	providedIn: "root"
@@ -42,5 +48,13 @@ export class StatsService {
 
 	public getTeacherCountByGender() {
 		return this.httpClient.get<GenderCounters>(StatsService.SERVER_URL + "/teacher-gender");
+	}
+
+	public getClassesPerDays() {
+		return this.httpClient.get<number[]>(StatsService.SERVER_URL + "/classes-per-days");
+	}
+
+	public getTopTeachers() {
+		return this.httpClient.get<TopTeacher[]>(StatsService.SERVER_URL + "/top-teachers");
 	}
 }

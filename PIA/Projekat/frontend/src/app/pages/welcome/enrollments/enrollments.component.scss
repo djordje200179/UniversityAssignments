@@ -1,0 +1,17 @@
+input {
+	background-color: transparent;
+	color: white;
+	font-weight: bold;
+	border:0;
+	outline:0;
+}
+
+::placeholder {
+	color: white;
+	font-weight: bold;
+	opacity: 1; /* Firefox */
+}
+
+input:focus {
+	outline:none!important;
+}

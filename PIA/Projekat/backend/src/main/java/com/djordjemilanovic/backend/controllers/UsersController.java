@@ -196,6 +196,17 @@ public class UsersController {
 		return resource.getInputStream().readAllBytes();
 	}
 
+	@SneakyThrows
+	@PostMapping(value ="/profile-image/{username}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public UserInfoEntity updateProfileImage(
+			@PathVariable String username,
+			@RequestPart("profile-image") MultipartFile profileImage
+	) {
+		fileStorageService.saveProfileImage(profileImage, username);
+
+		return usersService.getStudent(username).getInfo();
+	}
+
 	@GetMapping("/teachers")
 	public Collection<TeacherEntity> getTeachers() {
 		return usersService.getTeachers();
@@ -214,5 +225,10 @@ public class UsersController {
 	@GetMapping("/notifications/{username}")
 	public Collection<NotificationEntity> getNotifications(@PathVariable String username) {
 		return usersService.getNotifications(username);
+	}
+
+	@PutMapping("/student/{username}/increment")
+	public StudentEntity incrementSchoolYear(@PathVariable String username) {
+		return usersService.incrementSchoolYear(username);
 	}
 }

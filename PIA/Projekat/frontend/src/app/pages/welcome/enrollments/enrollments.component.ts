@@ -3,6 +3,7 @@ import {StatsService} from "../../../services/stats.service";
 import {MatTableDataSource, MatTableModule} from "@angular/material/table";
 import {MatSort, MatSortModule} from "@angular/material/sort";
 import {MatInputModule} from "@angular/material/input";
+import {FormsModule} from "@angular/forms";
 
 interface Row {
 	firstName: string;
@@ -17,14 +18,19 @@ interface Row {
 	imports: [
 		MatTableModule,
 		MatSortModule,
-		MatInputModule
+		MatInputModule,
+		FormsModule
 	],
 	standalone: true
 })
 export class EnrollmentsComponent implements OnInit {
-	public tableData?: MatTableDataSource<Row>;
+	public allData? : Row[];
 
 	public displayedColumns: string[] = ["firstName", "lastName", "subject"];
+
+	public searchedSubject = "";
+	public searchedFirstName = "";
+	public searchedLastName = "";
 
 	public constructor(private readonly statsService: StatsService) {
 
@@ -32,6 +38,19 @@ export class EnrollmentsComponent implements OnInit {
 
 	@ViewChild(MatSort)
 	public sort?: MatSort;
+
+	public getTableData() : MatTableDataSource<Row> {
+		const filteredData = this.allData?.filter(row => {
+			return row.subject.toLowerCase().includes(this.searchedSubject.toLowerCase()) &&
+				row.firstName.toLowerCase().includes(this.searchedFirstName.toLowerCase()) &&
+				row.lastName.toLowerCase().includes(this.searchedLastName.toLowerCase());
+		});
+
+		const source = new MatTableDataSource(filteredData);
+		source.sort = this.sort!;
+
+		return source;
+	}
 
 	public ngOnInit() {
 		this.statsService.getEnrollments().subscribe(
@@ -48,10 +67,7 @@ export class EnrollmentsComponent implements OnInit {
 					}
 				}
 
-				const source = new MatTableDataSource(tableData);
-				source.sort = this.sort!;
-
-				this.tableData = source;
+				this.allData = tableData;
 			},
 			console.error
 		);

@@ -1,8 +1,6 @@
 import {Component, OnInit} from "@angular/core";
 import {CommonModule} from "@angular/common";
 import {CanvasJSAngularChartsModule} from "@canvasjs/angular-charts";
-import {Role, UsersService} from "../../../services/users.service";
-import {Router} from "@angular/router";
 import {StatsService} from "../../../services/stats.service";
 
 
@@ -13,6 +11,11 @@ interface PieChartRecord {
 
 interface BarChartRecord {
 	label: string;
+	y: number;
+}
+
+interface LineChartRecord {
+	x: number;
 	y: number;
 }
 
@@ -27,11 +30,18 @@ export class GraphsComponent implements OnInit {
 	public studentGenderChartOptions = {};
 	public teacherGenderChartOptions = {};
 	public teacherAgeGenderChartOptions = {};
+	public classesPerDaysChartOptions = {};
+	public topTeachersChartOptions = {};
 
 	private static readonly genderTranslations : {[key: string]: string} = {
 		male: "Мушкарци",
 		female: "Жене",
 	};
+
+	private static readonly dayNames = [
+		"Понедељак", "Уторак", "Сриједа", "Четвртак",
+		"Петак", "Субота", "Недеља",
+	];
 
 	private static readonly defaultChartOptions = {
 		animationEnabled: true,
@@ -134,6 +144,72 @@ export class GraphsComponent implements OnInit {
 						yValueFormatString: "#,###",
 						dataPoints: chartData
 					}]
+				};
+			},
+			console.error
+		);
+
+		this.statsService.getClassesPerDays().subscribe(
+			counters => {
+				const graphData = [] as BarChartRecord[];
+				for (let i = 0; i < 7; i++) {
+					graphData.push({
+						label: GraphsComponent.dayNames[i],
+						y: counters[i]
+					});
+				}
+
+
+				this.classesPerDaysChartOptions = {
+					...GraphsComponent.defaultChartOptions,
+					title:{
+						text: "Часови по дану"
+					},
+					data: [{
+						type: "column",
+						dataPoints: graphData
+					}]
+				};
+			},
+			console.error
+		);
+
+		this.statsService.getTopTeachers().subscribe(
+			topTeachers => {
+				const chartData = [];
+
+				for (const teacherInfo of topTeachers) {
+					const dataPoints = [] as LineChartRecord[];
+
+					for (let i = 0; i < 12; i++) {
+						const count = teacherInfo.classesPerMonth[i];
+
+						dataPoints.push({ x: i + 1, y: count});
+					}
+
+					const teacherName = `${teacherInfo.teacher.info.firstName} ${teacherInfo.teacher.info.lastName}`;
+
+					chartData.push({
+							type: "line",
+							name: teacherName,
+							showInLegend: true,
+							dataPoints: dataPoints,
+						}
+					);
+				}
+
+				this.topTeachersChartOptions = {
+					...GraphsComponent.defaultChartOptions,
+					title:{
+						text: "Најактивнији наставници"
+					},
+					axisY: {
+						title: "Број часова"
+					},
+					axisX: {
+						title: "Мјесец"
+					},
+					data: chartData,
 				};
 			},
 			console.error

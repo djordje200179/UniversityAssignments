@@ -25,7 +25,17 @@ public class TeachersService {
 		return subjectsRepository.findAll();
 	}
 
-	public SubjectEntity addSubject(String name) {
+	public static class SubjectAlreadyExistsException extends Exception {
+		public SubjectAlreadyExistsException(String message) {
+			super("Предмет већ постоји");
+		}
+	}
+
+	public SubjectEntity addSubject(String name) throws SubjectAlreadyExistsException {
+		var existing = subjectsRepository.findById(name);
+		if (existing.isPresent())
+			throw new SubjectAlreadyExistsException("Предмет већ постоји");
+
 		var subject = new SubjectEntity(name);
 		return subjectsRepository.save(subject);
 	}

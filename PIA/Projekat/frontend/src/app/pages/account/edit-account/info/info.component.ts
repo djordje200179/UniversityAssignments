@@ -6,7 +6,7 @@ import {MatCardModule} from "@angular/material/card";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatIconModule} from "@angular/material/icon";
 import {MatInputModule} from "@angular/material/input";
-import {StudentInfo, TeacherInfo, UserInfo, UsersService} from "../../../../services/users.service";
+import {SchoolType, StudentInfo, TeacherInfo, UserInfo, UsersService} from "../../../../services/users.service";
 
 @Component({
 	selector: "app-info",
@@ -18,6 +18,13 @@ import {StudentInfo, TeacherInfo, UserInfo, UsersService} from "../../../../serv
 export class InfoComponent {
 	public userInfo: UserInfo;
 
+	public readonly schoolNames : {[key in SchoolType]: string} = {
+		[SchoolType.Elementary]: "Основна школа",
+		[SchoolType.Gymnasium]: "Гимназија",
+		[SchoolType.Specialized]: "Стручна школа",
+		[SchoolType.Art]: "Умјетничка школа"
+	}
+
 	@Input()
 	public studentInfo?: StudentInfo;
 
@@ -26,5 +33,14 @@ export class InfoComponent {
 
 	public constructor(private readonly usersService: UsersService) {
 		this.userInfo = usersService.getCurrentUser()!;
+	}
+
+	public incrementYear() {
+		this.usersService.incrementSchoolYear(this.userInfo.username!).subscribe(
+			student => {
+				window.location.reload();
+			},
+			console.error
+		);
 	}
 }

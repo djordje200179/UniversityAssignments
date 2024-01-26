@@ -164,4 +164,14 @@ export class UsersService {
 	public getNotifications(username: string) {
 		return this.httpClient.get<Notification[]>(`${(UsersService.SERVER_URL)}/notifications/${username}`);
 	}
+
+	public incrementSchoolYear(username: string) {
+		return this.httpClient.put<StudentInfo>(`${(UsersService.SERVER_URL)}/student/${username}/increment`, undefined);
+	}
+
+	public updateProfileImage(username: string, profileImage: File) {
+		const formData = new FormData();
+		formData.append("profile-image", profileImage as Blob);
+		return this.httpClient.post<UserInfo>(`${(UsersService.SERVER_URL)}/profile-image/${username}`, formData);
+	}
 }

@@ -30,13 +30,14 @@ public class StatsService {
 	) {}
 
 	public WelcomePageCounters getWelcomePageCounters() {
-		var weekAgo = new Date(System.currentTimeMillis() - 7L * 24 * 60 * 60 * 1000);
-		var monthAgo = new Date(System.currentTimeMillis() - 30L * 24 * 60 * 60 * 1000);
+		var weekAgo = new Timestamp(System.currentTimeMillis() - 7L * 24 * 60 * 60 * 1000);
+		var monthAgo = new Timestamp(System.currentTimeMillis() - 30L * 24 * 60 * 60 * 1000);
+		var currentTime = new Timestamp(System.currentTimeMillis());
 
 		return new WelcomePageCounters(
 			studentsRepository.count(), teachersRepository.countByActivatedIsTrue(),
-			classesRepository.countAllByTimeBeforeAndConfirmedIsTrueAndCancelledIsFalse(new Timestamp(weekAgo.getTime())),
-			classesRepository.countAllByTimeBeforeAndConfirmedIsTrueAndCancelledIsFalse(new Timestamp(monthAgo.getTime()))
+			classesRepository.findAllByTimeBetweenAndConfirmedIsTrueAndCancelledIsFalse(weekAgo, currentTime).size(),
+			classesRepository.findAllByTimeBetweenAndConfirmedIsTrueAndCancelledIsFalse(monthAgo, currentTime).size()
 		);
 	}
 
@@ -74,5 +75,62 @@ public class StatsService {
 
 	public Map<UserInfoEntity.Gender, Long> getTeacherCountByGender() {
 		return teachersRepository.findAll().stream().collect(Collectors.groupingBy(student -> student.getInfo().getGender(), Collectors.counting()));
+	}
+
+	public Collection<Long> getClassesPerDays() {
+		var counters = new ArrayList<Long>();
+		for (int i = 0; i < 7; i++)
+			counters.add(0L);
+
+		var start = new Timestamp(123, 0, 1, 0, 0, 0, 0);
+		var end = new Timestamp(123, 11, 31, 23, 59, 59, 999999999);
+
+		var allClasses = classesRepository.findAllByTimeBetweenAndConfirmedIsTrueAndCancelledIsFalse(start, end);
+		for (var c : allClasses) {
+			var day = c.getTime().getDay();
+			counters.set(day, counters.get(day) + 1);
+		}
+
+		return counters;
+	}
+
+	public static record TopTeacherInfo (
+		TeacherEntity teacher,
+		ArrayList<Integer> classesPerMonth
+	) {}
+
+	public Collection<TopTeacherInfo> getTopTeachers() {
+		var start = new Timestamp(123, 0, 1, 0, 0, 0, 0);
+		var end = new Timestamp(123, 11, 31, 23, 59, 59, 999999999);
+
+		var allClasses = classesRepository.findAllByTimeBetweenAndConfirmedIsTrueAndCancelledIsFalse(start, end);
+
+		var teacherClasses = new HashMap<TeacherEntity, ArrayList<Integer>>();
+		for (var c : allClasses) {
+			var teacher = c.getTeacher();
+			if (!teacherClasses.containsKey(teacher)) {
+				var perMonthCounters = new ArrayList<Integer>();
+				for (int i = 0; i < 12; i++)
+					perMonthCounters.add(0);
+
+				teacherClasses.put(teacher, perMonthCounters);
+			}
+
+			var month = c.getTime().getMonth();
+			teacherClasses.get(teacher).set(month, teacherClasses.get(teacher).get(month) + 1);
+		}
+
+		var topTeachers = teacherClasses.entrySet().stream().sorted((a, b) -> {
+			var aSum = a.getValue().stream().mapToInt(Integer::intValue).sum();
+			var bSum = b.getValue().stream().mapToInt(Integer::intValue).sum();
+
+			return bSum - aSum;
+		}).limit(10).toList();
+
+		var results = new ArrayList<TopTeacherInfo>();
+		for (var teacher : topTeachers)
+			results.add(new TopTeacherInfo(teacher.getKey(), teacher.getValue()));
+
+		return results;
 	}
 }

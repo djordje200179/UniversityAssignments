@@ -28,7 +28,8 @@ public class FileStorageService {
 	}
 
 	public void saveProfileImage(MultipartFile file, String username) throws IOException {
-		Files.copy(file.getInputStream(), this.profileImagesRoot.resolve(username + ".png"));
+		Files.copy(file.getInputStream(), this.profileImagesRoot.resolve(username + ".png"),
+				java.nio.file.StandardCopyOption.REPLACE_EXISTING);
 	}
 
 	public void saveGenericProfileImage(String username) throws IOException {

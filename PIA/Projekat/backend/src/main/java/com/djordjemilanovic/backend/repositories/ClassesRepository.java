@@ -16,5 +16,5 @@ public interface ClassesRepository extends JpaRepository<ClassEntity, Integer> {
 
 	Collection<ClassEntity> findAllByTeacherUsernameAndTimeAfterAndConfirmedIsFalseAndCancelledIsFalse(String username, Timestamp time);
 
-	long countAllByTimeBeforeAndConfirmedIsTrueAndCancelledIsFalse(Timestamp time);
+	Collection<ClassEntity> findAllByTimeBetweenAndConfirmedIsTrueAndCancelledIsFalse(Timestamp after, Timestamp before);
 }

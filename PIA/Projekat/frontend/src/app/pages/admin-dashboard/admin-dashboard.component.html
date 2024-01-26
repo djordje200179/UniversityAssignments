@@ -1,6 +1,10 @@
 <main *ngIf="loggedUser">
 	<app-graphs/>
 
+	<button mat-button (click)="addSubject()">
+		Додај нови предмет
+	</button>
+
 	<app-teacher-requests/>
 	<app-teachers-list />
 	<app-students-list />
