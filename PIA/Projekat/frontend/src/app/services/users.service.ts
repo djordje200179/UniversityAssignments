@@ -87,6 +87,10 @@ export class UsersService {
 		return this.httpClient.post<UserInfo | null>(`${(UsersService.SERVER_URL)}/sign-in`, credentials);
 	}
 
+	public signInBackup(credentials: Credentials) {
+		return this.httpClient.post<UserInfo | null>(`${(UsersService.SERVER_URL)}/sign-in-backup`, credentials);
+	}
+
 	public signInAdmin() {
 		return this.httpClient.post<UserInfo | null>(
 			"http://localhost:8080/users/sign-in-admin",
@@ -173,5 +177,12 @@ export class UsersService {
 		const formData = new FormData();
 		formData.append("profile-image", profileImage as Blob);
 		return this.httpClient.post<UserInfo>(`${(UsersService.SERVER_URL)}/profile-image/${username}`, formData);
+	}
+
+	public getSecurityQuestion(username: string) {
+		return this.httpClient.get(
+			`${(UsersService.SERVER_URL)}/security-question/${username}`,
+			{responseType: "text"}
+		);
 	}
 }

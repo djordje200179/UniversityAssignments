@@ -1,8 +1,6 @@
 <div class="grid">
 	<div class="column">
-		<app-sign-in-form (signIn)="onSignIn($event)"/>
-		<br>
-		<app-forgot-password-form />
+		<app-sign-in-form (signIn)="onSignIn($event)" (signInBackup)="onSignInBackup($event)"/>
 	</div>
 	<div class="column">
 		<app-sign-up-form (signUpStudent)="onSignUpStudent($event)" (signUpTeacher)="onSignUpTeacher($event)"/>

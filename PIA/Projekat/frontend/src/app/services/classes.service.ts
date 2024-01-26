@@ -40,7 +40,10 @@ export class ClassesService {
 	}
 
 	public scheduleClass(request: ScheduleRequest) {
-		return this.httpClient.post<any>(`${ClassesService.SERVER_URL}/schedule`, request);
+		return this.httpClient.post(
+			`${ClassesService.SERVER_URL}/schedule`, request,
+			{responseType: "text"}
+		);
 	}
 
 	public getArchive(username: string) {
@@ -61,5 +64,12 @@ export class ClassesService {
 
 	public getRequested(username: string) {
 		return this.httpClient.get<ClassInfo[]>(`${ClassesService.SERVER_URL}/requested/${username}`);
+	}
+
+	public getStudentRating(username: string) {
+		return this.httpClient.get(
+			`${ClassesService.SERVER_URL}/student/${username}/rating`,
+			{responseType: "text"}
+		);
 	}
 }

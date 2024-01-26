@@ -25,4 +25,7 @@ export class SignInFormComponent {
 
 	@Output()
 	public readonly signIn = new EventEmitter<Credentials>();
+
+	@Output()
+	public readonly signInBackup = new EventEmitter<string>();
 }

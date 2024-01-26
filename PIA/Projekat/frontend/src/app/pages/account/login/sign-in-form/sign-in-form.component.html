@@ -12,4 +12,8 @@
 	</mat-form-field>
 
 	<button type="submit" mat-flat-button color="primary">Пријави се</button>
+	<br><br>
+	<button type="button" mat-flat-button color="primary" (click)="signInBackup.emit(credentials.username)">
+		Заборавили сте лозинку?
+	</button>
 </form>

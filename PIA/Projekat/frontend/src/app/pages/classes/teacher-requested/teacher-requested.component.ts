@@ -5,26 +5,29 @@ import {MatButtonToggleChange, MatButtonToggleModule} from "@angular/material/bu
 import {MatTableModule} from "@angular/material/table";
 import {ClassesService, ClassInfo} from "../../../services/classes.service";
 import {UsersService} from "../../../services/users.service";
+import {MatIconModule} from "@angular/material/icon";
+import {MatSortModule} from "@angular/material/sort";
 
 interface Row {
 	id: number;
 	studentName: string;
 	topic: string;
 	subject: string;
+	rating: number;
 	time: Date;
 }
 
 @Component({
 	selector: "app-teacher-requested",
 	standalone: true,
-	imports: [CommonModule, MatButtonModule, MatButtonToggleModule, MatTableModule],
+	imports: [CommonModule, MatButtonModule, MatButtonToggleModule, MatTableModule, MatIconModule, MatSortModule],
 	templateUrl: "./teacher-requested.component.html",
 	styleUrls: ["./teacher-requested.component.scss"]
 })
 export class TeacherRequestedComponent implements OnInit {
 	public tableData?: Row[];
 
-	public displayedColumns: string[] = ["topic", "subject", "studentName", "time", "actions"];
+	public displayedColumns: string[] = ["topic", "subject", "studentName", "rating", "time", "actions"];
 
 	public constructor(private readonly usersService: UsersService, private readonly classesService: ClassesService) {
 
@@ -45,13 +48,23 @@ export class TeacherRequestedComponent implements OnInit {
 					const studentInfo = c.student.info;
 					const studentName = `${studentInfo.firstName} ${studentInfo.lastName}`;
 
-					tableData.push({
+					const studentRow = {
 						id: c.id,
 						studentName: studentName,
 						topic: c.topic,
 						subject: c.subject,
-						time: c.time
-					});
+						time: c.time,
+						rating: -1
+					};
+
+					tableData.push(studentRow);
+
+					this.classesService.getStudentRating(c.student.info.username!).subscribe(
+						rating => {
+							studentRow.rating = parseInt(rating);
+						},
+						console.error
+					);
 				}
 
 				this.tableData = tableData;

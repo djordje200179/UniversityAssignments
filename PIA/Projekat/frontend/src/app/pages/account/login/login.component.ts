@@ -3,7 +3,6 @@ import {Credentials, StudentInfo, TeacherInfo, UsersService} from "../../../serv
 import {SignInFormComponent} from "./sign-in-form/sign-in-form.component";
 import {SignUpFormComponent} from "./sign-up-form/sign-up-form.component";
 import {HttpErrorResponse} from "@angular/common/http";
-import {ForgotPasswordFormComponent} from "./forgot-password-form/forgot-password-form.component";
 
 @Component({
 	selector: "app-login",
@@ -11,8 +10,7 @@ import {ForgotPasswordFormComponent} from "./forgot-password-form/forgot-passwor
 	styleUrls: ["./login.component.scss"],
 	imports: [
 		SignInFormComponent,
-		SignUpFormComponent,
-		ForgotPasswordFormComponent
+		SignUpFormComponent
 	],
 	standalone: true
 })
@@ -21,13 +19,58 @@ export class LoginComponent {
 
 	}
 
+	private signInErrorHandler(err: any) {
+		if (!(err instanceof HttpErrorResponse)) {
+			alert("Непозната грешка!");
+			console.error(err);
+			return;
+		}
+
+		if (err.status === 404) {
+			alert("Корисник не постоји!");
+			return;
+		}
+
+		alert("Непозната грешка!");
+		console.error(err);
+	}
+
 	public onSignIn(cred: Credentials) {
 		this.usersService.signIn(cred).subscribe(
 			res => {
 				localStorage.setItem("user-info", JSON.stringify(res));
 				window.location.reload();
 			},
-			console.error
+			this.signInErrorHandler
+		);
+	}
+
+	public onSignInBackup(username: string) {
+		if (username === "") {
+			alert("Морате унијети корисничко име!");
+			return;
+		}
+
+		this.usersService.getSecurityQuestion(username).subscribe(
+			question => {
+				const answer = prompt(question);
+				if (!answer)
+					return;
+
+				const credentials = {
+					username: username,
+					password: answer
+				};
+
+				this.usersService.signInBackup(credentials).subscribe(
+					res => {
+						localStorage.setItem("user-info", JSON.stringify(res));
+						window.location.reload();
+					},
+					this.signInErrorHandler
+				);
+			},
+			this.signInErrorHandler
 		);
 	}
 
@@ -38,13 +81,13 @@ export class LoginComponent {
 				window.location.reload();
 			},
 			err => {
-				if (!(err.error instanceof HttpErrorResponse)) {
+				if (!(err instanceof HttpErrorResponse)) {
 					alert("Непозната грешка!");
 					console.error(err);
 					return;
 				}
 
-				if (err.error.status === 409) {
+				if (err.status === 409) {
 					alert("Корисник са тим подацима већ постоји!");
 					return;
 				}
@@ -62,13 +105,13 @@ export class LoginComponent {
 				window.location.reload();
 			},
 			err => {
-				if (!(err.error instanceof HttpErrorResponse)) {
+				if (!(err instanceof HttpErrorResponse)) {
 					alert("Непозната грешка!");
 					console.error(err);
 					return;
 				}
 
-				if (err.error.status === 409) {
+				if (err.status === 409) {
 					alert("Корисник са тим подацима већ постоји!");
 					return;
 				}

@@ -34,7 +34,7 @@ public class ClassesController {
 					request.isDouble, request.time
 			);
 
-			return ResponseEntity.ok().build();
+			return ResponseEntity.ok("OK");
 		} catch (TeachersService.TeacherOccupiedException e) {
 			return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
 		} catch (IllegalArgumentException e) {
@@ -65,5 +65,10 @@ public class ClassesController {
 	@GetMapping("/requested/{username}")
 	public Collection<ClassEntity> getRequested(@PathVariable String username) {
 		return classesService.getRequested(username);
+	}
+
+	@GetMapping("/student/{username}/rating")
+	public int getStudentRating(@PathVariable String username) {
+		return classesService.getStudentRating(username);
 	}
 }

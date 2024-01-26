@@ -16,6 +16,22 @@
 		<td mat-cell *matCellDef="let element">{{element.topic}}</td>
 	</ng-container>
 
+	<ng-container matColumnDef="rating">
+		<th mat-header-cell *matHeaderCellDef>Оцјена</th>
+		<td mat-cell *matCellDef="let element" class="rating-cell">
+			<div *ngIf="element.rating != -1">
+				<span>
+					{{element.rating}} / 5
+				</span>
+
+				<span *ngFor="let item of [].constructor(5); let i = index">
+					<mat-icon *ngIf="i < element.rating">star</mat-icon>
+					<mat-icon *ngIf="i >= element.rating">star_border</mat-icon>
+				</span>
+			</div>
+		</td>
+	</ng-container>
+
 	<ng-container matColumnDef="time">
 		<th mat-header-cell *matHeaderCellDef>Вријеме</th>
 		<td mat-cell *matCellDef="let element">

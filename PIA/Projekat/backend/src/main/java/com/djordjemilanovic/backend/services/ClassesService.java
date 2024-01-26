@@ -111,4 +111,22 @@ public class ClassesService {
 	public Collection<ClassEntity> getRequested(String username) {
 		return classesRepository.findAllByTeacherUsernameAndTimeAfterAndConfirmedIsFalseAndCancelledIsFalse(username, new Timestamp(new Date().getTime()));
 	}
+
+	public int getStudentRating(String username) {
+		var classes = classesRepository.findAllByStudentUsernameAndTimeBefore(username, new Timestamp(System.currentTimeMillis()));
+
+		int sum = 0, count = 0;
+		for (var c : classes) {
+			if (c.getTeacherRating() == null)
+				continue;
+
+			sum += c.getTeacherRating();
+			count++;
+		}
+
+		if (count < 3)
+			return -1;
+
+		return sum / count;
+	}
 }

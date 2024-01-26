@@ -231,4 +231,23 @@ public class UsersController {
 	public StudentEntity incrementSchoolYear(@PathVariable String username) {
 		return usersService.incrementSchoolYear(username);
 	}
+
+	@GetMapping("/security-question/{username}")
+	public ResponseEntity<String> getSecurityQuestion(@PathVariable String username) {
+		var securityQuestion = usersService.find(username).map(UserInfoEntity::getSecurityQuestion);
+		return securityQuestion.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+	}
+
+
+
+	@PostMapping("/sign-in-backup")
+	public ResponseEntity<UserInfoEntity> signInBackup(@RequestBody SignInRequest request) {
+		try {
+			var user = usersService.findBackup(request.username, request.password);
+			return user.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.internalServerError().build();
+		}
+	}
 }

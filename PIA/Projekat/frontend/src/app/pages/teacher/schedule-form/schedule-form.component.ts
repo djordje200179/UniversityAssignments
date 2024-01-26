@@ -37,7 +37,7 @@ export class ScheduleFormComponent implements OnChanges {
 		time: new Date()
 	}
 
-	public chosenTime : { hour: number, minute: number } = {hour: 8, minute: 0};
+	public chosenTime : { hour: number, minute: number } = null!;
 
 	public constructor(private readonly usersService: UsersService, private readonly classesService: ClassesService) {
 		this.scheduleRequest.student = this.usersService.getCurrentUser()!.username!;
@@ -70,6 +70,16 @@ export class ScheduleFormComponent implements OnChanges {
     }
 
 	public submit() {
+		if (this.scheduleRequest.subject == "") {
+			alert("Морате изабрати предмет!");
+			return;
+		}
+
+		if (!this.chosenTime) {
+			alert("Морате изабрати вријеме!");
+			return;
+		}
+
 		this.scheduleRequest.time.setHours(this.chosenTime.hour, this.chosenTime.minute, 0, 0);
 		this.classesService.scheduleClass(this.scheduleRequest).subscribe(
 			result => {
@@ -78,7 +88,7 @@ export class ScheduleFormComponent implements OnChanges {
 			err => {
 				if (!(err instanceof HttpErrorResponse)) {
 					alert("Непозната грешка!");
-					console.log(err);
+					console.error(err);
 					return;
 				}
 
@@ -88,12 +98,12 @@ export class ScheduleFormComponent implements OnChanges {
 				}
 
 				if (err.status == 400) {
-					alert(err.message);
+					alert(err.error);
 					return;
 				}
 
 				alert("Непозната грешка!");
-				console.log(err);
+				console.error(err);
 			}
 		);
 	}

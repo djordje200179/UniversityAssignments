@@ -20,6 +20,10 @@ public class UsersService {
 	private final SubjectsRepository subjectsRepository;
 	private final NotificationsRepository notificationsRepository;
 
+	public Optional<UserInfoEntity> find(String username) {
+		return usersInfoRepository.findById(username);
+	}
+
 	public Optional<UserInfoEntity> find(String username, String password) {
 		var passwordHash = password;
 
@@ -30,6 +34,20 @@ public class UsersService {
 		var userInfoOpt = usersInfoRepository.findById(username);
 		if (userInfoOpt.isEmpty())
 			return Optional.of(new UserInfoEntity(username, UserInfoEntity.Role.ADMIN));
+
+		var userInfo = userInfoOpt.get();
+		if (userInfo.getStudent() != null)
+			userInfo.setRole(UserInfoEntity.Role.STUDENT);
+		else if (userInfo.getTeacher() != null)
+			userInfo.setRole(UserInfoEntity.Role.TEACHER);
+
+		return Optional.of(userInfo);
+	}
+
+	public Optional<UserInfoEntity> findBackup(String username, String securityAnswer) {
+		var userInfoOpt = usersInfoRepository.findByUsernameAndSecurityAnswer(username, securityAnswer);
+		if (userInfoOpt.isEmpty())
+			return Optional.empty();
 
 		var userInfo = userInfoOpt.get();
 		if (userInfo.getStudent() != null)
