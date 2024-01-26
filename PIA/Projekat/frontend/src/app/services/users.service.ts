@@ -225,4 +225,8 @@ export class UsersService {
 
 		return this.httpClient.put<UserInfo>(`${(UsersService.SERVER_URL)}/password/${username}`, data);
 	}
+
+	public updateUser(userInfo: UserInfo) {
+		return this.httpClient.put<UserInfo>(`${(UsersService.SERVER_URL)}/update`, userInfo);
+	}
 }

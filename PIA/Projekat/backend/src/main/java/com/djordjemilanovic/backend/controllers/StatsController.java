@@ -70,4 +70,14 @@ public class StatsController {
 	public Collection<StatsService.TopTeacherInfo> getTopTeachers() {
 		return statsService.getTopTeachers();
 	}
+
+	@GetMapping("/class-statuses")
+	public Map<String, Long> getClassStatuses() {
+		return statsService.getClassStatuses();
+	}
+
+	@GetMapping("/teacher-statuses")
+	public Map<String, Long> getTeacherStatuses() {
+		return statsService.getTeacherStatuses();
+	}
 }

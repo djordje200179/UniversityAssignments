@@ -57,4 +57,12 @@ export class StatsService {
 	public getTopTeachers() {
 		return this.httpClient.get<TopTeacher[]>(StatsService.SERVER_URL + "/top-teachers");
 	}
+
+	public getClassStatuses() {
+		return this.httpClient.get<{[key: string]: number}>(StatsService.SERVER_URL + "/class-statuses");
+	}
+
+	public getTeacherStatuses() {
+		return this.httpClient.get<{[key: string]: number}>(StatsService.SERVER_URL + "/teacher-statuses");
+	}
 }

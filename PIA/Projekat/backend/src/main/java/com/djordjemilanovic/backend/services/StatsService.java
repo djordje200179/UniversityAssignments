@@ -133,4 +133,22 @@ public class StatsService {
 
 		return results;
 	}
+
+	public Map<String, Long> getClassStatuses() {
+		var results = new HashMap<String, Long>();
+		results.put("Потврђени", classesRepository.countAllByConfirmedIsTrueAndCancelledIsFalse());
+		results.put("На чекању", classesRepository.countAllByConfirmedIsFalseAndCancelledIsFalse());
+		results.put("Отказани", classesRepository.countAllByCancelledIsTrue());
+
+		return results;
+	}
+
+	public Map<String, Long> getTeacherStatuses() {
+		var results = new HashMap<String, Long>();
+		results.put("Активни", teachersRepository.countByActivatedIsTrue());
+		results.put("На чекању", teachersRepository.countByActivatedIsFalseAndBlockedIsFalse());
+		results.put("Блокирани", teachersRepository.countByActivatedIsFalseAndBlockedIsTrue());
+
+		return results;
+	}
 }

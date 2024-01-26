@@ -32,6 +32,8 @@ export class GraphsComponent implements OnInit {
 	public teacherAgeGenderChartOptions = {};
 	public classesPerDaysChartOptions = {};
 	public topTeachersChartOptions = {};
+	public classStatusesChartOptions = {};
+	public teacherStatusesChartOptions = {};
 
 	private static readonly genderTranslations : {[key: string]: string} = {
 		male: "Мушкарци",
@@ -210,6 +212,66 @@ export class GraphsComponent implements OnInit {
 						title: "Мјесец"
 					},
 					data: chartData,
+				};
+			},
+			console.error
+		);
+
+		this.statsService.getClassStatuses().subscribe(
+			statuses => {
+				const chartData = [] as PieChartRecord[];
+
+				for (const status in statuses) {
+					const count = statuses[status];
+					chartData.push({
+						name: status,
+						y: count,
+					})
+				}
+
+				this.classStatusesChartOptions = {
+					...GraphsComponent.defaultChartOptions,
+					title:{
+						text: "Часови према статусу"
+					},
+					data: [{
+						type: "doughnut",
+						startAngle: 45,
+						indexLabel: "{name}: {y}",
+						indexLabelPlacement: "inside",
+						yValueFormatString: "#,###",
+						dataPoints: chartData
+					}]
+				};
+			},
+			console.error
+		);
+
+		this.statsService.getTeacherStatuses().subscribe(
+			statuses => {
+				const chartData = [] as PieChartRecord[];
+
+				for (const status in statuses) {
+					const count = statuses[status];
+					chartData.push({
+						name: status,
+						y: count,
+					})
+				}
+
+				this.teacherStatusesChartOptions = {
+					...GraphsComponent.defaultChartOptions,
+					title:{
+						text: "Наставници према статусу"
+					},
+					data: [{
+						type: "doughnut",
+						startAngle: 45,
+						indexLabel: "{name}: {y}",
+						indexLabelPlacement: "inside",
+						yValueFormatString: "#,###",
+						dataPoints: chartData
+					}]
 				};
 			},
 			console.error

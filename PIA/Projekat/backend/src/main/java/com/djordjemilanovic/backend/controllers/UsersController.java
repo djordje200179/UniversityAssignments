@@ -266,4 +266,18 @@ public class UsersController {
 		var user = usersService.changePassword(username, request.newPassword, request.authAnswer, request.authType);
 		return user.map(ResponseEntity::ok).orElse(ResponseEntity.badRequest().build());
 	}
+
+	@PutMapping("/update")
+	public ResponseEntity<UserInfoEntity> updateUserInfo(@RequestBody UserInfoEntity user) {
+		try {
+			var updatedUser = usersService.updateUser(user);
+			return ResponseEntity.ok(updatedUser);
+		} catch (UsersService.UserAlreadyExistsException e) {
+			return ResponseEntity.status(HttpStatus.CONFLICT).build();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.internalServerError().build();
+		}
+
+	}
 }

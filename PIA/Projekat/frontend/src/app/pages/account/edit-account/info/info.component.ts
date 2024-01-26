@@ -7,6 +7,7 @@ import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatIconModule} from "@angular/material/icon";
 import {MatInputModule} from "@angular/material/input";
 import {SchoolType, StudentInfo, TeacherInfo, UserInfo, UsersService} from "../../../../services/users.service";
+import {HttpErrorResponse} from "@angular/common/http";
 
 @Component({
 	selector: "app-info",
@@ -38,9 +39,35 @@ export class InfoComponent {
 	public incrementYear() {
 		this.usersService.incrementSchoolYear(this.userInfo.username!).subscribe(
 			student => {
-				window.location.reload();
+				Object.assign(this.studentInfo!, student);
 			},
 			console.error
+		);
+	}
+
+	public updateProfile() {
+		this.usersService.updateUser(this.userInfo).subscribe(
+			user => {
+				localStorage.setItem("user-info", JSON.stringify(user));
+				this.userInfo = user;
+				alert("Профил је успјешно ажуриран");
+			},
+			err => {
+				if (!(err instanceof HttpErrorResponse)) {
+					alert("Непозната грешка");
+					console.error(err);
+					return;
+				}
+
+				if (err.status === 409) {
+					alert("И-мејл адреса је већ у употреби");
+					return;
+				}
+
+				alert("Непозната грешка");
+				console.error(err);
+				return;
+			}
 		);
 	}
 }

@@ -13,6 +13,8 @@ public interface TeachersRepository extends JpaRepository<TeacherEntity, String>
 	Collection<TeacherEntity> findAllByTeachesHighIsTrueAndActivatedIsTrue();
 
 	long countByActivatedIsTrue();
+	long countByActivatedIsFalseAndBlockedIsFalse();
+	long countByActivatedIsFalseAndBlockedIsTrue();
 
 	Collection<TeacherEntity> findAllByActivatedIsFalseAndBlockedIsFalse();
 }

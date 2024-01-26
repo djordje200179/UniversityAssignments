@@ -244,4 +244,24 @@ public class UsersService {
 
 		return Optional.of(userInfo);
 	}
+
+	public UserInfoEntity updateUser(UserInfoEntity newUser) throws UserAlreadyExistsException {
+		var oldUser = usersInfoRepository.findById(newUser.getUsername()).get();
+
+		if (
+			!newUser.getEmailAddress().equals(oldUser.getEmailAddress()) &&
+			usersInfoRepository.findByEmailAddress(newUser.getEmailAddress()).isPresent()
+		)
+			throw new UserAlreadyExistsException();
+
+		oldUser.setAddress(newUser.getAddress());
+		oldUser.setEmailAddress(newUser.getEmailAddress());
+		oldUser.setFirstName(newUser.getFirstName());
+		oldUser.setLastName(newUser.getLastName());
+		oldUser.setPhoneNumber(newUser.getPhoneNumber());
+
+		usersInfoRepository.save(oldUser);
+
+		return oldUser;
+	}
 }
