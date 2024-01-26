@@ -13,6 +13,7 @@ import {MatCardModule} from "@angular/material/card";
 import {MatDividerModule} from "@angular/material/divider";
 import {InfoComponent} from "./info/info.component";
 import {ProfileImageComponent} from "./profile-image/profile-image.component";
+import {PasswordComponent} from "./password/password.component";
 
 @Component({
 	selector: "app-edit-form",
@@ -31,7 +32,8 @@ import {ProfileImageComponent} from "./profile-image/profile-image.component";
 		MatCardModule,
 		MatDividerModule,
 		InfoComponent,
-		ProfileImageComponent
+		ProfileImageComponent,
+		PasswordComponent
 	],
 	templateUrl: "./edit-account.component.html",
 	styleUrls: ["./edit-account.component.scss"]

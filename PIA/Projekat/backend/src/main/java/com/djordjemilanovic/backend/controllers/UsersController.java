@@ -252,4 +252,18 @@ public class UsersController {
 			return ResponseEntity.internalServerError().build();
 		}
 	}
+
+	public record PasswordChangeRequest (
+			String newPassword,
+			String authAnswer,
+			String authType
+	) {}
+
+	@PutMapping("/password/{username}")
+	public ResponseEntity<UserInfoEntity> changePassword(
+			@PathVariable String username, @RequestBody PasswordChangeRequest request
+	) {
+		var user = usersService.changePassword(username, request.newPassword, request.authAnswer, request.authType);
+		return user.map(ResponseEntity::ok).orElse(ResponseEntity.badRequest().build());
+	}
 }

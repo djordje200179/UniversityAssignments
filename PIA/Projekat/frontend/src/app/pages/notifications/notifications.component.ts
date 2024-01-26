@@ -23,8 +23,6 @@ export class NotificationsComponent implements OnInit {
 			notifications => {
 				notifications.reverse();
 
-				console.log(notifications);
-
 				for (const notification of notifications)
 					notification.createdAt = new Date(notification.createdAt);
 

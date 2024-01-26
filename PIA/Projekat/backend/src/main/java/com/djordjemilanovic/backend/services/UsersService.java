@@ -3,6 +3,7 @@ package com.djordjemilanovic.backend.services;
 import com.djordjemilanovic.backend.models.*;
 import com.djordjemilanovic.backend.repositories.*;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -217,5 +218,30 @@ public class UsersService {
 		}
 
 		return student;
+	}
+
+	public Optional<UserInfoEntity> changePassword(
+			String username, String newPassword, String authAnswer, String authType
+	) {
+		UserInfoEntity userInfo;
+		switch (authType) {
+		case "old-password":
+			userInfo = find(username, authAnswer).orElse(null);
+			break;
+		case "security-question":
+			userInfo = findBackup(username, authAnswer).orElse(null);
+			break;
+		default:
+			return Optional.empty();
+		}
+
+		if (userInfo == null)
+			return Optional.empty();
+
+		var user = usersRepository.findById(username).orElse(null);
+		user.setPasswordHash(newPassword);
+		usersRepository.save(user);
+
+		return Optional.of(userInfo);
 	}
 }

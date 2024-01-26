@@ -29,7 +29,6 @@ public class UserInfoEntity {
 	@EqualsAndHashCode.Include
 	private String username;
 	@Basic
-	@JsonIgnore
 	@Column(name = "security_question")
 	private String securityQuestion;
 	@Basic

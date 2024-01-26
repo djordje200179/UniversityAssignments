@@ -3,7 +3,15 @@ import {MatInputModule} from "@angular/material/input";
 import {MatIconModule} from "@angular/material/icon";
 import {MatButtonModule} from "@angular/material/button";
 import {FormsModule} from "@angular/forms";
-import {Credentials, Role, SchoolType, StudentInfo, TeacherInfo, UserInfo} from "../../../../services/users.service";
+import {
+	Credentials,
+	Role,
+	SchoolType,
+	StudentInfo,
+	TeacherInfo,
+	UserInfo,
+	UsersService
+} from "../../../../services/users.service";
 import {MatSelectModule} from "@angular/material/select";
 import {MatButtonToggleModule} from "@angular/material/button-toggle";
 import {NgForOf, NgSwitch, NgSwitchCase} from "@angular/common";
@@ -86,7 +94,7 @@ export class SignUpFormComponent implements OnInit {
 
 	public possibleSubjects? : string[];
 
-	public constructor(private readonly teachersService: TeachersService) {
+	public constructor(private readonly teachersService: TeachersService, private readonly usersService: UsersService) {
 
 	}
 
@@ -127,26 +135,9 @@ export class SignUpFormComponent implements OnInit {
 		if (this.credentials.username === "")
 			return alert("Нисте унијели корисничко име.");
 
-		if (this.credentials.password === "")
-			return alert("Нисте унијели лозинку.");
-
-		if (this.credentials.password.length < 6 || this.credentials.password.length > 10)
-			return alert("Лозинка мора имати између 6 и 10 карактера.");
-
-		if (!/\d/.test(this.credentials.password))
-			return alert("Лозинка мора садржати бар један број.");
-
-		if (!/[A-Z]/.test(this.credentials.password))
-			return alert("Лозинка мора садржати бар једно велико слово.");
-
-		if (!/(.*[a-z]){3,}/.test(this.credentials.password))
-			return alert("Лозинка мора садржати бар три мала слова.");
-
-		if (!/[!@#$%^&*]/.test(this.credentials.password))
-			return alert("Лозинка мора садржати бар један специјални карактер.");
-
-		if (!/^[a-zA-Z]/.test(this.credentials.password))
-			return alert("Лозинка мора почети словом.");
+		const passwordError = this.usersService.isPasswordValid(this.credentials.password);
+		if (passwordError)
+			return alert(passwordError);
 
 		if (this.userInfo.securityQuestion === "")
 			return alert("Нисте унијели сигурносно питање.");
@@ -188,9 +179,6 @@ export class SignUpFormComponent implements OnInit {
 			if (this.ageGroups.length === 0)
 				return alert("Нисте одабрали узрастне групе.");
 		}
-
-
-
 
 		this.teacherInfo.teachesLowerElementary = this.ageGroups.includes("lowerElementary");
 		this.teacherInfo.teachesUpperElementary = this.ageGroups.includes("upperElementary");

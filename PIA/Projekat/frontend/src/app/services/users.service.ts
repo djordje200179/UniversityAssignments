@@ -25,7 +25,7 @@ export interface UserInfo {
 	lastName: string;
 	gender: Gender;
 
-	securityQuestion?: string;
+	securityQuestion: string;
 	securityAnswer?: string;
 
 	address: string;
@@ -71,6 +71,11 @@ export interface Notification {
 	message: string;
 	createdAt: Date;
 	seen: boolean;
+}
+
+export enum AuthType {
+	OldPassword = "old-password",
+	SecurityQuestion = "security-question"
 }
 
 @Injectable({
@@ -184,5 +189,40 @@ export class UsersService {
 			`${(UsersService.SERVER_URL)}/security-question/${username}`,
 			{responseType: "text"}
 		);
+	}
+	
+	public isPasswordValid(password: string) {
+		if (password === "")
+			return "Нисте унијели лозинку.";
+
+		if (password.length < 6 || password.length > 10)
+			return "Лозинка мора имати између 6 и 10 карактера.";
+
+		if (!/\d/.test(password))
+			return "Лозинка мора садржати бар један број.";
+
+		if (!/[A-Z]/.test(password))
+			return "Лозинка мора садржати бар једно велико слово.";
+
+		if (!/(.*[a-z]){3,}/.test(password))
+			return "Лозинка мора садржати бар три мала слова.";
+
+		if (!/[!@#$%^&*]/.test(password))
+			return "Лозинка мора садржати бар један специјални карактер.";
+
+		if (!/^[a-zA-Z]/.test(password))
+			return "Лозинка мора почети словом.";
+
+		return null;
+	}
+
+	public changePassword(username: string, newPassword: string, authAnswer: string, authType: AuthType) {
+		const data = {
+			newPassword,
+			authAnswer,
+			authType
+		};
+
+		return this.httpClient.put<UserInfo>(`${(UsersService.SERVER_URL)}/password/${username}`, data);
 	}
 }
