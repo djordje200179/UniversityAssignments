@@ -193,7 +193,9 @@ public class UsersController {
 	@GetMapping(value="/profile-image/{username}", produces = MediaType.IMAGE_PNG_VALUE)
 	public @ResponseBody byte[] getProfileImage(@PathVariable String username) {
 		var resource = fileStorageService.loadProfileImage(username);
-		return resource.getInputStream().readAllBytes();
+		try (var in = resource.getInputStream()) {
+			return in.readAllBytes();
+		}
 	}
 
 	@SneakyThrows
@@ -204,7 +206,7 @@ public class UsersController {
 	) {
 		fileStorageService.saveProfileImage(profileImage, username);
 
-		return usersService.getStudent(username).getInfo();
+		return usersService.find(username).get();
 	}
 
 	@GetMapping("/teachers")
