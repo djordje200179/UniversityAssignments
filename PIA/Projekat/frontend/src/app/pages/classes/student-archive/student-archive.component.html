@@ -31,7 +31,8 @@
 	<ng-container matColumnDef="studentComment">
 		<th mat-header-cell *matHeaderCellDef>Коментар ученика</th>
 		<td mat-cell *matCellDef="let element">
-			<button mat-button *ngIf="!element.studentComment">
+			<button mat-button *ngIf="!element.studentComment"
+                    (click)="commentClass(element.id)">
 				Остави коментар
 			</button>
 

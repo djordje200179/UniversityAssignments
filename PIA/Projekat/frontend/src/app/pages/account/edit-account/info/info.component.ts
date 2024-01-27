@@ -1,4 +1,4 @@
-import {Component, Input} from "@angular/core";
+import {Component, Input, OnInit} from "@angular/core";
 import {CommonModule} from "@angular/common";
 import {FormsModule} from "@angular/forms";
 import {MatButtonModule} from "@angular/material/button";
@@ -8,15 +8,19 @@ import {MatIconModule} from "@angular/material/icon";
 import {MatInputModule} from "@angular/material/input";
 import {SchoolType, StudentInfo, TeacherInfo, UserInfo, UsersService} from "../../../../services/users.service";
 import {HttpErrorResponse} from "@angular/common/http";
+import {MatOptionModule} from "@angular/material/core";
+import {MatSelectModule} from "@angular/material/select";
+import {TeachersService} from "../../../../services/teachers.service";
+import {MatCheckboxModule} from "@angular/material/checkbox";
 
 @Component({
 	selector: "app-info",
 	standalone: true,
-	imports: [CommonModule, FormsModule, MatButtonModule, MatCardModule, MatFormFieldModule, MatIconModule, MatInputModule],
+	imports: [CommonModule, FormsModule, MatButtonModule, MatCardModule, MatFormFieldModule, MatIconModule, MatInputModule, MatOptionModule, MatSelectModule, MatCheckboxModule],
 	templateUrl: "./info.component.html",
 	styleUrls: ["./info.component.scss"]
 })
-export class InfoComponent {
+export class InfoComponent implements OnInit {
 	public userInfo: UserInfo;
 
 	public readonly schoolNames : {[key in SchoolType]: string} = {
@@ -32,8 +36,28 @@ export class InfoComponent {
 	@Input()
 	public teacherInfo?: TeacherInfo;
 
-	public constructor(private readonly usersService: UsersService) {
+	public possibleSubjects? : string[];
+	public teacherSubjects? : string[];
+
+	public constructor(private readonly usersService: UsersService, private readonly teachersService: TeachersService, ) {
 		this.userInfo = usersService.getCurrentUser()!;
+	}
+
+	public ngOnInit() {
+		this.teachersService.getAllSubjects().subscribe(
+			subjects => {
+				this.possibleSubjects = subjects.map(s => s.name);
+			},
+			console.error
+		);
+
+		this.teachersService.getTeacherEnrollments(this.userInfo.username!).subscribe(
+			enrollments => {
+				this.teacherSubjects = enrollments.map(e => e.subject.name);
+			},
+			console.error
+		);
+
 	}
 
 	public incrementYear() {
@@ -68,6 +92,20 @@ export class InfoComponent {
 				console.error(err);
 				return;
 			}
+		);
+	}
+
+	public updateTeacherInfo() {
+		this.teachersService.updateTeacherInfo(
+			this.userInfo.username!, this.teacherSubjects!,
+			this.teacherInfo!.teachesLowerElementary, this.teacherInfo!.teachesUpperElementary,
+			this.teacherInfo!.teachesHigh
+		).subscribe(
+			data => {
+				Object.assign(this.teacherInfo!, data);
+				alert("Профил је успјешно ажуриран");
+			},
+			console.error
 		);
 	}
 }

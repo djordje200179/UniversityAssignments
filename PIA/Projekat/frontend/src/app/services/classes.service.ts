@@ -76,4 +76,21 @@ export class ClassesService {
 			{responseType: "text"}
 		);
 	}
+
+	public getAllTeacherStudentClasses(teacherUsername: string, studentUsername: string) {
+		return this.httpClient.get<ClassInfo[]>(
+			`${ClassesService.SERVER_URL}/${teacherUsername}/${studentUsername}`
+		);
+	}
+
+	public commentClass(id: number, isTeacher: boolean, comment: string, rating: number) {
+		return this.httpClient.post<ClassInfo>(
+			`${ClassesService.SERVER_URL}/comment/${id}`,
+			{
+				comment,
+				rating,
+				isTeacher
+			}
+		);
+	}
 }

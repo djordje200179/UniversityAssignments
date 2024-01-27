@@ -74,4 +74,25 @@ public class TeachersController {
 	public Collection<TeachersService.Rating> getRatings(@PathVariable("username") String username) {
 		return teachersService.getRatings(username);
 	}
+
+	public record UpdateTeacherRequest (
+		String[] subjects,
+		boolean teachesLowerElementary,
+		boolean teachesUpperElementary,
+		boolean teachesHigh
+	) {}
+
+	@PutMapping("/update/{username}")
+	public TeacherEntity updateTeacher(
+			@PathVariable("username") String username,
+			@RequestBody UpdateTeacherRequest request
+	) {
+		return teachersService.updateTeacher(
+			username,
+			request.subjects(),
+			request.teachesLowerElementary(),
+			request.teachesUpperElementary(),
+			request.teachesHigh()
+		);
+	}
 }

@@ -1,1 +1,52 @@
-<p>student works!</p>
+
+<table mat-table [dataSource]="tableData ?? []">
+	<ng-container matColumnDef="subject">
+		<th mat-header-cell *matHeaderCellDef>Предмет</th>
+		<td mat-cell *matCellDef="let element">{{element.subject}}</td>
+	</ng-container>
+
+	<ng-container matColumnDef="topic">
+		<th mat-header-cell *matHeaderCellDef>Тема</th>
+		<td mat-cell *matCellDef="let element">{{element.topic}}</td>
+	</ng-container>
+
+	<ng-container matColumnDef="time">
+		<th mat-header-cell *matHeaderCellDef>Вријеме</th>
+		<td mat-cell *matCellDef="let element">
+			{{element.time | date:"dd. MM. YYYY. 'у' HH:mm"}}
+		</td>
+	</ng-container>
+
+	<ng-container matColumnDef="teacherComment">
+		<th mat-header-cell *matHeaderCellDef>Коментар</th>
+		<td mat-cell *matCellDef="let element">
+			<button *ngIf="!element.teacherComment"
+			        mat-icon-button color="primary"
+			        (click)="commentClass(element.id)">
+				<mat-icon>add</mat-icon>
+			</button>
+			<span *ngIf="element.teacherComment">
+				{{element.teacherComment}}
+			</span>
+		</td>
+	</ng-container>
+
+	<ng-container matColumnDef="teacherRating">
+		<th mat-header-cell *matHeaderCellDef>Оцјена</th>
+		<td mat-cell *matCellDef="let element" class="rating-cell">
+			<div *ngIf="element.teacherRating">
+				<span>
+					{{element.teacherRating}} / 5
+				</span>
+
+				<span *ngFor="let item of [].constructor(5); let i = index">
+					<mat-icon *ngIf="i < element.teacherRating">star</mat-icon>
+					<mat-icon *ngIf="i >= element.teacherRating">star_border</mat-icon>
+				</span>
+			</div>
+		</td>
+	</ng-container>
+
+	<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+	<tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>

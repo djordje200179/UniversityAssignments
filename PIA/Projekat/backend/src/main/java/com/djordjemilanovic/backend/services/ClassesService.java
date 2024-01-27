@@ -133,4 +133,31 @@ public class ClassesService {
 
 		return sum / count;
 	}
+
+	public Collection<ClassEntity> getClasses(String teacherUsername, String studentUsername) {
+		return classesRepository.findAllByTeacherUsernameAndStudentUsernameAndTimeBefore(
+				teacherUsername, studentUsername,
+				new Timestamp(System.currentTimeMillis())
+		);
+	}
+
+	public ClassEntity commentClass(
+			int id,
+			int rating, String comment,
+			boolean isTeacher
+	) {
+		var classEntity = classesRepository.findById(id).get();
+
+		if (isTeacher) {
+			classEntity.setTeacherRating(rating);
+			classEntity.setTeacherComment(comment);
+		} else {
+			classEntity.setStudentRating(rating);
+			classEntity.setStudentComment(comment);
+		}
+
+		classesRepository.save(classEntity);
+
+		return classEntity;
+	}
 }

@@ -76,4 +76,21 @@ public class ClassesController {
 	public Collection<ClassEntity> getTeacherClasses(@PathVariable String username) {
 		return classesService.getTeacherClasses(username);
 	}
+
+	@GetMapping("/{teacherUsername}/{studentUsername}")
+	public Collection<ClassEntity> getClasses(
+			@PathVariable String teacherUsername, @PathVariable String studentUsername
+	) {
+		return classesService.getClasses(teacherUsername, studentUsername);
+	}
+
+	public record RateRequest(int rating, String comment, Boolean isTeacher) {}
+
+	@PostMapping("/comment/{id}")
+	public ClassEntity commentClass(
+			@PathVariable int id,
+			@RequestBody RateRequest request
+	) {
+		return classesService.commentClass(id, request.rating, request.comment, request.isTeacher);
+	}
 }

@@ -57,11 +57,27 @@
 					</div>
 				</div>
 				<div *ngIf="teacherInfo">
+					<mat-form-field appearance="outline">
+						<mat-label>Предмети</mat-label>
+						<mat-select [(ngModel)]="teacherSubjects" multiple required name="subjects">
+							<mat-option *ngFor="let subject of possibleSubjects" [value]="subject">{{subject}}</mat-option>
+						</mat-select>
+					</mat-form-field>
 
+					<h3>Узрасне групе:</h3>
+					<ul>
+						<li><mat-checkbox [(ngModel)]="teacherInfo.teachesLowerElementary">Нижи основци</mat-checkbox></li>
+						<li><mat-checkbox [(ngModel)]="teacherInfo.teachesUpperElementary">Виши основци</mat-checkbox></li>
+						<li><mat-checkbox [(ngModel)]="teacherInfo.teachesHigh">Средњошколци</mat-checkbox></li>
+					</ul>
 				</div>
 			</div>
 		</div>
 
-		<button mat-flat-button color="primary" (click)="updateProfile()">Сачувај</button>
+		<button mat-flat-button color="primary" (click)="updateProfile()">Сачувај основне информације</button>
+		<button mat-flat-button color="primary" *ngIf="teacherInfo"
+		        (click)="updateTeacherInfo()">
+			Сачувај информације о наставнику
+		</button>
 	</mat-card-content>
 </mat-card>

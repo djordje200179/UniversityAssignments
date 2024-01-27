@@ -9,6 +9,7 @@ import {CalendarModule, DateAdapter} from "angular-calendar";
 import {adapterFactory} from "angular-calendar/date-adapters/date-fns";
 import {registerLocaleData} from "@angular/common";
 import localeSr from '@angular/common/locales/sr-Cyrl-BA';
+import {MAT_DIALOG_DEFAULT_OPTIONS, MatDialogModule} from "@angular/material/dialog";
 
 registerLocaleData(localeSr);
 
@@ -21,10 +22,13 @@ registerLocaleData(localeSr);
 		AppRoutingModule,
 		BrowserAnimationsModule,
 		HttpClientModule,
+		MatDialogModule,
 		HeaderComponent,
 		CalendarModule.forRoot({provide: DateAdapter, useFactory: adapterFactory})
 	],
-	providers: [],
+	providers: [
+		{provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: true}}
+	],
 	exports: [],
 	bootstrap: [AppComponent]
 })

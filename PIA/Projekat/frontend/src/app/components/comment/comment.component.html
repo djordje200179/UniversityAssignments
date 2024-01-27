@@ -1,0 +1,47 @@
+<mat-dialog-content>
+	<h3 mat-dialog-title>Ваш коментар за одржани час:</h3>
+	<mat-form-field>
+		<textarea matInput [(ngModel)]="rating.comment"
+		          placeholder="Коментар" name="comment">
+
+		</textarea>
+	</mat-form-field>
+
+	<h3 mat-dialog-title>Колико сте задовољни одржаним часом?</h3>
+	<mat-button-toggle-group name="rating" [(ngModel)]="rating.rating">
+		<mat-button-toggle [value]="1">
+			<mat-icon fontIcon="star" />
+		</mat-button-toggle>
+
+		<mat-button-toggle [value]="2">
+			<mat-icon fontIcon="star" />
+			<mat-icon fontIcon="star" />
+		</mat-button-toggle>
+
+		<mat-button-toggle [value]="3">
+			<mat-icon fontIcon="star" />
+			<mat-icon fontIcon="star" />
+			<mat-icon fontIcon="star" />
+		</mat-button-toggle>
+
+		<mat-button-toggle [value]="4">
+			<mat-icon fontIcon="star" />
+			<mat-icon fontIcon="star" />
+			<mat-icon fontIcon="star" />
+			<mat-icon fontIcon="star" />
+		</mat-button-toggle>
+
+		<mat-button-toggle [value]="5">
+			<mat-icon fontIcon="star" />
+			<mat-icon fontIcon="star" />
+			<mat-icon fontIcon="star" />
+			<mat-icon fontIcon="star" />
+			<mat-icon fontIcon="star" />
+		</mat-button-toggle>
+	</mat-button-toggle-group>
+
+	<mat-dialog-actions>
+		<button mat-button (click)="dialogRef.close()">Откажи</button>
+		<button mat-button [mat-dialog-close]="rating">Пошаљи</button>
+	</mat-dialog-actions>
+</mat-dialog-content>

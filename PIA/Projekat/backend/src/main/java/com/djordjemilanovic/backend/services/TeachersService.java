@@ -102,4 +102,31 @@ public class TeachersService {
 
 		return ratings;
 	}
+
+	public TeacherEntity updateTeacher(
+			String username, String[] subjects,
+			boolean teachesLowerElementary, boolean teachesUpperElementary, boolean teachesHigh
+	) {
+		var teacher = teachersRepository.findById(username).orElseThrow();
+
+		teacher.setTeachesLowerElementary(teachesLowerElementary);
+		teacher.setTeachesUpperElementary(teachesUpperElementary);
+		teacher.setTeachesHigh(teachesHigh);
+		teachersRepository.save(teacher);
+
+		var existingTeacherSubjects = teacherSubjectRepository.findAllByIdTeacherUsername(username);
+		teacherSubjectRepository.deleteAll(existingTeacherSubjects);
+
+		var teacherSubjects = new ArrayList<TeacherSubjectEntity>();
+		for (var subjectName : subjects) {
+			var subject = subjectsRepository.findById(subjectName).orElseThrow();
+
+			var teacherSubject = new TeacherSubjectEntity(teacher, subject);
+			teacherSubjects.add(teacherSubject);
+		}
+
+		teacherSubjectRepository.saveAll(teacherSubjects);
+
+		return teacher;
+	}
 }

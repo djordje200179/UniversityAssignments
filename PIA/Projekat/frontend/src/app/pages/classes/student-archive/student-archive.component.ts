@@ -5,8 +5,11 @@ import {ClassesService} from "../../../services/classes.service";
 import {MatSortModule} from "@angular/material/sort";
 import {MatTableModule} from "@angular/material/table";
 import {MatButtonModule} from "@angular/material/button";
+import {MatDialog} from "@angular/material/dialog";
+import {CommentComponent, Rating} from "../../../components/comment/comment.component";
 
 interface Row {
+	id: number;
 	teacherName: string;
 	topic: string;
 	subject: string;
@@ -28,7 +31,11 @@ export class StudentArchiveComponent implements OnInit {
 	public displayedColumns: string[] = ["topic", "subject", "teacherName", "time", "teacherComment", "studentComment"];
 
 
-	public constructor(private readonly usersService: UsersService, private readonly classesService: ClassesService) {
+	public constructor(
+		private readonly usersService: UsersService,
+		private readonly classesService: ClassesService,
+		public dialog: MatDialog
+	) {
 
 	}
 
@@ -45,6 +52,7 @@ export class StudentArchiveComponent implements OnInit {
 					const teacherName = `${teacherInfo.firstName} ${teacherInfo.lastName}`;
 
 					tableData.push({
+						id: c.id,
 						teacherName: teacherName,
 						topic: c.topic,
 						subject: c.subject,
@@ -59,6 +67,40 @@ export class StudentArchiveComponent implements OnInit {
 				this.tableData = tableData;
 			},
 			console.error
+		);
+	}
+
+	public commentClass(id: number) {
+		const dialogRef = this.dialog.open<CommentComponent, any, Rating>(
+			CommentComponent,
+			{
+				height: '370px',
+				width: '600px',
+			}
+		);
+
+		dialogRef.afterClosed().subscribe(
+			result => {
+				if (!result)
+					return;
+
+				if (!result.comment || !result.rating) {
+					alert("Нисте унијели све потребне податке.");
+					return;
+				}
+
+				this.classesService.commentClass(id, false, result.comment, result.rating).subscribe(
+					() => {
+						alert("Успјешно сте оцјенили час.");
+						const c = this.tableData!.find(c => c.id === id)!;
+						c.studentComment = result.comment;
+						c.time = new Date();
+
+						this.tableData = this.tableData!;
+					},
+					console.error
+				);
+			}
 		);
 	}
 }

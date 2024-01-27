@@ -60,4 +60,18 @@ export class TeachersService {
 	public getTeacherRatings(username: string) {
 		return this.httpClient.get<Rating[]>(`${TeachersService.SERVER_URL}/ratings/${username}`);
 	}
+
+	public updateTeacherInfo(
+		username: string, subjects: string[],
+		teachesLowerElementary: boolean, teachesUpperElementary: boolean, teachesHigh: boolean
+	) {
+		const data = {
+			subjects,
+			teachesLowerElementary,
+			teachesUpperElementary,
+			teachesHigh
+		};
+
+		return this.httpClient.put<TeacherInfo>(`${TeachersService.SERVER_URL}/update/${username}`, data);
+	}
 }
