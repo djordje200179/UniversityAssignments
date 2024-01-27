@@ -6,12 +6,17 @@
 	</mat-card-header>
 	<mat-card-content>
 		<form>
-			<mat-form-field class="topic">
-				<mat-label>Тема часа</mat-label>
-				<textarea matInput [(ngModel)]="scheduleRequest.topic" required name="topic"></textarea>
-			</mat-form-field>
+			<mwl-calendar-week-view [weekStartsOn]="1" [excludeDays]="[0, 6]"
+			                        [dayStartHour]="8" [dayEndHour]="19" [locale]="'sr-cyrl-ba'"
+			                        [viewDate]="viewDate" [events]="events ?? []"
+									(hourSegmentClicked)="hourClicked($event.date)" />
 
-			<section class="date-picker">
+			<aside>
+				<mat-form-field>
+					<mat-label>Тема часа</mat-label>
+					<textarea matInput [(ngModel)]="scheduleRequest.topic" required name="topic"></textarea>
+				</mat-form-field>
+
 				<mat-form-field>
 					<mat-label>Предмет</mat-label>
 					<mat-select [disabled]="teacherSubjects?.length === 1" [(value)]="scheduleRequest.subject"
@@ -44,7 +49,7 @@
 				</mat-form-field>
 
 				<button mat-raised-button color="primary" (click)="submit()">Потврди</button>
-			</section>
+			</aside>
 		</form>
 	</mat-card-content>
 </mat-card>

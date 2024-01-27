@@ -3,14 +3,39 @@ form {
 	gap: 20px;
 }
 
-.topic {
+mat-form-field {
+	display: block !important;
+}
+
+mwl-calendar-week-view {
 	flex: 1;
 }
 
-.date-picker {
+@import "angular-calendar/scss/angular-calendar";
 
+.dark-theme {
+	$bg-dark-primary: #303030;
+	$bg-dark-secondary: #212121;
+	$bg-active: #2c343a;
+	$text-color: #fff;
+	$border-color: #212121;
+
+	@include cal-theme((
+		bg-primary: $bg-dark-primary,
+		bg-secondary: $bg-dark-secondary,
+		weekend-color: indianred,
+		bg-active: $bg-active,
+		border-color: $border-color,
+		gray: $bg-dark-secondary,
+		today-bg: $bg-dark-secondary,
+		event-color-primary: $bg-dark-secondary,
+	));
+
+	.cal-month-view .cal-day-cell.cal-out-month .cal-day-number {
+		opacity: 0.15;
+	}
 }
 
-.date-picker > mat-form-field {
-	display: block;
+h1 {
+	text-align: center;
 }

@@ -58,8 +58,7 @@ export class TeacherCalendarComponent implements OnInit, OnDestroy {
 
 	public constructor(
 		@Inject(DOCUMENT) private readonly document: Document,
-		private readonly classesService: ClassesService,
-		private readonly usersService: UsersService
+		private readonly classesService: ClassesService, private readonly usersService: UsersService
 	) { }
 
 	private readonly colors: any = {
