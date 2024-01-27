@@ -71,4 +71,9 @@ public class ClassesController {
 	public int getStudentRating(@PathVariable String username) {
 		return classesService.getStudentRating(username);
 	}
+
+	@GetMapping("/teacher/{username}")
+	public Collection<ClassEntity> getTeacherClasses(@PathVariable String username) {
+		return classesService.getTeacherClasses(username);
+	}
 }

@@ -5,11 +5,19 @@ import {StudentArchiveComponent} from "./student-archive/student-archive.compone
 import {StudentUpcomingComponent} from "./student-upcoming/student-upcoming.component";
 import {TeacherUpcomingComponent} from "./teacher-upcoming/teacher-upcoming.component";
 import {TeacherRequestedComponent} from "./teacher-requested/teacher-requested.component";
+import {TeacherCalendarComponent} from "./teacher-calendar/teacher-calendar.component";
 
 @Component({
 	selector: "app-classes",
 	standalone: true,
-	imports: [CommonModule, StudentArchiveComponent, StudentUpcomingComponent, TeacherUpcomingComponent, TeacherRequestedComponent],
+	imports: [
+		CommonModule,
+		StudentArchiveComponent,
+		StudentUpcomingComponent,
+		TeacherUpcomingComponent,
+		TeacherRequestedComponent,
+		TeacherCalendarComponent
+	],
 	templateUrl: "./classes.component.html",
 	styleUrls: ["./classes.component.scss"]
 })

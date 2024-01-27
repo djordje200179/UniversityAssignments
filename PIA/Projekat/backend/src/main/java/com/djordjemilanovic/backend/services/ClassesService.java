@@ -112,6 +112,10 @@ public class ClassesService {
 		return classesRepository.findAllByTeacherUsernameAndTimeAfterAndConfirmedIsFalseAndCancelledIsFalse(username, new Timestamp(new Date().getTime()));
 	}
 
+	public Collection<ClassEntity> getTeacherClasses(String username) {
+		return classesRepository.findAllByTeacherUsername(username);
+	}
+
 	public int getStudentRating(String username) {
 		var classes = classesRepository.findAllByStudentUsernameAndTimeBefore(username, new Timestamp(System.currentTimeMillis()));
 

@@ -66,6 +66,10 @@ export class ClassesService {
 		return this.httpClient.get<ClassInfo[]>(`${ClassesService.SERVER_URL}/requested/${username}`);
 	}
 
+	public getAllTeacherClasses(username: string) {
+		return this.httpClient.get<ClassInfo[]>(`${ClassesService.SERVER_URL}/teacher/${username}`);
+	}
+
 	public getStudentRating(username: string) {
 		return this.httpClient.get(
 			`${ClassesService.SERVER_URL}/student/${username}/rating`,
