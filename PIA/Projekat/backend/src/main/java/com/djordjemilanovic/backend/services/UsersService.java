@@ -3,7 +3,6 @@ package com.djordjemilanovic.backend.services;
 import com.djordjemilanovic.backend.models.*;
 import com.djordjemilanovic.backend.repositories.*;
 import lombok.AllArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -25,10 +24,16 @@ public class UsersService {
 		return usersInfoRepository.findById(username);
 	}
 
-	public Optional<UserInfoEntity> find(String username, String password) {
-		var passwordHash = password;
+	public static String encryptPassword(String password) {
+		var sb = new StringBuilder();
+		for (var c : password.toCharArray())
+			sb.append((char) (c + 1));
 
-		var optionalUser = usersRepository.findByUsernameAndPasswordHash(username, password);
+		return sb.toString();
+	}
+
+	public Optional<UserInfoEntity> find(String username, String password) {
+		var optionalUser = usersRepository.findByUsernameAndPasswordHash(username, encryptPassword(password));
 		if (optionalUser.isEmpty())
 			return Optional.empty();
 
@@ -86,9 +91,7 @@ public class UsersService {
 		if (usersInfoRepository.findByEmailAddress(emailAddress).isPresent())
 			throw new UserAlreadyExistsException();
 
-		var passwordHash = password;
-
-		var user = new UserEntity(username, passwordHash);
+		var user = new UserEntity(username, encryptPassword(password));
 		var userInfo = new UserInfoEntity(
 				username,
 				securityQuestion, securityAnswer,
@@ -239,7 +242,7 @@ public class UsersService {
 			return Optional.empty();
 
 		var user = usersRepository.findById(username).orElse(null);
-		user.setPasswordHash(newPassword);
+		user.setPasswordHash(encryptPassword(newPassword));
 		usersRepository.save(user);
 
 		return Optional.of(userInfo);
