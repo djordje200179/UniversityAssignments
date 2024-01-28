@@ -5,6 +5,8 @@ import {MatButtonModule} from "@angular/material/button";
 import {MatCardModule} from "@angular/material/card";
 import {MatDividerModule} from "@angular/material/divider";
 import {TeachersService} from "../../../services/teachers.service";
+import {MatDialog} from "@angular/material/dialog";
+import {EditTeacherComponent} from "../edit-teacher/edit-teacher.component";
 
 @Component({
 	selector: "app-teachers-list",
@@ -16,7 +18,10 @@ import {TeachersService} from "../../../services/teachers.service";
 export class TeachersListComponent implements OnInit {
 	public teachers?: TeacherInfo[];
 
-	public constructor(public readonly usersService: UsersService, public readonly teachersService: TeachersService) {
+	public constructor(
+		public readonly usersService: UsersService, public readonly teachersService: TeachersService,
+		public dialog: MatDialog
+	) {
 	}
 
 	public ngOnInit(): void {
@@ -44,6 +49,20 @@ export class TeachersListComponent implements OnInit {
 				teacher.blocked = true;
 			},
 			console.error
+		);
+	}
+
+	public editTeacher(teacher: TeacherInfo) {
+		let dialogRef = this.dialog.open(EditTeacherComponent,
+			{
+				data: teacher,
+				height: '470px',
+				width: '550px'
+			}
+		).afterClosed().subscribe(
+			() => {
+				this.ngOnInit();
+			}
 		);
 	}
 }

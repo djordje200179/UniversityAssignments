@@ -11,7 +11,8 @@
 				<h4 *ngIf="teacher.activated">АКТИВ(ан/на)</h4>
 			</mat-card-subtitle>
 		</mat-card-header>
-		<img mat-card-image [src]="usersService.getProfileImageURL(teacher.info.username!)">
+		<img mat-card-image [src]="usersService.getProfileImageURL(teacher.info.username!)"
+							(click)="editTeacher(teacher)">
 		<mat-card-content>
 			<mat-divider />
 			<a mat-button [href]="teachersService.getBiographyURL(teacher.info.username!)">Погледај биографију</a>

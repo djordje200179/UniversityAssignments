@@ -1,0 +1,17 @@
+mat-form-field, .year-container {
+	width: 250px;
+	display: block;
+}
+
+.grid {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+}
+
+.column {
+	padding: 10px;
+}
+
+ul {
+	list-style: none;
+}

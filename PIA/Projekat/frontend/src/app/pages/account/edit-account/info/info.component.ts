@@ -39,7 +39,7 @@ export class InfoComponent implements OnInit {
 	public possibleSubjects? : string[];
 	public teacherSubjects? : string[];
 
-	public constructor(private readonly usersService: UsersService, private readonly teachersService: TeachersService, ) {
+	public constructor(private readonly usersService: UsersService, private readonly teachersService: TeachersService) {
 		this.userInfo = usersService.getCurrentUser()!;
 	}
 

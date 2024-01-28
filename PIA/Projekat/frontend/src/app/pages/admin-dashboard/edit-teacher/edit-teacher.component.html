@@ -1,0 +1,54 @@
+<div class="grid">
+	<div class="column">
+		<mat-form-field appearance="outline">
+			<mat-label>Име</mat-label>
+			<input matInput [(ngModel)]="data.info.firstName" name="first-name"
+			       type="text" required>
+		</mat-form-field>
+
+		<mat-form-field appearance="outline">
+			<mat-label>Презиме</mat-label>
+			<input matInput [(ngModel)]="data.info.lastName" name="last-name"
+			       type="text" required>
+		</mat-form-field>
+
+		<mat-form-field appearance="outline">
+			<mat-label>Адреса</mat-label>
+			<input matInput [(ngModel)]="data.info.address" name="address"
+			       type="text" required>
+		</mat-form-field>
+
+		<mat-form-field appearance="outline">
+			<mat-label>Број телефона</mat-label>
+			<input matInput [(ngModel)]="data.info.phoneNumber" name="phone-number"
+			       type="text" required>
+		</mat-form-field>
+
+		<mat-form-field appearance="outline">
+			<mat-label>И-мејл адреса</mat-label>
+			<input matInput [(ngModel)]="data.info.emailAddress" name="email"
+			       type="email" required>
+		</mat-form-field>
+	</div>
+
+	<div class="column">
+		<mat-form-field appearance="outline">
+			<mat-label>Предмети</mat-label>
+			<mat-select [(ngModel)]="teacherSubjects" multiple required name="subjects">
+				<mat-option *ngFor="let subject of possibleSubjects" [value]="subject">{{subject}}</mat-option>
+			</mat-select>
+		</mat-form-field>
+
+		<h3>Узрасне групе:</h3>
+		<ul>
+			<li><mat-checkbox [(ngModel)]="data.teachesLowerElementary">Нижи основци</mat-checkbox></li>
+			<li><mat-checkbox [(ngModel)]="data.teachesUpperElementary">Виши основци</mat-checkbox></li>
+			<li><mat-checkbox [(ngModel)]="data.teachesHigh">Средњошколци</mat-checkbox></li>
+		</ul>
+	</div>
+
+	<mat-dialog-actions>
+		<button mat-button (click)="updateTeacher()">Сачувај</button>
+		<button mat-button (click)="dialogRef.close()">Откажи</button>
+	</mat-dialog-actions>
+</div>
