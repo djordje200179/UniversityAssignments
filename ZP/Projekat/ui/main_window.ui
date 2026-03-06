@@ -1,0 +1,434 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1389</width>
+    <height>612</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>PGP</string>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <widget class="QGroupBox" name="privateRingGroup">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>60</y>
+      <width>731</width>
+      <height>251</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Private ring</string>
+    </property>
+    <widget class="QTableWidget" name="privateRingTable">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>20</y>
+       <width>701</width>
+       <height>221</height>
+      </rect>
+     </property>
+     <property name="columnCount">
+      <number>6</number>
+     </property>
+     <column>
+      <property name="text">
+       <string>ID</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Name</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Email</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>ExportKey</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>ExportPublic</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Delete</string>
+      </property>
+     </column>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="publicRingGroup">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>320</y>
+      <width>721</width>
+      <height>251</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Public ring</string>
+    </property>
+    <widget class="QTableWidget" name="publicRingTable">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>20</y>
+       <width>701</width>
+       <height>221</height>
+      </rect>
+     </property>
+     <column>
+      <property name="text">
+       <string>ID</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Name</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Email</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Delete</string>
+      </property>
+     </column>
+    </widget>
+   </widget>
+   <widget class="QPushButton" name="newKeyButton">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>10</y>
+      <width>93</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>New key</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="importKeyButton">
+    <property name="geometry">
+     <rect>
+      <x>120</x>
+      <y>10</y>
+      <width>93</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Import key</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="readMessageButton">
+    <property name="geometry">
+     <rect>
+      <x>380</x>
+      <y>10</y>
+      <width>93</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Read message</string>
+    </property>
+   </widget>
+   <widget class="QGroupBox" name="sendMessageBox">
+    <property name="geometry">
+     <rect>
+      <x>780</x>
+      <y>60</y>
+      <width>551</width>
+      <height>511</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Send message</string>
+    </property>
+    <widget class="QCheckBox" name="signMessageInput">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>390</y>
+       <width>51</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Sign</string>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="compressMessageInput">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>420</y>
+       <width>81</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Compress</string>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="encodeMessageInput">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>450</y>
+       <width>131</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Encode in Base64</string>
+     </property>
+    </widget>
+    <widget class="QComboBox" name="senderInput">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>90</x>
+       <y>20</y>
+       <width>391</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="editable">
+      <bool>false</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="senderLabel">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>20</y>
+       <width>61</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Sender:</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="recipientLabel">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>50</y>
+       <width>61</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Recipient:</string>
+     </property>
+    </widget>
+    <widget class="QComboBox" name="recipientInput">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>90</x>
+       <y>50</y>
+       <width>391</width>
+       <height>22</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QTextBrowser" name="sendMessageInput">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>90</y>
+       <width>511</width>
+       <height>301</height>
+      </rect>
+     </property>
+     <property name="readOnly">
+      <bool>false</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="sendMessageButton">
+     <property name="geometry">
+      <rect>
+       <x>390</x>
+       <y>440</y>
+       <width>91</width>
+       <height>28</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Send</string>
+     </property>
+    </widget>
+    <widget class="QComboBox" name="encryptionInput">
+     <property name="geometry">
+      <rect>
+       <x>400</x>
+       <y>400</y>
+       <width>81</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <item>
+      <property name="text">
+       <string/>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>TripleDES</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>AES128</string>
+      </property>
+     </item>
+    </widget>
+    <widget class="QLabel" name="encryptionLabel">
+     <property name="geometry">
+      <rect>
+       <x>280</x>
+       <y>401</y>
+       <width>121</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Encription algorithm:</string>
+     </property>
+    </widget>
+   </widget>
+  </widget>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>newKeyButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>newKeyPressed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>66</x>
+     <y>23</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>493</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>importKeyButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>importKeyPressed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>155</x>
+     <y>30</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>263</x>
+     <y>18</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>readMessageButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>readMessagePressed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>426</x>
+     <y>23</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>355</x>
+     <y>35</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>signMessageInput</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>senderInput</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>906</x>
+     <y>454</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>998</x>
+     <y>87</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>sendMessageButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>sendMessagePressed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1314</x>
+     <y>518</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>320</x>
+     <y>16</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>encryptionInput</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>encryptionAlgorithmChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1295</x>
+     <y>479</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>307</x>
+     <y>37</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>newKeyPressed()</slot>
+  <slot>importKeyPressed()</slot>
+  <slot>readMessagePressed()</slot>
+  <slot>sendMessagePressed()</slot>
+  <slot>encryptionAlgorithmChanged(int)</slot>
+ </slots>
+</ui>

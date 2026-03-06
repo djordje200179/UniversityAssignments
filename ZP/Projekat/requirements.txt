@@ -1,0 +1,4 @@
+PyQt6~=6.7.0
+cryptography~=42.0.7
+# zipfile~=3.12.4
+pycryptodome
