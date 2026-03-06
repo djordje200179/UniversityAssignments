@@ -25,7 +25,7 @@ filling the board with words (IS1 DZ2)
 	- Backtracking
 	- Forward checking
 	- Arc consistency
-- Custom aassembler, linker and emulator (SS)
+- Custom assembler, linker and emulator (SS)
 - Dockerized e-commerce app for selling products with support 
 for Ethereum blockchain payments and calculating statistics
 with Apache Spark framework (IEP)
