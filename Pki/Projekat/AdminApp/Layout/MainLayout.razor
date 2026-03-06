@@ -1,0 +1,53 @@
+﻿@inherits LayoutComponentBase
+
+<MudThemeProvider IsDarkMode="true" />
+<MudPopoverProvider />
+<MudDialogProvider />
+<MudSnackbarProvider />
+
+@using System.ComponentModel
+@inject IAdminRepository adminRepository
+@inject NavigationManager navigationManager
+@implements IDisposable
+
+<CascadingValue Value="adminRepository.LoggedIn">
+    <MudLayout>
+        <MudAppBar Fixed="false">
+            <span>ПКИ администраторска апликација</span>
+
+            @if (adminRepository.LoggedIn is Administrator admin) {
+                <MudSpacer />
+                <MudIconButton Icon="@Icons.Material.Filled.Logout" @onclick="LogOut" />
+            }
+        </MudAppBar>
+
+        @if (adminRepository.LoggedIn is not null) {
+            <MudDrawer Open="true" Variant="@DrawerVariant.Mini" OpenMiniOnHover="true" ClipMode="DrawerClipMode.Always">
+                <MudNavMenu>
+                    <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.PedalBike" Href="/">Преглед бицикала</MudNavLink>
+                    <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Payments" Href="/rents">Преглед изнајмљивања</MudNavLink>
+                    <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Report" Href="/reports">Преглед пријављених кварова</MudNavLink>
+                </MudNavMenu>
+                <MudSpacer />
+                <MudNavMenu>
+                    <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Lock" Href="/change-password">Промјена лозинке</MudNavLink>
+                </MudNavMenu>
+            </MudDrawer>
+        }
+
+        <MudMainContent Class="pa-6">
+            @Body
+        </MudMainContent>
+    </MudLayout>
+</CascadingValue>
+
+@code {
+    private void OnAdminChanged(object? sender, PropertyChangedEventArgs e) => StateHasChanged();
+    protected override void OnInitialized() => adminRepository.PropertyChanged += OnAdminChanged;
+    public void Dispose() => adminRepository.PropertyChanged -= OnAdminChanged;
+
+    private void LogOut() {
+        adminRepository.LogOut();
+        navigationManager.NavigateTo("/");
+    }
+}

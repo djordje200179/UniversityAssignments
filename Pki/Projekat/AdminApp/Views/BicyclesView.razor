@@ -1,0 +1,97 @@
+﻿@using Common
+@using GoogleApi.Entities.Common
+@using GoogleApi.Entities.Common.Enums
+@using GoogleApi.Entities.Maps.Geocoding.Location.Request
+@using GoogleApi.Interfaces.Maps.Geocode
+
+@inject IBicycleRepository bicycleRepository
+@inject ILocationGeocodeApi geocodeApi
+@inject IDialogService dialogService
+@inject IJSRuntime jsRuntime;
+
+@using System.Text.Json
+@using TableModel = (Common.Models.Bicycle Bicycle, string Location)
+
+<MudPaper Elevation="3" Class="pa-4 rounded-lg">
+<MudText Typo="Typo.h5" Class="mb-4">Преглед бицикала</MudText>
+<MudTable T="TableModel" Items="@tableData" Hover="true" FixedHeader="true" Breakpoint="Breakpoint.Sm"
+          Elevation="0" RowClass="cursor-pointer" OnRowClick="@(args => EditBikeAsync(args.Item!.Bicycle))">
+    <HeaderContent>
+        <MudTh><MudTableSortLabel SortBy="new Func<TableModel, object>(x => x.Bicycle.Id)">Ид.</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<TableModel, object>(x => x.Bicycle.BType)">Тип</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<TableModel, object>(x => x.Bicycle.PricePerHour)">Цијена (РСД/h)</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<TableModel, object>(x => x.Bicycle.CurrentStatus)">Статус</MudTableSortLabel></MudTh>
+        <MudTh>Локација</MudTh>
+        <MudTh>Акција</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Ид.">@context.Bicycle.Id</MudTd>
+        <MudTd DataLabel="Тип">@context.Bicycle.BType.ToReadableString()</MudTd>
+        <MudTd DataLabel="Цијена">@context.Bicycle.PricePerHour</MudTd>
+        <MudTd DataLabel="Статус">@context.Bicycle.CurrentStatus.ToReadableString()</MudTd>
+        <MudTd DataLabel="Локација">@context.Location</MudTd>
+        <MudTd DataLabel="Акција">
+            <MudIconButton Icon="@Icons.Material.Filled.QrCode" Color="Color.Primary" OnClick="@(() => ShowQrCodeAsync(context.Bicycle))" />
+
+            @if (context.Bicycle.CurrentStatus == Bicycle.Status.Maintenance) {
+                <MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => context.Bicycle.CurrentStatus = Bicycle.Status.Free)">Врати</MudButton>
+            } else {
+                <MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => context.Bicycle.CurrentStatus = Bicycle.Status.Maintenance)"
+                           Disabled="context.Bicycle.CurrentStatus == Bicycle.Status.Rented">Одржавање</MudButton>
+            }
+        </MudTd>
+    </RowTemplate>
+    <FooterContent>
+        <MudTd colspan="6">
+            <MudButton Variant="Variant.Outlined" Size="Size.Large" FullWidth="true"
+                       OnClick="AddNewBikeAsync">Додај ново бицикло</MudButton>
+        </MudTd>
+    </FooterContent>
+</MudTable>
+</MudPaper>
+
+@code {
+    private IEnumerable<TableModel> tableData = [];
+
+    private async Task AddNewBikeAsync() {
+        var dialog = await dialogService.ShowAsync<NewBicycleView>();
+        var result = await dialog.Result;
+        if (result?.Data is Bicycle bicycle)
+            await OnInitializedAsync();
+    }
+
+    private async Task EditBikeAsync(Bicycle bicycle) {
+        var parameters = new DialogParameters<EditBicycleView> { { d => d.Bicycle, bicycle } };
+        var dialog = await dialogService.ShowAsync<EditBicycleView>(null, parameters);
+        var result = await dialog.Result;
+        if (result?.Data is Bicycle)
+            await OnInitializedAsync();
+    }
+
+    protected override async Task OnInitializedAsync() {
+        var bicycles = bicycleRepository.Fetch();
+
+        var geocodeTasks = bicycles.Select(async b => {
+            var geocodeResponse = await geocodeApi.QueryAsync(new LocationGeocodeRequest {
+                Location = new Coordinate(b.CurrentLocation.Latitude, b.CurrentLocation.Longitude),
+                Language = Language.Serbian,
+                Key = "AIzaSyAPo0cmsN7_LxYk7bS-pgUiTWdNMNY8atQ"
+            });
+
+            var location =
+                geocodeResponse.Status == Status.Ok
+                ? geocodeResponse.Results.First().AddressComponents.ElementAt(1).LongName
+                : "Грешка при геокодирању";
+
+            return (b, location);
+        });
+
+        tableData = await Task.WhenAll(geocodeTasks);
+    }
+
+    private ValueTask ShowQrCodeAsync(Bicycle bicycle) {
+        var text = JsonSerializer.Serialize<Bicycle>(bicycle);
+        var url = $"https://qrcode.show/{text}";
+		return jsRuntime.InvokeVoidAsync("open", url, "_blank");
+    }
+}

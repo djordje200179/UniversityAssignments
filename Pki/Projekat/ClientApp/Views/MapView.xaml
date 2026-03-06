@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+			 xmlns:m="clr-namespace:Common.Models;assembly=Common"
+			 xmlns:c="clr-namespace:ClientApp.Converters"
+			 xmlns:vm="clr-namespace:ClientApp.ViewModels"
+			 xmlns:v="clr-namespace:ClientApp.Views.Map"
+			 xmlns:maps="http://schemas.microsoft.com/dotnet/2021/maui/maps"
+			 xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+			 xmlns:sensors="clr-namespace:Microsoft.Maui.Devices.Sensors;assembly=Microsoft.Maui.Essentials"
+             x:Class="ClientApp.Views.MapView"
+			 x:DataType="vm:MapViewModel">
+	<Page.ToolbarItems>
+		<ToolbarItem Text="Одјава" IconImageSource="{FontImageSource Glyph='&#xf2f5;', FontFamily='FASolid'}"
+					 Command="{Binding LogoutCommand}" />
+	</Page.ToolbarItems>
+	
+	<AbsoluteLayout>
+		<maps:Map AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0, 0, 1, 1"
+				  IsZoomEnabled="True" IsShowingUser="True" ItemsSource="{Binding MapPins}">
+			<x:Arguments>
+				<maps:MapSpan>
+					<x:Arguments>
+						<sensors:Location Latitude="44.8055056" Longitude="20.473561" />
+						<x:Double>0.01</x:Double>
+						<x:Double>0.01</x:Double>
+					</x:Arguments>
+				</maps:MapSpan>
+			</x:Arguments>
+
+			<maps:Map.ItemTemplateSelector>
+				<v:PinTemplateSelector>
+					<v:PinTemplateSelector.BicycleTemplate>
+						<DataTemplate x:DataType="vm:MapViewModel+BicyclePin">
+							<v:BicyclePin Address="{Binding ParkingDistances, Converter={c:BicycleDistancesConverter}}"
+										  Label="{Binding Bicycle, Converter={c:MapPinTitleConverter}}"
+										  Location="{Binding Bicycle.CurrentLocation, Converter={c:LocationConverter}}" />
+						</DataTemplate>
+					</v:PinTemplateSelector.BicycleTemplate>
+
+					<v:PinTemplateSelector.ParkingTemplate>
+						<DataTemplate x:DataType="m:Parking">
+							<v:ParkingPin Address="{Binding Name}" Label="Паркинг"
+										  Location="{Binding Location, Converter={c:LocationConverter}}" />
+						</DataTemplate>
+					</v:PinTemplateSelector.ParkingTemplate>
+				</v:PinTemplateSelector>
+			</maps:Map.ItemTemplateSelector>
+		</maps:Map>
+
+		<ImageButton Source="{FontImageSource Glyph='&#xf024;', Color='Red', FontFamily='FASolid'}"
+					 BackgroundColor="Yellow" CornerRadius="100" Padding="20"
+					 AbsoluteLayout.LayoutFlags="PositionProportional"  
+					 AbsoluteLayout.LayoutBounds="0.05,0.95,80,80"
+					 Command="{Binding ReportIssueCommand}" />
+
+		<ImageButton Source="{FontImageSource Glyph='&#xf029;', Color='Red', FontFamily='FASolid'}"
+					 BackgroundColor="LightBlue" CornerRadius="100" Padding="20"
+					 AbsoluteLayout.LayoutFlags="PositionProportional"  
+					 AbsoluteLayout.LayoutBounds="0.95,0.95,80,80"
+					 Command="{Binding StartRideCommand}"
+					 IsVisible="{Binding ActiveRide, Converter={mct:IsNullConverter}}" />
+		
+		<ImageButton Source="{FontImageSource Glyph='&#xf05a;', Color='Red', FontFamily='FASolid'}"
+					 BackgroundColor="LightBlue" CornerRadius="100" Padding="20"
+					 AbsoluteLayout.LayoutFlags="PositionProportional"  
+					 AbsoluteLayout.LayoutBounds="0.95,0.95,80,80"
+					 Command="{Binding ViewRideInfoCommand}"
+					 IsVisible="{Binding ActiveRide, Converter={mct:IsNotNullConverter}}" />
+	</AbsoluteLayout>
+</ContentPage>

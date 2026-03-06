@@ -1,0 +1,85 @@
+﻿@using Common
+@using GoogleMapsComponents
+@using GoogleMapsComponents.Maps
+
+@inject IBicycleRepository bicycleRepository
+@inject IParkingRepository parkingRepository
+
+<MudDialog ContentStyle="width: 700px;" FullWidth="true" MaxWidth="MaxWidth.Large">
+    <TitleContent>
+        Додавање новог бицикла
+    </TitleContent>
+    <DialogContent>
+        <MudStack Row="true" Spacing="3">
+            <MudSelect HelperText="Тип" @bind-Value="type">
+                @foreach (var type in Enum.GetValues<Bicycle.Type>()) {
+                    <MudSelectItem Value="type">@type.ToReadableString()</MudSelectItem>
+                }
+            </MudSelect>
+
+            <MudTextField HelperText="Цијена" @bind-Value="pricePerHour" />
+        </MudStack>
+
+        <AdvancedGoogleMap @ref="@map" Id="map" Options="@mapOptions" Height="400px">
+            @foreach (var parking in parkings) {
+		        <MarkerComponent @key="parking.Name" OnClick="@(() => OnMarkerClicked(parking))"
+                                 Lat="@parking.Location.Latitude" Lng="@parking.Location.Longitude"
+                                 Clickable="true" Draggable="false">
+			        <div style="background-color: @(parking == selectedParking ? "darkslategray" : "gray"); padding: 10px; border-radius: 5%">
+				        @if (parking == selectedParking) {
+					        <h3>@parking.Name</h3>
+				        } else {
+					        <h4>@parking.Name</h4>
+				        }
+			        </div>
+		        </MarkerComponent>
+	        }
+         </AdvancedGoogleMap>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="@(() => dialog?.Cancel())">Одустани</MudButton>
+        <MudButton Color="Color.Primary" OnClick="Submit" Disabled="@(selectedParking is null)">Потврди</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    private IMudDialogInstance? dialog { get; set; }
+
+    private Bicycle.Type type;
+    private double pricePerHour;
+
+    private AdvancedGoogleMap map = null!;
+
+    private IEnumerable<Parking> parkings = [];
+    private Parking? selectedParking;
+
+    protected override void OnInitialized() {
+        parkings = parkingRepository.Fetch();
+    }
+
+    private MapOptions mapOptions = new MapOptions() {
+        Zoom = 13,
+        Center = new LatLngLiteral(44.8055056, 20.473561),
+        MapTypeId = MapTypeId.Roadmap,
+        MapId = "DEMO_MAP_ID",
+        ClickableIcons = false,
+        FullscreenControl = false,
+        CameraControl = false,
+        MapTypeControl = false,
+        PanControl = false,
+        RotateControl = false,
+        ScaleControl = false,
+        StreetViewControl = false,
+    };
+
+    private void Submit() {
+        var bicycle = new Bicycle(bicycleRepository.NextId, type, pricePerHour, selectedParking!.Location);
+        bicycleRepository.Add(bicycle);
+        dialog?.Close(bicycle);
+    }
+
+    private void OnMarkerClicked(Parking parking) {
+        selectedParking = parking;
+    }
+}

@@ -1,0 +1,14 @@
+﻿@page "/"
+
+<PageTitle>Почетна страница</PageTitle>
+
+@if (administrator is null) {
+    <LoginView />
+} else {
+    <BicyclesView />
+}
+
+@code {
+    [CascadingParameter]
+    private Administrator? administrator { get; set; }
+}

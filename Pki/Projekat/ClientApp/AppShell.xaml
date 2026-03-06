@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell x:Class="ClientApp.AppShell"
+	   xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+	   xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+	   xmlns:v="clr-namespace:ClientApp.Views"
+	   Title="ПКИ клијентска апликација">
+	<ShellContent ContentTemplate="{DataTemplate v:LoginView}" Route="login" Shell.PresentationMode="ModalAnimated" Shell.NavBarIsVisible="False" />
+
+	<TabBar>
+		<ShellContent Title="Мапа" Icon="{FontImageSource Glyph='&#xf206;', FontFamily='FASolid'}"
+					  ContentTemplate="{DataTemplate v:MapView}" Route="bicycle-map" />
+		<ShellContent Title="Вожње" Icon="{FontImageSource Glyph='&#xf03a;', FontFamily='FASolid'}"
+					  ContentTemplate="{DataTemplate v:RidesView}" Route="rides" />
+		<ShellContent Title="Подешавања" Icon="{FontImageSource Glyph='&#xf013;', FontFamily='FASolid'}"
+					  ContentTemplate="{DataTemplate v:SettingsView}" Route="settings" />
+	</TabBar>
+</Shell>

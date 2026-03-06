@@ -1,0 +1,52 @@
+﻿@inject IReportsRepository reportsRepository
+@inject IBicycleRepository bicyclesRepository
+
+@page "/reports"
+
+@using Common
+@using TableModel = (Common.Models.Report Report, Common.Models.Bicycle Bicycle);
+
+<MudPaper Elevation="3" Class="pa-4 rounded-lg">
+<MudText Typo="Typo.h5" Class="mb-4">Преглед пријављених кварова</MudText>
+<MudTable Items="@tableData" Hover="true" FixedHeader="true" Breakpoint="Breakpoint.Sm" Elevation="0">
+    <HeaderContent>
+        <MudTh><MudTableSortLabel SortBy="new Func<TableModel, object>(x => x.Report.Id)">Ид.</MudTableSortLabel></MudTh>
+        <MudTh>Опис</MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<TableModel, object>(x => x.Bicycle.BType)">Тип бицикла</MudTableSortLabel></MudTh>
+        <MudTh>Фотографија</MudTh>
+        <MudTh>Акција</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Ид.">@context.Report.Id</MudTd>
+        <MudTd DataLabel="Опис">@context.Report.Description</MudTd>
+        <MudTd DataLabel="Тип бицикла">@context.Bicycle.BType.ToReadableString()</MudTd>
+        <MudTd DataLabel="Фотографија">
+            @if (context.Report.Photography is null) {
+                <span>Није достављена</span>
+            } else {
+                <span>Достављена</span>
+            }
+        </MudTd>
+        <MudTh>
+            <MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => reportsRepository.Remove(context.Report))">Одбаци</MudButton>
+            <MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => HandleMaintenance(context))">Одржавање</MudButton>
+        </MudTh>
+    </RowTemplate>
+</MudTable>
+</MudPaper>
+
+@code {
+    private IEnumerable<TableModel> tableData = [];
+
+    protected override void OnInitialized() {
+        var reports = reportsRepository.Fetch();
+        var bicycles = bicyclesRepository.Fetch().ToDictionary(b => b.Id);
+
+        tableData = reports.Select(r => (r, bicycles[r.BicycleId]));
+    }
+
+    private void HandleMaintenance(TableModel model) {
+        model.Bicycle.CurrentStatus = Bicycle.Status.Maintenance;
+        reportsRepository.Remove(model.Report);
+    }
+}

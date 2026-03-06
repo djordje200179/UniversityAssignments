@@ -1,0 +1,69 @@
+﻿@page "/ride/{id:int}"
+
+@inject IRideRepository rideRepository
+@inject IClientRepository clientRepository
+
+<MudGrid>
+    <MudItem xs="12" md="6">
+        <MudStack Spacing="4">
+            <MudCard>
+                <MudCardHeader>
+                    <CardHeaderContent>
+                        <MudText Typo="Typo.h6">Изнајмљивање</MudText>
+                    </CardHeaderContent>
+                </MudCardHeader>
+                <MudCardContent>
+                    <MudText><strong>Датум:</strong> @ride.StartTime.ToShortDateString()</MudText>
+                    <MudText><strong>Почетак вожње:</strong> @ride.StartTime.ToString("HH:mm")</MudText>
+                    <MudText><strong>Крај вожње:</strong> @(ride.EndTime?.ToString("HH:mm") ?? "У току")</MudText>
+                    <MudText><strong>Јединична цијена:</strong> @ride.PricePerHour.ToString("F0") РСД/h</MudText>
+                    <MudText><strong>Укупна цијена:</strong> @ride.TotalPrice.ToString("F0") РСД</MudText>
+                </MudCardContent>
+            </MudCard>
+
+            <MudCard>
+                <MudCardHeader>
+                    <CardHeaderContent>
+                        <MudText Typo="Typo.h6">Корисник</MudText>
+                    </CardHeaderContent>
+                </MudCardHeader>
+                <MudCardContent>
+                    <MudText><strong>Име:</strong> @client.FirstName</MudText>
+                    <MudText><strong>Презиме:</strong> @client.LastName</MudText>
+                    <MudText><strong>Корисничко име:</strong> @client.Username</MudText>
+                    <MudText><strong>Контакт телефон:</strong> @client.PhoneNumber</MudText>
+                    <MudText><strong>Имејл адреса:</strong> @client.EmailAddress</MudText>
+                </MudCardContent>
+            </MudCard>
+        </MudStack>
+    </MudItem>
+
+    <MudItem xs="12" md="6">
+        <MudCard Style="height: 100%;">
+            @if (ride.Photo is not null) {
+                <MudCardMedia Image="@imageSource" Height="400" />
+            } else {
+                <MudCardContent Style="height: 100%; display: flex; align-items: center; justify-content: center;">
+                    <MudText Typo="Typo.h5">Вожња је у току</MudText>
+                </MudCardContent>
+            }
+        </MudCard>
+    </MudItem>
+</MudGrid>
+
+@code {
+    [Parameter]
+    public int Id { get; init; }
+
+    private Ride ride = null!;
+    private Client client = null!;
+
+    private string imageSource => ride.Photo is not null
+        ? $"data:image/png;base64,{Convert.ToBase64String(ride.Photo)}"
+        : string.Empty;
+
+    protected override void OnInitialized() {
+        ride = rideRepository.Fetch(Id);
+        client = clientRepository.Fetch(ride.ClientUsername);
+    }
+}

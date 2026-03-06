@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+			 xmlns:vm="clr-namespace:ClientApp.ViewModels"
+			 xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Class="ClientApp.Views.ReportIssueView"
+			 x:DataType="vm:ReportIssueViewModel">
+	<Grid VerticalOptions="Center" HorizontalOptions="Center" Padding="20">
+		<Border Padding="30" StrokeShape="RoundRectangle 12"
+				Stroke="{AppThemeBinding Light=#E0E0E0, Dark=#333333}"
+				BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}">
+			<Border.Shadow>
+				<Shadow Brush="Black" Offset="0,2" Radius="8" Opacity="0.2" />
+			</Border.Shadow>
+
+			<VerticalStackLayout Spacing="16" WidthRequest="300">
+				<Label Text="Пријава проблема" FontSize="24" FontAttributes="Bold"
+					   HorizontalTextAlignment="Center" Margin="0,0,0,8" />
+
+				<Editor Placeholder="Опишите проблем..." HeightRequest="150"
+						BindingContext="{Binding Description}" />
+
+				<HorizontalStackLayout Spacing="8" HorizontalOptions="Center">
+					<Button Text="Избаци фотографију" Command="{Binding RemovePhotoCommand}" IsVisible="{Binding Photo, Converter={mct:IsNotNullConverter}}" />
+					<Button Text="Додај фотографију" Command="{Binding AddPhotoCommand}" IsVisible="{Binding Photo, Converter={mct:IsNullConverter}}" />
+				</HorizontalStackLayout>
+
+				<HorizontalStackLayout Spacing="8" HorizontalOptions="Center">
+					<Button Text="Пошаљи" Command="{Binding SubmitCommand}" />
+					<Button Text="Откажи" Command="{Binding CancelCommand}" />
+				</HorizontalStackLayout>
+			</VerticalStackLayout>
+		</Border>
+	</Grid>
+</ContentView>

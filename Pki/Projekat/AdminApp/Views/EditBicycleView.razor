@@ -1,0 +1,46 @@
+﻿@using Common
+
+@inject IBicycleRepository bicycleRepository
+@inject IParkingRepository parkingRepository
+
+<MudDialog>
+    <TitleContent>
+        Додавање новог бицикла
+    </TitleContent>
+    <DialogContent>
+        <MudStack Row="true" Spacing="3">
+            <MudSelect HelperText="Тип" @bind-Value="type">
+                @foreach (var type in Enum.GetValues<Bicycle.Type>()) {
+                    <MudSelectItem Value="type">@type.ToReadableString()</MudSelectItem>
+                }
+            </MudSelect>
+
+            <MudTextField HelperText="Цијена" @bind-Value="pricePerHour" />
+        </MudStack>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="@(() => dialog?.Cancel())">Одустани</MudButton>
+        <MudButton Color="Color.Primary" OnClick="Submit">Потврди</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    private IMudDialogInstance? dialog { get; set; }
+
+    [Parameter]
+    public Bicycle Bicycle { get; set; } = null!;
+    private Bicycle.Type type;
+    private double pricePerHour;
+
+    override protected void OnInitialized() {
+        type = Bicycle.BType;
+        pricePerHour = Bicycle.PricePerHour;
+    }
+
+    private void Submit() {
+        Bicycle.BType = type;
+        Bicycle.PricePerHour = pricePerHour;
+        dialog?.Close(Bicycle);
+    }
+}

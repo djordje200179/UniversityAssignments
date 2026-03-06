@@ -1,0 +1,40 @@
+﻿@inject IRideRepository rideRepository
+@inject NavigationManager navigationManager
+
+@page "/rents"
+
+<MudPaper Elevation="3" Class="pa-4 rounded-lg">
+<MudText Typo="Typo.h5" Class="mb-4">Преглед изнајмљивања</MudText>
+<MudTable T="Ride" Items="@rides" Hover="true" FixedHeader="true" Breakpoint="Breakpoint.Sm"
+          Elevation="0" RowClass="cursor-pointer" OnRowClick="@(args => navigationManager.NavigateTo($"/ride/{args.Item!.Id}"))">
+    <HeaderContent>
+        <MudTh><MudTableSortLabel SortBy="new Func<Ride, object>(x => x.Id)">Ид.</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<Ride, object>(x => x.ClientUsername)">Корисник</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<Ride, object>(x => x.StartTime)">Датум</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<Ride, object>(x => x.StartTime)">Почетак вожње</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<Ride, object?>(x => x.EndTime)">Крај вожње</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<Ride, object>(x => x.TotalPrice)">Укупна цијена (РСД)</MudTableSortLabel></MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Ид.">@context.Id</MudTd>
+        <MudTd DataLabel="Корисник">@context.ClientUsername</MudTd>
+        <MudTd DataLabel="Датум">@context.StartTime.ToString("dd. MM. yy.")</MudTd>
+        <MudTd DataLabel="Почетак вожње">@context.StartTime.ToString("HH:mm")</MudTd>
+        <MudTd DataLabel="Крај вожње">@(context.EndTime?.ToString("HH:mm") ?? "У току")</MudTd>
+        <MudTd DataLabel="Цијена">
+            @if (context.EndTime == null) {
+                <em>~</em>
+            }
+            @context.TotalPrice.ToString("F0")
+        </MudTd>
+    </RowTemplate>
+</MudTable>
+</MudPaper>
+
+@code {
+    private IEnumerable<Ride> rides = [];
+
+    protected override void OnInitialized() {
+        rides = rideRepository.Fetch();
+    }
+}

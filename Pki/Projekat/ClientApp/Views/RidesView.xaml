@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+			 xmlns:vm="clr-namespace:ClientApp.ViewModels"
+			 xmlns:models="clr-namespace:Common.Models;assembly=Common"
+             x:Class="ClientApp.Views.RidesView"
+			 x:DataType="vm:RidesViewModel"
+             Title="Вожње">
+	<Page.ToolbarItems>
+		<ToolbarItem Text="Одјава" IconImageSource="{FontImageSource Glyph='&#xf2f5;', FontFamily='FASolid'}"
+					 Command="{Binding LogoutCommand}" />
+	</Page.ToolbarItems>
+	
+	<CollectionView ItemsSource="{Binding Rides}"
+					SelectionMode="None">
+		<CollectionView.EmptyView>
+			<StackLayout Padding="20" VerticalOptions="Center">
+				<Label Text="Нема вожњи" 
+					   HorizontalOptions="Center"
+					   FontSize="18"
+					   TextColor="Gray" />
+			</StackLayout>
+		</CollectionView.EmptyView>
+		
+		<CollectionView.ItemTemplate>
+			<DataTemplate x:DataType="models:Ride">
+				<Border Margin="10,5" Padding="15" StrokeShape="RoundRectangle 12"
+						Stroke="{AppThemeBinding Light=#E0E0E0, Dark=#333333}"
+						BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}">
+					<Border.Shadow>
+						<Shadow Brush="Black" Offset="0,2" Radius="8" Opacity="0.2" />
+					</Border.Shadow>
+					<VerticalStackLayout>
+						<Label Text="{Binding StartTime, StringFormat='{0:dd.MM.yyyy}'}"
+							   FontAttributes="Bold" FontSize="18" />
+
+						<Label>
+							<Label.FormattedText>
+								<FormattedString>
+									<Span Text="Термин: " FontAttributes="Bold" />
+									<Span Text="{Binding StartTime, StringFormat='{0: HH:mm}'}" />
+									<Span Text=" - " />
+									<Span Text="{Binding EndTime, StringFormat='{0: HH:mm}', TargetNullValue='у току'}" />
+								</FormattedString>
+							</Label.FormattedText>
+						</Label>
+
+						<Label>
+							<Label.FormattedText>
+								<FormattedString>
+									<Span Text="Цијена: " FontAttributes="Bold" />
+									<Span Text="{Binding TotalPrice, StringFormat='{0:F2}'}" />
+									<Span Text="РСД" />
+								</FormattedString>
+							</Label.FormattedText>
+						</Label>
+					</VerticalStackLayout>
+				</Border>
+			</DataTemplate>
+		</CollectionView.ItemTemplate>
+	</CollectionView>
+</ContentPage>
